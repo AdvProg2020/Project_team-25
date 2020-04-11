@@ -1,17 +1,19 @@
 package Store.Model;
 
+import Store.Model.Enums.CheckingStatus;
+
 import java.util.ArrayList;
 
 public class Product {
 
     private int productID;
-    private int productStatus;
+    private CheckingStatus productStatus;
     private Category category;
     private String name;
     private Seller seller;
     private String brand;
     private double price;
-    private ArrayList<Seller> sellers = new ArrayList<Seller>();
+    // private ArrayList<Seller> sellers = new ArrayList<Seller>();
     private boolean availablity;
     private String attributes;
     private String description;
@@ -21,7 +23,7 @@ public class Product {
 
     private static ArrayList<Product> allProducts = new ArrayList<Product>();
 
-    public Product(int productID, int productStatus, Category category, String name, Seller seller, String brand, double price, boolean availablity, String attributes, String description, float averageRating) {
+    public Product(int productID, CheckingStatus productStatus, Category category, String name, Seller seller, String brand, double price, boolean availablity, String attributes, String description, float averageRating) {
         this.productID = productID;
         this.productStatus = productStatus;
         this.category = category;
@@ -36,6 +38,14 @@ public class Product {
     }
 
     public static void addProduct(Product product) {
+
+    }
+
+    public static void addComment(User user, String title, String content) {
+
+    }
+
+    public static void rate(Customer customer, Rating rating) {
 
     }
 

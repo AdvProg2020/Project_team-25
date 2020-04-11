@@ -1,0 +1,66 @@
+package Store.View;
+
+import Store.Model.Customer;
+import Store.Model.Seller;
+
+public class CustomerMenu {
+
+    public static void init() {
+    }
+
+    private static void viewPersonalInfo() {
+
+    }
+
+    private static void editPersonalInfoWrapper(String field, String value) {
+
+    }
+
+    private static void viewCart() {
+
+    }
+
+    private static void showProduct(String attribute) {
+
+    }
+
+    private static void increaseProductWrapper(String attribute) {
+
+    }
+
+    private static void decreaseProductWrapper(String attribute) {
+
+    }
+
+    private static void showTotalCartPrice() {
+
+    }
+
+    private static void purchaseWrapper() {
+
+    }
+
+    private static void viewOrders() {
+
+    }
+
+    private static void showOrder(int id) {
+
+    }
+
+    private static void rateProductWrapper(String attribute, double rating) {
+
+    }
+
+    private static void viewBalance() {
+
+    }
+
+    private static void viewDiscountCodes() {
+
+    }
+
+    private static void printHelp() {
+
+    }
+}

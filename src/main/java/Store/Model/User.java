@@ -24,4 +24,8 @@ public abstract class User {
         this.password = password;
         this.money = money;
     }
+
+    public boolean validatePassword(String password) {
+        return this.password.equals(password);
+    }
 }

@@ -1,4 +1,6 @@
-package Store.Model;
+package Store.Model.Log;
+
+import java.util.Date;
 
 public class SellLogItem extends LogItem {
 

@@ -1,0 +1,5 @@
+package Store.Model.Enums;
+
+public enum RequestType {
+    REGISTERSELLER, ADDNEWPRODUCT, CHANGEPRODUCT, ADDNEWOFFER, CHANGEOFFER
+}
