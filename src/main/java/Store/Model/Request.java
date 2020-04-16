@@ -10,23 +10,23 @@ public class Request {
     private boolean change;
 
     Request(Seller seller) {
-        this.type = RequestType.REGISTERSELLER;
+        this.type = RequestType.REGISTER_SELLER;
         this.seller = seller;
     }
 
     Request(Product product, boolean change) {
         this.product = product;
         this.change = change;
-        this.type = RequestType.ADDNEWPRODUCT;
+        this.type = RequestType.ADD_NEW_PRODUCT;
         if (this.change)
-            this.type = RequestType.CHANGEPRODUCT;
+            this.type = RequestType.CHANGE_PRODUCT;
     }
 
     Request(Seller seller, Offer offer, boolean change) {
         this.offer = offer;
         this.change = change;
-        this.type = RequestType.ADDNEWOFFER;
+        this.type = RequestType.ADD_NEW_OFFER;
         if (this.change)
-            this.type = RequestType.CHANGEOFFER;
+            this.type = RequestType.CHANGE_OFFER;
     }
 }

@@ -10,4 +10,12 @@ public class Rating {
         this.rating = rating;
         this.product = product;
     }
+
+    public double getRating() {
+        return this.rating;
+    }
+
+    public User getUser() {
+        return user;
+    }
 }
