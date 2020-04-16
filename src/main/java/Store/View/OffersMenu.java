@@ -1,4 +1,6 @@
-package Store.View;
+package main.java.Store.View;
+
+import main.java.Store.Controller.OffersController;
 
 import java.util.ArrayList;
 
@@ -24,7 +26,8 @@ public class OffersMenu {
     }
 
     private static void showAvailableFilters() {
-
+        //doubt
+        OffersController.getFilteredList(filters);
     }
 
     private static void filter(String filter) {

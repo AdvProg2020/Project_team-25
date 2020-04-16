@@ -1,7 +1,8 @@
-package Store.View;
+package main.java.Store.View;
 
-import Store.Model.Customer;
-import Store.Model.Product;
+import main.java.Store.Controller.ProductController;
+import main.java.Store.Model.Customer;
+import main.java.Store.Model.Product;
 
 public class ProductMenu {
 
@@ -32,6 +33,6 @@ public class ProductMenu {
     }
 
     private static void comment() {
-
+        ProductController.addComment(null,null,null);
     }
 }

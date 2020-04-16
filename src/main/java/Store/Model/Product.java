@@ -1,6 +1,6 @@
-package Store.Model;
+package main.java.Store.Model;
 
-import Store.Model.Enums.CheckingStatus;
+import main.java.Store.Model.Enums.CheckingStatus;
 
 import java.util.ArrayList;
 
@@ -41,11 +41,11 @@ public class Product {
 
     }
 
-    public static void addComment(User user, String title, String content) {
+    public void addComment(User user, String title, String content) {
 
     }
 
-    public static void rate(Customer customer, Rating rating) {
+    public void rate(Customer customer, Rating rating) {
 
     }
 

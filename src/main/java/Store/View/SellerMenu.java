@@ -1,6 +1,7 @@
-package Store.View;
+package main.java.Store.View;
 
-import Store.Model.Seller;
+import main.java.Store.Controller.SellerController;
+import main.java.Store.Model.Seller;
 
 public class SellerMenu {
 
@@ -13,7 +14,7 @@ public class SellerMenu {
     }
 
     private static void editPersonalInfoWrapper(String field, String value) {
-
+        SellerController.editPersonalInfo(null,null,null);
     }
 
     private static void viewCompanyInformation() {
@@ -37,15 +38,15 @@ public class SellerMenu {
     }
 
     private static void editProductWrapper(String[] attributes) {
-
+        SellerController.editProduct(null,null,null);
     }
 
     private static void addProductWrapper(String[] attributes) {
-
+        SellerController.addProduct(null,null);
     }
 
     private static void removeProductWrapper(String attribute) {
-
+        SellerController.removeProduct(null,null);
     }
 
     private static void showCategories() {
@@ -61,11 +62,11 @@ public class SellerMenu {
     }
 
     private static void editOffWrapper(String[] attributes) {
-
+        SellerController.editOff(null,null,null);
     }
 
     private static void addOffWrapper(String[] attributes) {
-
+        SellerController.addOff(null,null);
     }
 
     private static void viewBalance() {

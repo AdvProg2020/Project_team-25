@@ -1,4 +1,4 @@
-package Store;
+package main.java.Store;
 
 public class Main {
 

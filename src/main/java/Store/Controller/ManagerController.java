@@ -1,50 +1,50 @@
-package Store.Controller;
+package main.java.Store.Controller;
 
-import Store.Model.*;
+import main.java.Store.Model.*;
 
 public class ManagerController {
 
-    private static void editPersonalInfo(Manager manager, String field, String value) {
+    public static void editPersonalInfo(Manager manager, String field, String value) {
+        manager.addCategory(null);
+    }
+
+    public static void createManagerProfile(Manager manager, Manager other) {
+        manager.addCategory(null);
+    }
+
+    public static void removeProducts(Manager manager, Product product) {
 
     }
 
-    private static void createManagerProfile(Manager manager, Manager other) {
+    public static void createOffCode(Manager manager, OffCode offCode) {
 
     }
 
-    private static void removeProducts(Manager manager, Product product) {
+    public static void deleteUserByName(Manager manager, User user) {
 
     }
 
-    private static void createOffCode(Manager manager, OffCode offCode) {
+    public static void removeOffCode(Manager manager, OffCode offCode) {
 
     }
 
-    private static void deleteUserByName(Manager manager, User user) {
+    public static void editOffCode(Manager manager, OffCode offCode, OffCode newOffCode) {
 
     }
 
-    private static void removeOffCode(Manager manager, OffCode offCode) {
+    public static void handleRequest(Manager manager, boolean status, Request request) {
 
     }
 
-    private static void editOffCode(Manager manager, OffCode offCode, OffCode newOffCode) {
+    public static void addCategory(Manager manager, Category category) {
 
     }
 
-    private static void handleRequest(Manager manager, boolean status, Request request) {
+    public static void editCategory(Manager manager, Category category, Category newCategory) {
 
     }
 
-    private static void addCategory(Manager manager, Category category) {
-
-    }
-
-    private static void editCategory(Manager manager, Category category, Category newCategory) {
-
-    }
-
-    private static void removeCategory(Manager manager, Category category) {
+    public static void removeCategory(Manager manager, Category category) {
 
     }
 }

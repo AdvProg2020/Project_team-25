@@ -1,6 +1,8 @@
-package Store.View;
+package main.java.Store.View;
 
-import Store.Model.Product;
+import main.java.Store.Controller.ProductController;
+import main.java.Store.Controller.ProductsController;
+import main.java.Store.Model.Product;
 
 import java.util.ArrayList;
 
@@ -26,7 +28,8 @@ public class ProductsMenu {
     }
 
     private static void showAvailableFilters() {
-
+        //doubt
+        ProductsController.getFilteredList(filters);
     }
 
     private static void filter(String filter) {

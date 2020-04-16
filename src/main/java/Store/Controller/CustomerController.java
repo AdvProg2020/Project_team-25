@@ -1,27 +1,28 @@
-package Store.Controller;
+package main.java.Store.Controller;
 
-import Store.Model.Customer;
-import Store.Model.Product;
+import main.java.Store.Model.Customer;
+import main.java.Store.Model.Product;
+import main.java.Store.Model.Rating;
 
 public class CustomerController {
 
-    private static void editPersonalInfo(Customer customer, String field, String value) {
-
+    public static void editPersonalInfo(Customer customer, String field, String value) {
+        customer.buy();
     }
 
-    private static void increaseProduct(Customer customer, Product product) {
-
+    public static void increaseProduct(Customer customer, Product product) {
+        customer.addToCart(product);
     }
 
-    private static void decreaseProduct(Customer customer, Product product) {
-
+    public static void decreaseProduct(Customer customer, Product product) {
+        customer.addToCart(null);
     }
 
-    private static void rateProduct(Customer customer, Product product, double rating) {
-
+    public static void rateProduct(Customer customer, Product product, double rating) {
+        product.rate(customer,null);
     }
 
-    private static void purchase(Customer customer, String[] attributes) {
-
+    public static void purchase(Customer customer, String[] attributes) {
+        customer.buy();
     }
 }

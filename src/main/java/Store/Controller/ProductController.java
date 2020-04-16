@@ -1,9 +1,9 @@
-package Store.Controller;
+package main.java.Store.Controller;
 
-import Store.Model.User;
+import main.java.Store.Model.User;
 
 public class ProductController {
-    private static void addComment(User user, String title, String content) {
+    public static void addComment(User user, String title, String content) {
 
     }
 }

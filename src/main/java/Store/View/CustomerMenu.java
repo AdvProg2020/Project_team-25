@@ -1,7 +1,8 @@
-package Store.View;
+package main.java.Store.View;
 
-import Store.Model.Customer;
-import Store.Model.Seller;
+import main.java.Store.Controller.CustomerController;
+import main.java.Store.Model.Customer;
+import main.java.Store.Model.Seller;
 
 public class CustomerMenu {
 
@@ -13,7 +14,7 @@ public class CustomerMenu {
     }
 
     private static void editPersonalInfoWrapper(String field, String value) {
-
+        CustomerController.editPersonalInfo(null, null, null);
     }
 
     private static void viewCart() {
@@ -25,11 +26,11 @@ public class CustomerMenu {
     }
 
     private static void increaseProductWrapper(String attribute) {
-
+        CustomerController.increaseProduct(null,null);
     }
 
     private static void decreaseProductWrapper(String attribute) {
-
+        CustomerController.decreaseProduct(null,null);
     }
 
     private static void showTotalCartPrice() {
@@ -37,7 +38,7 @@ public class CustomerMenu {
     }
 
     private static void purchaseWrapper() {
-
+        CustomerController.purchase(null, null);
     }
 
     private static void viewOrders() {
@@ -49,7 +50,7 @@ public class CustomerMenu {
     }
 
     private static void rateProductWrapper(String attribute, double rating) {
-
+        CustomerController.rateProduct(null,null,0);
     }
 
     private static void viewBalance() {

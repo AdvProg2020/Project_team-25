@@ -1,6 +1,7 @@
-package Store.View;
+package main.java.Store.View;
 
-import Store.Model.User;
+import main.java.Store.Controller.SignUpAndLoginController;
+import main.java.Store.Model.User;
 
 public class SignUpAndLoginMenu {
 
@@ -8,7 +9,7 @@ public class SignUpAndLoginMenu {
     }
 
     private static void createAccountWrapper(String type, String username, String password) {
-
+        SignUpAndLoginController.createAccount(null,null,null);
     }
 
     private static User login(String username, String password) {

@@ -1,32 +1,32 @@
-package Store.Controller;
+package main.java.Store.Controller;
 
-import Store.Model.Offer;
-import Store.Model.Product;
-import Store.Model.Seller;
+import main.java.Store.Model.Offer;
+import main.java.Store.Model.Product;
+import main.java.Store.Model.Seller;
 
 public class SellerController {
 
-    private static void editPersonalInfo(Seller seller, String field, String value) {
+    public static void editPersonalInfo(Seller seller, String field, String value) {
 
     }
 
-    private static void editProduct(Seller seller, Product product, Product newProduct) {
+    public static void editProduct(Seller seller, Product product, Product newProduct) {
 
     }
 
-    private static void addProduct(Seller seller, Product product) {
+    public static void addProduct(Seller seller, Product product) {
 
     }
 
-    private static void removeProduct(Seller seller, Product product) {
+    public static void removeProduct(Seller seller, Product product) {
 
     }
 
-    private static void editOff(Seller seller, Offer offer, Offer newOffer) {
+    public static void editOff(Seller seller, Offer offer, Offer newOffer) {
 
     }
 
-    private static void addOff(Seller seller, Offer offer) {
+    public static void addOff(Seller seller, Offer offer) {
 
     }
 }

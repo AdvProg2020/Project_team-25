@@ -1,4 +1,4 @@
-package Store.Model;
+package main.java.Store.Model;
 
 public class Rating {
     private User user;
