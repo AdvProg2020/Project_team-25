@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class User {
 
+    int id;
     protected String username;
     protected String name;
     protected String familyName;
@@ -12,7 +13,7 @@ public class User {
     protected String phoneNumber;
     protected String password;
     protected static ArrayList<User> allUsers = new ArrayList<User>();
-
+    protected static int idTillNow = 0;
     // Notification Array
 
     public User(String username, String name, String familyName, String email, String phoneNumber, String password) {
@@ -22,6 +23,7 @@ public class User {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
+        id = ++idTillNow;
     }
 
     public static User getUserByUsername(String username){
@@ -31,7 +33,7 @@ public class User {
         return null;
     }
 
-    public static ArrayList<User> getAllUsernames()
+    public static ArrayList<User> getAllUsers()
     {
         return allUsers;
     }
@@ -43,6 +45,16 @@ public class User {
     public void delete()
     {
 
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public User getUserById(int id) {
+        for(User user: allUsers)
+            if(id == user.getId())
+                return user;
     }
 
     public String getName() {
