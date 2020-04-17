@@ -55,6 +55,7 @@ public class User {
         for(User user: allUsers)
             if(id == user.getId())
                 return user;
+        return null;
     }
 
     public String getName() {
