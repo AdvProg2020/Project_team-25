@@ -1,5 +1,6 @@
 package main.java.Store.Model;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class User {
@@ -30,32 +31,9 @@ public class User {
         return null;
     }
 
-    public String viewPersonalInfo()
+    public static ArrayList<User> getAllUsernames()
     {
-        String returnString = null;
-        returnString += "username:" + username;
-        returnString += "\nfirst name:" + name;
-        returnString += "\nlast name:" + familyName;
-        returnString += "\nemail:" + email;
-        returnString += "\nphone number:" + phoneNumber;
-        return returnString;
-    }
-
-    public static String getAllUsernames()
-    {
-        String returnString = null;
-        for(User user: allUsers)
-        {
-            returnString += user.getUsername() + "\t";
-            if(user instanceof Manager)
-                returnString += "manager";
-            if(user instanceof Customer)
-                returnString += "customer";
-            if(user instanceof Seller)
-                returnString += "seller";
-            returnString += "\n";
-        }
-        return returnString;
+        return allUsers;
     }
 
     public boolean validatePassword(String password) {

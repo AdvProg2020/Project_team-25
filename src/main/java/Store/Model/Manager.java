@@ -2,41 +2,45 @@ package main.java.Store.Model;
 
 import java.util.ArrayList;
 
+import static main.java.Store.Model.Enums.VerifyStatus.ACCEPTED;
+
 public class Manager extends User {
 
-    private static ArrayList<Category> allCategories = new ArrayList<Category>();
+    public static ArrayList<Category> allCategories = new ArrayList<Category>();
     private static ArrayList<Request> pendingRequests = new ArrayList<Request>();
     private static ArrayList<OffCode> offCodes = new ArrayList<OffCode>();
     public static boolean hasManager = false;
 
     Manager(String username, String name, String familyName, String email, String phoneNumber, String password) {
         super(username, name, familyName, email, phoneNumber, password);
-        allUsers.add(this);
+        if(!hasManager)
+            allUsers.add(this);
         hasManager = true;
     }
 
-    public String viewUser(User user)
+    public static boolean verifyOffCode(OffCode customerOffCode, Customer customer)
     {
-        String returnString = null;
-        returnString = user.viewPersonalInfo();
-        if(user instanceof Customer)
-            returnString += "\nmoney:" + ((Customer) user).getMoney();
-        else if(user instanceof Seller) {
-            returnString += "\nmoney:" + ((Seller) user).getMoney();
-            returnString += "\ncompany name:" + ((Seller) user).getCompanyName();
-            returnString += "\ncompany discription:" + ((Seller) user).getCompanyDiscription();
-        }
-         return returnString;
+        for(OffCode offCode: offCodes)
+            if(offCode.isUserIncluded(customer))
+                return true;
+        return false;
     }
 
-    public String viewRequests()
+    public static ArrayList<Request> getPendingRequests() {
+        return pendingRequests;
+    }
+
+    //showing categories handled in controller
+    public void editCategory(Category oldCategory, Category newCategory)
     {
-        String returnString = null;
-        for(Request request: pendingRequests)
-        {
-            returnString += getRequestType() + "\n";
-        }
-        return returnString;
+        allCategories.remove(oldCategory);
+        allCategories.add(newCategory);
+    }
+
+    public void removeCategory(Category category)
+    {
+        category.removeInside();
+        allCategories.remove(category);
     }
 
     public static Request getRequestById(int id)
@@ -55,26 +59,21 @@ public class Manager extends User {
     {
         if(accepted)
         {
-
+            Seller.doRequest(product);
+            request.setStatus(ACCEPTED);  //????
         }
-        else
-        {
-
+        else {
+            request.setStatus(ACCEPTED);  //????
         }
+        pendingRequests.remove(request);
     }
 
     public void addNewManager(Manager manager) {
-        //nothing needed
+        allUsers.add(manager);
     }
 
-    public static String viewAllOffCodes()
-    {
-        String returnString = null;
-        for(OffCode offCode: offCodes)
-        {
-            returnString += offCode.getCode() + "\n";
-        }
-        return returnString;
+    public static ArrayList<OffCode> getOffCodes() {
+        return offCodes;
     }
 
     public static void removeOffCode(OffCode offCode) {
