@@ -1,4 +1,4 @@
-package Model.Log;
+package Store.Model.Log;
 
 import java.util.Date;
 
@@ -8,7 +8,7 @@ public class BuyLogItem extends LogItem {
     private String sellerName;
     private boolean recieved;
 
-    BuyLogItem(int id, Date date, double offValue, String sellerName, boolean recieved) {
+    public BuyLogItem(int id, Date date, double offValue, String sellerName, boolean recieved) {
         super(id, date);
     }
 }

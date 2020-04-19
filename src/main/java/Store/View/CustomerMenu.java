@@ -1,8 +1,8 @@
-package View;
+package Store.View;
 
-import Controller.CustomerController;
-import Model.Customer;
-import Model.Seller;
+import Store.Controller.CustomerController;
+import Store.Model.Customer;
+import Store.Model.Seller;
 
 public class CustomerMenu {
 

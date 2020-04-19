@@ -1,4 +1,4 @@
-package main.java.Store.Model.Log;
+package Store.Model.Log;
 
 import Store.Model.Product;
 

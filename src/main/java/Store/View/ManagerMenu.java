@@ -1,8 +1,8 @@
-package View;
+package Store.View;
 
-import Controller.ManagerController;
-import Model.Category;
-import Model.Manager;
+import Store.Controller.ManagerController;
+import Store.Model.Category;
+import Store.Model.Manager;
 
 
 public class ManagerMenu {

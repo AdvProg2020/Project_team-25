@@ -1,9 +1,15 @@
 package Store.Model;
 
+import Store.Model.Log.BuyLogItem;
 import Store.Model.Product;
 import Store.Model.Enums.RequestType;
-import main.java.Store.Model.Log.SellLogItem;
+import Store.Model.Log.SellLogItem;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Set;
 
 public class Seller extends User {
 
@@ -51,6 +57,9 @@ public class Seller extends User {
         new Request(this);
     }
 
+    public void handleLogs(double offValue, ArrayList<Product> sellProducts, Date date, Customer customer, double income) {
+        sellLog.add( new SellLogItem(sellLog.size() + 1, date, sellProducts, income, offValue , customer.getName(), false));
+    }
     public void removeProduct(int id)
     {
         Product removeProduct = null;

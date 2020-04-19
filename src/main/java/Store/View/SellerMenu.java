@@ -1,7 +1,7 @@
-package View;
+package Store.View;
 
-import Controller.SellerController;
-import Model.Seller;
+import Store.Controller.SellerController;
+import Store.Model.Seller;
 
 public class SellerMenu {
 

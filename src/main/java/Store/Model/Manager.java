@@ -61,7 +61,7 @@ public class Manager extends User {
     {
         if(accepted)
         {
-            Seller.doRequest(product);
+            Seller.doRequest(request);
             request.setStatus(ACCEPTED);  //????
         }
         else {

@@ -1,7 +1,7 @@
-package View;
+package Store.View;
 
-import Controller.SignUpAndLoginController;
-import Model.User;
+import Store.Controller.SignUpAndLoginController;
+import Store.Model.User;
 
 public class SignUpAndLoginMenu {
 

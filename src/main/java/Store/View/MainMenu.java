@@ -1,9 +1,9 @@
-package View;
+package Store.View;
 
-import Model.Customer;
-import Model.Manager;
-import Model.Seller;
-import Model.User;
+import Store.Model.Customer;
+import Store.Model.Manager;
+import Store.Model.Seller;
+import Store.Model.User;
 
 public class MainMenu {
 
