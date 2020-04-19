@@ -1,6 +1,6 @@
-package main.java.Store.Model;
+package Model;
 
-import main.java.Store.Model.Enums.VerifyStatus;
+import Model.Enums.VerifyStatus;
 
 public class Comment {
     private User commentingUser;

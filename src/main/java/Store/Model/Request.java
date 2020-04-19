@@ -1,7 +1,7 @@
-package main.java.Store.Model;
+package Model;
 
-import main.java.Store.Model.Enums.RequestType;
-import main.java.Store.Model.Enums.VerifyStatus;
+import Model.Enums.RequestType;
+import Model.Enums.VerifyStatus;
 
 public class Request {
     private RequestType type; // 5 Types

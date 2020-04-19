@@ -1,4 +1,4 @@
-package main.java.Store.Model;
+package Model;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,8 +1,8 @@
-package main.java.Store.Controller;
+package Controller;
 
-import main.java.Store.Model.Offer;
-import main.java.Store.Model.Product;
-import main.java.Store.Model.Seller;
+import Model.Offer;
+import Model.Product;
+import Model.Seller;
 
 public class SellerController {
 

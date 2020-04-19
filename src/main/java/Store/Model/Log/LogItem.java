@@ -1,6 +1,6 @@
-package main.java.Store.Model.Log;
+package Model.Log;
 
-import main.java.Store.Model.Product;
+import Model.Product;
 
 import java.util.ArrayList;
 import java.util.Date;

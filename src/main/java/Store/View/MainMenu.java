@@ -1,9 +1,9 @@
-package main.java.Store.View;
+package View;
 
-import main.java.Store.Model.Customer;
-import main.java.Store.Model.Manager;
-import main.java.Store.Model.Seller;
-import main.java.Store.Model.User;
+import Model.Customer;
+import Model.Manager;
+import Model.Seller;
+import Model.User;
 
 public class MainMenu {
 

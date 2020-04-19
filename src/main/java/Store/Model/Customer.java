@@ -1,13 +1,13 @@
-package main.java.Store.Model;
+package Model;
 
-import main.java.Store.Model.Log.BuyLogItem;
+import Model.Log.BuyLogItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Customer extends User {
 
-    private OffCode enableOffCode = null;
+    private HashMap <OffCode, Integer> offCodes = new HashMap<>();
     private double money;
     private ArrayList<BuyLogItem> buyLog = new ArrayList<BuyLogItem>();
     private HashMap<Product, Integer> cart = new HashMap<>(); // It's better to have a cart entry
@@ -29,21 +29,38 @@ public class Customer extends User {
         this.money = money;
     }
 
-    public OffCode getEnableOffCode() {
-        return enableOffCode;
+    public HashMap getOffCodes() {
+        return offCodes;
     }
 
-    public void setEnableOffCode(OffCode enableOffCode) {
-        this.enableOffCode = enableOffCode;
+    public void addOffCode(OffCode offCode) {
+        offCodes.put(offCode, 0);
+    }
+
+    public boolean buy(OffCode offCode) {
+        if(money >= getTotalCartPriceWithDiscount(offCode)) {
+            money -= getTotalCartPriceWithDiscount(offCode);
+            cart.clear();
+            offCodes.put(offCode, offCodes.get(offCode) + 1);
+            if(offCodes.get(offCode) >= offCode.getUsageCount()) {
+                removeOffCodeOfUser(offCode);
+            }
+            //logs
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public void removeOffCodeOfUser(OffCode offCode)
+    {
+        offCodes.remove(offCode);
     }
 
     public boolean buy() {
-        if(money >= getTotalCartPriceWithDiscount()) {
-            money -= getTotalCartPriceWithDiscount();
+        if(money >= getTotalCartPrice()) {
+            money -= getTotalCartPrice();
             cart.clear();
-            enableOffCode.setUsageCount(enableOffCode.getUsageCount + 1);
-            enableOffCode.removeUser(this);
-            enableOffCode = null;
             //logs
             return true;
         }
@@ -77,10 +94,10 @@ public class Customer extends User {
         return totalPrice;
     }
 
-    private double getTotalCartPriceWithDiscount() {
-        double totalDiscount = getTotalCartPrice() * (enableOffCode.getOffPercentage()) / 100.00;
-        if( totalDiscount > enableOffCode.getMaximumOff() )
-            totalDiscount = enableOffCode.getMaximumOff();
+    private double getTotalCartPriceWithDiscount(OffCode offCode) {
+        double totalDiscount = getTotalCartPrice() * (offCode.getOffPercentage()) / 100.00;
+        if( totalDiscount > offCode.getMaximumOff() )
+            totalDiscount = offCode.getMaximumOff();
         return (getTotalCartPrice() - totalDiscount);
     }
 

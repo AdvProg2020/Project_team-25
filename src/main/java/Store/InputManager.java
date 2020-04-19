@@ -1,4 +1,3 @@
-package main.java.Store;
 
 import java.util.Scanner;
 

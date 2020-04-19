@@ -1,8 +1,8 @@
-package main.java.Store.View;
+package View;
 
-import main.java.Store.Controller.CustomerController;
-import main.java.Store.Model.Customer;
-import main.java.Store.Model.Seller;
+import Controller.CustomerController;
+import Model.Customer;
+import Model.Seller;
 
 public class CustomerMenu {
 

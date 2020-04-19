@@ -1,6 +1,6 @@
-package main.java.Store.Controller;
+package Controller;
 
-import main.java.Store.Model.Product;
+import Model.Product;
 
 import java.util.ArrayList;
 
