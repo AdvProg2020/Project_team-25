@@ -1,5 +1,6 @@
-package main.java.Store.Model;
+package Store.Model;
 
+import Store.Model.Product;
 import main.java.Store.Model.Log.BuyLogItem;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ public class Customer extends User {
     private OffCode enableOffCode = null;
     private double money;
     private ArrayList<BuyLogItem> buyLog = new ArrayList<BuyLogItem>();
-    private HashMap<Product, Integer> cart = new HashMap<>(); // It's better to have a cart entry
+    private HashMap<Product, Integer> cart = new HashMap<Product, Integer>(); // It's better to have a cart entry
 
     Customer(String username, String name, String familyName, String email, String phoneNumber, String password, double money) {
         super(username, name, familyName, email, phoneNumber, password);

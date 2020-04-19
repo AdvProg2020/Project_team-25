@@ -1,8 +1,7 @@
-package main.java.Store.Controller;
+package Store.Controller;
 
-import main.java.Store.Model.Customer;
-import main.java.Store.Model.Product;
-import main.java.Store.Model.Rating;
+import Store.Model.Customer;
+import Store.Model.Product;
 
 public class CustomerController {
 
@@ -19,7 +18,7 @@ public class CustomerController {
     }
 
     public static void rateProduct(Customer customer, Product product, double rating) {
-        product.rate(customer,null);
+        product.rate(customer,rating);
     }
 
     public static void purchase(Customer customer, String[] attributes) {

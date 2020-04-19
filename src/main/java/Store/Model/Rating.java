@@ -1,4 +1,6 @@
-package main.java.Store.Model;
+package Store.Model;
+
+import Store.Model.Product;
 
 public class Rating {
     private User user;

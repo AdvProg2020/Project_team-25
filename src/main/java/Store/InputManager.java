@@ -1,4 +1,4 @@
-package main.java.Store;
+package Store;
 
 import java.util.Scanner;
 

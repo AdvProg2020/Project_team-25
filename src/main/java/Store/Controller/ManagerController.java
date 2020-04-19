@@ -1,6 +1,7 @@
-package main.java.Store.Controller;
+package Store.Controller;
 
-import main.java.Store.Model.*;
+import Store.Model.Product;
+import Store.Model.*;
 
 public class ManagerController {
 

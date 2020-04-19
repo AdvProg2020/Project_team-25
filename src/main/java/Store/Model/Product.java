@@ -1,6 +1,6 @@
-package main.java.Store.Model;
+package Store.Model;
 
-import main.java.Store.Model.Enums.CheckingStatus;
+import Store.Model.Enums.CheckingStatus;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,7 @@
-package main.java.Store.Model;
+package Store.Model;
 
-import main.java.Store.Model.Enums.RequestType;
+import Store.Model.Product;
+import Store.Model.Enums.RequestType;
 import main.java.Store.Model.Log.SellLogItem;
 import java.util.ArrayList;
 

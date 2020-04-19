@@ -1,4 +1,4 @@
-package main.java.Store.Model.Enums;
+package Store.Model.Enums;
 
 public enum VerifyStatus {
     REJECTED, WAITING, ACCEPTED

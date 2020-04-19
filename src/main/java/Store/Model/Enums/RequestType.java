@@ -1,4 +1,4 @@
-package main.java.Store.Model.Enums;
+package Store.Model.Enums;
 
 public enum RequestType {
     REGISTER_SELLER, ADD_NEW_PRODUCT, CHANGE_PRODUCT, ADD_NEW_OFFER, CHANGE_OFFER, DELETE_PRODUCT, DELETE_OFFER
