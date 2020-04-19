@@ -1,7 +1,8 @@
-package Model;
+package Store.Model;
 
-import Model.Enums.RequestType;
-import Model.Log.SellLogItem;
+import Store.Model.Product;
+import Store.Model.Enums.RequestType;
+import main.java.Store.Model.Log.SellLogItem;
 import java.util.ArrayList;
 
 public class Seller extends User {

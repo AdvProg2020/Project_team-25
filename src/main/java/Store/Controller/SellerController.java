@@ -1,8 +1,8 @@
-package Controller;
+package Store.Controller;
 
-import Model.Offer;
-import Model.Product;
-import Model.Seller;
+import Store.Model.Offer;
+import Store.Model.Product;
+import Store.Model.Seller;
 
 public class SellerController {
 

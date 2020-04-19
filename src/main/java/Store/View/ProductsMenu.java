@@ -1,8 +1,6 @@
-package View;
+package main.java.Store.View;
 
-import Controller.ProductController;
-import Controller.ProductsController;
-import Model.Product;
+import main.java.Store.Controller.ProductsController;
 
 import java.util.ArrayList;
 

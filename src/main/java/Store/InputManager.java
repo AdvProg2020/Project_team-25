@@ -1,3 +1,4 @@
+package Store;
 
 import java.util.Scanner;
 

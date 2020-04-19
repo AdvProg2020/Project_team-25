@@ -1,4 +1,4 @@
-package Controller;
+package Store.Controller;
 
 public class SignUpAndLoginController {
 

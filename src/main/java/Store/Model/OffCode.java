@@ -1,4 +1,4 @@
-package Model;
+package Store.Model;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -1,7 +1,8 @@
-package Model;
+package Store.Model;
 
-import Model.Enums.RequestType;
-import Model.Enums.VerifyStatus;
+import Store.Model.Product;
+import Store.Model.Enums.RequestType;
+import Store.Model.Enums.VerifyStatus;
 
 public class Request {
     private RequestType type; // 5 Types

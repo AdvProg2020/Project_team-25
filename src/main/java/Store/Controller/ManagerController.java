@@ -1,15 +1,16 @@
-package Controller;
+package Store.Controller;
 
-import Model.*;
+import Store.Model.Product;
+import Store.Model.*;
 
 public class ManagerController {
 
     public static void editPersonalInfo(Manager manager, String field, String value) {
-
+        manager.addCategory(null);
     }
 
     public static void createManagerProfile(Manager manager, Manager other) {
-
+        manager.addCategory(null);
     }
 
     public static void removeProducts(Manager manager, Product product) {

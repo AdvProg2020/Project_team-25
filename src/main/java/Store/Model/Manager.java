@@ -1,8 +1,10 @@
-package Model;
+package Store.Model;
+
+import Store.Model.Product;
 
 import java.util.ArrayList;
 
-import static Model.Enums.VerifyStatus.ACCEPTED;
+import static Store.Model.Enums.VerifyStatus.ACCEPTED;
 
 public class Manager extends User {
 
