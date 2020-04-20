@@ -24,12 +24,14 @@ public class Seller extends User {
         super(username, name, familyName, email, phoneNumber, password);
         companyDescription = "";
         this.money = money;
+        this.type = "Seller";
     }
 
     Seller(String username, String name, String familyName, String email, String phoneNumber, String password, double money, String companyName, String companyDescription) {
         super(username, name, familyName, email, phoneNumber, password);
         this.companyDescription = companyDescription;
         this.money = money;
+        this.type = "Seller";
     }
 
     public void requestAddProduct(Product product) {
