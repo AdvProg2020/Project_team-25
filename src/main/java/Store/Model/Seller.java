@@ -33,7 +33,7 @@ public class Seller extends User {
     }
 
     public void requestAddProduct(Product product) {
-        new Request(product, false, null, null);
+        new Request(product, false, null);
     }
 
     public String getCompanyName() {
@@ -49,7 +49,7 @@ public class Seller extends User {
     }
 
     public void requestChangeProduct(Product product, Product newProduct) {
-        new Request(product, true, product, newProduct);
+        new Request(product, true, newProduct);
     }
 
     public void requestRegisterSeller() {
@@ -73,11 +73,11 @@ public class Seller extends User {
     //showing categories handled in controller
 
     public void requestAddOffer(Offer offer) {
-        new Request(this, offer, false, null, null);
+        new Request(this, offer, false, null);
     }
 
     public void requestChangeOffer(Offer offer, Offer newOffer) {
-        new Request(this, offer, true, offer, newOffer);
+        new Request(this, offer, true, newOffer);
     }
 
     public void setMoney(double money) {
