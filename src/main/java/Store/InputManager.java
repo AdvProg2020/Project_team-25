@@ -1,6 +1,10 @@
 package Store;
 
+import com.google.gson.Gson;
+
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class InputManager {
 
@@ -8,5 +12,10 @@ public class InputManager {
 
     public static String getNextLine() {
         return sc.nextLine().trim();
+    }
+
+    public static Matcher getMatcher(String string, String regex) {
+        Pattern pattern = Pattern.compile(regex);
+        return pattern.matcher(string);
     }
 }

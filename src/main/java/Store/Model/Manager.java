@@ -15,16 +15,15 @@ public class Manager extends User {
 
     Manager(String username, String name, String familyName, String email, String phoneNumber, String password) {
         super(username, name, familyName, email, phoneNumber, password);
-        if(!hasManager)
+        if (!hasManager)
             allUsers.add(this);
         hasManager = true;
         this.type = "Manager";
     }
 
-    public static boolean verifyOffCode(OffCode customerOffCode, Customer customer)
-    {
-        for(OffCode offCode: offCodes)
-            if(offCode.isUserIncluded(customer))
+    public static boolean verifyOffCode(OffCode customerOffCode, Customer customer) {
+        for (OffCode offCode : offCodes)
+            if (offCode.isUserIncluded(customer))
                 return true;
         return false;
     }
@@ -34,38 +33,32 @@ public class Manager extends User {
     }
 
     //showing categories handled in controller
-    public void editCategory(Category oldCategory, Category newCategory)
-    {
+    public void editCategory(Category oldCategory, Category newCategory) {
         allCategories.remove(oldCategory);
         allCategories.add(newCategory);
     }
 
-    public void removeCategory(Category category)
-    {
+    public void removeCategory(Category category) {
         category.removeInside();
         allCategories.remove(category);
     }
 
-    public static Request getRequestById(int id)
-    {
-        for(Request request: pendingRequests)
-            if(id == request.getId())
+    public static Request getRequestById(int id) {
+        for (Request request : pendingRequests)
+            if (id == request.getId())
                 return request;
         return null;
     }
 
-    public static void addRequest(Request request)
-    {
+    public static void addRequest(Request request) {
         pendingRequests.add(request);
     }
-    public void handleRequest(Request request, boolean accepted)
-    {
-        if(accepted)
-        {
+
+    public void handleRequest(Request request, boolean accepted) {
+        if (accepted) {
             Seller.doRequest(request);
             request.setStatus(ACCEPTED);  //????
-        }
-        else {
+        } else {
             request.setStatus(ACCEPTED);  //????
         }
         pendingRequests.remove(request);
@@ -97,18 +90,15 @@ public class Manager extends User {
         allCategories.add(category);
     }
 
-    public void removeProduct(Product product)
-    {
+    public void removeProduct(Product product) {
         Offer.removeProductFromOffer(product);
         Manager.removeProductFromCatagory(product);
         Product.deleteProduct(product);
     }
 
-    private static void removeProductFromCatagory(Product product)
-    {
-        for(Category category: allCategories)
-        {
-            if( category.include(product) )
+    private static void removeProductFromCatagory(Product product) {
+        for (Category category : allCategories) {
+            if (category.include(product))
                 category.removeProductFrom(product);
         }
     }
@@ -118,8 +108,7 @@ public class Manager extends User {
     }
 
     @Override
-    public void delete()
-    {
+    public void delete() {
         allUsers.remove(this);
     }
 }

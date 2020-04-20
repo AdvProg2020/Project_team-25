@@ -35,7 +35,7 @@ public class Seller extends User {
     }
 
     public void requestAddProduct(Product product) {
-        new Request(product, false, null, null);
+        new Request(product, false, null);
     }
 
     public String getCompanyName() {
@@ -51,23 +51,21 @@ public class Seller extends User {
     }
 
     public void requestChangeProduct(Product product, Product newProduct) {
-        new Request(product , true, product, newProduct);
+        new Request(product, true, newProduct);
     }
 
-    public void requestRegisterSeller()
-    {
+    public void requestRegisterSeller() {
         new Request(this);
     }
 
     public void handleLogs(double offValue, ArrayList<Product> sellProducts, Date date, Customer customer, double income) {
-        sellLog.add( new SellLogItem(sellLog.size() + 1, date, sellProducts, income, offValue , customer.getName(), false));
+        sellLog.add(new SellLogItem(sellLog.size() + 1, date, sellProducts, income, offValue, customer.getName(), false));
     }
-    public void removeProduct(int id)
-    {
+
+    public void removeProduct(int id) {
         Product removeProduct = null;
-        for(Product product: products)
-            if(product.getProductID() == id)
-            {
+        for (Product product : products)
+            if (product.getProductID() == id) {
                 removeProduct = product;
                 break;
             }
@@ -77,11 +75,11 @@ public class Seller extends User {
     //showing categories handled in controller
 
     public void requestAddOffer(Offer offer) {
-        new Request(this, offer, false, null, null);
+        new Request(this, offer, false, null);
     }
 
     public void requestChangeOffer(Offer offer, Offer newOffer) {
-        new Request(this, offer, true, offer, newOffer);
+        new Request(this, offer, true, newOffer);
     }
 
     public void setMoney(double money) {
@@ -92,54 +90,41 @@ public class Seller extends User {
         return money;
     }
 
-    public static void doRequest(Request request)
-    {
+    public static void doRequest(Request request) {
         Seller seller = request.getSeller();
         ArrayList<Product> products = seller.getProducts();
         ArrayList<Offer> offers = seller.getOffers();
-        if(request.getRequestType() == RequestType.ADD_NEW_OFFER)
-        {
+        if (request.getRequestType() == RequestType.ADD_NEW_OFFER) {
             offers.add(request.getOffer());
-        }
-        else if(request.getRequestType() == RequestType.ADD_NEW_PRODUCT)
-        {
+        } else if (request.getRequestType() == RequestType.ADD_NEW_PRODUCT) {
             products.add(request.getProduct());
-        }
-        else if(request.getRequestType() == RequestType.CHANGE_OFFER)
-        {
-            offers.remove(request.getOffer);
-            offers.add(request.getNewOffer);
-        }
-        else if(request.getRequestType() == RequestType.CHANGE_PRODUCT)
-        {
-            products.remove(request.getProduct);
-            products.add(request.getNewProduct);
-        }
-        else if(request.getRequestType() == RequestType.REGISTER_SELLER)
-        {
+        } else if (request.getRequestType() == RequestType.CHANGE_OFFER) {
+            offers.remove(request.getOffer());
+            offers.add(request.getNewOffer());
+        } else if (request.getRequestType() == RequestType.CHANGE_PRODUCT) {
+            products.remove(request.getProduct());
+            products.add(request.getNewProduct());
+        } else if (request.getRequestType() == RequestType.REGISTER_SELLER) {
             allUsers.add(request.getSeller());
         }
     }
 
-    private ArrayList<Offer> getOffers()
-    {
+    private ArrayList<Offer> getOffers() {
         return offers;
     }
-    private ArrayList<Product> getProducts()
-    {
+
+    private ArrayList<Product> getProducts() {
         return products;
     }
+
     @Override
-    public void delete()
-    {
-        while(products.size() > 0)
-        {
+    public void delete() {
+        while (products.size() > 0) {
             Product product = products.get(0);
             products.remove(0);
             Product.deleteProduct(product);
         }
-        while(offers.size() > 0)
-        {
+        while (offers.size() > 0) {
             Offer offer = offers.get(0);
             offers.remove(0);
             offer.deleteOffer(offer);
