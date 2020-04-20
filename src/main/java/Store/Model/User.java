@@ -108,7 +108,7 @@ public class User {
         this.password = password;
     }
 
-    public static void readAllUsers() throws FileNotFoundException, EmptyFileException {
+    public static void readAllUsers() throws FileNotFoundException{
         try {
             File file = new File("..\\..\\..\\..\\..\\Resources\\All Users.json");
             Scanner scanner = new Scanner(file);
