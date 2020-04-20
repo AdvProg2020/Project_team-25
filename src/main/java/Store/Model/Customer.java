@@ -8,10 +8,10 @@ import java.util.HashMap;
 
 public class Customer extends User {
 
-    private HashMap<OffCode, Integer> offCodes = new HashMap<>();
+    private HashMap<OffCode, Integer> offCodes = new HashMap<OffCode, Integer>();
     private double money;
     private ArrayList<BuyLogItem> buyLog = new ArrayList<BuyLogItem>();
-    private ArrayList<Product> cart = new ArrayList<>(); // It's better to have a cart entry
+    private ArrayList<Product> cart = new ArrayList<Product>(); // It's better to have a cart entry
 
     Customer(String username, String name, String familyName, String email, String phoneNumber, String password, double money) {
         super(username, name, familyName, email, phoneNumber, password);
@@ -75,7 +75,7 @@ public class Customer extends User {
         Product product = null;
         Seller seller = null;
         Date date = new Date();
-        ArrayList<Product> productsOfOneSeller = new ArrayList<>();
+        ArrayList<Product> productsOfOneSeller = new ArrayList<Product>();
         while (cart.size() > 0) {
             seller = null;
             product = null;

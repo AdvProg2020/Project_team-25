@@ -4,7 +4,10 @@ import Store.Model.Product;
 import Store.Model.Enums.RequestType;
 import Store.Model.Enums.VerifyStatus;
 
+import java.util.ArrayList;
+
 public class Request {
+    private static ArrayList<Request> allRequests = new ArrayList<Request>();
     private RequestType requestType; // 5 Types
     private VerifyStatus status;
     private Product product;
@@ -17,6 +20,7 @@ public class Request {
         this.requestType = RequestType.REGISTER_SELLER;
         this.seller = seller;
         this.status = VerifyStatus.WAITING;
+        allRequests.add(this);
     }
 
     Request(Product product, boolean change, Object newObject) {
@@ -28,6 +32,7 @@ public class Request {
             this.newObject = newObject;
         }
         this.status = VerifyStatus.WAITING;
+        allRequests.add(this);
     }
 
     Request(Seller seller, Offer offer, boolean change, Object newObject) {
@@ -40,6 +45,7 @@ public class Request {
             this.newObject = newObject;
         }
         this.status = VerifyStatus.WAITING;
+        allRequests.add(this);
     }
 
     public Seller getSeller() {
@@ -55,7 +61,7 @@ public class Request {
     }
 
     public Offer getNewOffer() {
-        return (Offer)newObject;
+        return (Offer) newObject;
     }
 
     public Product getProduct() {
@@ -68,5 +74,9 @@ public class Request {
 
     public void setStatus(VerifyStatus status) {
         this.status = status;
+    }
+
+    public int getId() {
+        return allRequests.indexOf(this) + 1;
     }
 }
