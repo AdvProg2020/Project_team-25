@@ -5,43 +5,68 @@ import Store.Model.Enums.RequestType;
 import Store.Model.Enums.VerifyStatus;
 
 public class Request {
-    private RequestType type; // 5 Types
+    private RequestType requestType; // 5 Types
     private VerifyStatus status;
     private Product product;
     private Seller seller;
     private Offer offer;
-    private Object firstObject;
-    private Object secondObject;
+    private Object newObject;
     private boolean change;
 
     Request(Seller seller) {
-        this.type = RequestType.REGISTER_SELLER;
+        this.requestType = RequestType.REGISTER_SELLER;
         this.seller = seller;
         this.status = VerifyStatus.WAITING;
     }
 
-    Request(Product product, boolean change, Object firstObject, Object secondObject) {
+    Request(Product product, boolean change, Object newObject) {
         this.product = product;
         this.change = change;
-        this.type = RequestType.ADD_NEW_PRODUCT;
+        this.requestType = RequestType.ADD_NEW_PRODUCT;
         if (this.change) {
-            this.type = RequestType.CHANGE_PRODUCT;
-            this.firstObject = firstObject;
-            this.secondObject = secondObject;
+            this.requestType = RequestType.CHANGE_PRODUCT;
+            this.newObject = newObject;
         }
         this.status = VerifyStatus.WAITING;
     }
 
-    Request(Seller seller, Offer offer, boolean change, Object firstObject, Object secondObject) {
+    Request(Seller seller, Offer offer, boolean change, Object newObject) {
         this.offer = offer;
         this.change = change;
-        this.type = RequestType.ADD_NEW_OFFER;
+        this.seller = seller;
+        this.requestType = RequestType.ADD_NEW_OFFER;
         if (this.change) {
-            this.type = RequestType.CHANGE_OFFER;
-            this.firstObject = firstObject;
-            this.secondObject = secondObject;
+            this.requestType = RequestType.CHANGE_OFFER;
+            this.newObject = newObject;
         }
         this.status = VerifyStatus.WAITING;
-        //Deboo: seller must be defined
+    }
+
+    public Seller getSeller() {
+        return seller;
+    }
+
+    public RequestType getRequestType() {
+        return requestType;
+    }
+
+    public Offer getOffer() {
+        return offer;
+    }
+
+    public Offer getNewOffer() {
+        return (Offer)newObject;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public Product getNewProduct() {
+        return (Product) newObject;
+    }
+
+    public void setStatus(VerifyStatus status) {
+        this.status = status;
     }
 }

@@ -18,6 +18,10 @@ public class BuyLogItem extends LogItem {
         this.received = received;
     }
 
+    public void setReceived(boolean received) {
+        this.received = received;
+    }
+
     @Override
     public String toString() {
         return "BuyLogItem{" +

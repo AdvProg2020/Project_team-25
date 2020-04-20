@@ -20,6 +20,10 @@ public class SellLogItem extends LogItem {
         this.sendStatus = sendStatus;
     }
 
+    public void setSendStatus(boolean status) {
+        this.sendStatus = status;
+    }
+
     @Override
     public String toString() {
         return "SellLogItem{" +

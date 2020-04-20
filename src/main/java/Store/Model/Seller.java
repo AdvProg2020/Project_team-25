@@ -97,11 +97,11 @@ public class Seller extends User {
         } else if (request.getRequestType() == RequestType.ADD_NEW_PRODUCT) {
             products.add(request.getProduct());
         } else if (request.getRequestType() == RequestType.CHANGE_OFFER) {
-            offers.remove(request.getOffer);
-            offers.add(request.getNewOffer);
+            offers.remove(request.getOffer());
+            offers.add(request.getNewOffer());
         } else if (request.getRequestType() == RequestType.CHANGE_PRODUCT) {
-            products.remove(request.getProduct);
-            products.add(request.getNewProduct);
+            products.remove(request.getProduct());
+            products.add(request.getNewProduct());
         } else if (request.getRequestType() == RequestType.REGISTER_SELLER) {
             allUsers.add(request.getSeller());
         }
