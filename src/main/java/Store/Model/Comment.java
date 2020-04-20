@@ -1,7 +1,7 @@
 package Store.Model;
 
 import Store.Model.Product;
-import main.java.Store.Model.Enums.VerifyStatus;
+import Store.Model.Enums.VerifyStatus;
 
 public class Comment {
     private User commentingUser;
