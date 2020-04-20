@@ -16,6 +16,7 @@ public class Customer extends User {
     Customer(String username, String name, String familyName, String email, String phoneNumber, String password, double money) {
         super(username, name, familyName, email, phoneNumber, password);
         this.money = money;
+        this.type = "Customer";
     }
 
     public static void addCustomer(Customer customer)
@@ -55,8 +56,9 @@ public class Customer extends User {
         handleLogs(getTotalCartPrice() - getTotalCartPriceWithDiscount(offCode));
         cart.clear();
         offCodes.put(offCode, offCodes.get(offCode) + 1);
-        if(offCodes.get(offCode) >= offCode.getUsageCount()) {
+        if (offCodes.get(offCode) >= offCode.getUsageCount()) {
             removeOffCodeOfUser(offCode);
+        }
     }
 
     public void removeOffCodeOfUser(OffCode offCode)
@@ -139,7 +141,6 @@ public class Customer extends User {
             return true;
         return false;
     }
-}
     public ArrayList<Product> getCart() {
         return cart;
     }

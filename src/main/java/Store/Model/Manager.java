@@ -18,6 +18,7 @@ public class Manager extends User {
         if(!hasManager)
             allUsers.add(this);
         hasManager = true;
+        this.type = "Manager";
     }
 
     public static boolean verifyOffCode(OffCode customerOffCode, Customer customer)
