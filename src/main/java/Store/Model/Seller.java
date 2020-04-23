@@ -72,6 +72,15 @@ public class Seller extends User {
         products.remove(removeProduct);
     }
 
+    public void removeProducts(ArrayList<Product> productsToRemove) {
+        for(Product product: productsToRemove)
+            products.remove(product);
+    }
+
+    public void removeProduct(Product productToRemove)
+    {
+        products.remove(productToRemove);
+    }
     //showing categories handled in controller
 
     public void requestAddOffer(Offer offer) {
@@ -130,5 +139,38 @@ public class Seller extends User {
             offer.deleteOffer(offer);
         }
         allUsers.remove(this);
+    }
+
+    @Override
+    public String toString()
+    {
+        String output = null;
+        output += "Username: " + username;
+        output += "\nFirst Name: " + name;
+        output += "\nFamily Name: " + familyName;
+        output += "\nCompany Name: " + companyName;
+        if(companyDescription != null)
+            output += "\nCompany Discriptions: " + familyName;
+        output += "\nEmail: " + email;
+        output += "\nPhone Number: " + phoneNumber;
+        output += "\nSell Log:\n";
+        output += "\nProducts:\n";
+        for(Product product: products)
+            output += product;
+        for(SellLogItem sellLogItem: sellLog)
+            output += sellLogItem;
+        output += "\nOffers:\n";
+        for(Offer offer: offers)
+            output += offer;
+        return output;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        Seller seller = (Seller) object;
+        if(super.equals(seller))
+            if(companyName.equals(seller.getCompanyName()) && companyDescription.equals(seller.getCompanyDescription()) && offers.equals(seller.getOffers()) && sellLog.equals(seller.getSellLog()) && products.equals(seller.getProducts()))
+                return true;
+        return false;
     }
 }

@@ -36,15 +36,14 @@ public class User {
         id = ++idTillNow;
     }
 
-    public static User getUserByUsername(String username){
-        for (User user: allUsers)
-            if(username.equals(user.getUsername()))
+    public static User getUserByUsername(String username) {
+        for (User user : allUsers)
+            if (username.equals(user.getUsername()))
                 return user;
         return null;
     }
 
-    public static ArrayList<User> getAllUsers()
-    {
+    public static ArrayList<User> getAllUsers() {
         return allUsers;
     }
 
@@ -52,8 +51,7 @@ public class User {
         return this.password.equals(password);
     }
 
-    public void delete()
-    {
+    public void delete() {
 
     }
 
@@ -62,8 +60,8 @@ public class User {
     }
 
     public User getUserById(int id) {
-        for(User user: allUsers)
-            if(id == user.getId())
+        for (User user : allUsers)
+            if (id == user.getId())
                 return user;
         return null;
     }
@@ -84,7 +82,7 @@ public class User {
         return phoneNumber;
     }
 
-    public String getUsername(){
+    public String getUsername() {
         return username;
     }
 
@@ -108,18 +106,32 @@ public class User {
         this.password = password;
     }
 
-    public static void readAllUsers() throws FileNotFoundException{
+    public static void readAllUsers() throws FileNotFoundException {
         try {
-            File file = new File("..\\..\\..\\..\\..\\Resources\\All Users.json");
+            File file = new File("..\\..\\..\\..\\..\\Resources\\All Users.txt");
             Scanner scanner = new Scanner(file);
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.create();
             String allUsersString = scanner.nextLine();
             ArrayList<String> usernames = gson.fromJson(allUsersString, ArrayList.class);
-            for(String username: usernames)
+            for (String username : usernames)
                 readEachUser(username);
+        } catch (FileNotFoundException exception) {
+            throw exception;
         }
-        catch (FileNotFoundException exception) {
+    }
+
+    public static void readAllUsers(String path) throws FileNotFoundException {
+        try {
+            File file = new File(path);
+            Scanner scanner = new Scanner(file);
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            Gson gson = gsonBuilder.create();
+            String allUsersString = scanner.nextLine();
+            ArrayList<String> usernames = gson.fromJson(allUsersString, ArrayList.class);
+            for (String username : usernames)
+                readEachUser(username);
+        } catch (FileNotFoundException exception) {
             throw exception;
         }
     }
@@ -128,61 +140,77 @@ public class User {
         return type;
     }
 
-    private static void readEachUser(String username) throws FileNotFoundException{
-        try{
+    private static void readEachUser(String username) throws FileNotFoundException {
+        try {
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.create();
-            File file = new File("..\\..\\..\\..\\..\\Resources\\" + username + ".json");
+            File file = new File("..\\..\\..\\..\\..\\Resources\\" + username + ".txt");
             Scanner scanner = new Scanner(file);
             String userString = scanner.nextLine();
             User user = gson.fromJson(userString, User.class);
-            if(user.getType().equals("Customer"))
+            if (user.getType().equals("Customer"))
                 allUsers.add(gson.fromJson(userString, Customer.class));
-            else if(user.getType().equals("Seller"))
+            else if (user.getType().equals("Seller"))
                 allUsers.add(gson.fromJson(userString, Seller.class));
-            else if(user.getType().equals("Manager"))
+            else if (user.getType().equals("Manager"))
                 allUsers.add(gson.fromJson(userString, Manager.class));
-        }
-        catch(FileNotFoundException exception)
-        {
+        } catch (FileNotFoundException exception) {
             throw exception;
         }
     }
 
     public static void writeAllUsers() throws IOException {
         try {
-            File file = new File("..\\..\\..\\..\\..\\Resources\\All Users.json");
+            File file = new File("..\\..\\..\\..\\..\\Resources\\All Users.txt");
             file.createNewFile();
-            FileWriter fileWriter = new FileWriter("..\\..\\..\\..\\..\\Resources\\All Users.json");
+            FileWriter fileWriter = new FileWriter("..\\..\\..\\..\\..\\Resources\\All Users.txt");
             ArrayList<String> usernames = new ArrayList<String>();
-            for (User user: allUsers) {
+            for (User user : allUsers) {
                 usernames.add(user.getUsername());
             }
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.create();
             fileWriter.write(gson.toJson(usernames));
             fileWriter.close();
-            for(User user: allUsers)
-            {
+            for (User user : allUsers) {
                 writeEachUser(user);
             }
         } catch (IOException exception) {
             throw exception;
         }
     }
+
     private static void writeEachUser(User user) throws IOException {
-        File file = new File("..\\..\\..\\..\\..\\Resources\\" + user.getUsername() + ".json");
-        try{
+        File file = new File("..\\..\\..\\..\\..\\Resources\\" + user.getUsername() + ".txt");
+        try {
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.create();
             file.createNewFile();
-            FileWriter fileWriter = new FileWriter("..\\..\\..\\..\\..\\Resources\\" + user.getUsername() + ".json");
+            FileWriter fileWriter = new FileWriter("..\\..\\..\\..\\..\\Resources\\" + user.getUsername() + ".txt");
             fileWriter.write(gson.toJson(user));
             fileWriter.close();
-        }
-        catch(IOException exception)
-        {
+        } catch (IOException exception) {
             throw exception;
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        String output = null;
+        output += "Username: " + username;
+        output += "\nFirst Name: " + name;
+        output += "\nFamily Name: " + familyName;
+        output += "\nEmail: " + email;
+        output += "\nPhone Number: " + phoneNumber;
+        return output;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        User user = (User) object;
+        if(username.equals(user.getUsername()) && email.equals(user.getEmail()) && phoneNumber.equals(user.getPhoneNumber()) && familyName.equals(user.getFamilyName()) && name.equals(user.getName()) && id == user.getId() && type.equals(user.getType()))
+            return true;
+        return false;
     }
 }

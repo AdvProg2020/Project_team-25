@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class Customer extends User {
 
-    private HashMap <OffCode, Integer> offCodes = new HashMap<>();
+    private HashMap<OffCode, Integer> offCodes = new HashMap<>();
     private double money;
     private ArrayList<BuyLogItem> buyLog = new ArrayList<BuyLogItem>();
     private ArrayList<Product> cart = new ArrayList<>(); // It's better to have a cart entry
@@ -19,10 +19,10 @@ public class Customer extends User {
         this.type = "Customer";
     }
 
-    public static void addCustomer(Customer customer)
-    {
+    public static void addCustomer(Customer customer) {
         allUsers.add(customer);
     }
+
     public double getMoney() {
         return money;
     }
@@ -39,18 +39,18 @@ public class Customer extends User {
         offCodes.put(offCode, 0);
     }
 
-    public boolean canBuy(OffCode offCode)
-    {
-        if(money >= getTotalCartPriceWithDiscount(offCode))
+    public boolean canBuy(OffCode offCode) {
+        if (money >= getTotalCartPriceWithDiscount(offCode))
             return true;
         return false;
     }
-    public boolean canBuy()
-    {
-        if(money >= getTotalCartPrice())
+
+    public boolean canBuy() {
+        if (money >= getTotalCartPrice())
             return true;
         return false;
     }
+
     public void buy(OffCode offCode) {
         money -= getTotalCartPriceWithDiscount(offCode);
         handleLogs(getTotalCartPrice() - getTotalCartPriceWithDiscount(offCode));
@@ -61,8 +61,7 @@ public class Customer extends User {
         }
     }
 
-    public void removeOffCodeOfUser(OffCode offCode)
-    {
+    public void removeOffCodeOfUser(OffCode offCode) {
         offCodes.remove(offCode);
     }
 
@@ -72,14 +71,13 @@ public class Customer extends User {
         cart.clear();
     }
 
-    private void handleLogs(double discount)
-    {
+    private void handleLogs(double discount) {
         double totalPrice = getTotalCartPrice();
         Product product = null;
         Seller seller = null;
         Date date = new Date();
         ArrayList<Product> productsOfOneSeller = new ArrayList<>();
-        while(cart.size() > 0) {
+        while (cart.size() > 0) {
             seller = null;
             product = null;
             productsOfOneSeller.clear();
@@ -98,10 +96,10 @@ public class Customer extends User {
                     }
                 }
             }
-            buyLog.add(new BuyLogItem(buyLog.size() + 1, date, productsOfOneSeller, (discount/totalPrice) * priceOfList(productsOfOneSeller) , seller.getName(), false));
-            seller.handleLogs((discount/totalPrice) * priceOfList(productsOfOneSeller), productsOfOneSeller, date, this, (1 - discount/totalPrice) * priceOfList(productsOfOneSeller)) ;
+            buyLog.add(new BuyLogItem(buyLog.size() + 1, date, productsOfOneSeller, (discount / totalPrice) * priceOfList(productsOfOneSeller), seller.getName(), false));
+            seller.handleLogs((discount / totalPrice) * priceOfList(productsOfOneSeller), productsOfOneSeller, date, this, (1 - discount / totalPrice) * priceOfList(productsOfOneSeller));
+            seller.removeProducts(productsOfOneSeller);
         }
-
     }
 
     private double priceOfList(ArrayList<Product> list) {
@@ -116,38 +114,67 @@ public class Customer extends User {
     }
 
     public void removeFromCart(Product product) {
-        if(cart.contains(product)) {
+        if (cart.contains(product)) {
             cart.remove(product);
         }
     }
 
     public double getTotalCartPrice() {
         double totalPrice = 0;
-        for(Product product: cart)
+        for (Product product : cart)
             totalPrice += product.getPrice();
         return totalPrice;
     }
 
     private double getTotalCartPriceWithDiscount(OffCode offCode) {
         double totalDiscount = getTotalCartPrice() * (offCode.getOffPercentage()) / 100.00;
-        if( totalDiscount > offCode.getMaximumOff() )
+        if (totalDiscount > offCode.getMaximumOff())
             totalDiscount = offCode.getMaximumOff();
         return (getTotalCartPrice() - totalDiscount);
     }
 
-    public boolean hasBoughtProduct(Product product)
-    {
-        if(cart.contains(product))
+    public boolean hasBoughtProduct(Product product) {
+        if (cart.contains(product))
             return true;
         return false;
     }
+
     public ArrayList<Product> getCart() {
         return cart;
     }
 
     @Override
-    public void delete()
-    {
+    public void delete() {
         allUsers.remove(this);
+    }
+    @Override
+    public String toString()
+    {
+        String output = null;
+        output += "Username: " + username;
+        output += "\nFirst Name: " + name;
+        output += "\nFamily Name: " + familyName;
+        output += "\nEmail: " + email;
+        output += "\nPhone Number: " + phoneNumber;
+        output += "\nOffcodes:\n";
+        for(OffCode offCode: offCodes.keySet())
+            output += offCode;          //navid
+        output += "\nBuy Log:\n";
+        for(BuyLogItem buyLogItem: buyLog)
+            output += buyLogItem;
+        return output;
+    }
+
+    public ArrayList<BuyLogItem> getBuyLog() {
+        return buyLog;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        Customer customer = (Customer) object;
+        if(super.equals(customer))
+            if(money == customer.getMoney() && cart.equals(customer.getCart()) && offCodes.equals(customer.getOffCodes()) && buyLog.equals(customer.getBuyLog()))
+                return true;
+        return false;
     }
 }
