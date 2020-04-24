@@ -9,6 +9,7 @@ import java.util.Date;
 public class Offer {
     private int offID;
     private ArrayList<Product> products = new ArrayList<Product>();
+    private ArrayList<String> filters = new ArrayList<String>();
     private CheckingStatus offerStatus;
     private Date startingTime, endingTime;
     // StartingTime and EndingTime?
@@ -22,6 +23,26 @@ public class Offer {
         this.products = products;
         this.offerStatus = offerStatus;
         this.offPercent = offPercent;
+    }
+
+    public void addFilter(String filter) {
+        this.filters.add(filter);
+    }
+
+    public void removeFilter(String filter) {
+        this.filters.remove(filter);
+    }
+
+    public boolean hasFilter(String filter) {
+        return this.filters.contains(filter);
+    }
+
+    public ArrayList<String> getFilters() {
+        return filters;
+    }
+
+    public static ArrayList<Offer> getAllOffers() {
+        return allOffers;
     }
 
     public static Offer getOfferByID(int id) {
