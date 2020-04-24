@@ -1,6 +1,5 @@
 package Store.Model;
 
-import Store.Model.Product;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -117,7 +116,7 @@ public class Manager extends User {
     }
 
     public void removeProduct(Product product) {
-        Offer.removeProductFromAllOffer(product);
+        Offer.removeProductFromOffer(product);
         Manager.removeProductFromCatagory(product);
         Product.deleteProduct(product);
     }

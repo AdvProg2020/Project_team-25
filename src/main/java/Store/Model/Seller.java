@@ -74,8 +74,7 @@ public class Seller extends User {
             }
         Product.deleteProduct(removeProduct);
         products.remove(removeProduct);
-        for(Offer offer: offers)
-            offer.removeProductFromOffer(removeProduct);
+        Offer.removeProductFromOffer(removeProduct);
     }
 
     public void removeProducts(ArrayList<Product> productsToRemove) {
@@ -88,8 +87,7 @@ public class Seller extends User {
     {
         Product.deleteProduct(productToRemove);
         products.remove(productToRemove);
-        for(Offer offer: offers)
-            offer.removeProductFromOffer(productToRemove);
+        Offer.removeProductFromOffer(productToRemove);
     }
     //showing categories handled in controller
 
@@ -114,14 +112,14 @@ public class Seller extends User {
         ArrayList<Product> products = seller.getProducts();
         ArrayList<Offer> offers = seller.getOffers();
         if (request.getRequestType() == RequestType.ADD_NEW_OFFER) {
-            Offer.addOffer(request.getOffer());
+            Offer.addOfferToAllOffers(request.getOffer());
             offers.add(request.getOffer());
         } else if (request.getRequestType() == RequestType.ADD_NEW_PRODUCT) {
             Product.addProduct(request.getProduct());
             products.add(request.getProduct());
         } else if (request.getRequestType() == RequestType.CHANGE_OFFER) {
-            Offer.deleteOffer(request.getOffer());
-            Offer.addOffer(request.getOffer());
+            Offer.deleteOfferFromAllOffers(request.getOffer());
+            Offer.addOfferToAllOffers(request.getOffer());
             offers.remove(request.getOffer());
             offers.add(request.getNewOffer());
         } else if (request.getRequestType() == RequestType.CHANGE_PRODUCT) {
@@ -151,7 +149,7 @@ public class Seller extends User {
         }
         while (offers.size() > 0) {
             Offer offer = offers.get(0);
-            Offer.deleteOffer(offer);
+            Offer.deleteOfferFromAllOffers(offer);
             offers.remove(0);
         }
         allUsers.remove(this);
