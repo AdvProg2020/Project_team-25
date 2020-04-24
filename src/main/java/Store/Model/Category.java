@@ -70,4 +70,8 @@ public class Category {
             filters.remove(string);
         }
     }
+
+    public ArrayList<Product> getImmediateProducts() {
+        return immediateProducts;
+    }
 }
