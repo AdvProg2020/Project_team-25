@@ -3,6 +3,7 @@ package Store.Model;
 import Store.Model.Enums.CheckingStatus;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Product {
 
@@ -21,6 +22,8 @@ public class Product {
     private float averageRating;
     private ArrayList<Rating> ratings = new ArrayList<Rating>();
     private ArrayList<Comment> comments = new ArrayList<Comment>();
+    private ArrayList<String> filters = new ArrayList<>();
+    private int visited;
 
     private static ArrayList<Product> allProducts = new ArrayList<Product>();
 
@@ -36,6 +39,7 @@ public class Product {
         this.description = description;
         this.averageRating = averageRating;
         this.seller = seller;
+        this.visited = 0;
     }
 
 
@@ -147,5 +151,27 @@ public class Product {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public ArrayList<String> getFilters() {
+        return filters;
+    }
+
+    public Date getStartingDate() {  //just call when the product is in a offer
+        if (Offer.getOfferOfProduct(this) == null) {
+            return null;
+        }
+        return Offer.getOfferOfProduct(this).getStartingTime();
+    }
+
+    public Date getEndingDate() {  // just call when the product is in a offer
+        if (Offer.getOfferOfProduct(this) == null) {
+            return null;
+        }
+        return Offer.getOfferOfProduct(this).getEndingTime();
+    }
+
+    public int getVisited() {
+        return visited;
     }
 }

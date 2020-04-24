@@ -15,6 +15,7 @@ public class Offer {
     private double offPercent;
 
     private static ArrayList<Offer> allOffers = new ArrayList<Offer>();
+    private static ArrayList<Product> allOffProducts = new ArrayList<>();
 
 
     public Offer(int offID, CheckingStatus offerStatus, double offPercent) {
@@ -22,6 +23,7 @@ public class Offer {
         this.products = products;
         this.offerStatus = offerStatus;
         this.offPercent = offPercent;
+        allOffProducts.addAll(products);
     }
 
     public static Offer getOfferByID(int id) {
@@ -68,10 +70,12 @@ public class Offer {
 
     public void addProduct(Product product) {
         this.products.add(product);
+        allOffProducts.add(product);
     }
 
     public void removeProduct(Product product) {
         this.products.remove(product);
+        allOffProducts.remove(product);
     }
 
     public static void removeProductFromOffer(Product product) {
@@ -118,5 +122,19 @@ public class Offer {
 
     public int getOffID() {
         return offID;
+    }
+
+    public static ArrayList<Product> getAllOffProducts() {
+        return allOffProducts;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "offID=" + offID +
+                ", startingTime=" + startingTime +
+                ", endingTime=" + endingTime +
+                ", offPercent=" + offPercent +
+                '}';
     }
 }
