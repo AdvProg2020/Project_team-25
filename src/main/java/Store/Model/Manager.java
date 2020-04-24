@@ -20,7 +20,7 @@ public class Manager extends User {
     private static ArrayList<OffCode> offCodes = new ArrayList<OffCode>();
     public static boolean hasManager = false;
 
-    Manager(String username, String name, String familyName, String email, String phoneNumber, String password) {
+    public Manager(String username, String name, String familyName, String email, String phoneNumber, String password) {
         super(username, name, familyName, email, phoneNumber, password);
         allUsers.add(this);
         hasManager = true;
