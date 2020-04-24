@@ -24,4 +24,51 @@ public class Offer {
         this.offPercent = offPercent;
         allOffers.add(this);
     }
+
+    public double getOffPercent() {
+        return offPercent;
+    }
+
+    public boolean canBeUsedInDate(Date now) {
+        return (this.startingTime.before(now) && this.endingTime.after(now));
+    }
+
+    public CheckingStatus getOfferStatus() {
+        return offerStatus;
+    }
+
+    public void addProductToOffer(Product product) {
+        this.products.add(product);
+    }
+
+    public void removeProduct(Product product) {
+        this.products.remove(product);
+    }
+
+    public static void removeProductFromOffer(Product product) {
+        for (Offer offer : allOffers) {
+            if (offer.isProductInOffer(product)) {
+                offer.removeProduct(product);
+            }
+        }
+    }
+
+    public boolean isProductInOffer(Product product) {
+        for (Product currentProduct : this.products) {
+            if (currentProduct == product) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static Offer getOfferOfProduct(Product product) {
+        for (Offer offer : allOffers) {
+            if (offer.isProductInOffer(product)) {
+                return offer;
+            }
+        }
+        return null;
+    }
+
 }
