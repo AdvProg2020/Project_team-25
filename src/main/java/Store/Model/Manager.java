@@ -22,7 +22,8 @@ public class Manager extends User {
 
     Manager(String username, String name, String familyName, String email, String phoneNumber, String password) {
         super(username, name, familyName, email, phoneNumber, password);
-        allUsers.add(this);
+        if(!hasManager)
+            allUsers.add(this);
         hasManager = true;
         this.type = "Manager";
     }
