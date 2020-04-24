@@ -22,11 +22,36 @@ public class Offer {
         this.products = products;
         this.offerStatus = offerStatus;
         this.offPercent = offPercent;
-        allOffers.add(this);
+    }
+
+    public static Offer getOfferByID(int id) {
+        for (Offer offer : allOffers) {
+            if (offer.getOffID() == id) {
+                return offer;
+            }
+        }
+        return null;
+    }
+
+    public static boolean hasOfferByID(int id) {
+        for (Offer offer : allOffers) {
+            if (offer.getOffID() == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void addOfferToAllOffers(Offer offer) {
+        allOffers.add(offer);
     }
 
     public double getOffPercent() {
         return offPercent;
+    }
+
+    public void setOffPercent(double offPercent) {
+        this.offPercent = offPercent;
     }
 
     public boolean canBeUsedInDate(Date now) {
@@ -37,7 +62,11 @@ public class Offer {
         return offerStatus;
     }
 
-    public void addProductToOffer(Product product) {
+    public void setOfferStatus(CheckingStatus offerStatus) {
+        this.offerStatus = offerStatus;
+    }
+
+    public void addProduct(Product product) {
         this.products.add(product);
     }
 
@@ -71,4 +100,23 @@ public class Offer {
         return null;
     }
 
+    public void setStartingTime(Date startingTime) {
+        this.startingTime = startingTime;
+    }
+
+    public void setEndingTime(Date endingTime) {
+        this.endingTime = endingTime;
+    }
+
+    public Date getStartingTime() {
+        return this.startingTime;
+    }
+
+    public Date getEndingTime() {
+        return this.endingTime;
+    }
+
+    public int getOffID() {
+        return offID;
+    }
 }
