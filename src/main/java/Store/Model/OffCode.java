@@ -104,4 +104,14 @@ public class OffCode {
     public void setUsageCount(int usageCount) {
         this.usageCount = usageCount;
     }
+
+    @Override
+    public String toString() {
+        return "code='" + code + '\'' +
+                ", startingTime=" + startingTime +
+                ", endingTime=" + endingTime +
+                ", offPercentage=" + offPercentage +
+                ", maximumOff=" + maximumOff +
+                '}';
+    }
 }

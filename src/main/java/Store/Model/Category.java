@@ -12,13 +12,17 @@ public class Category {
     private ArrayList<Product> immediateProducts = new ArrayList<Product>();
     private Category parent;
 
-    Category(String name, Category parent) {
+    public Category(String name, Category parent) {
         this.name = name;
         this.parent = parent;
         parent.children.add(this);
     }
 
-    private void addToCategory(Product product) {
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void addToCategory(Product product) {
         if (this.parent == null) {
             this.immediateProducts.add(product);
             return;
@@ -53,6 +57,11 @@ public class Category {
     }
 
     public void removeInside() {
+        if (parent != null) {
+            for (Product immediateProduct : immediateProducts) {
+                parent.removeProductFrom(immediateProduct);
+            }
+        }
         this.immediateProducts = new ArrayList<Product>();
         this.children = new ArrayList<Category>();
     }
@@ -77,5 +86,11 @@ public class Category {
 
     public ArrayList<Product> getImmediateProducts() {
         return immediateProducts;
+    }
+
+    @Override
+    public String toString() {
+        return "name='" + name + '\'' +
+                '}';
     }
 }
