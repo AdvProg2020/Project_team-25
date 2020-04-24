@@ -194,6 +194,6 @@ public class ProductsMenu {
         System.out.println("sort [an available sort]");
         System.out.println("current sort");
         System.out.println("disable sort");
-        System.out.println("back\n*******");
+        System.out.println("back\n*******\n");
     }
 }
