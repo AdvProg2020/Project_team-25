@@ -53,6 +53,7 @@ public class OffersMenu {
             System.out.println("ID: " + product.getProductID());
             System.out.println("Actual Price: " + product.getPrice() + "You Have To Pay: " + (product.getPrice()- (product.getPrice() - offer.getOffPercent())));
             System.out.println("Offer Info :" + offer);
+            System.out.println("*******");
         }
     }
 
@@ -165,13 +166,13 @@ public class OffersMenu {
     }
 
     private static void printHelp() {
-        System.out.println("list of main commands");
+        System.out.println("list of main commands: ");
         System.out.println("show product [productId]");
         System.out.println("back");
         System.out.println("login");
         System.out.println("help");
         System.out.println("*******");
-        System.out.println("\n list of filtering commands");
+        System.out.println("\n list of filtering commands: ");
         System.out.println("filter");
         System.out.println("back");
         System.out.println("current filters");
@@ -179,7 +180,7 @@ public class OffersMenu {
         System.out.println("disable filter [filter]");
         System.out.println("filter [filter]");
         System.out.println("*******");
-        System.out.println("\n list of sort commands");
+        System.out.println("\n list of sort commands: ");
         System.out.println("sort [an available sort]");
         System.out.println("current sort");
         System.out.println("disable sort");
