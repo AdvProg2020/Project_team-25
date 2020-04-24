@@ -6,16 +6,22 @@ import Store.Model.Enums.VerifyStatus;
 public class Comment {
     private User commentingUser;
     private Product product;
+    private String commentTitle;
     private String commentText;
     private boolean hasBought;
     private VerifyStatus acceptanceStatus;
 
-    public Comment(User commentingUser, Product product, String commentText) {
+    public Comment(User commentingUser, Product product, String commentTitle, String commentText) {
         this.commentingUser = commentingUser;
         this.product = product;
+        this.commentTitle = commentTitle;
         this.commentText = commentText;
-        this.hasBought = false; // Bound to change
+        this.hasBought = ((Customer) commentingUser).hasBoughtProduct(product); // Bound to change
         this.acceptanceStatus = VerifyStatus.WAITING;
+    }
+
+    public String getCommentTitle() {
+        return commentTitle;
     }
 
     public String getCommentText() {

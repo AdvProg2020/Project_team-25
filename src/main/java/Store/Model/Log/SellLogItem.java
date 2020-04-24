@@ -24,6 +24,10 @@ public class SellLogItem extends LogItem {
         this.sendStatus = status;
     }
 
+    public String getCustomerName() {
+        return customerName;
+    }
+
     @Override
     public String toString() {
         return "SellLogItem{" +
