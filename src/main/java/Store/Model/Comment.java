@@ -10,12 +10,12 @@ public class Comment {
     private boolean hasBought;
     private VerifyStatus acceptanceStatus;
 
-    public Comment(User commentingUser, Product product, String commentText, boolean hasBought, VerifyStatus acceptanceStatus) {
+    public Comment(User commentingUser, Product product, String commentText) {
         this.commentingUser = commentingUser;
         this.product = product;
         this.commentText = commentText;
-        this.hasBought = hasBought;
-        this.acceptanceStatus = acceptanceStatus;
+        this.hasBought = false; // Bound to change
+        this.acceptanceStatus = VerifyStatus.WAITING;
     }
 
     public String getCommentText() {

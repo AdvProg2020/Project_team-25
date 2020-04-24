@@ -12,13 +12,17 @@ public class OffCode {
     private int usageCount;
     private ArrayList<User> users = new ArrayList<User>();
 
-    private ArrayList<Integer> usageCountRemaining = new ArrayList<Integer>();
-
     public OffCode(String code, double offPercentage, double maximumOff, int usageCount) {
         this.code = code;
         this.offPercentage = offPercentage;
         this.maximumOff = maximumOff;
         this.usageCount = usageCount;
+    }
+
+    public void remove() {
+        for (User user : this.users) {
+            ((Customer) user).removeOffCodeOfUser(this);
+        }
     }
 
     public boolean isUserIncluded(User user) {
@@ -32,17 +36,18 @@ public class OffCode {
 
     public void addUser(User user) {
         this.users.add(user);
-        this.usageCountRemaining.add(this.usageCount);
+    }
+
+    public boolean hasUser(User user) {
+        return this.users.contains(user);
     }
 
     public void removeUser(User user) {
-        for (int userIndex = 0; userIndex < this.users.size(); userIndex++) {
-            if (this.users.get(userIndex) == user) {
-                this.users.remove(userIndex);
-                this.usageCountRemaining.remove(userIndex);
-                break;
-            }
-        }
+        this.users.remove(user);
+    }
+
+    public int getUsageCount() {
+        return this.usageCount;
     }
 
     public User getUserByIndex(int index) {
