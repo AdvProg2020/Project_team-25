@@ -26,12 +26,6 @@ public class ProductMenu {
             if (input.equalsIgnoreCase("digest")) {
                 digest(product);
             }
-            else if (input.equalsIgnoreCase("add to cart")) {
-                addToCart(product);
-            }
-            else if ((matcher = InputManager.getMatcher(input, SELECT_SELLER_REGEX)).find()) {
-                product = selectSeller(product, matcher.group(1));
-            }
             else if (input.equalsIgnoreCase("attributes")) {
                 viewAttributes(product);
             }
@@ -41,23 +35,25 @@ public class ProductMenu {
             else if (input.equalsIgnoreCase("comments")) {
                 showComments(product);
             }
-            else if (input.equalsIgnoreCase("add comment")) {
-                addComment(product);
-            }
             else if (input.equalsIgnoreCase("login")) {
-                if (MainMenu.currentUser == null) {
-                    SignUpAndLoginMenu.init();
-                } else {
-                    System.out.println("you have signed in");
-                }
+                handleLogin();
             }
             else if (input.equalsIgnoreCase("help")) {
                 printHelp();
             }
             else {
-                System.out.printf("Invalid command");
+                System.out.println("Invalid command");
             }
         }
+    }
+
+    private static String getSellerNameTextList(Product product) {
+        ArrayList<Seller> allSellersOfProduct = ProductController.getAllSellersOfProduct(product);
+        String result = "";
+        for (Seller seller : allSellersOfProduct) {
+            result.concat(seller.getName() + "   ");
+        }
+        return result;
     }
 
     private static void digest(Product product) {
@@ -66,15 +62,33 @@ public class ProductMenu {
         System.out.println("Description: " + product.getDescription());
         System.out.println("Price: " + product.getPrice());
         System.out.println("Category: " + product.getCategory().getFullName());
-        System.out.print("Sellers: ");
-        ArrayList<Seller> allSellersOfProduct = ProductController.getAllSellersOfProduct(product);
+        System.out.print("Sellers: " + getSellerNameTextList(product));
+        /*ArrayList<Seller> allSellersOfProduct = ProductController.getAllSellersOfProduct(product);
         for (Seller seller : allSellersOfProduct) {
             System.out.print(seller.getName() + "   ");
-        }
+        }*/
         System.out.println();
         System.out.println("Current seller: " + product.getSeller().getName());
-        System.out.printf("Average rating: " + product.getAverageRating());
+        System.out.println("Average rating: " + product.getAverageRating());
         System.out.println("Date added: " + product.getStartingDate());
+        System.out.println();
+
+        String input;
+        Matcher matcher;
+        while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
+            if (input.equalsIgnoreCase("add to cart")) {
+                addToCart(product);
+            }
+            else if ((matcher = InputManager.getMatcher(input, SELECT_SELLER_REGEX)).find()) {
+                product = selectSeller(product, matcher.group(1));
+            }
+            else if (input.equalsIgnoreCase("login")) {
+                handleLogin();
+            }
+            else {
+                System.out.println("Invalid command");
+            }
+        }
     }
 
     private static void addToCart(Product product) {
@@ -120,15 +134,7 @@ public class ProductMenu {
             printAlongside("Price: " + product.getPrice(), "Price: " + other.getPrice());
             printAlongside("Category: " + product.getCategory().getFullName(), "Category: " + other.getCategory().getFullName());
 
-            String firstString = "", secondString = "";
-            ArrayList<Seller> allSellersOfProduct = ProductController.getAllSellersOfProduct(product);
-            for (Seller seller : allSellersOfProduct) {
-                firstString.concat(seller.getName() + "   ");
-            }
-            allSellersOfProduct = ProductController.getAllSellersOfProduct(other);
-            for (Seller seller : allSellersOfProduct) {
-                secondString.concat(seller.getName() + "   ");
-            }
+            String firstString = getSellerNameTextList(product), secondString = getSellerNameTextList(other);
             printAlongside("Sellers: " + firstString, "Sellers: " + secondString);
 
             printAlongside("Average rating: " + product.getAverageRating(), "Average rating: " + other.getAverageRating());
@@ -204,23 +210,56 @@ public class ProductMenu {
             System.out.printf("%150 %50", "Commenting user: " + comment.getCommentingUser().getName(),
                     (comment.getHasBought() ? "--Has bought this product" : "--Has not bought this product"));
             System.out.println("---> " + comment.getCommentText());
-            System.out.printf(comment.getCommentText());
+            System.out.println(comment.getCommentText());
         }
         for (int column = 0; column < COLUMN_COUNT; column++) {
             System.out.print("_");
+        }
+
+        String input;
+        while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
+            if (input.equalsIgnoreCase("add comment")) {
+                addComment(product);
+            }
+            else if (input.equalsIgnoreCase("login")) {
+                handleLogin();
+            }
+            else {
+                System.out.println("Invalid command");
+            }
         }
     }
 
     private static void printHelp() {
         System.out.println("list of commands: ");
         System.out.println("digest");
-        System.out.println("select seller [seller_username]");
         System.out.println("attributes");
         System.out.println("compare [productID | productName]");
         System.out.println("comments");
-        System.out.println("add comment");
         System.out.println("login");
         System.out.println("help");
+        System.out.println("back");
         System.out.println("*******");
+
+        System.out.println("\n list of commands in the digest submenu: ");
+        System.out.println("add to cart");
+        System.out.println("select seller [seller_username]");
+        System.out.println("login");
+        System.out.println("back");
+        System.out.println("*******");
+
+        System.out.println("\n list of commands in the comments submenu: ");
+        System.out.println("add comment");
+        System.out.println("login");
+        System.out.println("back");
+        System.out.println("*******");
+    }
+
+    private static void handleLogin() {
+        if (MainMenu.currentUser == null) {
+            SignUpAndLoginMenu.init();
+        } else {
+            System.out.println("you have signed in");
+        }
     }
 }
