@@ -15,7 +15,7 @@ import static Store.Model.Enums.VerifyStatus.REJECTED;
 
 public class Manager extends User {
 
-    public static ArrayList<Category> allCategories = new ArrayList<Category>();
+    private static ArrayList<Category> allCategories = new ArrayList<Category>();
     private static ArrayList<Request> pendingRequests = new ArrayList<Request>();
     private static ArrayList<OffCode> offCodes = new ArrayList<OffCode>();
     public static boolean hasManager = false;
@@ -28,6 +28,31 @@ public class Manager extends User {
         this.type = "Manager";
     }
 
+    public static String showCategories()
+    {
+        String output = null;
+        for(Category category: allCategories)
+            if(category.getParent() == null)
+                output += showAllOfCategory(category, 1) + "\n";
+        return output;
+    }
+
+    private static String showAllOfCategory(Category category, int numOfTabs)
+    {
+        String output = null;
+        putTabs(output, numOfTabs);
+        output += "-" + category.getFullName() + "\n";
+        for(Category subCategory: allCategories)
+            if(subCategory.getParent() == category)
+                output += showAllOfCategory(subCategory, numOfTabs + 1);
+        return output;
+    }
+
+    private static void putTabs(String output, int numOfTabs)
+    {
+        for(int i = 0; i < numOfTabs; i++)
+            output += "\t";
+    }
     public static boolean verifyOffCode(OffCode customerOffCode, Customer customer) {
         for (OffCode offCode : offCodes)
             if (offCode.isUserIncluded(customer))
