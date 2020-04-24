@@ -65,6 +65,10 @@ public class Category {
         return filters != null && filters.contains(string);
     }
 
+    public ArrayList<String> getFilters() {
+        return filters;
+    }
+
     public void removeFromFilter(String string) {
         if (isInFilter(string)) {
             filters.remove(string);

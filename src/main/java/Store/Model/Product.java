@@ -42,13 +42,57 @@ public class Product {
         this.visited = 0;
     }
 
+    public boolean equals(Product other) {
+        if (productStatus != other.getProductStatus()) {
+            return false;
+        }
+        else if (category != other.getCategory()) {
+            return false;
+        }
+        else if (!name.equals(other.getName())) {
+            return false;
+        }
+        else if (!brand.equals(other.getBrand())) {
+            return false;
+        }
+        else if (availablity != other.getAvailablity()) {
+            return false;
+        }
+        else if (!attributes.equals(other.getAttributes())) {
+            return false;
+        }
+        else if (!description.equals(other.getDescription())) {
+            return false;
+        }
+        else if (!comments.equals(other.comments)) {
+            return false;
+        }
+        else if (!ratings.equals(other.ratings)) {
+            return false;
+        }
+        else if (!filters.equals(other.filters)) {
+            return false;
+        }
+        else if (visited != other.getVisited()) {
+            return false;
+        }
+        return true;
+    }
+
+    public static ArrayList<Product> getAllProducts() {
+        return allProducts;
+    }
 
     public static void addProduct(Product product) {
         allProducts.add(product);
     }
 
-    public void addComment(User user, String content) {
-        this.comments.add(new Comment(user, this, content));
+    public void addComment(User user, String commentTitle, String content) {
+        this.comments.add(new Comment(user, this, commentTitle, content));
+    }
+
+    public ArrayList<Comment> getComments() {
+        return comments;
     }
 
     public void rate(Customer customer, double rating) {
@@ -85,6 +129,14 @@ public class Product {
         return false;
     }
 
+    public static Product getProductByName(String name) {
+        for (Product product : allProducts) {
+            if (product.getName().equalsIgnoreCase(name)) {
+                return product;
+            }
+        }
+        return null;
+    }
 
 
     public int getProductID() {
@@ -98,6 +150,7 @@ public class Product {
     public String getAttributes() {
         return this.attributes;
     }
+
 
     public String getBrand() {
         return this.brand;
@@ -185,5 +238,9 @@ public class Product {
 
     public int getVisited() {
         return visited;
+    }
+
+    public boolean getAvailablity() {
+        return this.availablity;
     }
 }
