@@ -43,8 +43,8 @@ public class Product {
         allProducts.add(product);
     }
 
-    public void addComment(User user, String title, String content) {
-
+    public void addComment(User user, String content) {
+        this.comments.add(new Comment(user, this, content));
     }
 
     public void rate(Customer customer, double rating) {
