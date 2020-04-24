@@ -46,7 +46,7 @@ public class ManagerMenu {
                 viewOffCodes();
             } else if (input.equalsIgnoreCase("manage requests")) {
                 manageRequests();
-            } else if (input.equalsIgnoreCase("manage category")) {
+            } else if (input.equalsIgnoreCase("manage categories")) {
                 manageCategories();
             } else if (input.equalsIgnoreCase("help")) {
                 printHelp();
@@ -262,6 +262,54 @@ public class ManagerMenu {
     }
 
     private static void printHelp() {
+        System.out.println("list of commands: ");
+        System.out.println("view personal info");
+        System.out.println("manage users");
+        System.out.println("manage all products");
+        System.out.println("create discount code");
+        System.out.println("view discount codes");
+        System.out.println("manage requests");
+        System.out.println("manage categories");
+        System.out.println("logout");
+        System.out.println("help");
+        System.out.println("back");
+        System.out.println("*******");
 
+        System.out.println("\nlist of commands in the view personal info submenu: ");
+        System.out.println("edit [password|family name|first name|email|phone number] [value]");
+        System.out.println("back");
+        System.out.println("*******");
+
+        System.out.println("\nlist of commands in the manage users submenu: ");
+        System.out.println("view [username]");
+        System.out.println("delete user [username]");
+        System.out.println("create manager profile");
+        System.out.println("back");
+        System.out.println("*******");
+
+        System.out.println("\nlist of commands in the manage all products: ");
+        System.out.println("remove [productID]");
+        System.out.println("back");
+        System.out.println("*******");
+
+        System.out.println("\nlist of commands in the view discount codes submenu: ");
+        System.out.println("view discount code [code]");
+        System.out.println("edit discount code [code] [maximumOff|offPercentage] [value]");
+        System.out.println("remove discount code [code]");
+        System.out.println("back");
+        System.out.println("*******");
+
+        System.out.println("\nlist of commands in the manage requests submenu: ");
+        System.out.println("details [requestID]");
+        System.out.println("[accept|decline] [requestID]");
+        System.out.println("back");
+        System.out.println("*******");
+
+        System.out.println("\nlist of commands in the manage categories submenu: ");
+        System.out.println("add category [name]");
+        System.out.println("edit category [code] [add filter|add product|change name|remove filter|add filter] [value]");
+        System.out.println("remove category [name]");
+        System.out.println("back");
+        System.out.println("*******");
     }
 }
