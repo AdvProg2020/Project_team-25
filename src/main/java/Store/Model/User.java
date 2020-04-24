@@ -2,14 +2,12 @@ package Store.Model;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.io.File;
 import java.util.Scanner;
 
 public class User {
@@ -48,7 +46,7 @@ public class User {
     }
 
     public boolean validatePassword(String password) {
-        return this.password.equals(password);
+        return (this.password).equals(password);
     }
 
     public void delete() {
@@ -113,6 +111,7 @@ public class User {
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.create();
             String allUsersString = scanner.nextLine();
+            idTillNow = scanner.nextInt();
             ArrayList<String> usernames = gson.fromJson(allUsersString, ArrayList.class);
             for (String username : usernames)
                 readEachUser(username);
@@ -170,7 +169,7 @@ public class User {
             }
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.create();
-            fileWriter.write(gson.toJson(usernames));
+            fileWriter.write(gson.toJson(usernames) + "\n" + idTillNow);
             fileWriter.close();
             for (User user : allUsers) {
                 writeEachUser(user);

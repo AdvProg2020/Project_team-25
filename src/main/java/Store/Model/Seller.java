@@ -1,15 +1,11 @@
 package Store.Model;
 
-import Store.Model.Log.BuyLogItem;
-import Store.Model.Product;
 import Store.Model.Enums.RequestType;
 import Store.Model.Log.SellLogItem;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Set;
 
 public class Seller extends User {
 
@@ -50,6 +46,13 @@ public class Seller extends User {
         return sellLog;
     }
 
+    public ArrayList<String> getBuyers()
+    {
+        ArrayList<String> buyers = null;
+        for(SellLogItem sellLogItem: sellLog)
+             buyers.add(sellLogItem.getCustomerName());
+        return buyers;
+    }
     public void requestChangeProduct(Product product, Product newProduct) {
         new Request(product, true, newProduct);
     }
@@ -69,17 +72,24 @@ public class Seller extends User {
                 removeProduct = product;
                 break;
             }
+        Product.deleteProduct(removeProduct);
         products.remove(removeProduct);
+        for(Offer offer: offers)
+            offer.removeProductFromOffer(removeProduct);
     }
 
     public void removeProducts(ArrayList<Product> productsToRemove) {
-        for(Product product: productsToRemove)
-            products.remove(product);
+        for(Product product: productsToRemove) {
+            this.removeProduct(product);
+        }
     }
 
     public void removeProduct(Product productToRemove)
     {
+        Product.deleteProduct(productToRemove);
         products.remove(productToRemove);
+        for(Offer offer: offers)
+            offer.removeProductFromOffer(productToRemove);
     }
     //showing categories handled in controller
 
@@ -104,13 +114,19 @@ public class Seller extends User {
         ArrayList<Product> products = seller.getProducts();
         ArrayList<Offer> offers = seller.getOffers();
         if (request.getRequestType() == RequestType.ADD_NEW_OFFER) {
+            Offer.addOffer(request.getOffer());
             offers.add(request.getOffer());
         } else if (request.getRequestType() == RequestType.ADD_NEW_PRODUCT) {
+            Product.addProduct(request.getProduct());
             products.add(request.getProduct());
         } else if (request.getRequestType() == RequestType.CHANGE_OFFER) {
+            Offer.deleteOffer(request.getOffer());
+            Offer.addOffer(request.getOffer());
             offers.remove(request.getOffer());
             offers.add(request.getNewOffer());
         } else if (request.getRequestType() == RequestType.CHANGE_PRODUCT) {
+            Product.deleteProduct(request.getProduct());
+            Product.addProduct(request.getNewProduct());
             products.remove(request.getProduct());
             products.add(request.getNewProduct());
         } else if (request.getRequestType() == RequestType.REGISTER_SELLER) {
@@ -135,8 +151,8 @@ public class Seller extends User {
         }
         while (offers.size() > 0) {
             Offer offer = offers.get(0);
+            Offer.deleteOffer(offer);
             offers.remove(0);
-            offer.deleteOffer(offer);
         }
         allUsers.remove(this);
     }

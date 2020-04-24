@@ -3,7 +3,6 @@ package Store.Model;
 import Store.Model.Product;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sun.org.apache.xml.internal.resolver.CatalogEntry;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import static Store.Model.Enums.VerifyStatus.ACCEPTED;
+import static Store.Model.Enums.VerifyStatus.REJECTED;
 
 public class Manager extends User {
 
@@ -23,8 +23,7 @@ public class Manager extends User {
 
     Manager(String username, String name, String familyName, String email, String phoneNumber, String password) {
         super(username, name, familyName, email, phoneNumber, password);
-        if (!hasManager)
-            allUsers.add(this);
+        allUsers.add(this);
         hasManager = true;
         this.type = "Manager";
     }
@@ -50,7 +49,7 @@ public class Manager extends User {
 
     //showing categories handled in controller
     public void editCategory(Category oldCategory, Category newCategory) {
-        allCategories.remove(oldCategory);
+        Manager.removeCategory(oldCategory);
         allCategories.add(newCategory);
     }
 
@@ -62,7 +61,7 @@ public class Manager extends User {
         return null;
     }
 
-    public void removeCategory(Category category) {
+    public static void removeCategory(Category category) {
         category.removeInside();
         allCategories.remove(category);
     }
@@ -83,7 +82,7 @@ public class Manager extends User {
             Seller.doRequest(request);
             request.setStatus(ACCEPTED);  //????
         } else {
-            request.setStatus(ACCEPTED);  //????
+            request.setStatus(REJECTED);  //????
         }
         pendingRequests.remove(request);
     }
@@ -97,12 +96,15 @@ public class Manager extends User {
     }
 
     public static void removeOffCode(OffCode offCode) {
-        offCode.remove();
+        for(User user: allUsers)
+            if(user instanceof Customer)
+                if(offCode.isUserIncluded(user))
+                    ((Customer) user).removeOffCodeOfUser(offCode);
         offCodes.remove(offCode);
     }
 
     public void changeOffCode(OffCode offCode, OffCode newOffCode) {
-        offCodes.remove(offCode);
+        Manager.removeOffCode(offCode);
         offCodes.add(newOffCode);
     }
 
@@ -115,7 +117,7 @@ public class Manager extends User {
     }
 
     public void removeProduct(Product product) {
-        Offer.removeProductFromOffer(product);
+        Offer.removeProductFromAllOffer(product);
         Manager.removeProductFromCatagory(product);
         Product.deleteProduct(product);
     }

@@ -8,10 +8,10 @@ import java.util.HashMap;
 
 public class Customer extends User {
 
-    private HashMap<OffCode, Integer> offCodes = new HashMap<>();
+    private HashMap<OffCode, Integer> offCodes = new HashMap<OffCode, Integer>();
     private double money;
     private ArrayList<BuyLogItem> buyLog = new ArrayList<BuyLogItem>();
-    private ArrayList<Product> cart = new ArrayList<>(); // It's better to have a cart entry
+    private ArrayList<Product> cart = new ArrayList<Product>();
 
     Customer(String username, String name, String familyName, String email, String phoneNumber, String password, double money) {
         super(username, name, familyName, email, phoneNumber, password);
@@ -63,6 +63,7 @@ public class Customer extends User {
 
     public void removeOffCodeOfUser(OffCode offCode) {
         offCodes.remove(offCode);
+        offCode.removeUser(this);
     }
 
     public void buy() {
@@ -76,7 +77,7 @@ public class Customer extends User {
         Product product = null;
         Seller seller = null;
         Date date = new Date();
-        ArrayList<Product> productsOfOneSeller = new ArrayList<>();
+        ArrayList<Product> productsOfOneSeller = new ArrayList<Product>();
         while (cart.size() > 0) {
             seller = null;
             product = null;
@@ -99,6 +100,7 @@ public class Customer extends User {
             buyLog.add(new BuyLogItem(buyLog.size() + 1, date, productsOfOneSeller, (discount / totalPrice) * priceOfList(productsOfOneSeller), seller.getName(), false));
             seller.handleLogs((discount / totalPrice) * priceOfList(productsOfOneSeller), productsOfOneSeller, date, this, (1 - discount / totalPrice) * priceOfList(productsOfOneSeller));
             seller.removeProducts(productsOfOneSeller);
+            seller.setMoney(seller.getMoney() + (1 - discount / totalPrice) * priceOfList(productsOfOneSeller));
         }
     }
 
