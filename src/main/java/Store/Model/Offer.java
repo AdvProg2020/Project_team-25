@@ -69,6 +69,10 @@ public class Offer {
         allOffers.add(offer);
     }
 
+    public static void deleteOfferFromAllOffers(Offer offer) {
+        allOffers.remove(offer);
+    }
+
     public double getOffPercent() {
         return offPercent;
     }

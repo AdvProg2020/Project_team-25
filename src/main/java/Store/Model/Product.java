@@ -157,6 +157,18 @@ public class Product {
         return filters;
     }
 
+    public void addFilter(String filter) {
+       this.filters.add(filter);
+    }
+
+    public void deleteFilter(String filter) {
+        this.filters.remove(filter);
+    }
+
+    public boolean hasFilter(String filter) {
+        return this.filters.contains(filter);
+    }
+
     public Date getStartingDate() {  //just call when the product is in a offer
         if (Offer.getOfferOfProduct(this) == null) {
             return null;
