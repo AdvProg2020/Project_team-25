@@ -161,6 +161,10 @@ public class Product {
        this.filters.add(filter);
     }
 
+    public void deleteFilter(String filter) {
+        this.filters.remove(filter);
+    }
+
     public boolean hasFilter(String filter) {
         return this.filters.contains(filter);
     }
