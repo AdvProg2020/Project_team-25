@@ -45,6 +45,15 @@ public class OffCode {
         }
     }
 
+    public int getUsageCountForUser(User user) {
+        for (int userIndex = 0; userIndex < this.users.size(); userIndex++) {
+            if (this.users.get(userIndex) == user) {
+                return this.usageCountRemaining.get(userIndex);
+            }
+        }
+        return 0;
+    }
+
     public User getUserByIndex(int index) {
         return this.users.get(index);
     }
