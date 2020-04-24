@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 public class Category {
     private String name;
-    private HashMap<String, String> specialAttributes = new HashMap<String, String>(); // Probably will change :/
+    private ArrayList<String> filters = new ArrayList<>(); // Probably will change :/
     private ArrayList<Category> children = new ArrayList<Category>();
     private ArrayList<Product> immediateProducts = new ArrayList<Product>();
     private Category parent;
@@ -28,7 +28,10 @@ public class Category {
     }
 
     public String getFullName() {
-        return "";
+        if (this.parent == null) {
+            return this.name;
+        }
+        return " -> " + this.parent.getFullName();
     }
 
     public boolean include(Product product) {
@@ -50,11 +53,21 @@ public class Category {
     }
 
     public void removeInside() {
-        try {
-            this.parent.immediateProducts.remove(this);
-        } catch (NullPointerException exception) {
-            // do nothing
-        }
+        this.immediateProducts = new ArrayList<Product>();
+        this.children = new ArrayList<Category>();
     }
 
+    public void addToFilter(String string) {
+        filters.add(string);
+    }
+
+    public boolean isInFilter(String string) {
+        return filters != null && filters.contains(string);
+    }
+
+    public void removeFromFilter(String string) {
+        if (isInFilter(string)) {
+            filters.remove(string);
+        }
+    }
 }

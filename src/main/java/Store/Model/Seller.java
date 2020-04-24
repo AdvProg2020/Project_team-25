@@ -132,11 +132,11 @@ public class Seller extends User {
         }
     }
 
-    private ArrayList<Offer> getOffers() {
+    public ArrayList<Offer> getOffers() {
         return offers;
     }
 
-    private ArrayList<Product> getProducts() {
+    public ArrayList<Product> getProducts() {
         return products;
     }
 
