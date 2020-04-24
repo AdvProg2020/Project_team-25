@@ -1,7 +1,7 @@
-package main.java.Store.View;
+package Store.View;
 
-import main.java.Store.Controller.SignUpAndLoginController;
-import main.java.Store.Model.User;
+import Store.Controller.SignUpAndLoginController;
+import Store.Model.User;
 
 public class SignUpAndLoginMenu {
 

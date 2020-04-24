@@ -1,8 +1,8 @@
-package main.java.Store.View;
+package Store.View;
 
-import main.java.Store.Controller.ManagerController;
-import main.java.Store.Model.Category;
-import main.java.Store.Model.Manager;
+import Store.Controller.ManagerController;
+import Store.Model.Category;
+import Store.Model.Manager;
 
 
 public class ManagerMenu {

@@ -1,4 +1,4 @@
-package main.java.Store.Model.Log;
+package Store.Model.Log;
 
 import Store.Model.Product;
 
@@ -10,6 +10,12 @@ public abstract class LogItem {
     protected Date date;
     protected ArrayList<Product> productList = new ArrayList<Product>();
 
-    LogItem(int id, Date date) {
+    LogItem(int id, Date date, ArrayList<Product> products) {
+        this.date = date;
+        this.id = id;
+        this.productList = products;
     }
+
+    @Override
+    public abstract String toString();
 }

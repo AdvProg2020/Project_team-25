@@ -1,6 +1,6 @@
-package main.java.Store.View;
+package Store.View;
 
-import main.java.Store.Controller.ProductController;
+import Store.Controller.ProductController;
 import Store.Model.Product;
 
 public class ProductMenu {
