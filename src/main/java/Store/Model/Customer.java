@@ -12,7 +12,6 @@ public class Customer extends User {
     private double money;
     private ArrayList<BuyLogItem> buyLog = new ArrayList<BuyLogItem>();
     private ArrayList<Product> cart = new ArrayList<Product>();
-    private ArrayList<Product> boughtProducts = new ArrayList<Product>();
 
     Customer(String username, String name, String familyName, String email, String phoneNumber, String password, double money) {
         super(username, name, familyName, email, phoneNumber, password);
@@ -55,18 +54,11 @@ public class Customer extends User {
     public void buy(OffCode offCode) {
         money -= getTotalCartPriceWithDiscount(offCode);
         handleLogs(getTotalCartPrice() - getTotalCartPriceWithDiscount(offCode));
-        addProductToBoughProducts();
         cart.clear();
         offCodes.put(offCode, offCodes.get(offCode) + 1);
         if (offCodes.get(offCode) >= offCode.getUsageCount()) {
             removeOffCodeOfUser(offCode);
         }
-    }
-
-    private void addProductToBoughProducts()
-    {
-        for(Product product: cart)
-            boughtProducts.add(product);
     }
 
     public void removeOffCodeOfUser(OffCode offCode) {
@@ -77,7 +69,6 @@ public class Customer extends User {
     public void buy() {
         money -= getTotalCartPrice();
         handleLogs(0);
-        addProductToBoughProducts();
         cart.clear();
     }
 
@@ -145,8 +136,9 @@ public class Customer extends User {
     }
 
     public boolean hasBoughtProduct(Product product) {
-        if (boughtProducts.contains(product))
-            return true;
+        for(BuyLogItem buyLogItem: buyLog)
+            if(buyLogItem.getProducts().contains(product))
+                return false;
         return false;
     }
 

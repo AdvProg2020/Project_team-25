@@ -16,6 +16,12 @@ public abstract class LogItem {
         this.productList = products;
     }
 
+    protected ArrayList<Product> getProducts()
+    {
+        return productList;
+    }
+
+
     @Override
     public abstract String toString();
 }
