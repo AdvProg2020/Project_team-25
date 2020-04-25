@@ -40,7 +40,7 @@ public class Manager extends User {
     private static String showAllOfCategory(Category category, int numOfTabs)
     {
         String output = null;
-        putTabs(output, numOfTabs);
+        output = putTabs(output, numOfTabs);
         output += "-" + category.getFullName() + "\n";
         for(Category subCategory: allCategories)
             if(subCategory.getParent() == category)
@@ -48,10 +48,11 @@ public class Manager extends User {
         return output;
     }
 
-    private static void putTabs(String output, int numOfTabs)
+    private static String putTabs(String output, int numOfTabs)
     {
         for(int i = 0; i < numOfTabs; i++)
             output += "\t";
+        return output;
     }
     public static boolean verifyOffCode(OffCode customerOffCode, Customer customer) {
         for (OffCode offCode : offCodes)
