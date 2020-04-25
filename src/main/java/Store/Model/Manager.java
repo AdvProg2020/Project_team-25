@@ -40,7 +40,7 @@ public class Manager extends User {
     private static String showAllOfCategory(Category category, int numOfTabs)
     {
         String output = null;
-        output = putTabs(output, numOfTabs);
+        output = putTabs(null, numOfTabs);
         output += "-" + category.getFullName() + "\n";
         for(Category subCategory: allCategories)
             if(subCategory.getParent() == category)
@@ -349,6 +349,10 @@ public class Manager extends User {
         } catch (IOException exception) {
             throw exception;
         }
+    }
+
+    public static ArrayList<Category> getAllCategories() {
+        return allCategories;
     }
 
     @Override

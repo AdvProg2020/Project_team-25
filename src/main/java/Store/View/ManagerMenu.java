@@ -243,7 +243,7 @@ public class ManagerMenu {
     }
 
     private static void showAllCategories() {
-        for (Category allCategory : Manager.allCategories) {
+        for (Category allCategory : Manager.getAllCategories()) {
             System.out.println(allCategory);
             System.out.println("*******");
         }

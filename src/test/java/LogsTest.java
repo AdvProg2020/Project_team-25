@@ -21,6 +21,7 @@ public class LogsTest {
                 ", date=" + new Date() +
                 ", productList=" + new ArrayList<Product>() +
                 '}');
+        Assert.assertEquals("testname", test.getCustomerName());
     }
 
     @Test
