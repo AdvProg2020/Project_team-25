@@ -16,8 +16,7 @@ public abstract class LogItem {
         this.productList = products;
     }
 
-    protected ArrayList<Product> getProducts()
-    {
+    public ArrayList<Product> getProducts() {
         return productList;
     }
 
