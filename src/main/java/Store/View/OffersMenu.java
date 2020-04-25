@@ -2,6 +2,7 @@ package Store.View;
 
 import Store.Controller.OffersController;
 import Store.InputManager;
+import Store.Main;
 import Store.Model.*;
 
 import java.util.ArrayList;
@@ -32,11 +33,9 @@ public class OffersMenu {
             } else if (input.equalsIgnoreCase("sorting")) {
                 sorting();
             } else if (input.equalsIgnoreCase("login")) {
-                if (MainMenu.currentUser == null) {
-                    SignUpAndLoginMenu.init();
-                } else {
-                    System.out.println("you have signed in");
-                }
+                handleLogin();
+            } else if (input.equalsIgnoreCase("logout")) {
+                handleLogout();
             } else if (input.equalsIgnoreCase("help")) {
                 printHelp();
             } else {
@@ -51,7 +50,7 @@ public class OffersMenu {
             Offer offer = Offer.getOfferOfProduct(product);
             System.out.println(product.getName() + ": ");
             System.out.println("ID: " + product.getProductID());
-            System.out.println("Actual Price: " + product.getPrice() + "You Have To Pay: " + (product.getPrice()- (product.getPrice() - offer.getOffPercent())));
+            System.out.println("Actual Price: " + product.getPrice() + "You Have To Pay: " + (product.getPrice() - (product.getPrice() - offer.getOffPercent())));
             System.out.println("Offer Info :" + offer);
             System.out.println("*******");
         }
@@ -78,6 +77,10 @@ public class OffersMenu {
                 disableFilter(matcher.group(1));
             } else if ((matcher = InputManager.getMatcher(input, FILTER)).find()) {
                 filter(matcher.group(1));
+            } else if (input.equalsIgnoreCase("login")) {
+                handleLogin();
+            } else if (input.equalsIgnoreCase("logout")) {
+                handleLogout();
             } else {
                 System.out.println("invalid command");
             }
@@ -133,6 +136,10 @@ public class OffersMenu {
                 showAvailableSorts();
             } else if ((matcher = InputManager.getMatcher(input, SORT)).find()) {
                 sort(matcher.group(1));
+            } else if (input.equalsIgnoreCase("login")) {
+                handleLogin();
+            } else if (input.equalsIgnoreCase("logout")) {
+                handleLogout();
             } else {
                 System.out.println("invalid command");
             }
@@ -168,24 +175,48 @@ public class OffersMenu {
     private static void printHelp() {
         System.out.println("list of main commands: ");
         System.out.println("show product [productId]");
+        System.out.println("filter");
+        System.out.println("sorting");
         System.out.println("back");
         System.out.println("login");
+        System.out.println("logout");
         System.out.println("help");
         System.out.println("*******");
-        System.out.println("\n list of filtering commands: ");
+        System.out.println("\n list of commands in the filter submenu: ");
         System.out.println("filter");
-        System.out.println("back");
         System.out.println("current filters");
         System.out.println("show available filters");
         System.out.println("disable filter [filter]");
         System.out.println("filter [filter]");
+        System.out.println("login");
+        System.out.println("logout");
+        System.out.println("back");
         System.out.println("*******");
-        System.out.println("\n list of sort commands: ");
+        System.out.println("\n list of commands in the sorting submenu: ");
         System.out.println("sort [an available sort]");
         System.out.println("current sort");
         System.out.println("disable sort");
         System.out.println("show available sorts");
+        System.out.println("login");
+        System.out.println("logout");
         System.out.println("back");
         System.out.println("*******");
+    }
+
+    private static void handleLogin() {
+        if (MainMenu.currentUser == null) {
+            SignUpAndLoginMenu.init();
+        } else {
+            System.out.println("you have signed in");
+        }
+    }
+
+    private static void handleLogout() {
+        if (MainMenu.currentUser == null) {
+            System.out.println("you haven't signed in");
+        } else {
+            MainMenu.currentUser = null;
+            MainMenu.init();
+        }
     }
 }
