@@ -1,9 +1,6 @@
 package Store.Model;
 
-import Store.Model.Product;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Category {
     private String name;
@@ -36,6 +33,10 @@ public class Category {
             return this.name;
         }
         return " -> " + this.parent.getFullName();
+    }
+
+    public Category getParent() {
+        return parent;
     }
 
     public boolean include(Product product) {
