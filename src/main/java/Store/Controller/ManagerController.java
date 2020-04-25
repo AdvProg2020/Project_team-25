@@ -9,27 +9,27 @@ import java.util.Date;
 
 public class ManagerController {
 
-    public static String editPersonalInfo(Manager manager, String field, String value) {
+    public static String editPersonalInfo(User user, String field, String value) {
         String returnValue = "info has changed successfully";
         if (field.equalsIgnoreCase("email")) {
-            manager.setEmail(value);
+            user.setEmail(value);
             return returnValue;
         } else if (field.equalsIgnoreCase("phone number")) {
             if (InputManager.getMatcher(value, "^[a-zA-Z]\\w{3,14}$").find()) {
-                manager.setPhoneNumber(value);
+                user.setPhoneNumber(value);
                 return returnValue;
             } else {
                 return "password type is incorrect";
             }
         } else if (field.equalsIgnoreCase("last name")) {
-            manager.setFamilyName(value);
+            user.setFamilyName(value);
             return returnValue;
         } else if (field.equalsIgnoreCase("first name")) {
-            manager.setName(value);
+            user.setName(value);
             return returnValue;
         } else if (field.equalsIgnoreCase("password")) {
             if (InputManager.getMatcher(value, "^[0-9]\\w{3,10}$").find()) {
-                manager.setPassword(value);
+                user.setPassword(value);
                 return returnValue;
             } else {
                 return "password type is incorrect";
