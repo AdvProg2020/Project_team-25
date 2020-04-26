@@ -46,7 +46,7 @@ public class CustomerController {
         getReceiverInfo(); // for what??
         System.out.println("Print code of your offCode (if you haven't offCode Print Null): ");
         String input = InputManager.getNextLine();
-        if (!input.equalsIgnoreCase("null")) {
+        if (input.equalsIgnoreCase("null")) {
             System.out.println("*******");
             if (customer.canBuy()) {
                 customer.buy();
@@ -55,7 +55,7 @@ public class CustomerController {
             return "you hadn't enough money";
         } else {
             OffCode offCode = Manager.getOffCodeByCode(input);
-            if (offCode != null && offCode.canBeUsedInDate(new Date())) {
+            if (offCode != null && offCode.canBeUsedInDate(new Date()) && offCode.isUserIncluded(customer)) {
                 System.out.println("*******");
                 if (customer.canBuy(offCode)) {
                     customer.buy();
