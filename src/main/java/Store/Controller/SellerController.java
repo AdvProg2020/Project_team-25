@@ -1,9 +1,6 @@
 package Store.Controller;
 
-import Store.Model.Offer;
-import Store.Model.Product;
-import Store.Model.Request;
-import Store.Model.Seller;
+import Store.Model.*;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.util.ArrayList;
@@ -54,11 +51,11 @@ public class SellerController {
     }
 
     public static void editProduct(Seller seller, Product product, Product newProduct) {
-        new Request(product, true, newProduct);
+        Manager.addRequest(new Request(product, true, newProduct));
     }
 
     public static void addProduct(Seller seller, Product product) {
-        new Request(product, false, null);
+        Manager.addRequest(new Request(product, false, null));
     }
 
     public static void removeProduct(Seller seller, Product product) {
@@ -66,11 +63,11 @@ public class SellerController {
     }
 
     public static void editOff(Seller seller, Offer offer, Offer newOffer) {
-        new Request(seller, offer, true, newOffer);
+        Manager.addRequest(new Request(seller, offer, true, newOffer));
     }
 
     public static void addOff(Seller seller, Offer offer) {
-        new Request(seller, offer, false, null);
+        Manager.addRequest(new Request(seller, offer, false, null));
     }
 
     public static ArrayList<String> makeBuyersUnique(ArrayList<String> buyers) {
