@@ -16,14 +16,14 @@ public class Request {
     private Object newObject;
     private boolean change;
 
-    Request(Seller seller) {
+    public Request(Seller seller) {
         this.requestType = RequestType.REGISTER_SELLER;
         this.seller = seller;
         this.status = VerifyStatus.WAITING;
         allRequests.add(this);
     }
 
-    Request(Product product, boolean change, Object newObject) {
+    public Request(Product product, boolean change, Object newObject) {
         this.product = product;
         this.change = change;
         this.requestType = RequestType.ADD_NEW_PRODUCT;
@@ -35,7 +35,7 @@ public class Request {
         allRequests.add(this);
     }
 
-    Request(Seller seller, Offer offer, boolean change, Object newObject) {
+    public Request(Seller seller, Offer offer, boolean change, Object newObject) {
         this.offer = offer;
         this.change = change;
         this.seller = seller;

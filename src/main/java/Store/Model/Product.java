@@ -29,7 +29,7 @@ public class Product {
 
     private static ArrayList<Product> allProducts = new ArrayList<Product>();
 
-    public Product(CheckingStatus productStatus, Category category, String name, Seller seller, String brand, double price, boolean availablity, String attributes, String description, float averageRating) {
+    public Product(CheckingStatus productStatus, Category category, String name, Seller seller, String brand, double price, boolean availablity, String attributes, String description) {
         this.productID = idCounter++;
         this.productStatus = productStatus;
         this.category = category;
@@ -39,9 +39,13 @@ public class Product {
         this.availablity = availablity;
         this.attributes = attributes;
         this.description = description;
-        this.averageRating = averageRating;
+        this.averageRating = 0;
         this.seller = seller;
         this.visited = 0;
+    }
+
+    public static void setIdCounter(int idCounter) {
+        Product.idCounter = idCounter;
     }
 
     public boolean equals(Product other) {

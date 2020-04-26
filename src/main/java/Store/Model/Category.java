@@ -3,20 +3,50 @@ package Store.Model;
 import java.util.ArrayList;
 
 public class Category {
+    private int id;
     private String name;
     private ArrayList<String> filters = new ArrayList<>(); // Probably will change :/
     private ArrayList<Category> children = new ArrayList<Category>();
     private ArrayList<Product> immediateProducts = new ArrayList<Product>();
     private Category parent;
 
+    private static int idCounter = 0;
+
     public Category(String name, Category parent) {
+        this.id = idCounter++;
         this.name = name;
         this.parent = parent;
         parent.children.add(this);
     }
 
+    public static void setIdCounter(int idCounter) {
+        Category.idCounter = idCounter;
+    }
+
+    public int getId() {
+        return id;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public static boolean hasCategoryWithId(int id) {
+        for (Category category : Manager.getAllCategories()) {
+            if (category.getId() == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static Category getCategoryById(int id) {
+        for (Category category : Manager.getAllCategories()) {
+            if (category.getId() == id) {
+                return category;
+            }
+        }
+        return null;
     }
 
     public void addToCategory(Product product) {

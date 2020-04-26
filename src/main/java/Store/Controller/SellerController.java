@@ -2,8 +2,11 @@ package Store.Controller;
 
 import Store.Model.Offer;
 import Store.Model.Product;
+import Store.Model.Request;
 import Store.Model.Seller;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.util.ArrayList;
 
 public class SellerController {
 
@@ -51,22 +54,71 @@ public class SellerController {
     }
 
     public static void editProduct(Seller seller, Product product, Product newProduct) {
-
+        new Request(product, true, newProduct);
     }
 
     public static void addProduct(Seller seller, Product product) {
-
+        new Request(product, false, null);
     }
 
     public static void removeProduct(Seller seller, Product product) {
-
+        Product.deleteProduct(product);
     }
 
     public static void editOff(Seller seller, Offer offer, Offer newOffer) {
-
+        new Request(seller, offer, true, newOffer);
     }
 
     public static void addOff(Seller seller, Offer offer) {
+        new Request(seller, offer, false, null);
+    }
 
+    public static ArrayList<String> makeBuyersUnique(ArrayList<String> buyers) {
+        ArrayList<String> result = new ArrayList<String>();
+        for (String buyer : buyers) {
+            if (!result.contains(buyer)) {
+                result.add(buyer);
+            }
+        }
+        return result;
+    }
+
+    public static boolean isValidField(String field) {
+        if (field.equalsIgnoreCase("name") || field.equalsIgnoreCase("family name")) {
+            return true;
+        }
+        else if (field.equalsIgnoreCase("email") || field.equalsIgnoreCase("phone number")) {
+            return true;
+        }
+        else if (field.equalsIgnoreCase("password")) {
+            return true;
+        }
+        else if (field.equalsIgnoreCase("company name") || field.equalsIgnoreCase("company description")) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isValidID(Seller seller, int id) {
+        for (Product product : seller.getProducts()) {
+            if (product.getProductID() == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static ArrayList<Offer> getOffersOfThisSeller(Seller seller) {
+        ArrayList<Offer> result = new ArrayList<Offer>();
+        for (Offer offer : Offer.getAllOffers()) {
+            if (offer.getUser() == seller) {
+                result.add(offer);
+            }
+        }
+        return result;
+    }
+
+    public static boolean isProductFromThisSeller(Seller seller, Product product) {
+        return seller == product.getSeller();
     }
 }

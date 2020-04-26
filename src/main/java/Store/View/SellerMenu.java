@@ -3,11 +3,15 @@ package Store.View;
 import Store.Controller.SellerController;
 import Store.InputManager;
 import Store.Model.*;
+import Store.Model.Enums.CheckingStatus;
 import Store.Model.Log.SellLogItem;
 import org.codehaus.plexus.util.StringUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.regex.Matcher;
 
 public class SellerMenu {
@@ -16,6 +20,9 @@ public class SellerMenu {
     public static final String VIEW_PRODUCT_REGEX = "^view (\\d+)$";
     public static final String VIEW_PRODUCT_BUYERS_INFO_REGEX = "^view buyers (\\d+)$";
     public static final String EDIT_PRODUCT_REGEX = "^edit (\\d+)$";
+    public static final String REMOVE_PRODUCT_REGEX = "^remove product (\\d+)$";
+    public static final String VIEW_OFFER_REGEX = "^view (\\d+)$";
+    public static final String EDIT_OFFER_REGEX = "^edit (\\d+)$";
 
 
     public static void init() {
@@ -34,6 +41,18 @@ public class SellerMenu {
             else if (input.equalsIgnoreCase("manage products")) {
                 manageProduct((Seller) MainMenu.currentUser);
             }
+            else if (input.equalsIgnoreCase("add product")) {
+                addProductWrapper((Seller) MainMenu.currentUser);
+            }
+            else if ((matcher = InputManager.getMatcher(input, REMOVE_PRODUCT_REGEX)).find()) {
+                removeProductWrapper((Seller) MainMenu.currentUser, matcher.group(1));
+            }
+            else if (input.equalsIgnoreCase("show categories")) {
+                showCategories();
+            }
+            else if (input.equalsIgnoreCase("view offs")) {
+                viewOffs((Seller) MainMenu.currentUser);
+            }
             else if (input.equalsIgnoreCase("view balance")) {
                 viewBalance((Seller) MainMenu.currentUser);
             }
@@ -44,6 +63,7 @@ public class SellerMenu {
                 handleLogout();
             }
             else if (input.equalsIgnoreCase("help")) {
+                System.out.println("---Currently in: seller menu");
                 printHelp();
             }
             else {
@@ -76,27 +96,11 @@ public class SellerMenu {
         }
     }
 
-    private static boolean isValidField(String field) {
-        if (field.equalsIgnoreCase("name") || field.equalsIgnoreCase("family name")) {
-            return true;
-        }
-        else if (field.equalsIgnoreCase("email") || field.equalsIgnoreCase("phone number")) {
-            return true;
-        }
-        else if (field.equalsIgnoreCase("password")) {
-            return true;
-        }
-        else if (field.equalsIgnoreCase("company name") || field.equalsIgnoreCase("company description")) {
-            return true;
-        }
-        return false;
-    }
-
     private static void editPersonalInfoWrapper(Seller seller, String field) {
         if (field.equalsIgnoreCase("username")) {
             System.out.println("This fiels cannot be edited");
         }
-        else if (!isValidField(field)) {
+        else if (!SellerController.isValidField(field)) {
             System.out.println("This is not a valid field");
         }
         else {
@@ -140,15 +144,6 @@ public class SellerMenu {
         }
     }
 
-    private static boolean isValidID(Seller seller, int id) {
-        for (Product product : seller.getProducts()) {
-            if (product.getProductID() == id) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private static void manageProduct(Seller seller) {
         for (Product product : seller.getProducts()) {
             System.out.println("{" + product.getName() + " " + product.getProductID() + ", " + product.getCategory().getFullName()
@@ -165,7 +160,7 @@ public class SellerMenu {
                 viewBuyers(seller, matcher.group(1));
             }
             else if ((matcher = InputManager.getMatcher(input, EDIT_PRODUCT_REGEX)).find()) {
-                handleEditProduct(seller, matcher.group(1));
+                editProductWrapper(seller, matcher.group(1));
             }
             else if (input.equalsIgnoreCase("login")) {
                 handleLogin();
@@ -174,6 +169,7 @@ public class SellerMenu {
                 handleLogout();
             }
             else if (input.equalsIgnoreCase("help")) {
+                System.out.println("---Currently in: manage product");
                 printHelp();
             }
             else {
@@ -182,22 +178,8 @@ public class SellerMenu {
         }
     }
 
-    private static ArrayList<String> makeBuyersUnique(ArrayList<String> buyers) {
-        ArrayList<String> result = new ArrayList<String>();
-        for (String buyer : buyers) {
-            if (!result.contains(buyer)) {
-                result.add(buyer);
-            }
-        }
-        return result;
-    }
-
-    private static void handleEditProduct(Seller seller, String attribute) {
-
-    }
-
     private static void viewProduct(Seller seller, String attribute) {
-        if (StringUtils.isNumeric(attribute) && isValidID(seller, Integer.parseInt(attribute))) {
+        if (StringUtils.isNumeric(attribute) && SellerController.isValidID(seller, Integer.parseInt(attribute))) {
             ProductMenu.init(Product.getProductByID(Integer.parseInt(attribute)));
         }
         else {
@@ -206,7 +188,7 @@ public class SellerMenu {
     }
 
     private static void viewBuyers(Seller seller, String attribute) {
-        if (StringUtils.isNumeric(attribute) && isValidID(seller, Integer.parseInt(attribute))) {
+        if (StringUtils.isNumeric(attribute) && SellerController.isValidID(seller, Integer.parseInt(attribute))) {
             ArrayList<String> buyers = new ArrayList<String>();
             Product key = Product.getProductByID(Integer.parseInt(attribute));
             for (SellLogItem sellLogItem : seller.getSellLog()) {
@@ -217,7 +199,7 @@ public class SellerMenu {
                     }
                 }
             }
-            buyers = makeBuyersUnique(buyers);
+            buyers = SellerController.makeBuyersUnique(buyers);
             System.out.println("Buyers of selected product: ");
             for (String buyer : buyers) {
                 System.out.print(buyer + "   ");
@@ -230,29 +212,80 @@ public class SellerMenu {
     }
 
     private static void editProductWrapper(Seller seller, String attribute) {
-        if (StringUtils.isNumeric(attribute) && isValidID(seller, Integer.parseInt(attribute))) {
-
+        if (StringUtils.isNumeric(attribute) && SellerController.isValidID(seller, Integer.parseInt(attribute))) {
+            Product product = createProduct(seller);
+            if (product != null) {
+                SellerController.editProduct(seller, Product.getProductByID(Integer.parseInt(attribute)), product);
+            }
         }
         else {
             System.out.println("Please enter a valid id");
         }
     }
 
-    private static void addProductWrapper() {
-        showCategories();
-        System.out.println("Please enter the required information for this product: ");
+    private static Product createProduct(Seller seller) {
+        System.out.println("Category ID: ");
+        String attribute = InputManager.getNextLine();
+        if (!StringUtils.isNumeric(attribute) || !Category.hasCategoryWithId(Integer.parseInt(attribute))) {
+            System.out.println("Invalid category ID");
+            return null;
+        }
+        Category parent = Category.getCategoryById(Integer.parseInt(attribute));
 
+        System.out.println("Product Name: ");
+        String name = InputManager.getNextLine();
+
+        System.out.println("Product brand: ");
+        String brand = InputManager.getNextLine();
+
+        System.out.println("Product price: ");
+        attribute = InputManager.getNextLine();
+        if (!attribute.matches("^\\d+\\.\\d+$")) {
+            System.out.println("Invalid price value");
+            return null;
+        }
+        double price = Double.parseDouble(attribute);
+
+        System.out.println("Product availability (0 | 1): ");
+        attribute = InputManager.getNextLine();
+        if (!attribute.matches("^(0|1)$")) {
+            System.out.println("Invalid availability value");
+            return null;
+        }
+        boolean availability = (attribute.equals("1"));
+
+        System.out.println("Attributes: ");
+        String attributes = InputManager.getNextLine();
+
+        System.out.println("Description: ");
+        String description = InputManager.getNextLine();
+
+        return new Product(CheckingStatus.CREATION, parent, name, seller, brand, price, availability, attributes, description);
     }
 
-    private static void removeProductWrapper(String attribute) {
-        SellerController.removeProduct(null,null);
+    private static void addProductWrapper(Seller seller) {
+        showCategories();
+        System.out.println("Please enter the required information for this product: ");
+        Product product = createProduct(seller);
+        if (product != null) {
+            SellerController.addProduct(seller, product);
+        }
+    }
+
+    private static void removeProductWrapper(Seller seller, String attribute) {
+        if (StringUtils.isNumeric(attribute) && SellerController.isValidID(seller, Integer.parseInt(attribute))) {
+            SellerController.removeProduct(seller, Product.getProductByID(Integer.parseInt(attribute)));
+        }
+        else {
+            System.out.println("Please enter a valid id");
+        }
     }
 
     private static void showCategories() {
-        System.out.println("Categories: ");
+        System.out.println("--- Categories: ");
         ArrayList<String> result = new ArrayList<String>();
         for (Category category : Manager.getAllCategories()) {
-            result.add(category.getFullName() + "   " + category.getID());
+            result.add(category.getFullName() + "   " + category.getId());
         }
         Collections.sort(result);
         for (String categoryData : result) {
@@ -260,20 +293,141 @@ public class SellerMenu {
         }
     }
 
-    private static void viewOffs() {
+    private static void viewOffs(Seller seller) {
+        System.out.println("Your offers: ");
+        for (Offer offer : SellerController.getOffersOfThisSeller(seller)) {
+            System.out.println(offer.toString());
+        }
 
+        String input;
+        Matcher matcher;
+        while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
+            if ((matcher = InputManager.getMatcher(input, VIEW_OFFER_REGEX)).find()) {
+                viewOff(matcher.group(1));
+            }
+            else if ((matcher = InputManager.getMatcher(input, EDIT_OFFER_REGEX)).find()) {
+                editOffWrapper(seller, matcher.group(1));
+            }
+            else if (input.equalsIgnoreCase("add off")) {
+                addOffWrapper(seller);
+            }
+            else if (input.equalsIgnoreCase("login")) {
+                handleLogin();
+            }
+            else if (input.equalsIgnoreCase("logout")) {
+                handleLogout();
+            }
+            else if (input.equalsIgnoreCase("help")) {
+                System.out.println("---Currently in: view offs");
+                printHelp();
+            }
+            else {
+                System.out.println("Invalid command");
+            }
+        }
     }
 
-    private static void viewOff(int id) {
+    private static void getOfferProducts(Seller seller, Offer offer) {
+        String input;
 
+        System.out.println("Your products: ");
+        for (Product product : seller.getProducts()) {
+            System.out.println("{" + product.getName() + " " + product.getProductID() + ", " + product.getCategory().getFullName()
+                    + ", " + (product.getAvailablity() ? "available" : "unavailable") + "}");
+        }
+
+        System.out.println("Select products for this off by inputting their ids, finish by inputting -1");
+        while (!(input = InputManager.getNextLine()).equals("-1")) {
+            if (!StringUtils.isNumeric(input) || !SellerController.isProductFromThisSeller(seller, Product.getProductByID(Integer.parseInt(input)))) {
+                System.out.println("Please enter a valid ID");
+            }
+            Product product = Product.getProductByID(Integer.parseInt(input));
+            if (offer.containsProduct(product)) {
+                System.out.println("Already added this product");
+            }
+            else {
+                offer.addProduct(product);
+            }
+        }
     }
 
-    private static void editOffWrapper() {
-        SellerController.editOff(null,null,null);
+    private static Offer createOffer(Seller seller) {
+        System.out.println("Please enter dates and times in the following format: dd-M-yyyy hh:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+
+        System.out.println("Starting time: ");
+        String input = InputManager.getNextLine();
+        Date startingTime, endingTime;
+        try {
+            startingTime = dateFormat.parse(input);
+        }
+        catch (ParseException exception) {
+            System.out.println("Invalid date format");
+            return null;
+        }
+
+        System.out.println("Ending time: ");
+        input = InputManager.getNextLine();
+        try {
+            endingTime = dateFormat.parse(input);
+        }
+        catch (ParseException exception) {
+            System.out.println("Invalid date format");
+            return null;
+        }
+
+        System.out.println("Off Percentage: ");
+        input = InputManager.getNextLine();
+        if (!input.matches("\\d+\\.\\d+")) {
+            System.out.println("Invalid percentage");
+            return null;
+        }
+        double offPercentage = Double.parseDouble(input);
+
+        Offer offer = new Offer(seller, CheckingStatus.CREATION, offPercentage);
+        offer.setStartingTime(startingTime);
+        offer.setEndingTime(endingTime);
+
+        getOfferProducts(seller, offer);
+
+        System.out.println("Select filters for this off, finish by inputting -1");
+        while (!(input = InputManager.getNextLine()).equals("-1")) {
+            offer.addFilter(input);
+        }
+
+        return offer;
     }
 
-    private static void addOffWrapper() {
-        SellerController.addOff(null,null);
+    private static void viewOff(String attribute) {
+        if (StringUtils.isNumeric(attribute) && Offer.hasOfferByID(Integer.parseInt(attribute))) {
+            Offer offer = Offer.getOfferByID(Integer.parseInt(attribute));
+            System.out.println(offer);
+            System.out.println("Products: ");
+            for (Product product : offer.getProducts()) {
+                System.out.println(product);
+            }
+        }
+        else {
+            System.out.println("Invalid ID");
+        }
+    }
+
+    private static void editOffWrapper(Seller seller, String attribute) {
+        if (!StringUtils.isNumeric(attribute) || !Offer.hasOfferByID(Integer.parseInt(attribute))) {
+            System.out.println("Invalid ID");
+            return;
+        }
+        Offer offer = createOffer(seller);
+        if (offer != null) {
+            SellerController.editOff(seller, Offer.getOfferByID(Integer.parseInt(attribute)), createOffer(seller));
+        }
+    }
+
+    private static void addOffWrapper(Seller seller) {
+        Offer offer = createOffer(seller);
+        if (offer != null) {
+            SellerController.addOff(seller, createOffer(seller));
+        }
     }
 
     private static void viewBalance(Seller seller) {
@@ -281,7 +435,46 @@ public class SellerMenu {
     }
 
     private static void printHelp() {
+        System.out.println("list of commands: ");
+        System.out.println("view personal info");
+        System.out.println("view company information");
+        System.out.println("view sales history");
+        System.out.println("manage products");
+        System.out.println("add product");
+        System.out.println("remove product [productId]");
+        System.out.println("show categories");
+        System.out.println("view offs");
+        System.out.println("view balance");
+        System.out.println("login");
+        System.out.println("logout");
+        System.out.println("help");
+        System.out.println("back");
+        System.out.println("*******");
 
+        System.out.println("\n list of commands in the 'view personal info' submenu: ");
+        System.out.println("edit [field]");
+        System.out.println("login");
+        System.out.println("logout");
+        System.out.println("back");
+        System.out.println("*******");
+
+        System.out.println("\n list of commands in the 'manage products' submenu: ");
+        System.out.println("view [productId]");
+        System.out.println("view buyers [productId]");
+        System.out.println("edit [productId]");
+        System.out.println("login");
+        System.out.println("logout");
+        System.out.println("back");
+        System.out.println("*******");
+
+        System.out.println("\n list of commands in the 'view offs' submenu: ");
+        System.out.println("view [offId]");
+        System.out.println("edit [offId]");
+        System.out.println("add off");
+        System.out.println("login");
+        System.out.println("logout");
+        System.out.println("back");
+        System.out.println("*******");
     }
 
     private static void handleLogin() {
