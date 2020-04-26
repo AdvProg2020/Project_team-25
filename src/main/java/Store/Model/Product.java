@@ -25,10 +25,12 @@ public class Product {
     private ArrayList<String> filters = new ArrayList<>();
     private int visited;
 
+    private static int idCounter = 0;
+
     private static ArrayList<Product> allProducts = new ArrayList<Product>();
 
-    public Product(int productID, CheckingStatus productStatus, Category category, String name, Seller seller, String brand, double price, boolean availablity, String attributes, String description, float averageRating) {
-        this.productID = productID;
+    public Product(CheckingStatus productStatus, Category category, String name, Seller seller, String brand, double price, boolean availablity, String attributes, String description, float averageRating) {
+        this.productID = idCounter++;
         this.productStatus = productStatus;
         this.category = category;
         this.name = name;
@@ -242,5 +244,10 @@ public class Product {
 
     public boolean getAvailablity() {
         return this.availablity;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + this.name + " " + this.productID + ")";
     }
 }

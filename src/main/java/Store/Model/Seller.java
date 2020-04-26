@@ -103,6 +103,14 @@ public class Seller extends User {
         this.money = money;
     }
 
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public void setCompanyDescription(String companyDescription) {
+        this.companyDescription = companyDescription;
+    }
+
     public double getMoney() {
         return money;
     }
