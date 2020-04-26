@@ -70,4 +70,11 @@ public class ResourceHandler {
             e.printStackTrace();
         }
     }
+
+    public static void resetFile() {
+        File file = new File("..\\resources\\Resources.res");
+        if (file.delete()) {
+            System.out.println("Saves have been reset");
+        }
+    }
 }
