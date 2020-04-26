@@ -47,6 +47,20 @@ public class ProductsMenu {
             {
                 printHelp();
             }
+            else if(input.equalsIgnoreCase("offs")) {
+                OffersMenu.init();
+            }
+            else if(input.equalsIgnoreCase("logout")) {
+                handleLogout();
+            }
+            else if(input.equalsIgnoreCase("login"))
+            {
+                handleLogin();
+            }
+            else
+            {
+                System.out.println("invalid command");
+            }
         }
     }
 
@@ -195,5 +209,22 @@ public class ProductsMenu {
         System.out.println("current sort");
         System.out.println("disable sort");
         System.out.println("back\n*******\n");
+    }
+
+    private static void handleLogin() {
+        if (MainMenu.currentUser == null) {
+            SignUpAndLoginMenu.init();
+        } else {
+            System.out.println("you have signed in");
+        }
+    }
+
+    private static void handleLogout() {
+        if (MainMenu.currentUser == null) {
+            System.out.println("you haven't signed in");
+        } else {
+            MainMenu.currentUser = null;
+            MainMenu.init();
+        }
     }
 }

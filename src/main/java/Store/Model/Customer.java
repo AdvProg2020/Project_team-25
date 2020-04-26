@@ -19,6 +19,13 @@ public class Customer extends User {
         this.type = "Customer";
     }
 
+    public Customer(User user, String password, double money)
+    {
+        super(user.getUsername(), user.getName(), user.getFamilyName(), user.getEmail(), user.getPhoneNumber(), password);
+        this.money = money;
+        this.type = "Customer";
+    }
+
     public static void addCustomer(Customer customer) {
         allUsers.add(customer);
     }

@@ -3,7 +3,6 @@ package Store.Model;
 import Store.Model.Enums.RequestType;
 import Store.Model.Log.SellLogItem;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -16,15 +15,18 @@ public class Seller extends User {
     private ArrayList<Product> products = new ArrayList<Product>();
     private ArrayList<Offer> offers = new ArrayList<Offer>();
 
-    Seller(String username, String name, String familyName, String email, String phoneNumber, String password, double money, String companyName) {
+    Seller(String username, String name, String familyName, String email, String phoneNumber, String password, double money, String companyName, String companyDescription) {
         super(username, name, familyName, email, phoneNumber, password);
-        companyDescription = "";
+        this.companyName = companyName;
+        this.companyDescription = companyDescription;
         this.money = money;
         this.type = "Seller";
     }
 
-    Seller(String username, String name, String familyName, String email, String phoneNumber, String password, double money, String companyName, String companyDescription) {
-        super(username, name, familyName, email, phoneNumber, password);
+    public Seller(User user, String password, double money, String companyName, String companyDescription)
+    {
+        super(user.getUsername(), user.getName(), user.getFamilyName(), user.getEmail(), user.getPhoneNumber(), password);
+        this.companyName = companyName;
         this.companyDescription = companyDescription;
         this.money = money;
         this.type = "Seller";
