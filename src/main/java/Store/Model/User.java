@@ -34,6 +34,18 @@ public class User {
         id = ++idTillNow;
     }
 
+    public static void setAllUsers(ArrayList<User> allUsers) {
+        User.allUsers = allUsers;
+    }
+
+    public static int getIdTillNow() {
+        return idTillNow;
+    }
+
+    public static void setIdTillNow(int idTillNow) {
+        User.idTillNow = idTillNow;
+    }
+
     public static User getUserByUsername(String username) {
         for (User user : allUsers)
             if (username.equals(user.getUsername()))

@@ -124,7 +124,7 @@ public class SellerMenu {
             try {
                 SellerController.editPersonalInfo(seller, field, value);
             }
-            catch (Exception exception) {
+            catch (SellerController.InvalidValueException exception) {
                 System.out.println(exception.getMessage());
             }
         }

@@ -44,8 +44,16 @@ public class Product {
         this.visited = 0;
     }
 
+    public static void setAllProducts(ArrayList<Product> allProducts) {
+        Product.allProducts = allProducts;
+    }
+
     public static void setIdCounter(int idCounter) {
         Product.idCounter = idCounter;
+    }
+
+    public static int getIdCounter() {
+        return idCounter;
     }
 
     public boolean equals(Product other) {

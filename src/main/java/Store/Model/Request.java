@@ -48,6 +48,14 @@ public class Request {
         allRequests.add(this);
     }
 
+    public static ArrayList<Request> getAllRequests() {
+        return allRequests;
+    }
+
+    public static void setAllRequests(ArrayList<Request> allRequests) {
+        Request.allRequests = allRequests;
+    }
+
     public Seller getSeller() {
         return seller;
     }

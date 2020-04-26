@@ -9,28 +9,34 @@ public class SellerController {
 
     private static final String INVALID_VALUE_ERROR = "The value you entered for this field is invalid";
 
-    public static void editPersonalInfo(Seller seller, String field, String value) throws Exception {
+    public static class InvalidValueException extends Exception {
+        InvalidValueException(String message) {
+            super(message);
+        }
+    }
+
+    public static void editPersonalInfo(Seller seller, String field, String value) throws InvalidValueException {
         if (field.equalsIgnoreCase("name")) {
             if (!StringUtils.isAlpha(value)) {
-                throw new Exception(INVALID_VALUE_ERROR);
+                throw new InvalidValueException(INVALID_VALUE_ERROR);
             }
             seller.setName(value);
         }
         if (field.equalsIgnoreCase("family name")) {
             if (!StringUtils.isAlpha(value)) {
-                throw new Exception(INVALID_VALUE_ERROR);
+                throw new InvalidValueException(INVALID_VALUE_ERROR);
             }
             seller.setFamilyName(value);
         }
         else if (field.equalsIgnoreCase("email")) {
             if (!isValidEmail(value)) {
-                throw new Exception(INVALID_VALUE_ERROR);
+                throw new InvalidValueException(INVALID_VALUE_ERROR);
             }
             seller.setEmail(value);
         }
         if (field.equalsIgnoreCase("phone number")) {
             if (!StringUtils.isNumeric(value)) {
-                throw new Exception(INVALID_VALUE_ERROR);
+                throw new InvalidValueException(INVALID_VALUE_ERROR);
             }
             seller.setPhoneNumber(value);
         }

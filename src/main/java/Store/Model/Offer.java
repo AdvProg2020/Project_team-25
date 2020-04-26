@@ -34,6 +34,18 @@ public class Offer {
         Offer.idCounter = idCounter;
     }
 
+    public static int getIdCounter() {
+        return idCounter;
+    }
+
+    public static void setAllOffers(ArrayList<Offer> allOffers) {
+        Offer.allOffers = allOffers;
+    }
+
+    public static void setAllOffProducts(ArrayList<Product> allOffProducts) {
+        Offer.allOffProducts = allOffProducts;
+    }
+
     public User getUser() {
         return user;
     }
