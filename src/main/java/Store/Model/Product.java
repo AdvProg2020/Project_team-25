@@ -25,10 +25,12 @@ public class Product {
     private ArrayList<String> filters = new ArrayList<>();
     private int visited;
 
+    private static int idCounter = 0;
+
     private static ArrayList<Product> allProducts = new ArrayList<Product>();
 
-    public Product(int productID, CheckingStatus productStatus, Category category, String name, Seller seller, String brand, double price, boolean availablity, String attributes, String description, float averageRating) {
-        this.productID = productID;
+    public Product(CheckingStatus productStatus, Category category, String name, Seller seller, String brand, double price, boolean availablity, String attributes, String description) {
+        this.productID = idCounter++;
         this.productStatus = productStatus;
         this.category = category;
         this.name = name;
@@ -37,9 +39,21 @@ public class Product {
         this.availablity = availablity;
         this.attributes = attributes;
         this.description = description;
-        this.averageRating = averageRating;
+        this.averageRating = 0;
         this.seller = seller;
         this.visited = 0;
+    }
+
+    public static void setAllProducts(ArrayList<Product> allProducts) {
+        Product.allProducts = allProducts;
+    }
+
+    public static void setIdCounter(int idCounter) {
+        Product.idCounter = idCounter;
+    }
+
+    public static int getIdCounter() {
+        return idCounter;
     }
 
     public boolean equals(Product other) {
@@ -242,5 +256,10 @@ public class Product {
 
     public boolean getAvailablity() {
         return this.availablity;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + this.name + " " + this.productID + ")";
     }
 }

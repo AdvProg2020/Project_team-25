@@ -31,7 +31,7 @@ public class Customer extends User {
         this.money = money;
     }
 
-    public HashMap getOffCodes() {
+    public HashMap<OffCode, Integer> getOffCodes() {
         return offCodes;
     }
 
@@ -116,9 +116,16 @@ public class Customer extends User {
     }
 
     public void removeFromCart(Product product) {
-        if (cart.contains(product)) {
+        if (isInCart(product)) {
             cart.remove(product);
         }
+    }
+
+    public boolean isInCart(Product product) {
+        if (cart == null || !cart.contains(product)) {
+            return false;
+        }
+        return true;
     }
 
     public double getTotalCartPrice() {

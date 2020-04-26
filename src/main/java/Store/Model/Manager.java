@@ -28,6 +28,18 @@ public class Manager extends User {
         this.type = "Manager";
     }
 
+    public static void setAllCategories(ArrayList<Category> allCategories) {
+        Manager.allCategories = allCategories;
+    }
+
+    public static void setPendingRequests(ArrayList<Request> pendingRequests) {
+        Manager.pendingRequests = pendingRequests;
+    }
+
+    public static void setOffCodes(ArrayList<OffCode> offCodes) {
+        Manager.offCodes = offCodes;
+    }
+
     public static String showCategories()
     {
         String output = null;

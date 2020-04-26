@@ -112,6 +112,7 @@ public class OffCode {
                 ", endingTime=" + endingTime +
                 ", offPercentage=" + offPercentage +
                 ", maximumOff=" + maximumOff +
+                ", usageCount=" + usageCount +
                 '}';
     }
 }

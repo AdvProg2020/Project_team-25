@@ -38,6 +38,9 @@ public class ProductMenu {
             else if (input.equalsIgnoreCase("login")) {
                 handleLogin();
             }
+            else if (input.equalsIgnoreCase("logout")) {
+                handleLogout();
+            }
             else if (input.equalsIgnoreCase("help")) {
                 printHelp();
             }
@@ -71,6 +74,9 @@ public class ProductMenu {
         System.out.println("Current seller: " + product.getSeller().getName());
         System.out.println("Average rating: " + product.getAverageRating());
         System.out.println("Date added: " + product.getStartingDate());
+        if (!product.getAvailablity()) {
+            System.out.printf("--- This product is not available");
+        }
         System.out.println();
 
         String input;
@@ -84,6 +90,9 @@ public class ProductMenu {
             }
             else if (input.equalsIgnoreCase("login")) {
                 handleLogin();
+            }
+            else if (input.equalsIgnoreCase("logout")) {
+                handleLogout();
             }
             else {
                 System.out.println("Invalid command");
@@ -224,6 +233,9 @@ public class ProductMenu {
             else if (input.equalsIgnoreCase("login")) {
                 handleLogin();
             }
+            else if (input.equalsIgnoreCase("logout")) {
+                handleLogout();
+            }
             else {
                 System.out.println("Invalid command");
             }
@@ -237,6 +249,7 @@ public class ProductMenu {
         System.out.println("compare [productID | productName]");
         System.out.println("comments");
         System.out.println("login");
+        System.out.println("logout");
         System.out.println("help");
         System.out.println("back");
         System.out.println("*******");
@@ -245,12 +258,14 @@ public class ProductMenu {
         System.out.println("add to cart");
         System.out.println("select seller [seller_username]");
         System.out.println("login");
+        System.out.println("logout");
         System.out.println("back");
         System.out.println("*******");
 
         System.out.println("\n list of commands in the comments submenu: ");
         System.out.println("add comment");
         System.out.println("login");
+        System.out.println("logout");
         System.out.println("back");
         System.out.println("*******");
     }
@@ -260,6 +275,15 @@ public class ProductMenu {
             SignUpAndLoginMenu.init();
         } else {
             System.out.println("you have signed in");
+        }
+    }
+
+    private static void handleLogout() {
+        if (MainMenu.currentUser == null) {
+            System.out.println("you haven't signed in");
+        } else {
+            MainMenu.currentUser = null;
+            MainMenu.init();
         }
     }
 }

@@ -8,6 +8,7 @@ import java.util.Date;
 
 public class Offer {
     private int offID;
+    private User user;
     private ArrayList<Product> products = new ArrayList<Product>();
     private ArrayList<String> filters = new ArrayList<String>();
     private CheckingStatus offerStatus;
@@ -18,13 +19,39 @@ public class Offer {
     private static ArrayList<Offer> allOffers = new ArrayList<Offer>();
     private static ArrayList<Product> allOffProducts = new ArrayList<>();
 
+    private static int idCounter = 0;
 
-    public Offer(int offID, CheckingStatus offerStatus, double offPercent) {
-        this.offID = offID;
+    public Offer(User user, CheckingStatus offerStatus, double offPercent) {
+        this.offID = idCounter++;
+        this.user = user;
         this.products = products;
         this.offerStatus = offerStatus;
         this.offPercent = offPercent;
         allOffProducts.addAll(products);
+    }
+
+    public static void setIdCounter(int idCounter) {
+        Offer.idCounter = idCounter;
+    }
+
+    public static int getIdCounter() {
+        return idCounter;
+    }
+
+    public static void setAllOffers(ArrayList<Offer> allOffers) {
+        Offer.allOffers = allOffers;
+    }
+
+    public static void setAllOffProducts(ArrayList<Product> allOffProducts) {
+        Offer.allOffProducts = allOffProducts;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public ArrayList<Product> getProducts() {
+        return products;
     }
 
     public void addFilter(String filter) {
@@ -41,6 +68,10 @@ public class Offer {
 
     public ArrayList<String> getFilters() {
         return filters;
+    }
+
+    public boolean containsProduct(Product product) {
+        return this.products.contains(product);
     }
 
     public static ArrayList<Offer> getAllOffers() {
