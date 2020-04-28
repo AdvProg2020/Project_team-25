@@ -3,10 +3,11 @@ package Store.Model;
 import Store.Model.Product;
 import Store.Model.Enums.CheckingStatus;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Offer {
+public class Offer implements Serializable {
     private int offID;
     private User user;
     private ArrayList<Product> products = new ArrayList<Product>();

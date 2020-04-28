@@ -1,9 +1,10 @@
 package Store.Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class OffCode {
+public class OffCode implements Serializable {
     private String code;
     private Date startingTime, endingTime;
     // StartingTime and EndingTime?

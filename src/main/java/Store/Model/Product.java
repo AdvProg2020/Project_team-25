@@ -2,10 +2,11 @@ package Store.Model;
 
 import Store.Model.Enums.CheckingStatus;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Product {
+public class Product implements Serializable {
 
     //Deboo: it needs buyer
     private int productID;

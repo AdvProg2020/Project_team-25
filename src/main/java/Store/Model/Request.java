@@ -4,9 +4,10 @@ import Store.Model.Product;
 import Store.Model.Enums.RequestType;
 import Store.Model.Enums.VerifyStatus;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Request {
+public class Request implements Serializable {
     private static ArrayList<Request> allRequests = new ArrayList<Request>();
     private RequestType requestType; // 5 Types
     private VerifyStatus status;
