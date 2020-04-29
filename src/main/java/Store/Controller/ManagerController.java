@@ -38,28 +38,8 @@ public class ManagerController {
         return "couldn't change info";
     }
 
-    public static void createManagerProfile(Manager manager) {
-        String username, password, firstName, lastName, email, phoneNumber;
-        System.out.println("Username: ");
-        while (User.getUserByUsername(username = InputManager.getNextLine()) != null) {
-            System.out.println("there is similar username and it's invalid");
-        }
-        System.out.println("Password: ");
-        while ((password = InputManager.getNextLine()).matches("^[a-zA-Z]\\w{3,14}$")) {
-            System.out.println("the format is invalid");
-        }
-        System.out.println("First Name: ");
-        firstName = InputManager.getNextLine();
-        System.out.println("Last Name: ");
-        lastName = InputManager.getNextLine();
-        System.out.println("Email: ");
-        email = InputManager.getNextLine();
-        System.out.println("Phone Number: ");
-        while ((phoneNumber = InputManager.getNextLine()).matches("^[0-9]\\w{3,10}$")) {
-            System.out.println("the format is invalid");
-        }
+    public static void createManagerProfile(Manager manager, String username, String firstName, String lastName, String email, String phoneNumber, String password) {
         manager.addNewManager(new Manager(username, firstName, lastName, email, phoneNumber, password));
-
     }
 
     public static String removeProducts(Manager manager, Product product) {
@@ -70,70 +50,11 @@ public class ManagerController {
         return "product was deleted successfully";
     }
 
-    public static void createOffCode(Manager manager) {
-        double offPercentage, maximumOff;
-        int usageCount;
-        String[] time;
-        Date startingDate, endingDate;
-        String code;
-        System.out.println("Code: ");
-        code = InputManager.getNextLine();
-        System.out.println("offPercentage: ");
-        while (true) {
-            try {
-                offPercentage = Double.parseDouble(InputManager.getNextLine());
-                break;
-            } catch (Exception exception) {
-                System.out.println("the format is invalid");
-            }
-        }
-        System.out.println("maximumOff: ");
-        while (true) {
-            try {
-                maximumOff = Double.parseDouble(InputManager.getNextLine());
-                break;
-            } catch (Exception exception) {
-                System.out.println("the format is invalid");
-            }
-        }
-        System.out.println("usageCount: ");
-        while (true) {
-            try {
-                usageCount = Integer.parseInt(InputManager.getNextLine());
-                break;
-            } catch (Exception exception) {
-                System.out.println("the format is invalid");
-            }
-        }
-        System.out.println("Print The Starting Date With This Format (year/month/day): ");
-        while (true) {
-            try {
-                time = InputManager.getNextLine().split("/");
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Integer.parseInt(time[0]), Integer.parseInt(time[1]), Integer.parseInt(time[2]));
-                startingDate = calendar.getTime();
-                break;
-            } catch (Exception exception) {
-                System.out.println("the format is invalid");
-            }
-        }
-        System.out.println("Print The Ending Date With This Format (year/month/day): ");
-        while (true) {
-            try {
-                time = InputManager.getNextLine().split("/");
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Integer.parseInt(time[0]), Integer.parseInt(time[1]), Integer.parseInt(time[2]));
-                endingDate = calendar.getTime();
-                break;
-            } catch (Exception exception) {
-                System.out.println("the format is invalid");
-            }
-        }
+    public static void createOffCode(Manager manager, String code, double offPercentage, double maximumOff, int usageCount, Date startingDate, Date endingDate) {
         OffCode offCode = new OffCode(code, offPercentage, maximumOff, usageCount);
         offCode.setEndingTime(endingDate);
         offCode.setStartingTime(startingDate);
         manager.addOffCode(offCode);
-
     }
 
     public static String deleteUserByName(Manager manager, String username) {
@@ -180,17 +101,7 @@ public class ManagerController {
         manager.handleRequest(request, status);
     }
 
-    public static void addCategory(Manager manager, String name) {
-        String parent;
-        System.out.println("name: ");
-        if (Manager.catagoryByName(name = InputManager.getNextLine()) != null) {
-            System.out.println("process failed: the category exists");
-            return;
-        }
-        System.out.println("Parent: ");
-        while (Manager.catagoryByName(parent = InputManager.getNextLine()) == null || !(parent.equalsIgnoreCase("null"))) {
-            System.out.println("you should print null if it hasn't any parent or its valid parent name");
-        }
+    public static void addCategory(Manager manager, String name, String parent) {
         if (parent.equalsIgnoreCase("null")) {
             manager.addCategory(new Category(name, null));
         }
