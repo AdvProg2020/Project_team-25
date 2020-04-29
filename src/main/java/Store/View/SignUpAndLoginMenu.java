@@ -115,7 +115,7 @@ public class SignUpAndLoginMenu {
 
         System.out.println("Please enter your password: ");
         String password = InputManager.getNextLine();
-        if (user.validatePassword(username)) {
+        if (user.validatePassword(password)) {
             MainMenu.currentUser = user;
             return true;
         }

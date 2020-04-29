@@ -3,6 +3,7 @@ package Store;
 import Store.Model.Manager;
 import Store.View.MainMenu;
 import Store.View.ManagerMenu;
+import Store.View.SellerMenu;
 import Store.View.SignUpAndLoginMenu;
 
 public class Main {
@@ -14,7 +15,8 @@ public class Main {
         ResourceHandler.readAll();
         System.out.println(Manager.hasManager);
         SignUpAndLoginMenu.init();
-        ManagerMenu.init();
+        //ManagerMenu.init();
+        SellerMenu.init();
 
         System.out.println("Save Current Database?");
         String input = InputManager.getNextLine();

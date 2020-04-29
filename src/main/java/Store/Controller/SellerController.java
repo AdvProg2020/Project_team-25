@@ -23,9 +23,6 @@ public class SellerController {
             seller.setName(value);
         }
         if (field.equalsIgnoreCase("family name")) {
-            if (!StringUtils.isAlpha(value)) {
-                throw new InvalidValueException(INVALID_VALUE_ERROR);
-            }
             seller.setFamilyName(value);
         }
         else if (field.equalsIgnoreCase("email")) {

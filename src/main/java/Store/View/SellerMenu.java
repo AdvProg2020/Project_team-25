@@ -131,9 +131,9 @@ public class SellerMenu {
     }
 
     private static void viewCompanyInformation(Seller seller) {
-        System.out.printf("Company name: " + seller.getCompanyName());
+        System.out.println("Company name: " + seller.getCompanyName());
         if (!seller.getCompanyDescription().isEmpty()) {
-            System.out.printf("Additional info: " + seller.getCompanyDescription());
+            System.out.println("Additional info: " + seller.getCompanyDescription());
         }
     }
 
@@ -431,7 +431,7 @@ public class SellerMenu {
     }
 
     private static void viewBalance(Seller seller) {
-        System.out.printf("Your current account balance: " + seller.getMoney());
+        System.out.println("Your current account balance: " + seller.getMoney());
     }
 
     private static void printHelp() {
