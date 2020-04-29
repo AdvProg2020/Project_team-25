@@ -42,12 +42,8 @@ public class CustomerController {
         return "yor rating was submitted";
     }
 
-    public static String purchase(Customer customer) {
-        getReceiverInfo(); // for what??
-        System.out.println("Print code of your offCode (if you haven't offCode Print Null): ");
-        String input = InputManager.getNextLine();
+    public static String purchase(Customer customer, String input) {
         if (input.equalsIgnoreCase("null")) {
-            System.out.println("*******");
             if (customer.canBuy()) {
                 customer.buy();
                 return "bought successfully. " + customer.getBuyLog().get(customer.getBuyLog().size() - 1);
@@ -56,7 +52,6 @@ public class CustomerController {
         } else {
             OffCode offCode = Manager.getOffCodeByCode(input);
             if (offCode != null && offCode.canBeUsedInDate(new Date()) && offCode.isUserIncluded(customer)) {
-                System.out.println("*******");
                 if (customer.canBuy(offCode)) {
                     customer.buy();
                     return "bought successfully. " + customer.getBuyLog().get(customer.getBuyLog().size() - 1);
@@ -65,21 +60,6 @@ public class CustomerController {
             }
             return "the offCode is invalid";
         }
-    }
-
-    public static ArrayList<String> getReceiverInfo() {
-        System.out.println("Print Address: ");
-        String address = InputManager.getNextLine();
-
-        System.out.println("Print Phone Number: ");
-        String phone = InputManager.getNextLine();
-
-        System.out.println("Print Email: ");
-        String email = InputManager.getNextLine();
-
-        System.out.println("*******");
-
-        return new ArrayList<>(Arrays.asList(address, phone, email));
     }
 
 }

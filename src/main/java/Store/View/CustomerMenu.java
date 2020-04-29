@@ -5,6 +5,9 @@ import Store.Controller.ManagerController;
 import Store.InputManager;
 import Store.Model.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.regex.Matcher;
 
 public class CustomerMenu {
@@ -119,7 +122,27 @@ public class CustomerMenu {
     }
 
     private static void purchaseWrapper() {
-        CustomerController.purchase(customer);
+        getReceiverInfo(); // for what??
+        System.out.println("Print code of your offCode (if you haven't offCode Print Null): ");
+        String input = InputManager.getNextLine();
+        System.out.println("*******");
+
+        System.out.println(CustomerController.purchase(customer, input));
+    }
+
+    public static ArrayList<String> getReceiverInfo() {
+        System.out.println("Print Address: ");
+        String address = InputManager.getNextLine();
+
+        System.out.println("Print Phone Number: ");
+        String phone = InputManager.getNextLine();
+
+        System.out.println("Print Email: ");
+        String email = InputManager.getNextLine();
+
+        System.out.println("*******");
+
+        return new ArrayList<>(Arrays.asList(address, phone, email));
     }
 
     private static void viewOrders() {
