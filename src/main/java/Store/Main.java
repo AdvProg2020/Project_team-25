@@ -15,8 +15,8 @@ public class Main {
         ResourceHandler.readAll();
         System.out.println(Manager.hasManager);
         SignUpAndLoginMenu.init();
-        //ManagerMenu.init();
-        SellerMenu.init();
+        ManagerMenu.init();
+        //SellerMenu.init();
 
         System.out.println("Save Current Database?");
         String input = InputManager.getNextLine();

@@ -17,7 +17,9 @@ public class Category implements Serializable {
         this.id = idCounter++;
         this.name = name;
         this.parent = parent;
-        parent.children.add(this);
+        if (parent != null) {
+            parent.children.add(this);
+        }
     }
 
     public static void setIdCounter(int idCounter) {

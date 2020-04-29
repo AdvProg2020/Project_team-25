@@ -330,7 +330,7 @@ public class ManagerMenu {
         }
         String parent;
         System.out.println("Parent: ");
-        while (Manager.catagoryByName(parent = InputManager.getNextLine()) == null || !(parent.equalsIgnoreCase("null"))) {
+        while (Manager.catagoryByName(parent = InputManager.getNextLine()) == null && !(parent.equalsIgnoreCase("null"))) {
             System.out.println("you should print null if it hasn't any parent or its valid parent name");
         }
         ManagerController.addCategory(currentUser, name, parent);

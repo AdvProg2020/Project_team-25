@@ -9,7 +9,7 @@ public class ResourceHandler {
 
     public static void readAll() {
         try {
-            InputStream inputStream = new FileInputStream("Resources.res");
+            InputStream inputStream = new FileInputStream("src/resources/Resources.res");
             ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
 
             User.setIdTillNow((int) objectInputStream.readObject());
@@ -42,7 +42,7 @@ public class ResourceHandler {
 
     public static void writeAll() {
         try {
-            OutputStream outputStream = new FileOutputStream("Resources.res");
+            OutputStream outputStream = new FileOutputStream("src/resources/Resources.res");
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
 
             objectOutputStream.writeObject(User.getIdTillNow());
@@ -72,7 +72,7 @@ public class ResourceHandler {
     }
 
     public static void resetFile() {
-        File file = new File("Resources.res");
+        File file = new File("src/resources/Resources.res");
         if (file.delete()) {
             System.out.println("Saves have been reset");
         }

@@ -18,7 +18,6 @@ public class SignUpAndLoginMenu {
         Matcher matcher;
         System.out.println("\nSign up and login menu\n");
         while(!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
-            System.out.println(input);
             if((matcher = InputManager.getMatcher(input, CREATE_ACCOUNT_REGEX)).find()) {
                 handleCreateAccount(matcher.group(1), matcher.group(2));
             }
