@@ -88,4 +88,17 @@ public class Request implements Serializable {
     public int getId() {
         return allRequests.indexOf(this) + 1;
     }
+
+    @Override
+    public String toString() {
+        return "Request{" +
+                "requestType=" + requestType +
+                ", status=" + status +
+                ", product=" + product +
+                ", seller=" + seller +
+                ", offer=" + offer +
+                ", newObject=" + newObject +
+                ", change=" + change +
+                '}';
+    }
 }

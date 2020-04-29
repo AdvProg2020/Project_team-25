@@ -2,25 +2,23 @@ package Store.View;
 
 import Store.Controller.SignUpAndLoginController;
 import Store.InputManager;
-import Store.Model.Customer;
 import Store.Model.Manager;
-import Store.Model.Seller;
 import Store.Model.User;
-import org.codehaus.plexus.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
 public class SignUpAndLoginMenu {
 
-    private static final String CREATE_ACCOUNT_REGEX = "^create account (customer|seller|manager) ([^\\s+])$";
-    private static final String LOGIN_REGEX = "^login (\\w+)$";
+    private static final String CREATE_ACCOUNT_REGEX = "^create account (customer|seller|manager) ([^\\s]+)$";
+    private static final String LOGIN_REGEX = "^login ([^\\s]+)$";
 
     public static void init() {
         String input;
         Matcher matcher;
         System.out.println("\nSign up and login menu\n");
         while(!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
+            System.out.println(input);
             if((matcher = InputManager.getMatcher(input, CREATE_ACCOUNT_REGEX)).find()) {
                 handleCreateAccount(matcher.group(1), matcher.group(2));
             }
@@ -74,6 +72,7 @@ public class SignUpAndLoginMenu {
     }
 
     private static double getMoney() {
+        System.out.println("Initial Money: ");
         String input;
         while (!(input = InputManager.getNextLine()).matches("^\\d+(.\\d+)?$")) {
             System.out.println("Invalid floating-point number format");
@@ -90,11 +89,11 @@ public class SignUpAndLoginMenu {
         System.out.println("Last Name: ");
         lastName = InputManager.getNextLine();
         System.out.println("Email: ");
-        while (!(email = InputManager.getNextLine()).matches("(\\w+)@(\\w+)(\\.)com")) {
+        while (!(email = InputManager.getNextLine()).matches("[^\\s]+@[^\\s]+(\\.)com")) {
             System.out.println("Invalid format");
         }
         System.out.println("Phone Number: ");
-        while ((phoneNumber = InputManager.getNextLine()).matches("^[0-9]\\w{3,10}$")) {
+        while (!(phoneNumber = InputManager.getNextLine()).matches("^[0-9]+$")) {
             System.out.println("Invalid format");
         }
         ArrayList<String> res = new ArrayList<String>();

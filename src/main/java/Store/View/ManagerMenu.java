@@ -60,10 +60,6 @@ public class ManagerMenu {
                 System.out.println("invalid command");
             }
         }
-        if (MainMenu.currentUser == null) {
-            MainMenu.init();
-        }
-
     }
 
     private static void viewPersonalInfo() {

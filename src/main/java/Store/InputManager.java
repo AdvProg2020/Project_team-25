@@ -12,8 +12,6 @@ public class InputManager {
         return sc.nextLine().trim();
     }
 
-    public static double getNextDouble() { return sc.nextDouble(); }
-
     public static Matcher getMatcher(String string, String regex) {
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(string);
