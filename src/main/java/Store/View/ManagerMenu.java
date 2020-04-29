@@ -305,10 +305,10 @@ public class ManagerMenu {
             if ((matcher = InputManager.getMatcher(input, ADD_CATEGORY)).find()) {
                 addCategoryWrapper(matcher.group(1));
             }
-            if ((matcher = InputManager.getMatcher(input, EDIT_CATEGORY)).find()) {
+            else if ((matcher = InputManager.getMatcher(input, EDIT_CATEGORY)).find()) {
                 editCategoryWrapper(matcher.group(1), matcher.group(2), matcher.group(3));
             }
-            if ((matcher = InputManager.getMatcher(input, REMOVE_CATEGORY)).find()) {
+            else if ((matcher = InputManager.getMatcher(input, REMOVE_CATEGORY)).find()) {
                 removeCategoryWrapper(matcher.group(1));
             } else {
                 System.out.println("invalid command");
@@ -317,8 +317,8 @@ public class ManagerMenu {
     }
 
     private static void showAllCategories() {
-        for (Category allCategory : Manager.getAllCategories()) {
-            System.out.println(allCategory);
+        for (Category category : Manager.getAllCategories()) {
+            System.out.println(category);
             System.out.println("*******");
         }
     }

@@ -105,7 +105,9 @@ public class ManagerController {
         if (parent.equalsIgnoreCase("null")) {
             manager.addCategory(new Category(name, null));
         }
-        manager.addCategory(new Category(name, Manager.catagoryByName(parent)));
+        else {
+            manager.addCategory(new Category(name, Manager.catagoryByName(parent)));
+        }
     }
 
     public static String editCategory(Manager manager, Category category, String field, String value) {
