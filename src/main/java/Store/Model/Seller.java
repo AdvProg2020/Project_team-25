@@ -15,7 +15,7 @@ public class Seller extends User {
     private ArrayList<Product> products = new ArrayList<Product>();
     private ArrayList<Offer> offers = new ArrayList<Offer>();
 
-    Seller(String username, String name, String familyName, String email, String phoneNumber, String password, double money, String companyName, String companyDescription) {
+    public Seller(String username, String name, String familyName, String email, String phoneNumber, String password, double money, String companyName, String companyDescription) {
         super(username, name, familyName, email, phoneNumber, password);
         this.companyName = companyName;
         this.companyDescription = companyDescription;
