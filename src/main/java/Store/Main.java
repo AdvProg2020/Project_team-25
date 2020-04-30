@@ -1,10 +1,8 @@
 package Store;
 
 import Store.Model.Manager;
-import Store.View.MainMenu;
-import Store.View.ManagerMenu;
-import Store.View.SellerMenu;
-import Store.View.SignUpAndLoginMenu;
+import Store.Model.Seller;
+import Store.View.*;
 
 public class Main {
 
@@ -16,8 +14,16 @@ public class Main {
         ResourceHandler.readAll();
         System.out.println(Manager.hasManager);
         SignUpAndLoginMenu.init();
-        ManagerMenu.init();
-        //SellerMenu.init();
+        ProductsMenu.init();
+        if (MainMenu.currentUser instanceof Manager) {
+            ManagerMenu.init();
+        }
+        else if (MainMenu.currentUser instanceof Seller) {
+            SellerMenu.init();
+        }
+        else {
+            CustomerMenu.init();
+        }
 
         System.out.println("Save Current Database?");
         String input = InputManager.getNextLine();

@@ -11,6 +11,11 @@ import java.util.regex.Matcher;
 
 public class ProductsMenu {
 
+    private static final String SHOW_PRODUCT_REGEX = "^show product (\\d+)$";
+    private static final String FILTER_REGEX = "^filter (\\w+)$";
+    private static final String DISABLE_FILTER_REGEX = "^disable filter (\\w+)$";
+    private static final String SORT_REGEX = "^sort (\\w+)$";
+
     private static ArrayList<String> filters = new ArrayList<String>();
     private static ArrayList<String> availableFilters = new ArrayList<String>();
     private static ArrayList<String> availableSorts = new ArrayList<String>(Arrays.asList("rating", "price", "visit", "lexicographical"));
@@ -23,28 +28,22 @@ public class ProductsMenu {
         Matcher matcher;
         while(!(input = InputManager.getNextLine()).equalsIgnoreCase("back"))
         {
-            if(input.equalsIgnoreCase("view categories"))
-            {
+            if(input.equalsIgnoreCase("view categories")) {
                 viewCategories();
             }
-            else if(input.equalsIgnoreCase("filter"))
-            {
+            else if(input.equalsIgnoreCase("filter")) {
                 filtering();
             }
-            else if(input.equalsIgnoreCase("sorting"))
-            {
+            else if(input.equalsIgnoreCase("sorting")) {
                 sorting();
             }
-            else if(input.equalsIgnoreCase("show products"))
-            {
+            else if(input.equalsIgnoreCase("show products")) {
                 showAllProducts();
             }
-            else if((matcher = InputManager.getMatcher(input, "(?i)show product(?-i) (\\.+)")).find())
-            {
-                showProduct(matcher.group(3));
+            else if((matcher = InputManager.getMatcher(input, SHOW_PRODUCT_REGEX)).find()) {
+                showProduct(matcher.group(1));
             }
-            else if(input.equalsIgnoreCase("help"))
-            {
+            else if(input.equalsIgnoreCase("help")) {
                 printHelp();
             }
             else if(input.equalsIgnoreCase("offs")) {
@@ -53,12 +52,10 @@ public class ProductsMenu {
             else if(input.equalsIgnoreCase("logout")) {
                 handleLogout();
             }
-            else if(input.equalsIgnoreCase("login"))
-            {
+            else if(input.equalsIgnoreCase("login")) {
                 handleLogin();
             }
-            else
-            {
+            else {
                 System.out.println("invalid command");
             }
         }
@@ -81,13 +78,13 @@ public class ProductsMenu {
             {
                 printCurrentFilter();
             }
-            else if((matcher = InputManager.getMatcher(input,"(?i)filter(?-i) (\\w+)")).find())
+            else if((matcher = InputManager.getMatcher(input, FILTER_REGEX)).find())
             {
-                filter(matcher.group(3));
+                filter(matcher.group(1));
             }
-            else if((matcher = InputManager.getMatcher(input,"(?i)disable filter(?-i) (\\w+)")).find())
+            else if((matcher = InputManager.getMatcher(input,DISABLE_FILTER_REGEX)).find())
             {
-                disableFilter(matcher.group(3));
+                disableFilter(matcher.group(1));
             }
         }
     }
@@ -135,21 +132,20 @@ public class ProductsMenu {
         Matcher matcher;
         while(!(input = InputManager.getNextLine()).equalsIgnoreCase("back"))
         {
-            if(input.equalsIgnoreCase("show available sorts"))
-            {
+            if(input.equalsIgnoreCase("show available sorts")) {
                 showAvailableSorts();
             }
-            else if(input.equalsIgnoreCase("current sort"))
-            {
+            else if(input.equalsIgnoreCase("current sort")) {
                 printCurrentSort();
             }
-            else if(input.equalsIgnoreCase("disable sort"))
-            {
+            else if(input.equalsIgnoreCase("disable sort")) {
                 disableSort();
             }
-            else if((matcher = InputManager.getMatcher(input,"(?i)sort(?-i) (\\w+)")).find())
-            {
-                sort(matcher.group(3));
+            else if((matcher = InputManager.getMatcher(input, SORT_REGEX)).find()) {
+                sort(matcher.group(1));
+            }
+            else {
+                System.out.println("Invalid command");
             }
         }
     }
