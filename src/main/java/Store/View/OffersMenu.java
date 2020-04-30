@@ -22,6 +22,10 @@ public class OffersMenu {
     private static String SORT_REGEX = "^sort ([^\\s]+)$";
 
     public static void init() {
+        currentSort = "visit";
+        filters = new ArrayList<>();
+        availableFilters = new ArrayList(Offer.getAllFilters());
+
         String input;
         Matcher matcher;
         System.out.println("\nOffers menu\n");
