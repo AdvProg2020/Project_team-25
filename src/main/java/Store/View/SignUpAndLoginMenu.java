@@ -29,8 +29,10 @@ public class SignUpAndLoginMenu {
                 printHelp();
             } else if (input.equalsIgnoreCase("offs")) {
                 OffersMenu.init();
+                System.out.println("\nSign up and Login menu\n");
             } else if (input.equalsIgnoreCase("products")) {
                 ProductsMenu.init();
+                System.out.println("\nSign up and Login menu\n");
             } else {
                 System.out.println("Invalid command!");
             }
