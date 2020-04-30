@@ -24,13 +24,13 @@ public class OffersMenu {
     public static void init() {
         currentSort = "visit";
         filters = new ArrayList<>();
-        availableFilters = new ArrayList(Offer.getAllFilters());
 
         String input;
         Matcher matcher;
         System.out.println("\nOffers menu\n");
         viewOffs();
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
+            availableFilters = new ArrayList(Offer.getAllFilters());
             if ((matcher = InputManager.getMatcher(input, SHOW_PRODUCT_REGEX)).find()) {
                 showProducts(matcher.group(1));
             } else if (input.equalsIgnoreCase("filter")) {
