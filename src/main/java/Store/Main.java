@@ -9,6 +9,7 @@ import Store.View.SignUpAndLoginMenu;
 public class Main {
 
     public static void main(String[] args) {
+
 //        ResourceHandler.resetFile();
 //        ResourceHandler.writeAll();
 

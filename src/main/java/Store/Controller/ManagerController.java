@@ -12,14 +12,19 @@ public class ManagerController {
     public static String editPersonalInfo(User user, String field, String value) {
         String returnValue = "info has changed successfully";
         if (field.equalsIgnoreCase("email")) {
-            user.setEmail(value);
-            return returnValue;
+            if (isValidEmail(value)) {
+                user.setEmail(value);
+                return returnValue;
+            }
+            else {
+                return "Invalid email format";
+            }
         } else if (field.equalsIgnoreCase("phone number")) {
-            if (InputManager.getMatcher(value, "^[a-zA-Z]\\w{3,14}$").find()) {
+            if (InputManager.getMatcher(value, "^[0-9]+$").find()) {
                 user.setPhoneNumber(value);
                 return returnValue;
             } else {
-                return "password type is incorrect";
+                return "Phone number format is incorrect";
             }
         } else if (field.equalsIgnoreCase("last name")) {
             user.setFamilyName(value);
@@ -28,14 +33,20 @@ public class ManagerController {
             user.setName(value);
             return returnValue;
         } else if (field.equalsIgnoreCase("password")) {
-            if (InputManager.getMatcher(value, "^[0-9]\\w{3,10}$").find()) {
+            if (value.matches("^[a-zA-Z]\\w{3,14}$")) {
                 user.setPassword(value);
                 return returnValue;
-            } else {
-                return "password type is incorrect";
+            }
+            else {
+                return "Invalid password format";
             }
         }
         return "couldn't change info";
+    }
+
+    private static boolean isValidEmail(String email) {
+        String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+        return email.matches(regex);
     }
 
     public static void createManagerProfile(Manager manager, String username, String firstName, String lastName, String email, String phoneNumber, String password) {
@@ -47,7 +58,7 @@ public class ManagerController {
             return "there isn't any product with this ID";
         }
         manager.removeProduct(product);
-        return "product was deleted successfully";
+        return "product deleted successfully";
     }
 
     public static void createOffCode(Manager manager, String code, double offPercentage, double maximumOff, int usageCount, Date startingDate, Date endingDate) {

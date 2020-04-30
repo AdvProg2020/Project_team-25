@@ -132,7 +132,7 @@ public class ManagerMenu {
         System.out.println("Email: ");
         email = InputManager.getNextLine();
         System.out.println("Phone Number: ");
-        while ((phoneNumber = InputManager.getNextLine()).matches("^[0-9]\\w{3,10}$")) {
+        while (!(phoneNumber = InputManager.getNextLine()).matches("^[0-9]+$")) {
             System.out.println("the format is invalid");
         }
         ManagerController.createManagerProfile(currentUser, username, firstName, lastName, email, phoneNumber, password);
@@ -141,6 +141,7 @@ public class ManagerMenu {
     private static void manageAllProducts() {
         String input;
         Matcher matcher;
+        ProductsMenu.showAllProducts();
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if ((matcher = InputManager.getMatcher(input, REMOVE_PRODUCTS)).find()) {
                 removeProductsWrapper(matcher.group(1));
@@ -264,10 +265,10 @@ public class ManagerMenu {
             if ((matcher = InputManager.getMatcher(input, SHOW_REQUEST_DETAILS)).find()) {
                 manageRequestDetails(Integer.parseInt(matcher.group(1)));
             }
-            if ((matcher = InputManager.getMatcher(input, ACCEPT_REQUEST)).find()) {
+            else if ((matcher = InputManager.getMatcher(input, ACCEPT_REQUEST)).find()) {
                 handleRequestWrapper(true, Integer.parseInt(matcher.group(1)));
             }
-            if ((matcher = InputManager.getMatcher(input, DECLINE_REQUEST)).find()) {
+            else if ((matcher = InputManager.getMatcher(input, DECLINE_REQUEST)).find()) {
                 handleRequestWrapper(false, Integer.parseInt(matcher.group(1)));
             } else {
                 System.out.println("invalid command");
@@ -292,6 +293,7 @@ public class ManagerMenu {
     private static void handleRequestWrapper(boolean status, int id) {
         if (Manager.getRequestById(id) == null) {
             System.out.println("there isn't any request with this id");
+            return;
         }
         System.out.println("status saved");
         ManagerController.handleRequest(currentUser, status, Manager.getRequestById(id));

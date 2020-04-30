@@ -25,6 +25,7 @@ public class Request implements Serializable {
     }
 
     public Request(Product product, boolean change, Object newObject) {
+        this.seller = product.getSeller();
         this.product = product;
         this.change = change;
         this.requestType = RequestType.ADD_NEW_PRODUCT;
@@ -93,6 +94,7 @@ public class Request implements Serializable {
     public String toString() {
         return "Request{" +
                 "requestType=" + requestType +
+                ", id=" + this.getId() +
                 ", status=" + status +
                 ", product=" + product +
                 ", seller=" + seller +

@@ -26,6 +26,10 @@ public class Category implements Serializable {
         Category.idCounter = idCounter;
     }
 
+    public static int getIdCounter() {
+        return idCounter;
+    }
+
     public int getId() {
         return id;
     }
@@ -65,7 +69,7 @@ public class Category implements Serializable {
         if (this.parent == null) {
             return this.name;
         }
-        return " -> " + this.parent.getFullName();
+        return this.parent.getFullName() + " -> " + this.name;
     }
 
     public Category getParent() {

@@ -105,9 +105,11 @@ public class Manager extends User {
     }
 
     public static Request getRequestById(int id) {
-        for (Request request : pendingRequests)
-            if (id == request.getId())
+        for (Request request : pendingRequests) {
+            if (id == request.getId()) {
                 return request;
+            }
+        }
         return null;
     }
 
@@ -369,8 +371,8 @@ public class Manager extends User {
 
     @Override
     public boolean equals(Object object) {
-        Manager manager = (Manager) object;
-        return(super.equals(manager));
+        User user = (User) object;
+        return(super.equals(user));
     }
 
     @Override

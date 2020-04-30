@@ -177,7 +177,7 @@ public class ProductsMenu {
         currentSort = "visit";
     }
 
-    private static void showAllProducts() {
+    public static void showAllProducts() {
         productsToBeShown = ProductsController.getFilteredList(filters);
         productsToBeShown = ProductsController.sort(currentSort, productsToBeShown);
         for(Product product: productsToBeShown)

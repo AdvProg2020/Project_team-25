@@ -32,13 +32,18 @@ public class SellerController {
             seller.setEmail(value);
         }
         if (field.equalsIgnoreCase("phone number")) {
-            if (!StringUtils.isNumeric(value)) {
+            if (!value.matches("^[0-9]+$")) {
                 throw new InvalidValueException(INVALID_VALUE_ERROR);
             }
             seller.setPhoneNumber(value);
         }
         else if (field.equalsIgnoreCase("password")) {
-            seller.setPassword(value);
+            if (value.matches("^[a-zA-Z]\\w{3,14}$")) {
+                seller.setPassword(value);
+            }
+            else {
+                throw new InvalidValueException(INVALID_VALUE_ERROR);
+            }
         }
         else if (field.equalsIgnoreCase("company name")) {
             seller.setCompanyName(value);
