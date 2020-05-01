@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class User implements Serializable {
 
     int id;
-    protected String type;
+    protected String type = null;
     protected String username;
     protected String name;
     protected String familyName;
@@ -132,8 +132,9 @@ public class User implements Serializable {
     @Override
     public boolean equals(Object object) {
         User user = (User) object;
-        if(username.equals(user.getUsername()) && email.equals(user.getEmail()) && phoneNumber.equals(user.getPhoneNumber()) && familyName.equals(user.getFamilyName()) && name.equals(user.getName()) && id == user.getId() && type.equals(user.getType()))
-            return true;
+        if(username.equals(user.getUsername()) && email.equals(user.getEmail()) && phoneNumber.equals(user.getPhoneNumber()) && familyName.equals(user.getFamilyName()) && name.equals(user.getName()) && user.validatePassword(password))
+            if((type == null && user.getType() == null) || (type.equals(user.getType())))
+             return true;
         return false;
     }
 }
