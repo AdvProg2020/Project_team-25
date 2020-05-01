@@ -1,6 +1,7 @@
 package Store.Model;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import static Store.Model.Enums.VerifyStatus.ACCEPTED;
 import static Store.Model.Enums.VerifyStatus.REJECTED;
@@ -142,6 +143,7 @@ public class Manager extends User {
 
     public void addOffCode(OffCode offCode) {
         offCodes.add(offCode);
+        offCode.setStartingTime(new Date());
     }
 
     public void addCategory(Category category) {

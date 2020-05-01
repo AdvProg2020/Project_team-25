@@ -116,7 +116,8 @@ public class CustomerMenu {
         if (Product.getProductByID(Integer.parseInt(attribute)) == null) {
             System.out.println("There isn't any product with this ID!");
         }
-        System.out.println(Product.getProductByID(Integer.parseInt(attribute)));
+        else
+            System.out.println(Product.getProductByID(Integer.parseInt(attribute)));
     }
 
     private static void increaseProductWrapper(String attribute) {
@@ -132,6 +133,11 @@ public class CustomerMenu {
     }
 
     private static void purchaseWrapper() {
+        if (customer.getCart().isEmpty())
+        {
+            System.out.println("You haven't selected any products");
+            return;
+        }
         getReceiverInfo(); // for what??
         System.out.println("Print code of your offCode (if you haven't offCode Print Null): ");
         String input = InputManager.getNextLine();

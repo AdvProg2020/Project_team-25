@@ -4,17 +4,13 @@ import Store.Model.Manager;
 import Store.Model.Product;
 import Store.Model.Request;
 import Store.Model.User;
-import Store.ResourceHandler;
 import Store.View.MainMenu;
 import Store.View.ManagerMenu;
-import Store.View.SignUpAndLoginMenu;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.jws.soap.SOAPBinding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 
 public class ManagerModelTest {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();

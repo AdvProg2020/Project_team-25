@@ -4,6 +4,8 @@ import Store.Model.*;
 import Store.Model.Enums.CheckingStatus;
 import Store.View.*;
 
+import java.util.Date;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -54,6 +56,18 @@ public class Main {
         Product product2 = new Product(CheckingStatus.CREATION, null, "product2", seller2, "brand1", 5, true, "www", "describe");
         Product product3 = new Product(CheckingStatus.CREATION, null, "product3", seller1, "brand1", 10, true, "www", "describe");
         Product product4 = new Product(CheckingStatus.CREATION, null, "product3", seller2, "brand1", 15.5, true, "www", "describe");
+        Product product5 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "www", "describe");
+
+        OffCode offCode1 = new OffCode("ce98",30,10,2);
+        offCode1.setEndingTime(new Date(2020, 5, 4));
+        OffCode offCode2 = new OffCode("AP2",60,5,1);
+        offCode2.setEndingTime(new Date(2020, 5, 4));
+        manager1.addOffCode(offCode1);
+        manager1.addOffCode(offCode2);
+        offCode1.addUser(customer);
+        offCode2.addUser(customer);
+        customer.addOffCode(offCode1);
+        customer.addOffCode(offCode2);
 
         Request request = new Request(seller1);
         Manager.addRequest(request);
@@ -62,10 +76,12 @@ public class Main {
         product2.assignToSeller();
         product3.assignToSeller();
         product4.assignToSeller();
+        product5.assignToSeller();
 
         Product.addProduct(product1);
         Product.addProduct(product2);
         Product.addProduct(product3);
         Product.addProduct(product4);
+        Product.addProduct(product5);
     }
 }

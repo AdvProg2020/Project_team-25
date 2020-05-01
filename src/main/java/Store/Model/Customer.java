@@ -105,7 +105,7 @@ public class Customer extends User {
             }
             buyLog.add(new BuyLogItem(buyLog.size() + 1, date, productsOfOneSeller, (discount / totalPrice) * priceOfList(productsOfOneSeller), seller.getName(), false));
             seller.handleLogs((discount / totalPrice) * priceOfList(productsOfOneSeller), productsOfOneSeller, date, this, (1 - discount / totalPrice) * priceOfList(productsOfOneSeller));
-            seller.removeProducts(productsOfOneSeller);
+           // seller.removeProducts(productsOfOneSeller);
             seller.setMoney(seller.getMoney() + (1 - discount / totalPrice) * priceOfList(productsOfOneSeller));
         }
     }

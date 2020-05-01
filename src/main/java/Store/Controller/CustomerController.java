@@ -1,13 +1,10 @@
 package Store.Controller;
 
-import Store.InputManager;
 import Store.Model.Customer;
 import Store.Model.Manager;
 import Store.Model.OffCode;
 import Store.Model.Product;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 public class CustomerController {
@@ -46,14 +43,14 @@ public class CustomerController {
         if (input.equalsIgnoreCase("null")) {
             if (customer.canBuy()) {
                 customer.buy();
-                return "bBought successfully. " + customer.getBuyLog().get(customer.getBuyLog().size() - 1);
+                return "Bought successfully. " + customer.getBuyLog().get(customer.getBuyLog().size() - 1);
             }
             return "You don't have enough money!";
         } else {
             OffCode offCode = Manager.getOffCodeByCode(input);
             if (offCode != null && offCode.canBeUsedInDate(new Date()) && offCode.isUserIncluded(customer)) {
                 if (customer.canBuy(offCode)) {
-                    customer.buy();
+                    customer.buy(offCode);
                     return "Bought successfully. " + customer.getBuyLog().get(customer.getBuyLog().size() - 1);
                 }
                 return "You don't have enough money!";
