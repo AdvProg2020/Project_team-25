@@ -57,8 +57,7 @@ public class User implements Serializable {
     public void delete() {
     }
 
-    public static boolean isExist(User user)
-    {
+    public static boolean isExist(User user) {
         return allUsers.contains(user);
     }
 
@@ -118,9 +117,8 @@ public class User implements Serializable {
     }
 
     @Override
-    public String toString()
-    {
-        String output = null;
+    public String toString() {
+        String output = "";
         output += "Username: " + username;
         output += "\nFirst Name: " + name;
         output += "\nFamily Name: " + familyName;
@@ -132,8 +130,16 @@ public class User implements Serializable {
     @Override
     public boolean equals(Object object) {
         User user = (User) object;
-        if(username.equals(user.getUsername()) && email.equals(user.getEmail()) && phoneNumber.equals(user.getPhoneNumber()) && familyName.equals(user.getFamilyName()) && name.equals(user.getName()) && id == user.getId() && type.equals(user.getType()))
+        if (user == null && object == null) {
             return true;
+        }
+        if ((user != null && object != null)) {
+            if (username.equals(user.getUsername()) && email.equals(user.getEmail()) && phoneNumber.equals(user.getPhoneNumber()) && familyName.equals(user.getFamilyName()) && name.equals(user.getName())) {
+                if ((type == null && user.getType() == null) || type.equals(user.getType())) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 }

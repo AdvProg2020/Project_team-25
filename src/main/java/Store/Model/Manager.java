@@ -380,15 +380,4 @@ public class Manager extends User {
         allUsers.remove(this);
     }
 
-    @Override
-    public String toString()
-    {
-        String output = null;
-        output += "Username: " + username;
-        output += "\nFirst Name: " + name;
-        output += "\nFamily Name: " + familyName;
-        output += "\nEmail: " + email;
-        output += "\nPhone Number: " + phoneNumber;
-        return output;
-    }
 }
