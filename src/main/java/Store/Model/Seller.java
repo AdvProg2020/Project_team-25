@@ -32,6 +32,15 @@ public class Seller extends User {
         this.type = "Seller";
     }
 
+    public static void addSeller(Seller seller)
+    {
+        allUsers.add(seller);
+    }
+
+    public void addProduct(Product product)
+    {
+        products.add(product);
+    }
     public void requestAddProduct(Product product) {
         new Request(product, false, null);
     }
