@@ -431,11 +431,13 @@ public class ManagerMenu {
         System.out.println("view [username]");
         System.out.println("delete user [username]");
         System.out.println("create manager profile");
+        System.out.println("sort by [name | family name | phone number | username | email]");
         System.out.println("back");
         System.out.println("*******");
 
         System.out.println("\nList of commands in the manage all products: ");
         System.out.println("remove [productID]");
+        System.out.println("sort by [rating | price | visit | lexicographical]");
         System.out.println("back");
         System.out.println("*******");
 
@@ -443,6 +445,7 @@ public class ManagerMenu {
         System.out.println("view discount code [code]");
         System.out.println("edit discount code [code] [maximumOff|offPercentage] [value]");
         System.out.println("remove discount code [code]");
+        System.out.println("sort by [time of starting | time of ending | code | off percentage | maximum off | usage count]");
         System.out.println("back");
         System.out.println("*******");
 
