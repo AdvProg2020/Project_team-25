@@ -3,8 +3,8 @@ import Store.Model.User;
 import Store.View.CustomerMenu;
 import Store.View.MainMenu;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-import org.testng.annotations.BeforeTest;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,7 +15,7 @@ public class CustomerModelTest {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
 
-    @BeforeTest
+    @Before
     public void setUpTest()
     {
         Main.setTest();

@@ -200,6 +200,9 @@ public class Seller extends User {
 
     @Override
     public boolean equals(Object object) {
+        if (!(object instanceof Seller)) {
+            return false;
+        }
         Seller seller = (Seller) object;
         if(super.equals(seller))
             if(companyName.equals(seller.getCompanyName()) && companyDescription.equals(seller.getCompanyDescription()) && offers.equals(seller.getOffers()) && sellLog.equals(seller.getSellLog()) && products.equals(seller.getProducts()))

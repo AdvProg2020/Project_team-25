@@ -55,9 +55,17 @@ public class Main {
         Product product3 = new Product(CheckingStatus.CREATION, null, "product3", seller1, "brand1", 10, true, "www", "describe");
         Product product4 = new Product(CheckingStatus.CREATION, null, "product3", seller2, "brand1", 15.5, true, "www", "describe");
 
+        Request request = new Request(seller1);
+        Manager.addRequest(request);
+
         product1.assignToSeller();
         product2.assignToSeller();
         product3.assignToSeller();
         product4.assignToSeller();
+
+        Product.addProduct(product1);
+        Product.addProduct(product2);
+        Product.addProduct(product3);
+        Product.addProduct(product4);
     }
 }

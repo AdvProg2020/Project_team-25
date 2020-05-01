@@ -28,7 +28,7 @@ public class ManagerController {
             } else {
                 return "Phone number format is incorrect!";
             }
-        } else if (field.equalsIgnoreCase("last name")) {
+        } else if (field.equalsIgnoreCase("family name")) {
             user.setFamilyName(value);
             return returnValue;
         } else if (field.equalsIgnoreCase("first name")) {

@@ -103,4 +103,8 @@ public class Request implements Serializable {
                 ", change=" + change +
                 '}';
     }
+
+    public VerifyStatus getStatus() {
+        return status;
+    }
 }
