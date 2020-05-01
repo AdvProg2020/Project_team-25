@@ -28,9 +28,11 @@ public class SellerMenu {
     public static void init() {
         String input;
         Matcher matcher;
+        System.out.println("\nSeller menu\n");
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if (input.equalsIgnoreCase("view personal info")) {
                 viewPersonaInfo((Seller) MainMenu.currentUser);
+                System.out.println("\nSeller menu\n");
             }
             else if (input.equalsIgnoreCase("view company information")) {
                 viewCompanyInformation((Seller) MainMenu.currentUser);
@@ -40,6 +42,7 @@ public class SellerMenu {
             }
             else if (input.equalsIgnoreCase("manage products")) {
                 manageProduct((Seller) MainMenu.currentUser);
+                System.out.println("\nSeller menu\n");
             }
             else if (input.equalsIgnoreCase("add product")) {
                 addProductWrapper((Seller) MainMenu.currentUser);
@@ -52,22 +55,31 @@ public class SellerMenu {
             }
             else if (input.equalsIgnoreCase("view offs")) {
                 viewOffs((Seller) MainMenu.currentUser);
+                System.out.println("\nSeller menu\n");
             }
             else if (input.equalsIgnoreCase("view balance")) {
                 viewBalance((Seller) MainMenu.currentUser);
             }
+            else if (input.equalsIgnoreCase("products")) {
+                ProductsMenu.init();
+                System.out.println("\nSeller menu\n");
+            }
+            else if (input.equalsIgnoreCase("offs")) {
+                OffersMenu.init();
+                System.out.println("\nSeller menu\n");
+            }
             else if (input.equalsIgnoreCase("login")) {
                 handleLogin();
+                System.out.println("\nSeller menu\n");
             }
             else if (input.equalsIgnoreCase("logout")) {
                 handleLogout();
             }
             else if (input.equalsIgnoreCase("help")) {
-                System.out.println("---Currently in: seller menu");
                 printHelp();
             }
             else {
-                System.out.println("Invalid command");
+                System.out.println("Invalid command!");
             }
         }
     }
@@ -77,12 +89,14 @@ public class SellerMenu {
 
         String input;
         Matcher matcher;
+        System.out.println("\nSeller menu -> View Personal Info\n");
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if ((matcher = InputManager.getMatcher(input, EDIT_PERSONAL_INFO_REGEX)).find()) {
                 editPersonalInfoWrapper(seller, matcher.group(1));
             }
             else if (input.equalsIgnoreCase("login")) {
                 handleLogin();
+                System.out.println("\nSeller menu -> View Personal Info\n");
             }
             else if (input.equalsIgnoreCase("logout")) {
                 handleLogout();
@@ -98,10 +112,10 @@ public class SellerMenu {
 
     private static void editPersonalInfoWrapper(Seller seller, String field) {
         if (field.equalsIgnoreCase("username")) {
-            System.out.println("This fiels cannot be edited");
+            System.out.println("This field cannot be edited!");
         }
         else if (!SellerController.isValidField(field)) {
-            System.out.println("This is not a valid field");
+            System.out.println("This is not a valid field!");
         }
         else {
             String value;
@@ -113,7 +127,7 @@ public class SellerMenu {
                     value = InputManager.getNextLine();
                 }
                 else {
-                    System.out.println("The password you entered is incorrect");
+                    System.out.println("The password you entered is incorrect!");
                     return;
                 }
             }
@@ -145,6 +159,7 @@ public class SellerMenu {
     }
 
     private static void manageProduct(Seller seller) {
+        System.out.println("\nSeller menu -> Manage Products\n");
         for (Product product : seller.getProducts()) {
             System.out.println("{" + product.getName() + " " + product.getProductID() + ", " + product.getCategory().getFullName()
                                 + ", " + (product.getAvailablity() ? "available" : "unavailable") + "}");
@@ -164,16 +179,16 @@ public class SellerMenu {
             }
             else if (input.equalsIgnoreCase("login")) {
                 handleLogin();
+                System.out.println("\nSeller menu -> Manage Products\n");
             }
             else if (input.equalsIgnoreCase("logout")) {
                 handleLogout();
             }
             else if (input.equalsIgnoreCase("help")) {
-                System.out.println("---Currently in: manage product");
                 printHelp();
             }
             else {
-                System.out.println("Invalid command");
+                System.out.println("Invalid command!");
             }
         }
     }
@@ -183,7 +198,7 @@ public class SellerMenu {
             ProductMenu.init(Product.getProductByID(Integer.parseInt(attribute)));
         }
         else {
-            System.out.println("Please enter a valid id");
+            System.out.println("Invalid ID!");
         }
     }
 
@@ -207,7 +222,7 @@ public class SellerMenu {
             System.out.println();
         }
         else {
-            System.out.println("Please enter a valid id");
+            System.out.println("Invalid ID!");
         }
     }
 
@@ -219,7 +234,7 @@ public class SellerMenu {
             }
         }
         else {
-            System.out.println("Please enter a valid id");
+            System.out.println("Invalid ID!");
         }
     }
 
@@ -227,7 +242,7 @@ public class SellerMenu {
         System.out.println("Category ID: ");
         String attribute = InputManager.getNextLine();
         if (!StringUtils.isNumeric(attribute) || !Category.hasCategoryWithId(Integer.parseInt(attribute))) {
-            System.out.println("Invalid category ID");
+            System.out.println("Invalid category ID!");
             return null;
         }
         Category parent = Category.getCategoryById(Integer.parseInt(attribute));
@@ -241,7 +256,7 @@ public class SellerMenu {
         System.out.println("Product price: ");
         attribute = InputManager.getNextLine();
         if (!attribute.matches("^\\d+\\.\\d+$")) {
-            System.out.println("Invalid price value");
+            System.out.println("Invalid price value!");
             return null;
         }
         double price = Double.parseDouble(attribute);
@@ -249,7 +264,7 @@ public class SellerMenu {
         System.out.println("Product availability (0 | 1): ");
         attribute = InputManager.getNextLine();
         if (!attribute.matches("^(0|1)$")) {
-            System.out.println("Invalid availability value");
+            System.out.println("Invalid availability value!");
             return null;
         }
         boolean availability = (attribute.equals("1"));
@@ -277,7 +292,7 @@ public class SellerMenu {
             SellerController.removeProduct(seller, Product.getProductByID(Integer.parseInt(attribute)));
         }
         else {
-            System.out.println("Please enter a valid id");
+            System.out.println("Invalid ID!");
         }
     }
 
@@ -294,6 +309,7 @@ public class SellerMenu {
     }
 
     private static void viewOffs(Seller seller) {
+        System.out.println("\nSeller menu -> View Offs\n");
         System.out.println("Your offers: ");
         for (Offer offer : SellerController.getOffersOfThisSeller(seller)) {
             System.out.println(offer.toString());
@@ -313,16 +329,16 @@ public class SellerMenu {
             }
             else if (input.equalsIgnoreCase("login")) {
                 handleLogin();
+                System.out.println("\nSeller menu -> View Offs\n");
             }
             else if (input.equalsIgnoreCase("logout")) {
                 handleLogout();
             }
             else if (input.equalsIgnoreCase("help")) {
-                System.out.println("---Currently in: view offs");
                 printHelp();
             }
             else {
-                System.out.println("Invalid command");
+                System.out.println("Invalid command!");
             }
         }
     }
@@ -362,7 +378,7 @@ public class SellerMenu {
             startingTime = dateFormat.parse(input);
         }
         catch (ParseException exception) {
-            System.out.println("Invalid date format");
+            System.out.println("Invalid date format!");
             return null;
         }
 
@@ -372,14 +388,14 @@ public class SellerMenu {
             endingTime = dateFormat.parse(input);
         }
         catch (ParseException exception) {
-            System.out.println("Invalid date format");
+            System.out.println("Invalid date format!");
             return null;
         }
 
         System.out.println("Off Percentage: ");
         input = InputManager.getNextLine();
         if (!input.matches("\\d+\\.\\d+")) {
-            System.out.println("Invalid percentage");
+            System.out.println("Invalid percentage!");
             return null;
         }
         double offPercentage = Double.parseDouble(input);
@@ -408,13 +424,13 @@ public class SellerMenu {
             }
         }
         else {
-            System.out.println("Invalid ID");
+            System.out.println("Invalid ID!");
         }
     }
 
     private static void editOffWrapper(Seller seller, String attribute) {
         if (!StringUtils.isNumeric(attribute) || !Offer.hasOfferByID(Integer.parseInt(attribute))) {
-            System.out.println("Invalid ID");
+            System.out.println("Invalid ID!");
             return;
         }
         Offer offer = createOffer(seller);
@@ -435,7 +451,7 @@ public class SellerMenu {
     }
 
     private static void printHelp() {
-        System.out.println("list of commands: ");
+        System.out.println("List of main commands: ");
         System.out.println("view personal info");
         System.out.println("view company information");
         System.out.println("view sales history");
@@ -445,20 +461,22 @@ public class SellerMenu {
         System.out.println("show categories");
         System.out.println("view offs");
         System.out.println("view balance");
+        System.out.println("offs");
+        System.out.println("products");
         System.out.println("login");
         System.out.println("logout");
         System.out.println("help");
         System.out.println("back");
         System.out.println("*******");
 
-        System.out.println("\n list of commands in the 'view personal info' submenu: ");
+        System.out.println("\nList of commands in the 'view personal info' submenu: ");
         System.out.println("edit [field]");
         System.out.println("login");
         System.out.println("logout");
         System.out.println("back");
         System.out.println("*******");
 
-        System.out.println("\n list of commands in the 'manage products' submenu: ");
+        System.out.println("\nList of commands in the 'manage products' submenu: ");
         System.out.println("view [productId]");
         System.out.println("view buyers [productId]");
         System.out.println("edit [productId]");
@@ -467,7 +485,7 @@ public class SellerMenu {
         System.out.println("back");
         System.out.println("*******");
 
-        System.out.println("\n list of commands in the 'view offs' submenu: ");
+        System.out.println("\nList of commands in the 'view offs' submenu: ");
         System.out.println("view [offId]");
         System.out.println("edit [offId]");
         System.out.println("add off");
@@ -481,13 +499,13 @@ public class SellerMenu {
         if (MainMenu.currentUser == null) {
             SignUpAndLoginMenu.init();
         } else {
-            System.out.println("you have signed in");
+            System.out.println("You have signed in!");
         }
     }
 
     private static void handleLogout() {
         if (MainMenu.currentUser == null) {
-            System.out.println("you haven't signed in");
+            System.out.println("You haven't signed in!");
         } else {
             MainMenu.currentUser = null;
             MainMenu.init();

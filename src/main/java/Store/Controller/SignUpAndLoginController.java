@@ -1,7 +1,8 @@
 package Store.Controller;
 
-import Store.InputManager;
 import Store.Model.*;
+import Store.View.MainMenu;
+import Store.View.SignUpAndLoginMenu;
 
 import java.util.ArrayList;
 
@@ -20,6 +21,41 @@ public class SignUpAndLoginController {
     public static void createCustomer(ArrayList<String> attributes, double money) {
         new Customer(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4),
                 attributes.get(5), money);
+    }
+
+    public static String handleLogin(String username, String password) {
+        User user = User.getUserByUsername(username);
+        if (user == null) {
+            return "No user with this username exists!";
+        }
+
+        if (user.validatePassword(password)) {
+            MainMenu.currentUser = user;
+            return "Login successful.";
+        } else {
+            return "Invalid password!";
+        }
+    }
+
+    public static String handleCreateAccount(String type, String username) {
+        if (User.getUserByUsername(username) != null) {
+            return "A user with this username already exists!";
+        }
+        if (type.equalsIgnoreCase("manager") && Manager.hasManager) {
+            return "You can only create the first manager via this method!";
+        }
+        ArrayList<String> attributes = SignUpAndLoginMenu.getPersonal(username);
+        if (type.equalsIgnoreCase("seller")) {
+            double money = SignUpAndLoginMenu.getMoney();
+            ArrayList<String> companyDescription = SignUpAndLoginMenu.getCompanyDescription();
+
+            SignUpAndLoginController.createSeller(attributes, money, companyDescription.get(0), companyDescription.get(1));
+        } else if (type.equalsIgnoreCase("customer")) {
+            SignUpAndLoginController.createCustomer(attributes, SignUpAndLoginMenu.getMoney());
+        } else {
+            SignUpAndLoginController.createManager(attributes);
+        }
+        return "Register successfully.";
     }
 
 }

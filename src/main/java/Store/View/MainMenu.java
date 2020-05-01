@@ -1,9 +1,12 @@
 package Store.View;
 
+import Store.InputManager;
 import Store.Model.Customer;
 import Store.Model.Manager;
 import Store.Model.Seller;
 import Store.Model.User;
+
+import java.util.regex.Matcher;
 
 public class MainMenu {
 
@@ -11,32 +14,73 @@ public class MainMenu {
 
     public static void init() {
         // Set current user
-        int a = 0;
-        while (true) {
-            if (a == 1) {
-                ProductsMenu.init();
-            }
-            else if (a == 2) {
-                SignUpAndLoginMenu.init();
-            }
-            else if (a == 3) {
-                OffersMenu.init();
-            }
-            else if (a == 4) {
-                if (currentUser instanceof Customer) {
-                    CustomerMenu.init();
+        String input;
+        Matcher matcher;
+        System.out.println("\nMain menu\n");
+        while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
+            if (input.equalsIgnoreCase("user page")) {
+                if (currentUser == null) {
+                    System.out.println("You must login before going into your user page!");
                 }
-                else if (currentUser instanceof Manager) {
-                    ManagerMenu.init();
+                else if (currentUser instanceof Customer) {
+                    CustomerMenu.init();
                 }
                 else if (currentUser instanceof Seller) {
                     SellerMenu.init();
                 }
+                else if (currentUser instanceof Manager) {
+                    ManagerMenu.init();
+                }
+                System.out.println("\nMain menu\n");
+            }
+            else if (input.equalsIgnoreCase("products")) {
+                ProductsMenu.init();
+                System.out.println("\nMain menu\n");
+            }
+            else if (input.equalsIgnoreCase("offs")) {
+                OffersMenu.init();
+                System.out.println("\nMain menu\n");
+            }
+            else if (input.equalsIgnoreCase("login")) {
+                handleLogin();
+                System.out.println("\nMain menu\n");
+            }
+            else if (input.equalsIgnoreCase("logout")) {
+                handleLogout();
+            }
+            else if (input.equalsIgnoreCase("help")) {
+                printHelp();
+            }
+            else {
+                System.out.println("Invalid command!");
             }
         }
     }
 
     private static void printHelp() {
+        System.out.println("List of main commands: ");
+        System.out.println("user page");
+        System.out.println("products");
+        System.out.println("offs");
+        System.out.println("login");
+        System.out.println("logout");
+        System.out.println("help");
+        System.out.println("*******");
+    }
 
+    private static void handleLogin() {
+        if (MainMenu.currentUser == null) {
+            SignUpAndLoginMenu.init();
+        } else {
+            System.out.println("You have signed in!");
+        }
+    }
+
+    private static void handleLogout() {
+        if (MainMenu.currentUser == null) {
+            System.out.println("You haven't signed in!");
+        } else {
+            MainMenu.currentUser = null;
+        }
     }
 }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class SellerController {
 
-    private static final String INVALID_VALUE_ERROR = "The value you entered for this field is invalid";
+    private static final String INVALID_VALUE_ERROR = "The value you entered for this field is invalid!";
 
     public static class InvalidValueException extends Exception {
         InvalidValueException(String message) {
@@ -32,13 +32,18 @@ public class SellerController {
             seller.setEmail(value);
         }
         if (field.equalsIgnoreCase("phone number")) {
-            if (!StringUtils.isNumeric(value)) {
+            if (!value.matches("^[0-9]+$")) {
                 throw new InvalidValueException(INVALID_VALUE_ERROR);
             }
             seller.setPhoneNumber(value);
         }
         else if (field.equalsIgnoreCase("password")) {
-            seller.setPassword(value);
+            if (value.matches("^[a-zA-Z]\\w{3,14}$")) {
+                seller.setPassword(value);
+            }
+            else {
+                throw new InvalidValueException(INVALID_VALUE_ERROR);
+            }
         }
         else if (field.equalsIgnoreCase("company name")) {
             seller.setCompanyName(value);

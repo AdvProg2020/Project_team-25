@@ -1,22 +1,31 @@
 package Store;
 
 import Store.Model.Manager;
-import Store.View.MainMenu;
-import Store.View.ManagerMenu;
-import Store.View.SellerMenu;
-import Store.View.SignUpAndLoginMenu;
+import Store.Model.Seller;
+import Store.View.*;
 
 public class Main {
 
     public static void main(String[] args) {
+
 //        ResourceHandler.resetFile();
 //        ResourceHandler.writeAll();
 
         ResourceHandler.readAll();
         System.out.println(Manager.hasManager);
-        SignUpAndLoginMenu.init();
-        ManagerMenu.init();
-        //SellerMenu.init();
+//        SignUpAndLoginMenu.init();
+//        ProductsMenu.init();
+//        if (MainMenu.currentUser instanceof Manager) {
+//            ManagerMenu.init();
+//        }
+//        else if (MainMenu.currentUser instanceof Seller) {
+//            SellerMenu.init();
+//        }
+//        else {
+//            CustomerMenu.init();
+//        }
+
+        MainMenu.init();
 
         System.out.println("Save Current Database?");
         String input = InputManager.getNextLine();

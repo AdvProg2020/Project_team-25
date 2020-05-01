@@ -5,6 +5,7 @@ import Store.Model.Enums.CheckingStatus;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 
 public class Product implements Serializable {
 
@@ -24,6 +25,7 @@ public class Product implements Serializable {
     private ArrayList<Rating> ratings = new ArrayList<Rating>();
     private ArrayList<Comment> comments = new ArrayList<Comment>();
     private ArrayList<String> filters = new ArrayList<>();
+    private static HashSet<String> allFilters = new HashSet<>();
     private int visited;
 
     private static int idCounter = 0;
@@ -225,8 +227,13 @@ public class Product implements Serializable {
         return filters;
     }
 
+    public static HashSet<String> getAllFilters() {
+        return allFilters;
+    }
+
     public void addFilter(String filter) {
        this.filters.add(filter);
+       allFilters.add(filter);
     }
 
     public void deleteFilter(String filter) {

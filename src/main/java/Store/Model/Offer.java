@@ -6,12 +6,14 @@ import Store.Model.Enums.CheckingStatus;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 
 public class Offer implements Serializable {
     private int offID;
     private User user;
     private ArrayList<Product> products = new ArrayList<Product>();
     private ArrayList<String> filters = new ArrayList<String>();
+    private static HashSet<String> allFilters = new HashSet<>();
     private CheckingStatus offerStatus;
     private Date startingTime, endingTime;
     // StartingTime and EndingTime?
@@ -57,6 +59,7 @@ public class Offer implements Serializable {
 
     public void addFilter(String filter) {
         this.filters.add(filter);
+        allFilters.add(filter);
     }
 
     public void removeFilter(String filter) {
@@ -69,6 +72,10 @@ public class Offer implements Serializable {
 
     public ArrayList<String> getFilters() {
         return filters;
+    }
+
+    public static HashSet<String> getAllFilters() {
+        return allFilters;
     }
 
     public boolean containsProduct(Product product) {

@@ -17,6 +17,7 @@ public class Customer extends User {
         super(username, name, familyName, email, phoneNumber, password);
         this.money = money;
         this.type = "Customer";
+        User.allUsers.add(this);
     }
 
     public Customer(User user, String password, double money)

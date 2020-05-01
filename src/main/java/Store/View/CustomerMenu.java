@@ -24,28 +24,35 @@ public class CustomerMenu {
         customer = (Customer) MainMenu.currentUser;
         String input;
 
+        System.out.println("\nCustomer menu\n");
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if (input.equalsIgnoreCase("view personal info")) {
                 viewPersonalInfo();
+                System.out.println("\nCustomer menu\n");
             } else if (input.equalsIgnoreCase("view cart")) {
                 viewCart();
+                System.out.println("\nCustomer menu\n");
             } else if (input.equalsIgnoreCase("purchase")) {
                 purchaseWrapper();
             } else if (input.equalsIgnoreCase("view orders")) {
                 viewOrders();
+                System.out.println("\nCustomer menu\n");
             } else if (input.equalsIgnoreCase("view balance")) {
                 viewBalance();
             } else if (input.equalsIgnoreCase("view discount codes")) {
                 viewDiscountCodes();
             } else if (input.equalsIgnoreCase("help")) {
                 printHelp();
+            } else if (input.equalsIgnoreCase("products")) {
+                ProductsMenu.init();
+                System.out.println("\nCustomer menu\n");
             } else if (input.equalsIgnoreCase("offs")) {
                 OffersMenu.init();
+                System.out.println("\nCustomer menu\n");
             } else if (input.equalsIgnoreCase("logout")) {
-                MainMenu.currentUser = null;
-                break;
+                handleLogout();
             } else {
-                System.out.println("invalid command");
+                System.out.println("Invalid command!");
             }
         }
         if (MainMenu.currentUser == null) {
@@ -57,12 +64,13 @@ public class CustomerMenu {
     private static void viewPersonalInfo() {
         String input;
         Matcher matcher;
+        System.out.println("\nCustomer menu -> View Personal Info\n");
         System.out.println(customer);//
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if ((matcher = InputManager.getMatcher(input, EDIT_PERSONAL_INFO)).find()) {
                 editPersonalInfoWrapper(matcher.group(1), matcher.group(2));
             } else {
-                System.out.println("invalid command");
+                System.out.println("Invalid command!");
             }
         }
     }
@@ -74,6 +82,7 @@ public class CustomerMenu {
     private static void viewCart() {
         String input;
         Matcher matcher;
+        System.out.println("\nCustomer menu -> View Cart\n");
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if (input.equalsIgnoreCase("show product")) {
                 showProducts();
@@ -89,7 +98,7 @@ public class CustomerMenu {
                 purchaseWrapper();
                 break;
             } else {
-                System.out.println("invalid command");
+                System.out.println("Invalid command!");
             }
         }
     }
@@ -104,7 +113,7 @@ public class CustomerMenu {
 
     private static void showProduct(String attribute) {
         if (Product.getProductByID(Integer.parseInt(attribute)) == null) {
-            System.out.println("there isn't any product with this ID");
+            System.out.println("There isn't any product with this ID!");
         }
         System.out.println(Product.getProductByID(Integer.parseInt(attribute)));
     }
@@ -118,7 +127,7 @@ public class CustomerMenu {
     }
 
     private static void showTotalCartPrice() {
-        System.out.println("The Total CartPrice Is: " + customer.getTotalCartPrice());
+        System.out.println("The total cart price Is: " + customer.getTotalCartPrice());
     }
 
     private static void purchaseWrapper() {
@@ -148,20 +157,21 @@ public class CustomerMenu {
     private static void viewOrders() {
         String input;
         Matcher matcher;
+        System.out.println("\nCustomer menu -> View Orders\n");
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if ((matcher = InputManager.getMatcher(input, SHOW_ORDER)).find()) {
                 showOrder(Integer.parseInt(matcher.group(1)));
             } else if ((matcher = InputManager.getMatcher(input, RATE_PRODUCT)).find()) {
                 rateProductWrapper(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
             } else {
-                System.out.println("invalid command");
+                System.out.println("Invalid command!");
             }
         }
     }
 
     private static void showOrder(int id) {
         if (Product.getProductByID(id) == null) {
-            System.out.println("you haven't bought this product");
+            System.out.println("You haven't bought this product!");
         }
         System.out.println(Product.getProductByID(id));
     }
@@ -183,7 +193,7 @@ public class CustomerMenu {
     }
 
     private static void printHelp() {
-        System.out.println("list of commands: ");
+        System.out.println("List of main commands: ");
         System.out.println("view personal info");
         System.out.println("view cart");
         System.out.println("purchase");
@@ -195,11 +205,11 @@ public class CustomerMenu {
         System.out.println("back");
         System.out.println("*******");
 
-        System.out.println("\nlist of commands in the view personal info submenu: ");
+        System.out.println("\nList of commands in the view personal info submenu: ");
         System.out.println("edit [password|family name|first name|email|phone number] [value]");
         System.out.println("back");
 
-        System.out.println("\nlist of commands in the view cart submenu: ");
+        System.out.println("\nList of commands in the view cart submenu: ");
         System.out.println("show products");
         System.out.println("view [ProductID]");
         System.out.println("increase [ProductID]");
@@ -209,11 +219,20 @@ public class CustomerMenu {
         System.out.println("back");
         System.out.println("*******");
 
-        System.out.println("\nlist of commands in the view orders submenu: ");
+        System.out.println("\nList of commands in the view orders submenu: ");
         System.out.println("show order [orderID]");
         System.out.println("rate [Product ID] [1-5]");
         System.out.println("back");
         System.out.println("*******");
 
+    }
+
+    private static void handleLogout() {
+        if (MainMenu.currentUser == null) {
+            System.out.println("You haven't signed in!");
+        } else {
+            MainMenu.currentUser = null;
+            MainMenu.init();
+        }
     }
 }

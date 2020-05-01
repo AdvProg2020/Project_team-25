@@ -15,6 +15,7 @@ public class ResourceHandler {
             User.setIdTillNow((int) objectInputStream.readObject());
             Product.setIdCounter((int) objectInputStream.readObject());
             Offer.setIdCounter((int) objectInputStream.readObject());
+            Category.setIdCounter((int) objectInputStream.readObject());
             Manager.hasManager = (boolean) objectInputStream.readObject();
 
             User.setAllUsers((ArrayList<User>) objectInputStream.readObject());
@@ -48,6 +49,7 @@ public class ResourceHandler {
             objectOutputStream.writeObject(User.getIdTillNow());
             objectOutputStream.writeObject(Product.getIdCounter());
             objectOutputStream.writeObject(Offer.getIdCounter());
+            objectOutputStream.writeObject(Category.getIdCounter());
             objectOutputStream.writeObject(Manager.hasManager);
 
             objectOutputStream.writeObject(User.getAllUsers());
