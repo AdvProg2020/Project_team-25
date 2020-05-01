@@ -97,4 +97,38 @@ public class OffersController {
             return products;
         }
     }
+
+    public static ArrayList<Offer> sort(String mode, ArrayList<Offer> offers) {
+        if (mode.equalsIgnoreCase("time of starting")) {
+            return sortByStartingTime(offers);
+        }
+        else if (mode.equalsIgnoreCase("time of ending")) {
+            return sortByEndingTime(offers);
+        }
+        return offers;
+    }
+
+    private static ArrayList<Offer> sortByStartingTime(ArrayList<Offer> offers) {
+        ArrayList<Offer> result = new ArrayList<Offer>();
+        result.addAll(offers);
+        try {
+            return result.stream()
+                    .sorted(Comparator.comparing(Offer::getStartingTime))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        } catch (Exception exception) {
+            return result;
+        }
+    }
+
+    private static ArrayList<Offer> sortByEndingTime(ArrayList<Offer> offers) {
+        ArrayList<Offer> result = new ArrayList<Offer>();
+        result.addAll(offers);
+        try {
+            return result.stream()
+                    .sorted(Comparator.comparing(Offer::getEndingTime))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        } catch (Exception exception) {
+            return result;
+        }
+    }
 }

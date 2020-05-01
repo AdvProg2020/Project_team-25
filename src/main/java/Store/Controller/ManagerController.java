@@ -4,7 +4,10 @@ import Store.InputManager;
 import Store.Model.Product;
 import Store.Model.*;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 public class ManagerController {
 
@@ -169,5 +172,178 @@ public class ManagerController {
         }
         Manager.removeCategory(category);
         return "Category deleted successfully.";
+    }
+
+    public static ArrayList<OffCode> sortOffCodes(String mode, ArrayList<OffCode> offCodes) {
+        if (mode.equalsIgnoreCase("time of starting")) {
+            return sortOffCodesByStartingTime(offCodes);
+        }
+        else if (mode.equalsIgnoreCase("time of ending")) {
+            return sortOffCodesByEndingTime(offCodes);
+        }
+        else if (mode.equalsIgnoreCase("code")) {
+            return sortOffCodesByCode(offCodes);
+        }
+        else if (mode.equalsIgnoreCase("off percentage")) {
+            return sortOffCodesByOffPercentage(offCodes);
+        }
+        else if (mode.equalsIgnoreCase("maximum off")) {
+            return sortOffCodesByMaxOff(offCodes);
+        }
+        else if (mode.equalsIgnoreCase("usage count")) {
+            return sortOffCodesByUsageCount(offCodes);
+        }
+        return offCodes;
+    }
+
+    private static ArrayList<OffCode> sortOffCodesByStartingTime(ArrayList<OffCode> offCodes) {
+        ArrayList<OffCode> result = new ArrayList<OffCode>();
+        result.addAll(offCodes);
+        try {
+            return result.stream()
+                    .sorted(Comparator.comparing(OffCode::getStartingTime))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        } catch (Exception exception) {
+            return result;
+        }
+    }
+
+    private static ArrayList<OffCode> sortOffCodesByEndingTime(ArrayList<OffCode> offCodes) {
+        ArrayList<OffCode> result = new ArrayList<OffCode>();
+        result.addAll(offCodes);
+        try {
+            return result.stream()
+                    .sorted(Comparator.comparing(OffCode::getEndingTime))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        } catch (Exception exception) {
+            return result;
+        }
+    }
+
+    private static ArrayList<OffCode> sortOffCodesByCode(ArrayList<OffCode> offCodes) {
+        ArrayList<OffCode> result = new ArrayList<OffCode>();
+        result.addAll(offCodes);
+        try {
+            return result.stream()
+                    .sorted(Comparator.comparing(OffCode::getCode))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        } catch (Exception exception) {
+            return result;
+        }
+    }
+
+    private static ArrayList<OffCode> sortOffCodesByOffPercentage(ArrayList<OffCode> offCodes) {
+        ArrayList<OffCode> result = new ArrayList<OffCode>();
+        result.addAll(offCodes);
+        try {
+            return result.stream()
+                    .sorted(Comparator.comparing(OffCode::getOffPercentage))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        } catch (Exception exception) {
+            return result;
+        }
+    }
+
+    private static ArrayList<OffCode> sortOffCodesByMaxOff(ArrayList<OffCode> offCodes) {
+        ArrayList<OffCode> result = new ArrayList<OffCode>();
+        result.addAll(offCodes);
+        try {
+            return result.stream()
+                    .sorted(Comparator.comparing(OffCode::getMaximumOff))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        } catch (Exception exception) {
+            return result;
+        }
+    }
+
+    private static ArrayList<OffCode> sortOffCodesByUsageCount(ArrayList<OffCode> offCodes) {
+        ArrayList<OffCode> result = new ArrayList<OffCode>();
+        result.addAll(offCodes);
+        try {
+            return result.stream()
+                    .sorted(Comparator.comparing(OffCode::getUsageCount))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        } catch (Exception exception) {
+            return result;
+        }
+    }
+
+    public static ArrayList<User> sortUsers(String mode, ArrayList<User> users) {
+        if (mode.equalsIgnoreCase("name")) {
+            return sortUsersByName(users);
+        }
+        else if (mode.equalsIgnoreCase("family name")) {
+            return sortUsersByFamilyName(users);
+        }
+        else if (mode.equalsIgnoreCase("phone number")) {
+            return sortUsersByPhoneNumber(users);
+        }
+        else if (mode.equalsIgnoreCase("username")) {
+            return sortUsersByUsername(users);
+        }
+        else if (mode.equalsIgnoreCase("email")) {
+            return sortUsersByEmail(users);
+        }
+        return users;
+    }
+
+    private static ArrayList<User> sortUsersByName(ArrayList<User> users) {
+        ArrayList<User> result = new ArrayList<User>();
+        result.addAll(users);
+        try {
+            return result.stream()
+                    .sorted(Comparator.comparing(User::getName))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        } catch (Exception exception) {
+            return result;
+        }
+    }
+
+    private static ArrayList<User> sortUsersByFamilyName(ArrayList<User> users) {
+        ArrayList<User> result = new ArrayList<User>();
+        result.addAll(users);
+        try {
+            return result.stream()
+                    .sorted(Comparator.comparing(User::getFamilyName))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        } catch (Exception exception) {
+            return result;
+        }
+    }
+
+    private static ArrayList<User> sortUsersByPhoneNumber(ArrayList<User> users) {
+        ArrayList<User> result = new ArrayList<User>();
+        result.addAll(users);
+        try {
+            return result.stream()
+                    .sorted(Comparator.comparing(User::getPhoneNumber))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        } catch (Exception exception) {
+            return result;
+        }
+    }
+
+    private static ArrayList<User> sortUsersByUsername(ArrayList<User> users) {
+        ArrayList<User> result = new ArrayList<User>();
+        result.addAll(users);
+        try {
+            return result.stream()
+                    .sorted(Comparator.comparing(User::getUsername))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        } catch (Exception exception) {
+            return result;
+        }
+    }
+
+    private static ArrayList<User> sortUsersByEmail(ArrayList<User> users) {
+        ArrayList<User> result = new ArrayList<User>();
+        result.addAll(users);
+        try {
+            return result.stream()
+                    .sorted(Comparator.comparing(User::getEmail))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        } catch (Exception exception) {
+            return result;
+        }
     }
 }

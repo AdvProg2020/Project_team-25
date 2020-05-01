@@ -1,9 +1,12 @@
 package Store.View;
 
 import Store.Controller.ManagerController;
+import Store.Controller.ProductsController;
 import Store.InputManager;
 import Store.Model.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -26,6 +29,10 @@ public class ManagerMenu {
     private static final String ADD_CATEGORY = "^add ([^\\s]+)$";
     private static final String EDIT_CATEGORY = "^edit ([^\\s]+) (add filter|add product|change name|remove filter|add filter) ([^\\s]+)$";
     private static final String REMOVE_CATEGORY = "^remove ([^\\s]+)$";
+    private static final String SORT_BY_REGEX = "^sort by (\\w+)$";
+    private static ArrayList<String> availableSortsProducts = new ArrayList<String>(Arrays.asList("rating", "price", "visit", "lexicographical"));
+    private static ArrayList<String> availableSortsOffCodes = new ArrayList<String>(Arrays.asList("time of starting", "time of ending", "code", "off percentage", "maximum off", "usage count"));
+    private static ArrayList<String> availableSortsUsers = new ArrayList<String>(Arrays.asList("name", "family name", "phone number", "username", "email"));
 
 
     public static void init() {
@@ -96,6 +103,8 @@ public class ManagerMenu {
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if ((matcher = InputManager.getMatcher(input, SHOW_USER_BY_NAME)).find()) {
                 viewUserByName(matcher.group(1));
+            } else if ((matcher = InputManager.getMatcher(input, SORT_BY_REGEX)).find()) {
+                sortUsersAndOutput(matcher.group(1));
             } else if ((matcher = InputManager.getMatcher(input, DELETE_USER_BY_NAME)).find()) {
                 deleteUserByNameWrapper(matcher.group(1));
             } else if ((input.equalsIgnoreCase("create manager profile"))) {
@@ -106,9 +115,20 @@ public class ManagerMenu {
         }
     }
 
+    private static void sortUsersAndOutput(String mode) {
+        if (availableSortsUsers == null || !availableSortsUsers.contains(mode)) {
+            System.out.println("Mode isn't available!");
+            return;
+        }
+        for (User user : ManagerController.sortUsers(mode, User.getAllUsers())) {
+            System.out.println(user);
+            System.out.println("*******");
+        }
+    }
+
     private static void showAllUsers() {
-        for (User allUser : User.getAllUsers()) {
-            System.out.println(allUser);
+        for (User user : User.getAllUsers()) {
+            System.out.println(user);
             System.out.println("*******");
         }
     }
@@ -156,9 +176,22 @@ public class ManagerMenu {
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if ((matcher = InputManager.getMatcher(input, REMOVE_PRODUCTS)).find()) {
                 removeProductsWrapper(matcher.group(1));
+            } else if ((matcher = InputManager.getMatcher(input, SORT_BY_REGEX)).find()) {
+                sortProductsAndOutput(matcher.group(1));
             } else {
                 System.out.println("Invalid command!");
             }
+        }
+    }
+
+    private static void sortProductsAndOutput(String mode) {
+        if (availableSortsProducts == null || !availableSortsProducts.contains(mode)) {
+            System.out.println("Mode isn't available!");
+            return;
+        }
+        for (Product product : ProductsController.sort(mode, Product.getAllProducts())) {
+            System.out.println("{" + product.getName() + " " + product.getProductID() + ", " + product.getCategory().getFullName()
+                    + ", " + (product.getAvailablity() ? "available" : "unavailable") + "}");
         }
     }
 
@@ -236,6 +269,8 @@ public class ManagerMenu {
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if ((matcher = InputManager.getMatcher(input, VIEW_DISCOUNT_CODE)).find()) {
                 viewOffCode(matcher.group(1));
+            } else if ((matcher = InputManager.getMatcher(input, SORT_BY_REGEX)).find()) {
+                sortOffCodesAndOutput(matcher.group(1));
             } else if ((matcher = InputManager.getMatcher(input, REMOVE_DISCOUNT_CODE)).find()) {
                 removeOffCodeWrapper(matcher.group(1));
             } else if ((matcher = InputManager.getMatcher(input, EDIT_DISCOUNT_CODE)).find()) {
@@ -243,6 +278,17 @@ public class ManagerMenu {
             } else {
                 System.out.println("Invalid command!");
             }
+        }
+    }
+
+    private static void sortOffCodesAndOutput(String mode) {
+        if (availableSortsOffCodes == null || !availableSortsOffCodes.contains(mode)) {
+            System.out.println("Mode isn't available!");
+            return;
+        }
+        for (OffCode offCode : ManagerController.sortOffCodes(mode, Manager.getOffCodes())) {
+            System.out.println(offCode);
+            System.out.println("*******");
         }
     }
 
