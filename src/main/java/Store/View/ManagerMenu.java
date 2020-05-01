@@ -27,7 +27,7 @@ public class ManagerMenu {
     private static final String ACCEPT_REQUEST = "^accept (\\d+)$";
     private static final String DECLINE_REQUEST = "^decline (\\d+)$";
     private static final String ADD_CATEGORY = "^add ([^\\s]+)$";
-    private static final String EDIT_CATEGORY = "^edit ([^\\s]+) (add filter|add product|change name|remove filter|add filter) ([^\\s]+)$";
+    private static final String EDIT_CATEGORY = "^edit ([^\\s]+) (add filter|add product|change name|remove filter|remove product) ([^\\s]+)$";
     private static final String REMOVE_CATEGORY = "^remove ([^\\s]+)$";
     private static final String SORT_BY_REGEX = "^sort by (\\w+)$";
     private static ArrayList<String> availableSortsProducts = new ArrayList<String>(Arrays.asList("rating", "price", "visit", "lexicographical"));
@@ -457,7 +457,7 @@ public class ManagerMenu {
 
         System.out.println("\nList of commands in the manage categories submenu: ");
         System.out.println("add category [name]");
-        System.out.println("edit category [code] [add filter|add product|change name|remove filter|add filter] [value]");
+        System.out.println("edit category [code] [add filter|add product|change name|remove filter|remove product] [value]");
         System.out.println("remove category [name]");
         System.out.println("back");
         System.out.println("*******");

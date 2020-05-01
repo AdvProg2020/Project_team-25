@@ -1,16 +1,19 @@
 import Store.Main;
+import Store.Model.*;
 import Store.Model.Enums.VerifyStatus;
-import Store.Model.Manager;
-import Store.Model.Product;
-import Store.Model.Request;
-import Store.Model.User;
+import Store.ResourceHandler;
 import Store.View.MainMenu;
 import Store.View.ManagerMenu;
+import Store.View.SignUpAndLoginMenu;
 import org.junit.Assert;
 import org.junit.Test;
 
+import javax.jws.soap.SOAPBinding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Calendar;
 
 public class ManagerModelTest {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -66,13 +69,23 @@ public class ManagerModelTest {
     }
 
     @Test
-    public void DeleteUserTest() {
+    public void DeleteCustomerTest() {
         Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("manage users\ndelete user customer1\nback\nback\n").getBytes()));
         ManagerMenu.init();
         Assert.assertEquals(null, Manager.getUserByUsername("customer1"));
+    }
+
+    @Test
+    public void DeleteSellerTest() {
+        Main.setTest();
+        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
+        MainMenu.currentUser = manager;
+        System.setIn(new ByteArrayInputStream(("manage users\ndelete user seller1\nback\nback\n").getBytes()));
+        ManagerMenu.init();
+        Assert.assertEquals(null, Manager.getUserByUsername("seller1"));
     }
 
     @Test
@@ -153,5 +166,81 @@ public class ManagerModelTest {
         ManagerMenu.init();
         Assert.assertEquals(request.getStatus(), VerifyStatus.ACCEPTED);
     }
+
+    @Test
+    public void addCategoryTest() {
+        Main.setTest();
+        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
+        MainMenu.currentUser = manager;
+        System.setIn(new ByteArrayInputStream(("manage categories\nadd test\nnull\nback\nback\n").getBytes()));
+        ManagerMenu.init();
+        Assert.assertEquals("test", Manager.categoryByName("test").getFullName());
+    }
+
+    @Test
+    public void removeCategoryTest() {
+        Main.setTest();
+        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
+        MainMenu.currentUser = manager;
+        System.setIn(new ByteArrayInputStream(("manage categories\nadd test\nnull\nremove test\nback\nback\n").getBytes()));
+        ManagerMenu.init();
+        Assert.assertEquals(null, Manager.categoryByName("test"));
+    }
+
+    @Test
+    public void changeCategoryNameTest() {
+        Main.setTest();
+        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
+        MainMenu.currentUser = manager;
+        System.setIn(new ByteArrayInputStream(("manage categories\nadd test\nnull\nedit test change name test2\nback\nback\n").getBytes()));
+        ManagerMenu.init();
+        System.out.println(Manager.getAllCategories());
+        Assert.assertEquals("test2", Manager.categoryByName("test2").getFullName());
+    }
+
+    @Test
+    public void addFilterCategoryTest() {
+        Main.setTest();
+        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
+        MainMenu.currentUser = manager;
+        System.setIn(new ByteArrayInputStream(("manage categories\nadd test\nnull\nedit test add filter filter1\nedit test add filter filter2\nback\nback\n").getBytes()));
+        ManagerMenu.init();
+        System.out.println(Manager.getAllCategories());
+        Assert.assertEquals(Arrays.asList("filter1", "filter2"), Manager.categoryByName("test").getFilters());
+    }
+
+    @Test
+    public void removeFilterCategoryTest() {
+        Main.setTest();
+        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
+        MainMenu.currentUser = manager;
+        System.setIn(new ByteArrayInputStream(("manage categories\nadd test\nnull\nedit test add filter filter1\nedit test add filter filter2\nedit test remove filter filter1\nback\nback\n").getBytes()));
+        ManagerMenu.init();
+        System.out.println(Manager.getAllCategories());
+        Assert.assertEquals(Arrays.asList("filter2"), Manager.categoryByName("test").getFilters());
+    }
+
+    @Test
+    public void addProductCategoryTest() {
+        Main.setTest();
+        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
+        MainMenu.currentUser = manager;
+        System.setIn(new ByteArrayInputStream(("manage categories\nadd test\nnull\nedit test add product product1\nback\nback\n").getBytes()));
+        ManagerMenu.init();
+        System.out.println(Manager.getAllCategories());
+        Assert.assertEquals(Arrays.asList(Product.getProductByName("product1")), Manager.categoryByName("test").getImmediateProducts());
+    }
+
+    @Test
+    public void removeProductCategoryTest() {
+        Main.setTest();
+        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
+        MainMenu.currentUser = manager;
+        System.setIn(new ByteArrayInputStream(("manage categories\nadd test\nnull\nedit test add product product1\nedit test add product product2\nedit test remove product product1\nback\nback\n").getBytes()));
+        ManagerMenu.init();
+        System.out.println(Manager.getAllCategories());
+        Assert.assertEquals(Arrays.asList(Product.getProductByName("product2")), Manager.categoryByName("test").getImmediateProducts());
+    }
+
 
 }
