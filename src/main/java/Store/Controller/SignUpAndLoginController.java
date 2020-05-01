@@ -25,9 +25,6 @@ public class SignUpAndLoginController {
 
     public static String handleLogin(String username, String password) {
         User user = User.getUserByUsername(username);
-        if (user == null) {
-            return "No user with this username exists!";
-        }
 
         if (user.validatePassword(password)) {
             MainMenu.currentUser = user;

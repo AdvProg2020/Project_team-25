@@ -82,6 +82,10 @@ public class SignUpAndLoginMenu {
     }
 
     private static boolean handleLogin(String username) {
+        if (User.getUserByUsername(username) == null) {
+            System.out.println("No user with this username exists!");
+            return false;
+        }
         System.out.println("Please enter your password: ");
         String password = InputManager.getNextLine();
         String message = SignUpAndLoginController.handleLogin(username, password);
