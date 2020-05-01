@@ -1,5 +1,7 @@
 package Store.View;
 
+import Store.Controller.OffersController;
+import Store.Controller.ProductsController;
 import Store.Controller.SellerController;
 import Store.InputManager;
 import Store.Model.*;
@@ -10,19 +12,23 @@ import org.codehaus.plexus.util.StringUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.regex.Matcher;
 
 public class SellerMenu {
 
-    public static final String EDIT_PERSONAL_INFO_REGEX = "^edit (.+)$";
-    public static final String VIEW_PRODUCT_REGEX = "^view (\\d+)$";
-    public static final String VIEW_PRODUCT_BUYERS_INFO_REGEX = "^view buyers (\\d+)$";
-    public static final String EDIT_PRODUCT_REGEX = "^edit (\\d+)$";
-    public static final String REMOVE_PRODUCT_REGEX = "^remove product (\\d+)$";
-    public static final String VIEW_OFFER_REGEX = "^view (\\d+)$";
-    public static final String EDIT_OFFER_REGEX = "^edit (\\d+)$";
+    private static final String EDIT_PERSONAL_INFO_REGEX = "^edit (.+)$";
+    private static final String VIEW_PRODUCT_REGEX = "^view (\\d+)$";
+    private static final String VIEW_PRODUCT_BUYERS_INFO_REGEX = "^view buyers (\\d+)$";
+    private static final String EDIT_PRODUCT_REGEX = "^edit (\\d+)$";
+    private static final String REMOVE_PRODUCT_REGEX = "^remove product (\\d+)$";
+    private static final String VIEW_OFFER_REGEX = "^view (\\d+)$";
+    private static final String EDIT_OFFER_REGEX = "^edit (\\d+)$";
+    private static final String SORT_BY_REGEX = "^sort by (\\w+)$";
+    private static ArrayList<String> availableSortsProducts = new ArrayList<String>(Arrays.asList("rating", "price", "visit", "lexicographical"));
+    private static ArrayList<String> availableSortsOffs = new ArrayList<String>(Arrays.asList("time of starting", "time of ending"));
 
 
     public static void init() {
@@ -68,10 +74,6 @@ public class SellerMenu {
                 OffersMenu.init();
                 System.out.println("\nSeller menu\n");
             }
-            else if (input.equalsIgnoreCase("login")) {
-                handleLogin();
-                System.out.println("\nSeller menu\n");
-            }
             else if (input.equalsIgnoreCase("logout")) {
                 handleLogout();
             }
@@ -93,10 +95,6 @@ public class SellerMenu {
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if ((matcher = InputManager.getMatcher(input, EDIT_PERSONAL_INFO_REGEX)).find()) {
                 editPersonalInfoWrapper(seller, matcher.group(1));
-            }
-            else if (input.equalsIgnoreCase("login")) {
-                handleLogin();
-                System.out.println("\nSeller menu -> View Personal Info\n");
             }
             else if (input.equalsIgnoreCase("logout")) {
                 handleLogout();
@@ -171,15 +169,14 @@ public class SellerMenu {
             if ((matcher = InputManager.getMatcher(input, VIEW_PRODUCT_REGEX)).find()) {
                 viewProduct(seller, matcher.group(1));
             }
+            else if ((matcher = InputManager.getMatcher(input, SORT_BY_REGEX)).find()) {
+                sortProductsAndOutput(seller, matcher.group(1));
+            }
             else if ((matcher = InputManager.getMatcher(input, VIEW_PRODUCT_BUYERS_INFO_REGEX)).find()) {
                 viewBuyers(seller, matcher.group(1));
             }
             else if ((matcher = InputManager.getMatcher(input, EDIT_PRODUCT_REGEX)).find()) {
                 editProductWrapper(seller, matcher.group(1));
-            }
-            else if (input.equalsIgnoreCase("login")) {
-                handleLogin();
-                System.out.println("\nSeller menu -> Manage Products\n");
             }
             else if (input.equalsIgnoreCase("logout")) {
                 handleLogout();
@@ -190,6 +187,17 @@ public class SellerMenu {
             else {
                 System.out.println("Invalid command!");
             }
+        }
+    }
+
+    private static void sortProductsAndOutput(Seller seller, String mode) {
+        if (availableSortsProducts == null || !availableSortsProducts.contains(mode)) {
+            System.out.println("Mode isn't available!");
+            return;
+        }
+        for (Product product : ProductsController.sort(mode, seller.getProducts())) {
+            System.out.println("{" + product.getName() + " " + product.getProductID() + ", " + product.getCategory().getFullName()
+                    + ", " + (product.getAvailablity() ? "available" : "unavailable") + "}");
         }
     }
 
@@ -321,15 +329,14 @@ public class SellerMenu {
             if ((matcher = InputManager.getMatcher(input, VIEW_OFFER_REGEX)).find()) {
                 viewOff(matcher.group(1));
             }
+            else if ((matcher = InputManager.getMatcher(input, SORT_BY_REGEX)).find()) {
+                sortOffsAndOutput(seller, matcher.group(1));
+            }
             else if ((matcher = InputManager.getMatcher(input, EDIT_OFFER_REGEX)).find()) {
                 editOffWrapper(seller, matcher.group(1));
             }
             else if (input.equalsIgnoreCase("add off")) {
                 addOffWrapper(seller);
-            }
-            else if (input.equalsIgnoreCase("login")) {
-                handleLogin();
-                System.out.println("\nSeller menu -> View Offs\n");
             }
             else if (input.equalsIgnoreCase("logout")) {
                 handleLogout();
@@ -340,6 +347,16 @@ public class SellerMenu {
             else {
                 System.out.println("Invalid command!");
             }
+        }
+    }
+
+    private static void sortOffsAndOutput(Seller seller, String mode) {
+        if (availableSortsOffs == null || !availableSortsOffs.contains(mode)) {
+            System.out.println("Mode isn't available!");
+            return;
+        }
+        for (Offer offer : OffersController.sort(mode, seller.getOffers())) {
+            System.out.println(offer.toString());
         }
     }
 
@@ -463,7 +480,6 @@ public class SellerMenu {
         System.out.println("view balance");
         System.out.println("offs");
         System.out.println("products");
-        System.out.println("login");
         System.out.println("logout");
         System.out.println("help");
         System.out.println("back");
@@ -471,7 +487,6 @@ public class SellerMenu {
 
         System.out.println("\nList of commands in the 'view personal info' submenu: ");
         System.out.println("edit [field]");
-        System.out.println("login");
         System.out.println("logout");
         System.out.println("back");
         System.out.println("*******");
@@ -480,7 +495,7 @@ public class SellerMenu {
         System.out.println("view [productId]");
         System.out.println("view buyers [productId]");
         System.out.println("edit [productId]");
-        System.out.println("login");
+        System.out.println("sort by [rating | price | visit | lexicographical]");
         System.out.println("logout");
         System.out.println("back");
         System.out.println("*******");
@@ -489,18 +504,10 @@ public class SellerMenu {
         System.out.println("view [offId]");
         System.out.println("edit [offId]");
         System.out.println("add off");
-        System.out.println("login");
+        System.out.println("sort by [time of starting | time of ending]");
         System.out.println("logout");
         System.out.println("back");
         System.out.println("*******");
-    }
-
-    private static void handleLogin() {
-        if (MainMenu.currentUser == null) {
-            SignUpAndLoginMenu.init();
-        } else {
-            System.out.println("You have signed in!");
-        }
     }
 
     private static void handleLogout() {
