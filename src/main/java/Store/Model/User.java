@@ -134,7 +134,7 @@ public class User implements Serializable {
         User user = (User) object;
         if(username.equals(user.getUsername()) && email.equals(user.getEmail()) && phoneNumber.equals(user.getPhoneNumber()) && familyName.equals(user.getFamilyName()) && name.equals(user.getName()) && user.validatePassword(password))
             if((type == null && user.getType() == null) || (type.equals(user.getType())))
-             return true;
+                return true;
         return false;
     }
 }

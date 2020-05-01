@@ -12,6 +12,4 @@ public class ManagerModelTest {
         ResourceHandler.readAll();
         Assert.assertEquals(Manager.isExist(manager), true);
     }
-
-
 }
