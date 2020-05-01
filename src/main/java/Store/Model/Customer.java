@@ -168,7 +168,7 @@ public class Customer extends User {
     @Override
     public String toString()
     {
-        String output = null;
+        String output = "";
         output += "Username: " + username;
         output += "\nFirst Name: " + name;
         output += "\nFamily Name: " + familyName;

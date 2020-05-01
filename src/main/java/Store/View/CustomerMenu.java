@@ -3,11 +3,12 @@ package Store.View;
 import Store.Controller.CustomerController;
 import Store.Controller.ManagerController;
 import Store.InputManager;
-import Store.Model.*;
+import Store.Model.Customer;
+import Store.Model.OffCode;
+import Store.Model.Product;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.regex.Matcher;
 
 public class CustomerMenu {
@@ -55,9 +56,9 @@ public class CustomerMenu {
                 System.out.println("Invalid command!");
             }
         }
-        if (MainMenu.currentUser == null) {
+       /* if (MainMenu.currentUser == null) {
             MainMenu.init();
-        }
+        }*/
 
     }
 
