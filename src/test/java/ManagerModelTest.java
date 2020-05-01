@@ -33,7 +33,7 @@ public class ManagerModelTest {
         SignUpAndLoginMenu.init();
         Assert.assertEquals(Manager.getUserByUsername("cloudStrife"), new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234"));
     }
-    
+
 
 
 }

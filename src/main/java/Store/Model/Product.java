@@ -47,6 +47,10 @@ public class Product implements Serializable {
         this.visited = 0;
     }
 
+    public void assignToSeller() {
+        seller.addProduct(this);
+    }
+
     public static void setAllProducts(ArrayList<Product> allProducts) {
         Product.allProducts = allProducts;
     }
