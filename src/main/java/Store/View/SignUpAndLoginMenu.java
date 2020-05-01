@@ -56,7 +56,7 @@ public class SignUpAndLoginMenu {
         System.out.println("Initial Money: ");
         String input;
         while (!(input = InputManager.getNextLine()).matches("^\\d+(.\\d+)?$")) {
-            System.out.println("Invalid floating-point number format");
+            System.out.println("Invalid floating-point number format!");
         }
         return Double.parseDouble(input);
     }
