@@ -69,13 +69,23 @@ public class ManagerModelTest {
     }
 
     @Test
-    public void DeleteUserTest() {
+    public void DeleteCustomerTest() {
         Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("manage users\ndelete user customer1\nback\nback\n").getBytes()));
         ManagerMenu.init();
         Assert.assertEquals(null, Manager.getUserByUsername("customer1"));
+    }
+
+    @Test
+    public void DeleteSellerTest() {
+        Main.setTest();
+        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
+        MainMenu.currentUser = manager;
+        System.setIn(new ByteArrayInputStream(("manage users\ndelete user seller1\nback\nback\n").getBytes()));
+        ManagerMenu.init();
+        Assert.assertEquals(null, Manager.getUserByUsername("seller1"));
     }
 
     @Test
