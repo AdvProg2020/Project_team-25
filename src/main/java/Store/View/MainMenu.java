@@ -16,6 +16,7 @@ public class MainMenu {
         // Set current user
         String input;
         Matcher matcher;
+        System.out.println("\nMain menu\n");
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if (input.equalsIgnoreCase("user page")) {
                 if (currentUser == null) {
@@ -30,15 +31,19 @@ public class MainMenu {
                 else if (currentUser instanceof Manager) {
                     ManagerMenu.init();
                 }
+                System.out.println("\nMain menu\n");
             }
             else if (input.equalsIgnoreCase("products")) {
                 ProductsMenu.init();
+                System.out.println("\nMain menu\n");
             }
             else if (input.equalsIgnoreCase("offs")) {
                 OffersMenu.init();
+                System.out.println("\nMain menu\n");
             }
             else if (input.equalsIgnoreCase("login")) {
                 handleLogin();
+                System.out.println("\nMain menu\n");
             }
             else if (input.equalsIgnoreCase("logout")) {
                 handleLogout();
