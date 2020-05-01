@@ -20,8 +20,7 @@ public class Customer extends User {
         User.allUsers.add(this);
     }
 
-    public Customer(User user, String password, double money)
-    {
+    public Customer(User user, String password, double money) {
         super(user.getUsername(), user.getName(), user.getFamilyName(), user.getEmail(), user.getPhoneNumber(), password);
         this.money = money;
         this.type = "Customer";
@@ -151,8 +150,8 @@ public class Customer extends User {
     }
 
     public boolean hasBoughtProduct(Product product) {
-        for(BuyLogItem buyLogItem: buyLog)
-            if(buyLogItem.getProducts().contains(product))
+        for (BuyLogItem buyLogItem : buyLog)
+            if (buyLogItem.getProducts().contains(product))
                 return false;
         return false;
     }
@@ -165,20 +164,20 @@ public class Customer extends User {
     public void delete() {
         allUsers.remove(this);
     }
+
     @Override
-    public String toString()
-    {
-        String output = null;
+    public String toString() {
+        String output = "";
         output += "Username: " + username;
         output += "\nFirst Name: " + name;
         output += "\nFamily Name: " + familyName;
         output += "\nEmail: " + email;
         output += "\nPhone Number: " + phoneNumber;
         output += "\nOffcodes:\n";
-        for(OffCode offCode: offCodes.keySet())
+        for (OffCode offCode : offCodes.keySet())
             output += offCode;          //navid
         output += "\nBuy Log:\n";
-        for(BuyLogItem buyLogItem: buyLog)
+        for (BuyLogItem buyLogItem : buyLog)
             output += buyLogItem;
         return output;
     }
@@ -189,9 +188,12 @@ public class Customer extends User {
 
     @Override
     public boolean equals(Object object) {
+        if (!(object instanceof Customer)) {
+            return false;
+        }
         Customer customer = (Customer) object;
-        if(super.equals(customer))
-            if(money == customer.getMoney() && cart.equals(customer.getCart()) && offCodes.equals(customer.getOffCodes()) && buyLog.equals(customer.getBuyLog()))
+        if (super.equals(customer))
+            if (money == customer.getMoney() && cart.equals(customer.getCart()) && offCodes.equals(customer.getOffCodes()) && buyLog.equals(customer.getBuyLog()))
                 return true;
         return false;
     }

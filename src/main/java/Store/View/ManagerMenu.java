@@ -18,7 +18,7 @@ public class ManagerMenu {
 
     private static final String EDIT_PERSONAL_INFO = "^edit (password|family name|first name|email|phone number) ([^\\s]+)$";
     private static final String SHOW_USER_BY_NAME = "^view ([^\\s]+)$";
-    private static final String DELETE_USER_BY_NAME = "^delete ([^\\s]+)$";
+    private static final String DELETE_USER_BY_NAME = "^delete user ([^\\s]+)$";
     private static final String REMOVE_PRODUCTS = "^remove (\\d+)$";
     private static final String VIEW_DISCOUNT_CODE = "^view discount code ([^\\s]+)$";
     private static final String EDIT_DISCOUNT_CODE = "^edit discount code ([^\\s]+) (maximumOff|offPercentage) ([^\\s]+)$";

@@ -127,6 +127,10 @@ public class User implements Serializable {
         return output;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     @Override
     public boolean equals(Object object) {
         User user = (User) object;
