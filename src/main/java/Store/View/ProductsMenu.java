@@ -49,7 +49,6 @@ public class ProductsMenu {
                 System.out.println("\nProducts Menu\n");
             } else if (input.equalsIgnoreCase("logout")) {
                 handleLogout();
-                System.out.println("\nProducts Menu\n");
             } else if (input.equalsIgnoreCase("login")) {
                 handleLogin();
                 System.out.println("\nProducts Menu\n");
@@ -80,10 +79,8 @@ public class ProductsMenu {
                 System.out.println("\nProducts menu -> Filtering submenu\n");
             } else if (input.equalsIgnoreCase("logout")) {
                 handleLogout();
-                System.out.println("\nProducts menu -> Filtering submenu\n");
             } else {
                 System.out.println("Invalid command!");
-                ;
             }
         }
     }
@@ -140,7 +137,6 @@ public class ProductsMenu {
                 System.out.println("\nProducts menu -> Sorting submenu\n");
             } else if (input.equalsIgnoreCase("logout")) {
                 handleLogout();
-                System.out.println("\nProducts menu -> Sorting submenu\n");
             } else {
                 System.out.println("Invalid command!");
             }

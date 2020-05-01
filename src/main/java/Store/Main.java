@@ -13,17 +13,19 @@ public class Main {
 
         ResourceHandler.readAll();
         System.out.println(Manager.hasManager);
-        SignUpAndLoginMenu.init();
-        ProductsMenu.init();
-        if (MainMenu.currentUser instanceof Manager) {
-            ManagerMenu.init();
-        }
-        else if (MainMenu.currentUser instanceof Seller) {
-            SellerMenu.init();
-        }
-        else {
-            CustomerMenu.init();
-        }
+//        SignUpAndLoginMenu.init();
+//        ProductsMenu.init();
+//        if (MainMenu.currentUser instanceof Manager) {
+//            ManagerMenu.init();
+//        }
+//        else if (MainMenu.currentUser instanceof Seller) {
+//            SellerMenu.init();
+//        }
+//        else {
+//            CustomerMenu.init();
+//        }
+
+        MainMenu.init();
 
         System.out.println("Save Current Database?");
         String input = InputManager.getNextLine();

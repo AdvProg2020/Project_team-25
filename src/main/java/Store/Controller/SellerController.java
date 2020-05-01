@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class SellerController {
 
-    private static final String INVALID_VALUE_ERROR = "The value you entered for this field is invalid";
+    private static final String INVALID_VALUE_ERROR = "The value you entered for this field is invalid!";
 
     public static class InvalidValueException extends Exception {
         InvalidValueException(String message) {

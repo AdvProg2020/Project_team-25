@@ -14,51 +14,51 @@ public class CustomerController {
 
     public static String increaseProduct(Customer customer, Product product) {
         if (product == null) {
-            return "there isn't any product with this name";
+            return "There isn't any product with this name!";
         }
         customer.addToCart(product);
-        return "added product to cart successfully";
+        return "Product added to cart successfully.";
     }
 
     public static String decreaseProduct(Customer customer, Product product) {
         if (product == null) {
-            return "there isn't any product with this name";
+            return "There isn't any product with this name!";
         }
         if (customer.isInCart(product)) {
             customer.removeFromCart(product);
-            return "successfully deleted";
+            return "Successfully deleted.";
         }
-        return "you haven't selected this product";
+        return "You haven't selected this product!";
     }
 
     public static String rateProduct(Customer customer, Product product, double rating) {
         if (product == null) {
-            return "there isn't any product with this name";
+            return "There isn't any product with this name!";
         }
         if (!customer.hasBoughtProduct(product)) {
-            return "you hasn't buy this product";
+            return "You haven't bought this product!";
         }
         product.rate(customer, rating);
-        return "yor rating was submitted";
+        return "Rating submitted.";
     }
 
     public static String purchase(Customer customer, String input) {
         if (input.equalsIgnoreCase("null")) {
             if (customer.canBuy()) {
                 customer.buy();
-                return "bought successfully. " + customer.getBuyLog().get(customer.getBuyLog().size() - 1);
+                return "bBought successfully. " + customer.getBuyLog().get(customer.getBuyLog().size() - 1);
             }
-            return "you hadn't enough money";
+            return "You don't have enough money!";
         } else {
             OffCode offCode = Manager.getOffCodeByCode(input);
             if (offCode != null && offCode.canBeUsedInDate(new Date()) && offCode.isUserIncluded(customer)) {
                 if (customer.canBuy(offCode)) {
                     customer.buy();
-                    return "bought successfully. " + customer.getBuyLog().get(customer.getBuyLog().size() - 1);
+                    return "Bought successfully. " + customer.getBuyLog().get(customer.getBuyLog().size() - 1);
                 }
-                return "you hadn't enough money";
+                return "You don't have enough money!";
             }
-            return "the offCode is invalid";
+            return "The offCode is invalid!";
         }
     }
 

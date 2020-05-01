@@ -42,7 +42,6 @@ public class OffersMenu {
                 System.out.println("\nOffers menu\n");
             } else if (input.equalsIgnoreCase("logout")) {
                 handleLogout();
-                System.out.println("\nOffers menu\n");
             } else if (input.equalsIgnoreCase("help")) {
                 printHelp();
             } else if (input.equalsIgnoreCase("products")) {
@@ -93,7 +92,6 @@ public class OffersMenu {
                 System.out.println("\nOffers menu -> Filtering submenu\n");
             } else if (input.equalsIgnoreCase("logout")) {
                 handleLogout();
-                System.out.println("\nOffers menu -> Filtering submenu\n");
             } else {
                 System.out.println("Invalid command!");
             }
@@ -155,7 +153,6 @@ public class OffersMenu {
                 System.out.println("\nOffers menu -> Sorting submenu\n");
             } else if (input.equalsIgnoreCase("logout")) {
                 handleLogout();
-                System.out.println("\nOffers menu -> Sorting submenu\n");
             } else {
                 System.out.println("Invalid command!");
             }

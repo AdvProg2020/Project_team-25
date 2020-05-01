@@ -25,7 +25,7 @@ public class ProductsController {
         if(currentSort.equalsIgnoreCase("rating"))
             return sortByRating(products);
         else if(currentSort.equalsIgnoreCase("lexicographical"))
-            return sortByLexiographical(products);
+            return sortByLexicographical(products);
         else if(currentSort.equalsIgnoreCase("visit"))
             return sortByVisit(products);
         else if(currentSort.equalsIgnoreCase("price"))
@@ -58,7 +58,7 @@ public class ProductsController {
             return products;
         }
     }
-    private static ArrayList<Product> sortByLexiographical(ArrayList<Product> products)
+    private static ArrayList<Product> sortByLexicographical(ArrayList<Product> products)
     {
         try {
             return products.stream()
