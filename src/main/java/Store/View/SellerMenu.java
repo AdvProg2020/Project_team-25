@@ -522,6 +522,8 @@ public class SellerMenu {
         System.out.println("view [productId]");
         System.out.println("view buyers [productId]");
         System.out.println("edit [productId]");
+        System.out.println("add filter");
+        System.out.println("remove filter");
         System.out.println("sort by [rating | price | visit | lexicographical]");
         System.out.println("logout");
         System.out.println("back");
@@ -531,6 +533,8 @@ public class SellerMenu {
         System.out.println("view [offId]");
         System.out.println("edit [offId]");
         System.out.println("add off");
+        System.out.println("add filter");
+        System.out.println("remove filter");
         System.out.println("sort by [time of starting | time of ending]");
         System.out.println("logout");
         System.out.println("back");
