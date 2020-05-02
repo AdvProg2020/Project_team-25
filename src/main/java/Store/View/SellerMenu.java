@@ -23,6 +23,8 @@ public class SellerMenu {
     private static final String VIEW_PRODUCT_REGEX = "^view (\\d+)$";
     private static final String VIEW_PRODUCT_BUYERS_INFO_REGEX = "^view buyers (\\d+)$";
     private static final String EDIT_PRODUCT_REGEX = "^edit (\\d+)$";
+    private static final String ADD_FILTER_REGEX = "^add filter (\\d+) ([^\\s]+)$";
+    private static final String REMOVE_FILTER_REGEX = "^remove filter (\\d+) ([^\\s]+)$";
     private static final String REMOVE_PRODUCT_REGEX = "^remove product (\\d+)$";
     private static final String VIEW_OFFER_REGEX = "^view (\\d+)$";
     private static final String EDIT_OFFER_REGEX = "^edit (\\d+)$";
@@ -178,6 +180,12 @@ public class SellerMenu {
             else if ((matcher = InputManager.getMatcher(input, EDIT_PRODUCT_REGEX)).find()) {
                 editProductWrapper(seller, matcher.group(1));
             }
+            else if ((matcher = InputManager.getMatcher(input, ADD_FILTER_REGEX)).find()) {
+                System.out.println(SellerController.addFilterToProduct(seller, matcher.group(1), matcher.group(2)));
+            }
+            else if ((matcher = InputManager.getMatcher(input, REMOVE_FILTER_REGEX)).find()) {
+                System.out.println(SellerController.removeFilterFromProduct(seller, matcher.group(1), matcher.group(2)));
+            }
             else if (input.equalsIgnoreCase("logout")) {
                 handleLogout();
             }
@@ -277,13 +285,26 @@ public class SellerMenu {
         }
         boolean availability = (attribute.equals("1"));
 
-        System.out.println("Attributes: ");
-        String attributes = InputManager.getNextLine();
+        System.out.println("Filters: (end with inputting -1)");
+        String filter;
+        ArrayList<String> filters = new ArrayList<String>();
+        while ((filter = InputManager.getNextLine()).equalsIgnoreCase("-1")) {
+            if (filters.contains(filter)) {
+                System.out.println("You have already added this filter!");
+            }
+            else {
+                filters.add(filter);
+            }
+        }
 
         System.out.println("Description: ");
         String description = InputManager.getNextLine();
 
-        return new Product(CheckingStatus.CREATION, parent, name, seller, brand, price, availability, attributes, description);
+        Product product = new Product(CheckingStatus.CREATION, parent, name, seller, brand, price, availability, description);
+        for (String filterToAdd : filters) {
+            product.addFilter(filter);
+        }
+        return product;
     }
 
     private static void addProductWrapper(Seller seller) {
@@ -337,6 +358,12 @@ public class SellerMenu {
             }
             else if (input.equalsIgnoreCase("add off")) {
                 addOffWrapper(seller);
+            }
+            else if ((matcher = InputManager.getMatcher(input, ADD_FILTER_REGEX)).find()) {
+                System.out.println(SellerController.addFilterToOffer(seller, matcher.group(1), matcher.group(2)));
+            }
+            else if ((matcher = InputManager.getMatcher(input, REMOVE_FILTER_REGEX)).find()) {
+                System.out.println(SellerController.removeFilterFromOffer(seller, matcher.group(1), matcher.group(2)));
             }
             else if (input.equalsIgnoreCase("logout")) {
                 handleLogout();
@@ -495,6 +522,8 @@ public class SellerMenu {
         System.out.println("view [productId]");
         System.out.println("view buyers [productId]");
         System.out.println("edit [productId]");
+        System.out.println("add filter");
+        System.out.println("remove filter");
         System.out.println("sort by [rating | price | visit | lexicographical]");
         System.out.println("logout");
         System.out.println("back");
@@ -504,6 +533,8 @@ public class SellerMenu {
         System.out.println("view [offId]");
         System.out.println("edit [offId]");
         System.out.println("add off");
+        System.out.println("add filter");
+        System.out.println("remove filter");
         System.out.println("sort by [time of starting | time of ending]");
         System.out.println("logout");
         System.out.println("back");
