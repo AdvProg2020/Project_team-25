@@ -67,7 +67,7 @@ public class SellerController {
     }
 
     public static void removeProduct(Seller seller, Product product) {
-        Product.deleteProduct(product);
+        seller.removeProduct(product);
     }
 
     public static void editOff(Seller seller, Offer offer, Offer newOffer) {

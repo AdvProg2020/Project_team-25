@@ -87,7 +87,7 @@ public class Manager extends User {
     public static Category categoryByName(String name)
     {
         for(Category category: allCategories)
-            if(category.getFullName().equals(name))
+            if(category.getName().equals(name))
                 return category;
         return null;
     }
