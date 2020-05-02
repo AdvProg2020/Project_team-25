@@ -457,7 +457,7 @@ public class ManagerMenu {
 
         System.out.println("\nList of commands in the manage categories submenu: ");
         System.out.println("add category [name]");
-        System.out.println("edit category [code] [add filter|add product|change name|remove filter|remove product] [value]");
+        System.out.println("edit category [code] [add filter|add product|change name|remove filter|remove product] [value (must be an ID for product options)]");
         System.out.println("remove category [name]");
         System.out.println("back");
         System.out.println("*******");

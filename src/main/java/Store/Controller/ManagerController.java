@@ -3,6 +3,7 @@ package Store.Controller;
 import Store.InputManager;
 import Store.Model.Product;
 import Store.Model.*;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -135,13 +136,17 @@ public class ManagerController {
             category.addToFilter(value);
             return returnValue;
         } else if (field.equalsIgnoreCase("add product")) {
-            if (Product.getProductByName(value) == null) {
-                return "There isn't any product with this name!";
+            if (!StringUtils.isNumeric(value)) {
+                return "Invalid input, ID expected!";
             }
-            if (category.include(Product.getProductByName(value))) {
+            int id = Integer.parseInt(value);
+            if (Product.getProductByID(id) == null) {
+                return "There isn't any product with this ID!";
+            }
+            if (category.include(Product.getProductByID(id))) {
                 return "It's in the category right now!";
             }
-            category.addToCategory(Product.getProductByName(value));
+            category.addToCategory(Product.getProductByID(id));
             return returnValue;
         } else if (field.equalsIgnoreCase("remove filter")) {
             if (category.isInFilter(value)) {
@@ -150,11 +155,15 @@ public class ManagerController {
             }
             return "There isn't any filter with this name!";
         } else if (field.equalsIgnoreCase("remove product")) {
-            if (category.include(Product.getProductByName(value))) {
-                category.removeProductFrom(Product.getProductByName(value));
+            if (!StringUtils.isNumeric(value)) {
+                return "Invalid input, ID expected!";
+            }
+            int id = Integer.parseInt(value);
+            if (category.include(Product.getProductByID(id))) {
+                category.removeProductFrom(Product.getProductByID(id));
                 return returnValue;
             }
-            return "There isn't any product with this name in this category!";
+            return "There isn't any product with this ID in this category!";
         } else if (field.equalsIgnoreCase("change name")) {
             if (Manager.categoryByName(value) == null) {
                 category.setName(value);
