@@ -12,6 +12,7 @@ import javax.jws.soap.SOAPBinding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -241,5 +242,14 @@ public class ManagerModelTest {
         Assert.assertEquals(Arrays.asList(Product.getProductByID(1)), Manager.categoryByName("test2").getImmediateProducts());
     }
 
-
+    @Test
+    public void helpTest() {
+        System.setOut(new PrintStream(outContent));
+        Main.setTest();
+        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
+        MainMenu.currentUser = manager;
+        System.setIn(new ByteArrayInputStream(("help\nback").getBytes()));
+        ManagerMenu.init();
+        Assert.assertTrue(outContent.toString().contains("List of main commands: "));
+    }
 }

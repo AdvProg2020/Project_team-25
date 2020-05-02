@@ -92,4 +92,12 @@ public class SellerModelTest {
     public void addOffTest() {
 
     }
+
+    @Test
+    public void helpTest() {
+        System.setOut(new PrintStream(outContent));
+        System.setIn(new ByteArrayInputStream(("help\nback").getBytes()));
+        SellerMenu.init();
+        Assert.assertTrue(outContent.toString().contains("List of main commands: "));
+    }
 }
