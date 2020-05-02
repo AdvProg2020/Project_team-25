@@ -85,26 +85,27 @@ public class Category implements Serializable {
         return false;
     }
 
-    private void removeProductFromParents(Product product) {
+    private void removeProductFromChildren(Product product) {
+        if (children.isEmpty()) {
+            immediateProducts.remove(product);
+            return;
+        }
+        for (Category child : children) {
+            if (child.immediateProducts.contains(product)) {
+                child.removeProductFromChildren(product);
+            }
+        }
+        immediateProducts.remove(product);
+    }
+
+    private void removeProductFromParents(Product product){
+        System.out.println();
         if (parent == null) {
             immediateProducts.remove(product);
             return;
         }
         parent.removeProductFrom(product);
         this.immediateProducts.remove(product);
-    }
-
-    private void removeProductFromChildren(Product product) {
-        if (children.isEmpty()) {
-            immediateProducts.remove(product);
-            return;
-        }
-        this.immediateProducts.remove(product);
-        for (Category child : children) {
-            if (child.children.contains(product)) {
-                child.removeProductFromChildren(product);
-            }
-        }
     }
 
     public void removeProductFrom(Product product) {
@@ -144,6 +145,10 @@ public class Category implements Serializable {
 
     public ArrayList<Product> getImmediateProducts() {
         return immediateProducts;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override

@@ -8,6 +8,7 @@ import Store.View.SignUpAndLoginMenu;
 import org.junit.Assert;
 import org.junit.Test;
 
+import javax.jws.soap.SOAPBinding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -224,10 +225,10 @@ public class ManagerModelTest {
         Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
-        System.setIn(new ByteArrayInputStream(("manage categories\nadd test\nnull\nedit test add product product1\nback\nback\n").getBytes()));
+        System.setIn(new ByteArrayInputStream(("manage categories\nadd test\nnull\nedit test add product 0\nback\nback\n").getBytes()));
         ManagerMenu.init();
         System.out.println(Manager.getAllCategories());
-        Assert.assertEquals(Arrays.asList(Product.getProductByName("product1")), Manager.categoryByName("test").getImmediateProducts());
+        Assert.assertEquals(Arrays.asList(Product.getProductByID(0)), Manager.categoryByName("test").getImmediateProducts());
     }
 
     @Test
@@ -235,10 +236,9 @@ public class ManagerModelTest {
         Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
-        System.setIn(new ByteArrayInputStream(("manage categories\nadd test\nnull\nadd test2\ntest\nedit test2 add product product1\nedit test add product product2\nedit test2 remove product product1\nback\nback\n").getBytes()));
+        System.setIn(new ByteArrayInputStream(("manage categories\nadd test\nnull\nadd test2\ntest\nedit test2 add product 0\nedit test2 add product 1\nedit test remove product 0\nback\nback\n").getBytes()));
         ManagerMenu.init();
-        System.out.println(Manager.getAllCategories());
-        Assert.assertEquals(Arrays.asList(Product.getProductByName("product2")), Manager.categoryByName("test").getImmediateProducts());
+        Assert.assertEquals(Arrays.asList(Product.getProductByID(1)), Manager.categoryByName("test2").getImmediateProducts());
     }
 
 
