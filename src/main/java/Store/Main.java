@@ -59,6 +59,10 @@ public class Main {
         Product product4 = new Product(CheckingStatus.CREATION, null, "product3", seller2, "brand1", 15.5, true, "www", "describe");
         Product product5 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "www", "describe");
 
+        Category category1 = new Category("category1", null);
+        Category category2 = new Category("category2", null);
+        Category category3 = new Category("category3", category1);
+
         OffCode offCode1 = new OffCode("ce98",30,10,2);
         offCode1.setEndingTime(new Date(2020, 5, 4));
         OffCode offCode2 = new OffCode("AP2",60,5,1);
@@ -78,6 +82,16 @@ public class Main {
         product3.assignToSeller();
         product4.assignToSeller();
         product5.assignToSeller();
+
+        category1.addToCategory(product1);
+        category2.addToCategory(product2);
+        category3.addToCategory(product3);
+        category3.addToCategory(product4);
+        category2.addToCategory(product5);
+
+        manager1.addCategory(category1);
+        manager1.addCategory(category3);
+        manager2.addCategory(category2);
 
         Product.addProduct(product1);
         Product.addProduct(product2);

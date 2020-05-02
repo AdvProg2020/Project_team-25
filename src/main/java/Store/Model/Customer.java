@@ -136,8 +136,14 @@ public class Customer extends User {
 
     public double getTotalCartPrice() {
         double totalPrice = 0;
-        for (Product product : cart)
-            totalPrice += product.getPrice();
+        for (Product product : cart) {
+            if (Offer.getOfferOfProduct(product) == null)
+                totalPrice += product.getPrice();
+            else if(Offer.getOfferOfProduct(product).canBeUsedInDate(new Date()))
+                totalPrice += product.getPrice() * Offer.getOfferOfProduct(product).getOffPercent() / 100.0;
+            else
+                totalPrice += product.getPrice();
+        }
         return totalPrice;
     }
 

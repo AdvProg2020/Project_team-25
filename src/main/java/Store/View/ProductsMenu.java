@@ -3,7 +3,6 @@ package Store.View;
 import Store.Controller.ProductsController;
 import Store.InputManager;
 import Store.Model.Manager;
-import Store.Model.Offer;
 import Store.Model.Product;
 
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ public class ProductsMenu {
     }
 
     private static void viewCategories() {
-        Manager.showCategories();
+        System.out.println(Manager.showCategories());
     } //
 
     private static void filtering() {
@@ -145,7 +144,10 @@ public class ProductsMenu {
 
     private static void showAvailableSorts() {
         for (String availableSort : availableSorts) {
-            System.out.print(availableSort + " ");
+            if(availableSorts.get(availableSorts.size() - 1).equals(availableSort))
+                System.out.println(availableSort + ".");
+            else
+                System.out.print(availableSort + ", ");
         }
         System.out.println("*******");
     }

@@ -35,7 +35,7 @@ public class Manager extends User {
 
     public static String showCategories()
     {
-        String output = null;
+        String output = "";
         for(Category category: allCategories)
             if(category.getParent() == null)
                 output += showAllOfCategory(category, 1) + "\n";
@@ -44,8 +44,8 @@ public class Manager extends User {
 
     private static String showAllOfCategory(Category category, int numOfTabs)
     {
-        String output = null;
-        output = putTabs(null, numOfTabs);
+        String output = "";
+        output = putTabs("", numOfTabs);
         output += "-" + category.getFullName() + "\n";
         for(Category subCategory: allCategories)
             if(subCategory.getParent() == category)
