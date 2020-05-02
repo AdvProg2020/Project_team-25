@@ -87,10 +87,10 @@ public class Customer extends User {
         while (cart.size() > 0) {
             seller = null;
             product = null;
-            productsOfOneSeller.clear();
             for (int i = 0; i < cart.size(); i++) {
                 product = cart.get(i);
                 if (seller == null) {
+                    productsOfOneSeller = new ArrayList<>();
                     seller = product.getSeller();
                     productsOfOneSeller.add(product);
                     cart.remove(product);
@@ -104,9 +104,9 @@ public class Customer extends User {
                 }
             }
             buyLog.add(new BuyLogItem(buyLog.size() + 1, date, productsOfOneSeller, (discount / totalPrice) * priceOfList(productsOfOneSeller), seller.getName(), false));
-            seller.handleLogs((discount / totalPrice) * priceOfList(productsOfOneSeller), productsOfOneSeller, date, this, (1 - discount / totalPrice) * priceOfList(productsOfOneSeller));
+            seller.handleLogs(priceOfList(productsOfOneSeller), productsOfOneSeller, date, this, priceOfList(productsOfOneSeller));
            // seller.removeProducts(productsOfOneSeller);
-            seller.setMoney(seller.getMoney() + (1 - discount / totalPrice) * priceOfList(productsOfOneSeller));
+            seller.setMoney(seller.getMoney() + priceOfList(productsOfOneSeller));
         }
     }
 
@@ -151,7 +151,7 @@ public class Customer extends User {
     public boolean hasBoughtProduct(Product product) {
         for (BuyLogItem buyLogItem : buyLog)
             if (buyLogItem.getProducts().contains(product))
-                return false;
+                return true;
         return false;
     }
 

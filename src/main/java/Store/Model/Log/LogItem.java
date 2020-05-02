@@ -13,7 +13,7 @@ public abstract class LogItem {
     LogItem(int id, Date date, ArrayList<Product> products) {
         this.date = date;
         this.id = id;
-        this.productList = products;
+        this.productList.addAll(products);
     }
 
     public ArrayList<Product> getProducts() {

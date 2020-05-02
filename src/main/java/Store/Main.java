@@ -46,6 +46,7 @@ public class Main {
         Seller seller2 = new Seller("seller2", "seller2", "seller2", "lab@lab.com", "0930", "1234", 100, "company2", "describe");
 
         Customer customer = new Customer("customer1", "customer1", "customer1", "lab@lab.com", "0912", "1234", 1000);
+        customer.setMoney(1000);
 
         Customer.addCustomer(customer);
         Seller.addSeller(seller1);
