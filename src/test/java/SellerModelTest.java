@@ -1,8 +1,6 @@
 import Store.Main;
-import Store.Model.Manager;
 import Store.Model.Seller;
 import Store.View.MainMenu;
-import Store.View.ManagerMenu;
 import Store.View.SellerMenu;
 import org.junit.Assert;
 import org.junit.Test;

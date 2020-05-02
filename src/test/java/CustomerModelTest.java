@@ -1,8 +1,5 @@
 import Store.Main;
-import Store.Model.Customer;
-import Store.Model.Product;
-import Store.Model.Seller;
-import Store.Model.User;
+import Store.Model.*;
 import Store.View.CustomerMenu;
 import Store.View.MainMenu;
 import org.junit.Assert;
@@ -133,76 +130,59 @@ public class CustomerModelTest {
     public void purchaseWithOffCodeMoneyTest()
     {
         System.setOut(originalOut);
-        String input = "purchase\nImamAliHighWay\n0912\nlab@lab.com\nce98\nback\nback\n";
+        String input = "purchase\nImamAliHighWay\n0912\nlab@lab.com\nce98\nview cart\nincrease 6\nback\npurchase\nback\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
         ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
         ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
         Seller seller1 = Product.getProductByID(0).getSeller();
         CustomerMenu.init();
-        Assert.assertTrue(((Customer)MainMenu.currentUser).getMoney() == 979 && seller1.getMoney() == 1021);
-
-    }
-   /* @Test
-    public void addCustomerTest()
-    {
-        Customer customer = new Customer("ali00","ali","abasi","HEY","33326214","pass",20.5);
-        Customer.addCustomer(customer);
-        Assert.assertTrue(User.isExist(customer));
-    }
-
-    @Test
-    public void canBuyTest()
-    {
-        Customer customer = new Customer("ali00","ali","abasi","HEY","33326214","pass",20.5);
-        Customer.addCustomer(customer);
-        Seller seller = new Seller("bahram00","bahram","abasi","HEY","33326214","pass",10,"sibsazi","khobim");
-        Seller.addSeller(seller);
-        Product product = new Product(CheckingStatus.CREATION, null, "apple", seller, "nike", 20.6, true, "", "clean");
-        seller.addProduct(product);
-        customer.addToCart(product);
-        Assert.assertFalse(customer.canBuy());
+        Assert.assertTrue(((Customer)MainMenu.currentUser).getMoney() == 979 && seller1.getMoney() == 1030);
     }
     @Test
-    public void buyTest()
+    public void purchaseOtherTests()
     {
-        Customer customer = new Customer("ali00","ali","abasi","HEY","33326214","pass",20.5);
-        Customer.addCustomer(customer);
-        Seller seller = new Seller("bahram00","bahram","abasi","HEY","33326214","pass",10,"sibsazi","khobim");
-        Seller.addSeller(seller);
-        Product product = new Product(CheckingStatus.CREATION, null, "apple", seller, "nike", 5.5, true, "", "clean");
-        seller.addProduct(product);
-        customer.addToCart(product);
-        customer.buy();
-        Assert.assertTrue((customer.getMoney() == 15) && (seller.getMoney() == 15.5) && (customer.getCart().size() == 0) && (!seller.getProducts().contains(product)));
+        System.setOut(originalOut);
+        String input = "purchase\nImamAliHighWay\n0912\nlab@lab.com\nce98\nview cart\nincrease 6\nback\nback\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
+        ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
+        ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(1));
+        Seller seller1 = Product.getProductByID(0).getSeller();
+        Seller seller2 = Product.getProductByID(1).getSeller();
+        CustomerMenu.init();
+        Assert.assertTrue(((Customer)MainMenu.currentUser).hasBoughtProduct(Product.getProductByID(0)) && ((Customer)MainMenu.currentUser).hasBoughtProduct(Product.getProductByID(1)) && seller1.getBuyers().contains(MainMenu.currentUser.getName()) && seller2.getBuyers().contains(MainMenu.currentUser.getName()));
     }
     @Test
-    public void cartTest()
+    public void viewsInCustomerMenu()
     {
-        Customer customer = new Customer("ali00","ali","abasi","HEY","33326214","pass",20.5);
-        Customer.addCustomer(customer);
-        Seller seller = new Seller("bahram00","bahram","abasi","HEY","33326214","pass",10,"sibsazi","khobim");
-        Seller.addSeller(seller);
-        Product product = new Product(CheckingStatus.CREATION, null, "apple", seller, "nike", 5.5, true, "", "clean");
-        seller.addProduct(product);
-        customer.addToCart(product);
-        if(customer.isInCart(new Product(CheckingStatus.CREATION, null, "bannana", seller, "nike", 5.5, true, "", "clean")))
-            Assert.fail();
-        customer.removeFromCart(product);
-        Assert.assertFalse(customer.getCart().contains(product));
+        String input = "view balance\nview discount codes\nback\nback";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        CustomerMenu.init();
+        Assert.assertTrue(outContent.toString().contains("Your Balance: 1000") && outContent.toString().contains(Manager.getOffCodes().get(0) + "\r\nYour Number Of Usage: 0"));
     }
     @Test
-    public void logTest()
+    public void viewOrdersTest()
     {
-        Customer customer = new Customer("ali00","ali","abasi","HEY","33326214","pass",20.5);
-        Customer.addCustomer(customer);
-        Seller seller = new Seller("bahram00","bahram","abasi","HEY","33326214","pass",10,"sibsazi","khobim");
-        Seller.addSeller(seller);
-        Product product = new Product(CheckingStatus.CREATION, null, "apple", seller, "nike", 5.5, true, "", "clean");
-        seller.addProduct(product);
-        customer.addToCart(product);
-        customer.buy();
-        System.out.println(customer.getBuyLog().get(0).toString() + "\n" + new ArrayList<Product>(Arrays.asList(product)));
-        Assert.assertTrue(Pattern.matches("BuyLogItem\\{offValue=0\\.0, sellerName='bahram', received=false, id=(\\d+), date=(.+)," + " productList=" + "\\[\\(apple 4\\)\\]" + "}", customer.getBuyLog().get(0).toString()));
-     }*/
+        System.setOut(originalOut);
+        String input = "purchase\nImamAliHighWay\n0912\nlab@lab.com\nce98\nview orders\nshow order 0\nshow order 1\nback\nback";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
+        ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
+        ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(1));
+        CustomerMenu.init();
+        Assert.assertTrue(true);
+    }
+    @Test
+    public void rateTest()
+    {
+        System.setOut(originalOut);
+        String input = "purchase\nImamAliHighWay\n0912\nlab@lab.com\nce98\nview orders\nrate 0 3\nrate 1 4\nrate 10 5\nrate 2 3\nback\nback";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
+        ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
+        ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(1));
+        CustomerMenu.init();
+        Assert.assertEquals(Product.getProductByID(0).getAverageRating(), 3, 3);
+    }
 }
