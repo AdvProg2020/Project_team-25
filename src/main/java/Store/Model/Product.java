@@ -32,7 +32,7 @@ public class Product implements Serializable {
 
     private static ArrayList<Product> allProducts = new ArrayList<Product>();
 
-    public Product(CheckingStatus productStatus, Category category, String name, Seller seller, String brand, double price, boolean availablity, String attributes, String description) {
+    public Product(CheckingStatus productStatus, Category category, String name, Seller seller, String brand, double price, boolean availablity, String description) {
         this.productID = idCounter++;
         this.productStatus = productStatus;
         this.category = category;
