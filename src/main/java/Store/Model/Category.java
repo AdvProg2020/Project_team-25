@@ -85,13 +85,33 @@ public class Category implements Serializable {
         return false;
     }
 
-    public void removeProductFrom(Product product) {
+    private void removeProductFromParents(Product product) {
         if (parent == null) {
             immediateProducts.remove(product);
             return;
         }
         parent.removeProductFrom(product);
         this.immediateProducts.remove(product);
+    }
+
+    private void removeProductFromChildren(Product product) {
+        if (children.isEmpty()) {
+            immediateProducts.remove(product);
+            return;
+        }
+        this.immediateProducts.remove(product);
+        for (Category child : children) {
+            if (child.children.contains(product)) {
+                child.removeProductFromChildren(product);
+            }
+        }
+    }
+
+    public void removeProductFrom(Product product) {
+        removeProductFromChildren(product);
+        if (parent != null) {
+            parent.removeProductFromParents(product);
+        }
     }
 
     public void removeInside() {
