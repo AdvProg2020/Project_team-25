@@ -272,6 +272,7 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return "(" + this.name + " " + this.productID + ")";
+        return "(" + this.name + " ID:" + this.productID + " Seller:" + this.getSeller().getName()
+                + " Price:" + this.getPrice() + ")";
     }
 }
