@@ -59,10 +59,12 @@ public class Category implements Serializable {
     public void addToCategory(Product product) {
         if (this.parent == null) {
             this.immediateProducts.add(product);
+            product.setCategory(this);
             return;
         }
         parent.addToCategory(product);
         this.immediateProducts.add(product);
+        product.setCategory(this);
     }
 
     public String getFullName() {

@@ -40,7 +40,7 @@ public class Product implements Serializable {
         this.brand = brand;
         this.price = price;
         this.availablity = availablity;
-        this.attributes = attributes;
+   //     this.attributes = attributes;
         this.description = description;
         this.averageRating = 0;
         this.seller = seller;
@@ -66,7 +66,7 @@ public class Product implements Serializable {
     public boolean equals(Product other) {
         if (productStatus != other.getProductStatus()) {
             return false;
-        }
+        }//????
         else if (category != other.getCategory()) {
             return false;
         }
@@ -79,24 +79,24 @@ public class Product implements Serializable {
         else if (availablity != other.getAvailablity()) {
             return false;
         }
-        else if (!attributes.equals(other.getAttributes())) {
+/*        else if (!attributes.equals(other.getAttributes())) {
             return false;
-        }
-        else if (!description.equals(other.getDescription())) {
+        }*/
+       /* else if (!description.equals(other.getDescription())) {
             return false;
-        }
-        else if (!comments.equals(other.comments)) {
+        }*/ //???
+      /*  else if (!comments.equals(other.comments)) {
             return false;
-        }
-        else if (!ratings.equals(other.ratings)) {
+        }*/
+      /*  else if (!ratings.equals(other.ratings)) {
             return false;
-        }
+        }*/
         else if (!filters.equals(other.filters)) {
             return false;
         }
-        else if (visited != other.getVisited()) {
+        /*else if (visited != other.getVisited()) {
             return false;
-        }
+        }*/
         return true;
     }
 

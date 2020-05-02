@@ -17,7 +17,7 @@ public class ProductMenu {
     private static final int COLUMN_COUNT = 200;
 
     private static final String SELECT_SELLER_REGEX = "^select seller ([^\\s]+)$";
-    private static final String COMPARE_PRODUCT_REGEX = "^compare (\\d+ | [^\\s]+)$";
+    private static final String COMPARE_PRODUCT_REGEX = "^compare (\\d+|[^\\s]+)$";
 
     public static void init(Product product) {
         String input;
@@ -55,10 +55,11 @@ public class ProductMenu {
     }
 
     private static String getSellerNameTextList(Product product) {
-        ArrayList<Seller> allSellersOfProduct = ProductController.getAllSellersOfProduct(product);
+        ArrayList<Seller> allSellersOfProduct = new ArrayList<>();
+        allSellersOfProduct = ProductController.getAllSellersOfProduct(product);
         String result = "";
         for (Seller seller : allSellersOfProduct) {
-            result.concat(seller.getName() + "   ");
+            result = result.concat(seller.getUsername() + "   ");
         }
         return result;
     }
@@ -69,14 +70,17 @@ public class ProductMenu {
         System.out.println("Product Brand: " + product.getBrand());
         System.out.println("Description: " + product.getDescription());
         System.out.println("Price: " + product.getPrice());
-        System.out.println("Category: " + product.getCategory().getFullName());
+        if(product.getCategory() != null)
+            System.out.println("Category: " + product.getCategory().getFullName());
+        else
+            System.out.println("Category: empty");
         System.out.print("Sellers: " + getSellerNameTextList(product));
         /*ArrayList<Seller> allSellersOfProduct = ProductController.getAllSellersOfProduct(product);
         for (Seller seller : allSellersOfProduct) {
             System.out.print(seller.getName() + "   ");
         }*/
         System.out.println();
-        System.out.println("Current seller: " + product.getSeller().getName());
+        System.out.println("Current seller: " + product.getSeller().getUsername());
         System.out.println("Average rating: " + product.getAverageRating());
         System.out.println("Date added: " + product.getStartingDate());
         if (!product.getAvailablity()) {
@@ -147,8 +151,14 @@ public class ProductMenu {
             printAlongside("Product Brand: " + product.getBrand(), "Product Brand: " + other.getBrand());
             printAlongside("Description: " + product.getDescription(), "Description: " + other.getDescription());
             printAlongside("Price: " + product.getPrice(), "Price: " + other.getPrice());
-            printAlongside("Category: " + product.getCategory().getFullName(), "Category: " + other.getCategory().getFullName());
-
+            if (product.getCategory() == null && other.getCategory() == null)
+                printAlongside("Category: empty", "Category: empty");
+            else if(product.getCategory() == null)
+                printAlongside("Category: empty", "Category: " + other.getCategory().getFullName());
+            else if(other.getCategory() == null)
+                printAlongside("Category: " + product.getCategory().getFullName(), "Category: empty");
+            else
+                printAlongside("Category: " + product.getCategory().getFullName(), "Category: " + other.getCategory().getFullName());
             String firstString = getSellerNameTextList(product), secondString = getSellerNameTextList(other);
             printAlongside("Sellers: " + firstString, "Sellers: " + secondString);
 
@@ -162,17 +172,17 @@ public class ProductMenu {
         String firstPart = "", secondPart = "";
         for (int character = 0; character < len; character++) {
             if (character < firstString.length()) {
-                firstPart.concat("" + firstString.charAt(character));
+                firstPart = firstPart.concat("" + firstString.charAt(character));
             }
             else {
-                firstPart.concat(" ");
+                firstPart = firstPart.concat(" ");
             }
 
             if (character < secondString.length()) {
-                secondPart.concat("" + secondString.charAt(character));
+                secondPart = secondPart.concat("" + secondString.charAt(character));
             }
             else {
-                secondPart.concat(" ");
+                secondPart = secondPart.concat(" ");
             }
 
             if (firstPart.length() == COLUMN_COUNT && secondPart.length() == COLUMN_COUNT) {
@@ -223,14 +233,15 @@ public class ProductMenu {
             for (int column = 0; column < COLUMN_COUNT; column++) {
                 System.out.print("_");
             }
-            System.out.printf("%150 %50", "Commenting user: " + comment.getCommentingUser().getName(),
+            System.out.println("");
+            System.out.printf("%150s %50s", "Commenting user: " + comment.getCommentingUser().getName(),
                     (comment.getHasBought() ? "--Has bought this product" : "--Has not bought this product"));
             System.out.println("---> " + comment.getCommentText());
-            System.out.println(comment.getCommentText());
         }
         for (int column = 0; column < COLUMN_COUNT; column++) {
             System.out.print("_");
         }
+        System.out.println("");
 
         String input;
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
