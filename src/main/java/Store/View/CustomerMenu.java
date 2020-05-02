@@ -165,6 +165,7 @@ public class CustomerMenu {
         String input;
         Matcher matcher;
         System.out.println("\nCustomer menu -> View Orders\n");
+        System.out.println(customer.getBuyLog());
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if ((matcher = InputManager.getMatcher(input, SHOW_ORDER)).find()) {
                 showOrder(Integer.parseInt(matcher.group(1)));
@@ -177,10 +178,11 @@ public class CustomerMenu {
     }
 
     private static void showOrder(int id) {
-        if (Product.getProductByID(id) == null) {
+        if (Product.getProductByID(id) == null || !customer.hasBoughtProduct(Product.getProductByID(id))) {
             System.out.println("You haven't bought this product!");
         }
-        System.out.println(Product.getProductByID(id));
+        else
+            System.out.println(Product.getProductByID(id));
     }
 
     private static void rateProductWrapper(int id, double rating) {

@@ -59,7 +59,7 @@ public class Seller extends User {
 
     public ArrayList<String> getBuyers()
     {
-        ArrayList<String> buyers = null;
+        ArrayList<String> buyers = new ArrayList<>();
         for(SellLogItem sellLogItem: sellLog)
              buyers.add(sellLogItem.getCustomerName());
         return buyers;

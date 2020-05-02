@@ -1,20 +1,17 @@
 import Store.Main;
-import Store.Model.*;
 import Store.Model.Enums.VerifyStatus;
-import Store.ResourceHandler;
+import Store.Model.Manager;
+import Store.Model.Product;
+import Store.Model.Request;
+import Store.Model.User;
 import Store.View.MainMenu;
 import Store.View.ManagerMenu;
-import Store.View.SignUpAndLoginMenu;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.jws.soap.SOAPBinding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.Calendar;
 
 public class ManagerModelTest {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -242,14 +239,5 @@ public class ManagerModelTest {
         Assert.assertEquals(Arrays.asList(Product.getProductByID(1)), Manager.categoryByName("test2").getImmediateProducts());
     }
 
-    @Test
-    public void helpTest() {
-        System.setOut(new PrintStream(outContent));
-        Main.setTest();
-        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
-        MainMenu.currentUser = manager;
-        System.setIn(new ByteArrayInputStream(("help\nback").getBytes()));
-        ManagerMenu.init();
-        Assert.assertTrue(outContent.toString().contains("List of main commands: "));
-    }
+
 }

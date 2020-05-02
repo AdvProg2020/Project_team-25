@@ -126,4 +126,64 @@ public class SellerController {
     public static boolean isProductFromThisSeller(Seller seller, Product product) {
         return seller == product.getSeller();
     }
+
+    public static String addFilterToProduct(Seller seller, String idString, String filter) {
+        if (!StringUtils.isNumeric(idString) || !Product.hasProductWithID(Integer.parseInt(idString))) {
+            return "Invalid ID!";
+        }
+        Product product = Product.getProductByID(Integer.parseInt(idString));
+        if (product.getSeller() != seller) {
+            return "You do not own this product!";
+        }
+        if (product.hasFilter(filter)) {
+            return "This product already has this filter!";
+        }
+        product.addFilter(filter);
+        return "Filter added.";
+    }
+
+    public static String removeFilterFromProduct(Seller seller, String idString, String filter) {
+        if (!StringUtils.isNumeric(idString) || !Product.hasProductWithID(Integer.parseInt(idString))) {
+            return "Invalid ID!";
+        }
+        Product product = Product.getProductByID(Integer.parseInt(idString));
+        if (product.getSeller() != seller) {
+            return "You do not own this product!";
+        }
+        if (!product.hasFilter(filter)) {
+            return "This product does not have this filter!";
+        }
+        product.deleteFilter(filter);
+        return "Filter removed.";
+    }
+
+    public static String addFilterToOffer(Seller seller, String idString, String filter) {
+        if (!StringUtils.isNumeric(idString) || !Offer.hasOfferByID(Integer.parseInt(idString))) {
+            return "Invalid ID!";
+        }
+        Offer offer = Offer.getOfferByID(Integer.parseInt(idString));
+        if ((Seller) offer.getUser() != seller) {
+            return "You do not own this offer!";
+        }
+        if (offer.hasFilter(filter)) {
+            return "This offer already has this filter!";
+        }
+        offer.addFilter(filter);
+        return "Filter added.";
+    }
+
+    public static String removeFilterFromOffer(Seller seller, String idString, String filter) {
+        if (!StringUtils.isNumeric(idString) || !Offer.hasOfferByID(Integer.parseInt(idString))) {
+            return "Invalid ID!";
+        }
+        Offer offer = Offer.getOfferByID(Integer.parseInt(idString));
+        if ((Seller) offer.getUser() != seller) {
+            return "You do not own this offer!";
+        }
+        if (!offer.hasFilter(filter)) {
+            return "This offer does not have this filter!";
+        }
+        offer.removeFilter(filter);
+        return "Filter removed.";
+    }
 }
