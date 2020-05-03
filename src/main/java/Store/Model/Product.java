@@ -40,7 +40,7 @@ public class Product implements Serializable {
         this.brand = brand;
         this.price = price;
         this.availablity = availablity;
-   //     this.attributes = attributes;
+     //   this.attributes = attributes;
         this.description = description;
         this.averageRating = 0;
         this.seller = seller;
@@ -235,14 +235,24 @@ public class Product implements Serializable {
         return new HashSet<>(allFilters);
     }
 
+    public static void addFilterToAllFilters(String filter)
+    {
+        if (!allFilters.contains(filter))
+            allFilters.add(filter);
+    }
     public void addFilter(String filter) {
        this.filters.add(filter);
-       allFilters.add(filter);
+       addFilterToAllFilters(filter);
     }
 
     public void deleteFilter(String filter) {
         this.filters.remove(filter);
-        allFilters.remove(filter);
+    }
+
+    public static void deleteFilterFromAllFilters(String filter)
+    {
+        if (allFilters.contains(filter))
+            allFilters.remove(filter);
     }
 
     public boolean hasFilter(String filter) {

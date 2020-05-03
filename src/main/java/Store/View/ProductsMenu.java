@@ -88,14 +88,14 @@ public class ProductsMenu {
         for (String filter : filters) {
             System.out.print(filter + " ");
         }
-        System.out.println("*******");
+        System.out.println("\n*******");
     }
 
     private static void showAvailableFilters() {
         for (String availableFilter : availableFilters) {
             System.out.print(availableFilter + " ");
         }
-        System.out.println("*******");
+        System.out.println("\n*******");
     }
 
     private static void filter(String filter) {
@@ -173,6 +173,7 @@ public class ProductsMenu {
         productsToBeShown = ProductsController.sort(currentSort, productsToBeShown);
         for (Product product : productsToBeShown)
             System.out.println(product);
+        System.out.println("*********");
     }
 
     private static void showProduct(String attribute) {

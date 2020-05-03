@@ -185,4 +185,12 @@ public class CustomerModelTest {
         CustomerMenu.init();
         Assert.assertEquals(Product.getProductByID(0).getAverageRating(), 3, 3);
     }
+    @Test
+    public void openOtherMenusAndLogoutTest()
+    {
+        String input = "products\nback\noffs\nback\nlogout\nback\nback";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        CustomerMenu.init();
+        Assert.assertEquals(MainMenu.currentUser, null);
+    }
 }

@@ -98,5 +98,19 @@ public class Main {
         Product.addProduct(product3);
         Product.addProduct(product4);
         Product.addProduct(product5);
+
+        Product.addFilterToAllFilters("AB");
+        Product.addFilterToAllFilters("BC");
+        Product.addFilterToAllFilters("CD");
+        Product.addFilterToAllFilters("DE");
+        product1.addFilter("AB");
+        product2.addFilter("BC");
+        product2.addFilter("AB");
+        product2.addFilter("CD");
+        product1.addFilter("CD");
+        product3.addFilter("AB");
+        product4.addFilter("AB");
+        product3.addFilter("CD");
+        product4.addFilter("CD");
     }
 }

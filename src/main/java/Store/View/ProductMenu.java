@@ -201,7 +201,7 @@ public class ProductMenu {
     }
 
     private static void viewAttributes(Product product) {
-        System.out.println(product.getAttributes());
+        System.out.println(product.getDescription());
         ArrayList<String> filters = product.getFilters();
         System.out.print("Filters: ");
         for (String filter : filters) {

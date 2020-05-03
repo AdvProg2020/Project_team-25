@@ -108,7 +108,7 @@ public class ProductsTest {
     @Test
     public void sortTest()
     {
-        String input = "sorting\nshow available sorts\ncurrent sort\nsort boz\nsort rating\ncurrent sort\ndisable sort\ncurrent sort\nback\nback";
+        String input = "sorting\nshow available sorts\ncurrent sort\nsort boz\nsort rating\ncurrent sort\ndisable sort\ncurrent sort\n sort lexicographical\nback\nshow products\nsorting\nsort price\nback\nshow products\nsorting\nsort rating\nback\nshow products\nback\nback";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         ProductsMenu.init();
         Assert.assertTrue(outContent.toString().contains("rating, price, visit, lexicographical.\r\n" +
@@ -178,5 +178,51 @@ public class ProductsTest {
                 "Comments for product product2 with seller seller2: \r\n" +
                 "________________________________________________________________________________________________________________________________________________________________________________________________________\r\n" +
                 "                                                                                                                            Commenting user: customer1                      --Has not bought this product---> it was on of the worst i've ever seen"));
+    }
+    @Test
+    public void filterTest()
+    {
+        String input = "filter\nshow available filters\ncurrent filters\nfilter AB\nfilter AB\nfilter BC\nfilter CD\nfilter XY\ncurrent filters\ndisable filter DE\ndisable filter DP\ndisable filter BC\ncurrent filters\nback\nback";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(outContent.toString().contains("AB CD"));
+    }
+    @Test
+    public void viewAttributeTest()
+    {
+        String input = "attributes\nback";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        ProductMenu.init(Product.getProductByID(1));
+        Assert.assertTrue(outContent.toString().contains("describe\r\n" +
+                "Filters: BC   AB   CD   \r\n" +
+                "Category filters: \r\n" +
+                "Price: 5.0\r\n" +
+                "Date added: null"));
+    }
+    @Test
+    public void otherMenusAndLogoutTest()
+    {
+        String input = "offs\nback\nlogout\nproducts\nlogout\nback\nback\nback";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        ProductsMenu.init();
+        Assert.assertEquals(MainMenu.currentUser, null);
+    }
+    @Test
+    public void logoutProductMenu()
+    {
+        String input = "logout\nback\nback";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        ProductMenu.init(Product.getProductByID(0));
+        Assert.assertEquals(MainMenu.currentUser, null);
+    }
+    @Test
+    public void LoginTest()
+    {
+        MainMenu.currentUser = null;
+        String input = "login\nback\nback\nlogin\nback\nback";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        ProductsMenu.init();
+        ProductMenu.init(Product.getProductByID(1));
+        Assert.assertEquals(MainMenu.currentUser, null);
     }
 }
