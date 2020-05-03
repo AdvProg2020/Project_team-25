@@ -13,7 +13,7 @@ public class Offer implements Serializable {
     private User user;
     private ArrayList<Product> products = new ArrayList<Product>();
     private ArrayList<String> filters = new ArrayList<String>();
-    private static HashSet<String> allFilters = new HashSet<>();
+    private static ArrayList<String> allFilters = new ArrayList<>();
     private CheckingStatus offerStatus;
     private Date startingTime, endingTime;
     // StartingTime and EndingTime?
@@ -64,6 +64,7 @@ public class Offer implements Serializable {
 
     public void removeFilter(String filter) {
         this.filters.remove(filter);
+        allFilters.remove(filter);
     }
 
     public boolean hasFilter(String filter) {
@@ -74,7 +75,7 @@ public class Offer implements Serializable {
         return filters;
     }
 
-    public static HashSet<String> getAllFilters() {
+    public static ArrayList<String> getAllFilters() {
         return allFilters;
     }
 

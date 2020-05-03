@@ -25,7 +25,7 @@ public class Product implements Serializable {
     private ArrayList<Rating> ratings = new ArrayList<Rating>();
     private ArrayList<Comment> comments = new ArrayList<Comment>();
     private ArrayList<String> filters = new ArrayList<>();
-    private static HashSet<String> allFilters = new HashSet<>();
+    private static ArrayList<String> allFilters = new ArrayList<>();
     private int visited;
 
     private static int idCounter = 0;
@@ -232,7 +232,7 @@ public class Product implements Serializable {
     }
 
     public static HashSet<String> getAllFilters() {
-        return allFilters;
+        return new HashSet<>(allFilters);
     }
 
     public void addFilter(String filter) {
@@ -242,6 +242,7 @@ public class Product implements Serializable {
 
     public void deleteFilter(String filter) {
         this.filters.remove(filter);
+        allFilters.remove(filter);
     }
 
     public boolean hasFilter(String filter) {

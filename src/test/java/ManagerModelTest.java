@@ -6,11 +6,13 @@ import Store.Model.Request;
 import Store.Model.User;
 import Store.View.MainMenu;
 import Store.View.ManagerMenu;
+import Store.View.OffersMenu;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.Arrays;
 
 public class ManagerModelTest {
@@ -237,6 +239,17 @@ public class ManagerModelTest {
         System.setIn(new ByteArrayInputStream(("manage categories\nadd test\nnull\nadd test2\ntest\nedit test2 add product 0\nedit test2 add product 1\nedit test remove product 0\nback\nback\n").getBytes()));
         ManagerMenu.init();
         Assert.assertEquals(Arrays.asList(Product.getProductByID(1)), Manager.categoryByName("test2").getImmediateProducts());
+    }
+
+    @Test
+    public void helpTest() {
+        Main.setTest();
+        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
+        MainMenu.currentUser = manager;
+        System.setOut(new PrintStream(outContent));
+        System.setIn(new ByteArrayInputStream(("help\nback").getBytes()));
+        ManagerMenu.init();
+        Assert.assertTrue(outContent.toString().contains("List of main commands: "));
     }
 
 

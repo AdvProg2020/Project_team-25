@@ -70,9 +70,7 @@ public class SellerModelTest {
 
     @Test
     public void removeProduct() {
-        System.setIn(new ByteArrayInputStream("add product\nback".getBytes()));
-        SellerMenu.init();
-        Assert.assertEquals(Arrays.asList(Product.getProductByID(3)), seller.getProducts());
+
     }
 
     @Test
