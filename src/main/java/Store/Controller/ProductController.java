@@ -21,9 +21,9 @@ public class ProductController {
         return sellers;
     }
 
-    public static Product getProductWithDifferentSeller(Product product, String sellerName) {
+    public static Product getProductWithDifferentSeller(Product product, String sellerUsername) {
         for (Product currentProduct : Product.getAllProducts()) {
-            if (product.equals(currentProduct) && currentProduct.getSeller().getName().equals(sellerName)) {
+            if (product.equals(currentProduct) && currentProduct.getSeller().getUsername().equals(sellerUsername)) {
                 return currentProduct;
             }
         }
