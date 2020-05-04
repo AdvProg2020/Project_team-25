@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 public class ProductMenu {
 
     private static String sellerName = "";
-    private static final int COLUMN_COUNT = 200;
+    private static final int COLUMN_COUNT = 100;
 
     private static final String SELECT_SELLER_REGEX = "^select seller ([^\\s]+)$";
     private static final String COMPARE_PRODUCT_REGEX = "^compare (\\d+|[^\\s]+)$";
@@ -167,7 +167,7 @@ public class ProductMenu {
         }
     }
 
-    private static void printAlongside(String firstString, String secondString) {
+    public static void printAlongside(String firstString, String secondString) {
         int len = Math.max(firstString.length(), secondString.length());
         String firstPart = "", secondPart = "";
         for (int character = 0; character < len; character++) {
@@ -192,7 +192,13 @@ public class ProductMenu {
             }
         }
         if (firstPart.length() != 0) {
-            System.out.printf("%200s | %200s\n", firstPart, secondPart);
+            while (firstPart.length() < COLUMN_COUNT) {
+                firstPart = firstPart.concat(" ");
+            }
+            while (secondPart.length() < COLUMN_COUNT) {
+                secondPart = secondPart.concat(" ");
+            }
+            System.out.printf("%s | %s\n", firstPart, secondPart);
         }
         for (int column = 0; column < 2 * COLUMN_COUNT + 3; column++) {
             System.out.print("_");

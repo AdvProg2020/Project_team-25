@@ -137,6 +137,7 @@ public class ProductsTest {
     @Test
     public void compareTest()
     {
+        // This test should change, because the output format has changed
         String input = "compare 4\ncompare product1\nback\nback";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         ProductMenu.init(Product.getProductByID(1));
