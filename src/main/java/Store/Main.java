@@ -28,14 +28,6 @@ public class Main {
 //        }
 
         MainMenu.init();
-
-        System.out.println("Save Current Database?");
-        String input = InputManager.getNextLine();
-        MainMenu.currentUser = null;
-        if (input.equalsIgnoreCase("Y")) {
-            ResourceHandler.resetFile();
-            ResourceHandler.writeAll();
-        }
     }
 
     public static void setTest() {
