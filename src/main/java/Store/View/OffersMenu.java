@@ -57,9 +57,9 @@ public class OffersMenu {
     public static void viewOffs() {
         for (Product product : OffersController.sortOffers(currentSort, filters)) {
             Offer offer = Offer.getOfferOfProduct(product);
-            System.out.println(product.getName() + ": ");
+            System.out.println("Name: " + product.getName());
             System.out.println("ID: " + product.getProductID());
-            System.out.println("Actual Price: " + product.getPrice() + "You Have To Pay: " + (product.getPrice() - (product.getPrice() - offer.getOffPercent())));
+            System.out.println("Actual Price: " + product.getPrice() + "You Have To Pay: " + (product.getPrice() - (product.getPrice() * offer.getOffPercent() / 100.0)));
             System.out.println("Offer Info :" + offer);
             System.out.println("*******");
         }
@@ -101,8 +101,9 @@ public class OffersMenu {
 
     private static void showAvailableFilters() {
         for (String availableFilter : availableFilters) {
-            System.out.print(availableFilter + " ");
+            System.out.print(availableFilter + "\t");
         }
+        System.out.println();
         System.out.println("*******");
     }
 
@@ -124,14 +125,15 @@ public class OffersMenu {
             System.out.println("This filter hasn't been selected!");
         }
         filters.remove(filter);
-        OffersController.getFilteredList(filters);
+        viewOffs();
 
     }
 
     private static void printCurrentFilters() {
         for (String filter : filters) {
-            System.out.print(filter + " ");
+            System.out.print(filter + "\t");
         }
+        System.out.println();
         System.out.println("*******");
     }
 
@@ -162,8 +164,9 @@ public class OffersMenu {
 
     private static void showAvailableSorts() {
         for (String availableSort : availableSorts) {
-            System.out.print(availableSort + " ");
+            System.out.print(availableSort + "\t");
         }
+        System.out.println();
         System.out.println("*******");
     }
 

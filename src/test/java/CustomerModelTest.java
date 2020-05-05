@@ -2,6 +2,7 @@ import Store.Main;
 import Store.Model.*;
 import Store.View.CustomerMenu;
 import Store.View.MainMenu;
+import Store.View.ManagerMenu;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -184,5 +185,15 @@ public class CustomerModelTest {
         ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(1));
         CustomerMenu.init();
         Assert.assertEquals(Product.getProductByID(0).getAverageRating(), 3, 3);
+    }
+
+    @Test
+    public void logoutTest() {
+        Main.setTest();
+        Customer customer = (Customer) Customer.getUserByUsername("customer1");
+        MainMenu.currentUser = customer;
+        System.setIn(new ByteArrayInputStream(("logout\nback\nback").getBytes()));
+        CustomerMenu.init();
+        Assert.assertNotEquals(MainMenu.currentUser, customer);
     }
 }

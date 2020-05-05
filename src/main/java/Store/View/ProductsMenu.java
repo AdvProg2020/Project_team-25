@@ -117,6 +117,7 @@ public class ProductsMenu {
         } else {
             filters.remove(filter);
         }
+        showAllProducts();
     }
 
     private static void sorting() {

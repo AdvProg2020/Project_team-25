@@ -77,6 +77,16 @@ public class Main {
         Request request = new Request(seller1);
         Manager.addRequest(request);
 
+        Offer offer1 = new Offer(seller1, CheckingStatus.CREATION, 20);
+        offer1.addProduct(product1);
+        offer1.addProduct(product2);
+        offer1.addProduct(product3);
+        Offer offer2 = new Offer(seller1, CheckingStatus.CREATION, 20);
+        offer2.addProduct(product4);
+        offer2.addProduct(product5);
+        Offer.addOfferToAllOffers(offer1);
+        Offer.addOfferToAllOffers(offer2);
+
         product1.assignToSeller();
         product2.assignToSeller();
         product3.assignToSeller();
