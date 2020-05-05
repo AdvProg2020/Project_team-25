@@ -19,7 +19,7 @@ public class OffersMenu {
     private static String SHOW_PRODUCT_REGEX = "^show product (\\d+)$";
     private static String DISABLE_FILTER_REGEX = "^disable filter ([^\\s]+)$";
     private static String FILTER_REGEX = "^filter ([^\\s]+)$";
-    private static String SORT_REGEX = "^sort ([^\\s]+)$";
+    private static String SORT_REGEX = "^sort (.+)$";
 
     public static void init() {
         currentSort = "visit";

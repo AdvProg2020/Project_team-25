@@ -29,7 +29,7 @@ public class ManagerMenu {
     private static final String ADD_CATEGORY = "^add ([^\\s]+)$";
     private static final String EDIT_CATEGORY = "^edit ([^\\s]+) (add filter|add product|change name|remove filter|remove product) ([^\\s]+)$";
     private static final String REMOVE_CATEGORY = "^remove ([^\\s]+)$";
-    private static final String SORT_BY_REGEX = "^sort by (\\w+)$";
+    private static final String SORT_BY_REGEX = "^sort by (.+)$";
     private static ArrayList<String> availableSortsProducts = new ArrayList<String>(Arrays.asList("rating", "price", "visit", "lexicographical"));
     private static ArrayList<String> availableSortsOffCodes = new ArrayList<String>(Arrays.asList("time of starting", "time of ending", "code", "off percentage", "maximum off", "usage count"));
     private static ArrayList<String> availableSortsUsers = new ArrayList<String>(Arrays.asList("name", "family name", "phone number", "username", "email"));
