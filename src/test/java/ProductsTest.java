@@ -106,19 +106,7 @@ public class ProductsTest {
                 "logout\r\n" +
                 "back"));
     }
-    @Test
-    public void sortTest()
-    {
-        String input = "sorting\nshow available sorts\ncurrent sort\nsort boz\nsort rating\ncurrent sort\ndisable sort\ncurrent sort\nback\nback";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-        ProductsMenu.init();
-        Assert.assertTrue(outContent.toString().contains("rating, price, visit, lexicographical.\r\n" +
-                "*******\r\n" +
-                "Current sort is: visit.\r\n" +
-                "Mode isn't available!\r\n" +
-                "Current sort is: rating.\r\n" +
-                "Current sort is: visit."));
-    }
+
     @Test
     public void digestTest()
     {
