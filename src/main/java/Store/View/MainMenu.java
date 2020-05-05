@@ -5,6 +5,7 @@ import Store.Model.Customer;
 import Store.Model.Manager;
 import Store.Model.Seller;
 import Store.Model.User;
+import Store.ResourceHandler;
 
 import java.util.regex.Matcher;
 
@@ -17,7 +18,7 @@ public class MainMenu {
         String input;
         Matcher matcher;
         System.out.println("\nMain menu\n");
-        while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
+        while (!(input = InputManager.getNextLine()).equalsIgnoreCase("exit")) {
             if (input.equalsIgnoreCase("user page")) {
                 if (currentUser == null) {
                     System.out.println("You must login before going into your user page!");
@@ -55,6 +56,18 @@ public class MainMenu {
                 System.out.println("Invalid command!");
             }
         }
+        exitAll();
+    }
+
+    private static void exitAll() {
+        System.out.println("Save Current Database?");
+        String input = InputManager.getNextLine();
+        MainMenu.currentUser = null;
+        if (input.equalsIgnoreCase("Y")) {
+            ResourceHandler.resetFile();
+            ResourceHandler.writeAll();
+        }
+        System.exit(0);
     }
 
     private static void printHelp() {
