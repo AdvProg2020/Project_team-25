@@ -187,13 +187,4 @@ public class CustomerModelTest {
         Assert.assertEquals(Product.getProductByID(0).getAverageRating(), 3, 3);
     }
 
-    @Test
-    public void logoutTest() {
-        Main.setTest();
-        Customer customer = (Customer) Customer.getUserByUsername("customer1");
-        MainMenu.currentUser = customer;
-        System.setIn(new ByteArrayInputStream(("logout\nback\nback").getBytes()));
-        CustomerMenu.init();
-        Assert.assertNotEquals(MainMenu.currentUser, customer);
-    }
 }

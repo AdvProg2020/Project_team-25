@@ -19,6 +19,7 @@ public class OffersModelTest {
     @Before
     public void setTest() {
         Main.setTest();
+        Main.setOffers();
     }
 
     @Test

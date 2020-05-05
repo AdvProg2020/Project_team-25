@@ -3,6 +3,7 @@ import Store.Model.Customer;
 import Store.Model.Product;
 import Store.Model.User;
 import Store.View.MainMenu;
+import Store.View.OffersMenu;
 import Store.View.ProductMenu;
 import Store.View.ProductsMenu;
 import org.junit.Assert;
@@ -179,5 +180,72 @@ public class ProductsTest {
                 "Comments for product product2 with seller seller2: \r\n" +
                 "________________________________________________________________________________________________________________________________________________________________________________________________________\r\n" +
                 "                                                                                                                            Commenting user: customer1                      --Has not bought this product---> it was on of the worst i've ever seen"));
+    }
+
+    @Test
+    public void productSortTest() {
+        System.setOut(originalOut);
+        System.setIn(new ByteArrayInputStream(("sorting\nsort visit\nsort lexicographical\nsort rating\nsort price\nback\nback").getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(true);
+    }
+
+    @Test
+    public void availableSortTest() {
+        System.setIn(new ByteArrayInputStream(("sorting\nshow available sorts\nback\nback").getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(outContent.toString().contains("rating, price, visit, lexicographical."));
+    }
+
+    @Test
+    public void currentSortTest() {
+        System.setIn(new ByteArrayInputStream(("sorting\ncurrent sort\nback\nback").getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(outContent.toString().contains("visit"));
+    }
+
+    @Test
+    public void disableSortTest() {
+        System.setIn(new ByteArrayInputStream(("sorting\nsort lexicographical\ndisable sort\ncurrent sort\nback\nback").getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(outContent.toString().contains("visit"));
+    }
+
+    @Test
+    public void availableFilterTest() {
+        (Product.getProductByID(0)).addFilter("red");
+        (Product.getProductByID(0)).addFilter("blue");
+        System.setIn(new ByteArrayInputStream(("filter\nshow available filters\nback\nback").getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(outContent.toString().contains("red\tblue\t"));
+    }
+
+    @Test
+    public void filterTest() {
+        (Product.getProductByID(0)).addFilter("red");
+        (Product.getProductByID(4)).addFilter("red");
+        System.setOut(originalOut);
+        System.setIn(new ByteArrayInputStream(("filter\nfilter red\nback\nback").getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(true);
+    }
+
+    @Test
+    public void showFilterTest() {
+        (Product.getProductByID(0)).addFilter("red");
+        (Product.getProductByID(4)).addFilter("blue");
+        System.setIn(new ByteArrayInputStream(("filter\nfilter red\ncurrent filters\nback\nback").getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(outContent.toString().contains("red\t"));
+    }
+
+    @Test
+    public void disableFilterTest() {
+        (Product.getProductByID(0)).addFilter("red");
+        (Product.getProductByID(1)).addFilter("red");
+        (Product.getProductByID(1)).addFilter("blue");
+        System.setIn(new ByteArrayInputStream(("filter\nfilter red\nfilter blue\ndisable filter blue\ncurrent filters\nback\nback").getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(outContent.toString().contains("red\t"));
     }
 }

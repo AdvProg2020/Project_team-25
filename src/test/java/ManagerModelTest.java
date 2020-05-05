@@ -253,16 +253,6 @@ public class ManagerModelTest {
     }
 
     @Test
-    public void logoutTest() {
-        Main.setTest();
-        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
-        MainMenu.currentUser = manager;
-        System.setIn(new ByteArrayInputStream(("logout\nback\nback").getBytes()));
-        ManagerMenu.init();
-        Assert.assertNotEquals(MainMenu.currentUser, manager);
-    }
-
-    @Test
     public void viewOffCodeTest() {
         Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");

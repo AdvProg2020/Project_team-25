@@ -69,16 +69,6 @@ public class Main {
         Request request = new Request(seller1);
         Manager.addRequest(request);
 
-        Offer offer1 = new Offer(seller1, CheckingStatus.CREATION, 20);
-        offer1.addProduct(product1);
-        offer1.addProduct(product2);
-        offer1.addProduct(product3);
-        Offer offer2 = new Offer(seller1, CheckingStatus.CREATION, 20);
-        offer2.addProduct(product4);
-        offer2.addProduct(product5);
-        Offer.addOfferToAllOffers(offer1);
-        Offer.addOfferToAllOffers(offer2);
-
         product1.assignToSeller();
         product2.assignToSeller();
         product3.assignToSeller();
@@ -100,5 +90,17 @@ public class Main {
         Product.addProduct(product3);
         Product.addProduct(product4);
         Product.addProduct(product5);
+    }
+
+    public static void setOffers() {
+        Offer offer1 = new Offer(User.getUserByUsername("seller1"), CheckingStatus.CREATION, 20);
+        offer1.addProduct(Product.getProductByID(0));
+        offer1.addProduct((Product.getProductByID(1)));
+        offer1.addProduct((Product.getProductByID(2)));
+        Offer offer2 = new Offer(User.getUserByUsername("seller1"), CheckingStatus.CREATION, 20);
+        offer2.addProduct((Product.getProductByID(3)));
+        offer2.addProduct((Product.getProductByID(4)));
+        Offer.addOfferToAllOffers(offer1);
+        Offer.addOfferToAllOffers(offer2);
     }
 }

@@ -64,6 +64,7 @@ public class ProductsMenu {
     private static void filtering() {
         String input;
         Matcher matcher;
+        showAllProducts();
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if (input.equalsIgnoreCase("show available filters")) {
                 showAvailableFilters();
@@ -86,15 +87,17 @@ public class ProductsMenu {
 
     private static void printCurrentFilter() {
         for (String filter : filters) {
-            System.out.print(filter + " ");
+            System.out.print(filter + "\t");
         }
+        System.out.println();
         System.out.println("*******");
     }
 
     private static void showAvailableFilters() {
         for (String availableFilter : availableFilters) {
-            System.out.print(availableFilter + " ");
+            System.out.print(availableFilter + "\t");
         }
+        System.out.println();
         System.out.println("*******");
     }
 
@@ -107,6 +110,7 @@ public class ProductsMenu {
         } else {
             System.out.println("The filter is invalid!");
         }
+        showAllProducts();
     }
 
     private static void disableFilter(String filter) {
@@ -123,6 +127,7 @@ public class ProductsMenu {
     private static void sorting() {
         String input;
         Matcher matcher;
+        showAllProducts();
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if (input.equalsIgnoreCase("show available sorts")) {
                 showAvailableSorts();
@@ -159,6 +164,7 @@ public class ProductsMenu {
             return;
         }
         currentSort = mode;
+        showAllProducts();
     }
 
     private static void printCurrentSort() {
@@ -167,6 +173,7 @@ public class ProductsMenu {
 
     private static void disableSort() {
         currentSort = "visit";
+        showAllProducts();
     }
 
     public static void showAllProducts() {
