@@ -28,7 +28,7 @@ public class SellerMenu {
     private static final String REMOVE_PRODUCT_REGEX = "^remove product (\\d+)$";
     private static final String VIEW_OFFER_REGEX = "^view (\\d+)$";
     private static final String EDIT_OFFER_REGEX = "^edit (\\d+)$";
-    private static final String SORT_BY_REGEX = "^sort by (\\w+)$";
+    private static final String SORT_BY_REGEX = "^sort by (.+)$";
     private static ArrayList<String> availableSortsProducts = new ArrayList<String>(Arrays.asList("rating", "price", "visit", "lexicographical"));
     private static ArrayList<String> availableSortsOffs = new ArrayList<String>(Arrays.asList("time of starting", "time of ending"));
 

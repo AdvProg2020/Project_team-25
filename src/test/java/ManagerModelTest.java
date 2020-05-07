@@ -252,5 +252,67 @@ public class ManagerModelTest {
         Assert.assertTrue(outContent.toString().contains("List of main commands: "));
     }
 
+    @Test
+    public void viewOffCodeTest() {
+        Main.setTest();
+        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
+        MainMenu.currentUser = manager;
+        System.setOut(new PrintStream(outContent));
+        System.setIn(new ByteArrayInputStream(("view discount codes\nview discount code ce98\nback\nback").getBytes()));
+        ManagerMenu.init();
+        Assert.assertTrue(outContent.toString().contains(Manager.getOffCodeByCode("ce98").toString()));
+    }
+
+    @Test
+    public void viewUserTest() {
+        Main.setTest();
+        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
+        MainMenu.currentUser = manager;
+        System.setOut(new PrintStream(outContent));
+        System.setIn(new ByteArrayInputStream(("manage users\nview cloudStrife\nback\nback").getBytes()));
+        ManagerMenu.init();
+        Assert.assertTrue(outContent.toString().contains(Manager.getUserByUsername("cloudStrife").toString()));
+    }
+
+    @Test
+    public void viewRequestTest() {
+        Main.setTest();
+        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
+        MainMenu.currentUser = manager;
+        System.setOut(new PrintStream(outContent));
+        System.setIn(new ByteArrayInputStream(("manage requests\ndetails 0\nback\nback").getBytes()));
+        ManagerMenu.init();
+        Assert.assertTrue(outContent.toString().contains(Manager.getRequestById(1).toString()));
+    }
+
+    @Test
+    public void userSortTest() {
+        Main.setTest();
+        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
+        MainMenu.currentUser = manager;
+        System.setIn(new ByteArrayInputStream(("manage users\nsort by phone number\nsort by name\nsort by family name\nsort by username\nsort by email\nback\nback").getBytes()));
+        ManagerMenu.init();
+        Assert.assertTrue(true);
+    }
+
+    @Test
+    public void productSortTest() {
+        Main.setTest();
+        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
+        MainMenu.currentUser = manager;
+        System.setIn(new ByteArrayInputStream(("manage all products\nsort by visit\nsort by lexicographical\nsort by price\nsort by rating\nback\nback").getBytes()));
+        ManagerMenu.init();
+        Assert.assertTrue(true);
+    }
+
+    @Test
+    public void offCodeSortTest() {
+        Main.setTest();
+        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
+        MainMenu.currentUser = manager;
+        System.setIn(new ByteArrayInputStream(("view discount codes\nsort by time of starting\nsort by time of ending\nsort by code\nsort by usage count\nsort by maximum off\nsort by off percentage\nback\nback").getBytes()));
+        ManagerMenu.init();
+        Assert.assertTrue(true);
+    }
 
 }

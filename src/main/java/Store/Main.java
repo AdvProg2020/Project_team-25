@@ -28,14 +28,6 @@ public class Main {
 //        }
 
         MainMenu.init();
-
-        System.out.println("Save Current Database?");
-        String input = InputManager.getNextLine();
-        MainMenu.currentUser = null;
-        if (input.equalsIgnoreCase("Y")) {
-            ResourceHandler.resetFile();
-            ResourceHandler.writeAll();
-        }
     }
 
     public static void setTest() {
@@ -112,5 +104,17 @@ public class Main {
         product4.addFilter("AB");
         product3.addFilter("CD");
         product4.addFilter("CD");
+    }
+
+    public static void setOffers() {
+        Offer offer1 = new Offer(User.getUserByUsername("seller1"), CheckingStatus.CREATION, 20);
+        offer1.addProduct(Product.getProductByID(0));
+        offer1.addProduct((Product.getProductByID(1)));
+        offer1.addProduct((Product.getProductByID(2)));
+        Offer offer2 = new Offer(User.getUserByUsername("seller1"), CheckingStatus.CREATION, 20);
+        offer2.addProduct((Product.getProductByID(3)));
+        offer2.addProduct((Product.getProductByID(4)));
+        Offer.addOfferToAllOffers(offer1);
+        Offer.addOfferToAllOffers(offer2);
     }
 }
