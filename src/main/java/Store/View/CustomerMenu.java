@@ -85,7 +85,7 @@ public class CustomerMenu {
         Matcher matcher;
         System.out.println("\nCustomer menu -> View Cart\n");
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
-            if (input.equalsIgnoreCase("show product")) {
+            if (input.equalsIgnoreCase("show products")) {
                 showProducts();
             } else if ((matcher = InputManager.getMatcher(input, SHOW_PRODUCT)).find()) {
                 showProduct(matcher.group(1));
@@ -133,8 +133,11 @@ public class CustomerMenu {
     }
 
     private static void purchaseWrapper() {
-        if (customer.getCart().isEmpty())
-        {
+        if (customer == MainMenu.guest) {
+            System.out.println("You must login first to finalize your purchase!");
+            return;
+        }
+        if (customer.getCart().isEmpty()) {
             System.out.println("You haven't selected any products");
             return;
         }
@@ -237,10 +240,10 @@ public class CustomerMenu {
     }
 
     private static void handleLogout() {
-        if (MainMenu.currentUser == null) {
+        if (MainMenu.currentUser == MainMenu.guest) {
             System.out.println("You haven't signed in!");
         } else {
-            MainMenu.currentUser = null;
+            MainMenu.currentUser = MainMenu.guest;
             MainMenu.init();
         }
     }

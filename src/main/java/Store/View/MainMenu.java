@@ -1,10 +1,7 @@
 package Store.View;
 
 import Store.InputManager;
-import Store.Model.Customer;
-import Store.Model.Manager;
-import Store.Model.Seller;
-import Store.Model.User;
+import Store.Model.*;
 import Store.ResourceHandler;
 
 import java.util.regex.Matcher;
@@ -12,6 +9,8 @@ import java.util.regex.Matcher;
 public class MainMenu {
 
     public static User currentUser;
+    public static Customer guest = new Customer("guest", "guest", "guest",
+            "guest@approject.com", "00000000000", "guest", 0.0);
 
     public static void init() {
         // Set current user
@@ -78,22 +77,35 @@ public class MainMenu {
         System.out.println("login");
         System.out.println("logout");
         System.out.println("help");
+        System.out.println("exit");
         System.out.println("*******");
     }
 
     private static void handleLogin() {
-        if (MainMenu.currentUser == null) {
+        if (MainMenu.currentUser == MainMenu.guest) {
             SignUpAndLoginMenu.init();
+            if (MainMenu.currentUser != MainMenu.guest) {
+                moveShoppingCart();
+            }
         } else {
             System.out.println("You have signed in!");
         }
     }
 
+    private static void moveShoppingCart() {
+        if (MainMenu.currentUser instanceof Customer) {
+            for (Product product : MainMenu.guest.getCart()) {
+                ((Customer) MainMenu.currentUser).addToCart(product);
+            }
+        }
+        MainMenu.guest.getCart().clear();
+    }
+
     private static void handleLogout() {
-        if (MainMenu.currentUser == null) {
+        if (MainMenu.currentUser == MainMenu.guest) {
             System.out.println("You haven't signed in!");
         } else {
-            MainMenu.currentUser = null;
+            MainMenu.currentUser = MainMenu.guest;
         }
     }
 }

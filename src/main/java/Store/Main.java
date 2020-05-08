@@ -14,6 +14,7 @@ public class Main {
 //        ResourceHandler.writeAll();
 
         ResourceHandler.readAll();
+        MainMenu.currentUser = MainMenu.guest;
         System.out.println(Manager.hasManager);
 //        SignUpAndLoginMenu.init();
 //        ProductsMenu.init();
