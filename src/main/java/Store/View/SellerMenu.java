@@ -288,7 +288,7 @@ public class SellerMenu {
         System.out.println("Filters: (end with inputting -1)");
         String filter;
         ArrayList<String> filters = new ArrayList<String>();
-        while ((filter = InputManager.getNextLine()).equalsIgnoreCase("-1")) {
+        while (!(filter = InputManager.getNextLine()).equalsIgnoreCase("-1")) {
             if (filters.contains(filter)) {
                 System.out.println("You have already added this filter!");
             }
@@ -438,7 +438,7 @@ public class SellerMenu {
 
         System.out.println("Off Percentage: ");
         input = InputManager.getNextLine();
-        if (!input.matches("\\d+\\.\\d+")) {
+        if (!input.matches("\\d+(\\.\\d+)?")) {
             System.out.println("Invalid percentage!");
             return null;
         }
@@ -479,14 +479,14 @@ public class SellerMenu {
         }
         Offer offer = createOffer(seller);
         if (offer != null) {
-            SellerController.editOff(seller, Offer.getOfferByID(Integer.parseInt(attribute)), createOffer(seller));
+            SellerController.editOff(seller, Offer.getOfferByID(Integer.parseInt(attribute)), offer);
         }
     }
 
     private static void addOffWrapper(Seller seller) {
         Offer offer = createOffer(seller);
         if (offer != null) {
-            SellerController.addOff(seller, createOffer(seller));
+            SellerController.addOff(seller, offer);
         }
     }
 

@@ -1,9 +1,5 @@
 import Store.Main;
-import Store.Model.Manager;
 import Store.Model.Product;
-import Store.Model.User;
-import Store.View.MainMenu;
-import Store.View.ManagerMenu;
 import Store.View.OffersMenu;
 import org.junit.Assert;
 import org.junit.Before;
@@ -68,7 +64,7 @@ public class OffersModelTest {
         System.setOut(new PrintStream(outContent));
         System.setIn(new ByteArrayInputStream(("filter\nshow available filters\nback\nback").getBytes()));
         OffersMenu.init();
-        Assert.assertTrue(outContent.toString().contains("red\tblue\t"));
+        Assert.assertTrue(outContent.toString().contains("red") && outContent.toString().contains("blue"));
     }
 
     @Test

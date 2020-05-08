@@ -32,6 +32,10 @@ public class Seller extends User {
         this.type = "Seller";
     }
 
+    public void forceAddOffer(Offer offer)
+    {
+        offers.add(offer);
+    }
     public static void addSeller(Seller seller)
     {
         allUsers.add(seller);

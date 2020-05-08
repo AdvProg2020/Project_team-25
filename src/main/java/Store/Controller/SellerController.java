@@ -158,7 +158,7 @@ public class SellerController {
     }
 
     public static String addFilterToOffer(Seller seller, String idString, String filter) {
-        if (!StringUtils.isNumeric(idString) || !Offer.hasOfferByID(Integer.parseInt(idString))) {
+        if (!StringUtils.isNumeric(idString) || !Offer.hasOfferByID(Integer.parseInt(idString)) || Offer.getOfferByID(Integer.parseInt(idString)) == null) {
             return "Invalid ID!";
         }
         Offer offer = Offer.getOfferByID(Integer.parseInt(idString));
@@ -173,7 +173,7 @@ public class SellerController {
     }
 
     public static String removeFilterFromOffer(Seller seller, String idString, String filter) {
-        if (!StringUtils.isNumeric(idString) || !Offer.hasOfferByID(Integer.parseInt(idString))) {
+        if (!StringUtils.isNumeric(idString) || !Offer.hasOfferByID(Integer.parseInt(idString)) || Offer.getOfferByID(Integer.parseInt(idString)) == null) {
             return "Invalid ID!";
         }
         Offer offer = Offer.getOfferByID(Integer.parseInt(idString));

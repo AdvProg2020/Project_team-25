@@ -2,7 +2,7 @@ package Store;
 
 import Store.Model.*;
 import Store.Model.Enums.CheckingStatus;
-import Store.View.*;
+import Store.View.MainMenu;
 
 import java.util.Date;
 
@@ -107,14 +107,20 @@ public class Main {
     }
 
     public static void setOffers() {
-        Offer offer1 = new Offer(User.getUserByUsername("seller1"), CheckingStatus.CREATION, 20);
+        Offer offer1 = new Offer(User.getUserByUsername("seller2"), CheckingStatus.CREATION, 20);
         offer1.addProduct(Product.getProductByID(0));
         offer1.addProduct((Product.getProductByID(1)));
         offer1.addProduct((Product.getProductByID(2)));
-        Offer offer2 = new Offer(User.getUserByUsername("seller1"), CheckingStatus.CREATION, 20);
+        Offer offer2 = new Offer(User.getUserByUsername("seller2"), CheckingStatus.CREATION, 20);
         offer2.addProduct((Product.getProductByID(3)));
         offer2.addProduct((Product.getProductByID(4)));
         Offer.addOfferToAllOffers(offer1);
         Offer.addOfferToAllOffers(offer2);
-    }
+        ((Seller) User.getUserByUsername("seller2")).forceAddOffer(offer1);
+        ((Seller) User.getUserByUsername("seller2")).forceAddOffer(offer2);
+        offer1.setStartingTime(new Date());
+        offer2.setStartingTime(new Date());
+        offer1.setEndingTime(new Date(2020,6,10));
+        offer2.setEndingTime(new Date(2020,6,9));
+        }
 }

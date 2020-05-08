@@ -2,7 +2,6 @@ import Store.Main;
 import Store.Model.*;
 import Store.View.CustomerMenu;
 import Store.View.MainMenu;
-import Store.View.ManagerMenu;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
