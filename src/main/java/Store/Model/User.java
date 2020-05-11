@@ -57,10 +57,6 @@ public class User implements Serializable {
     public void delete() {
     }
 
-    public static boolean isExist(User user) {
-        return allUsers.contains(user);
-    }
-
     public int getId() {
         return id;
     }

@@ -78,12 +78,6 @@ public class Manager extends User {
         return pendingRequests;
     }
 
-    //showing categories handled in controller
-    public void editCategory(Category oldCategory, Category newCategory) {
-        Manager.removeCategory(oldCategory);
-        allCategories.add(newCategory);
-    }
-
     public static Category categoryByName(String name)
     {
         for(Category category: allCategories)
@@ -134,11 +128,6 @@ public class Manager extends User {
                 if(offCode.isUserIncluded(user))
                     ((Customer) user).removeOffCodeOfUser(offCode);
         offCodes.remove(offCode);
-    }
-
-    public void changeOffCode(OffCode offCode, OffCode newOffCode) {
-        Manager.removeOffCode(offCode);
-        offCodes.add(newOffCode);
     }
 
     public void addOffCode(OffCode offCode) {
