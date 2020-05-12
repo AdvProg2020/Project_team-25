@@ -2,9 +2,12 @@ package Store.View;
 
 import Store.Controller.SignUpAndLoginController;
 import Store.InputManager;
+import Store.Model.Customer;
 import Store.Model.Manager;
+import Store.Model.Seller;
 import Store.Model.User;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -82,7 +85,8 @@ public class SignUpAndLoginMenu {
     }
 
     private static boolean handleLogin(String username) {
-        if (User.getUserByUsername(username) == null) {
+        User user;
+        if ((user = User.getUserByUsername(username)) == null) {
             System.out.println("No user with this username exists!");
             return false;
         }
@@ -91,6 +95,16 @@ public class SignUpAndLoginMenu {
         String message = SignUpAndLoginController.handleLogin(username, password);
         System.out.println(message);
         if (message.equals("Login successful.")) {
+            MainMenu.currentUser = user;
+            if (user instanceof Manager) {
+                ManagerMenu.init();
+            }
+            else if (user instanceof Seller) {
+                SellerMenu.init();
+            }
+            else if (user instanceof Customer) {
+                CustomerMenu.init();
+            }
             return true;
         }
         return false;
