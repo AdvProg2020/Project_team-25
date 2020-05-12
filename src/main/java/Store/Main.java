@@ -2,7 +2,7 @@ package Store;
 
 import Store.Model.*;
 import Store.Model.Enums.CheckingStatus;
-import Store.View.MainMenu;
+import Store.View.*;
 
 import java.util.Date;
 
@@ -10,23 +10,22 @@ public class Main {
 
     public static void main(String[] args) {
 
-//        ResourceHandler.resetFile();
+        ResourceHandler.resetFile();
 //        ResourceHandler.writeAll();
 
-        ResourceHandler.readAll();
+//        ResourceHandler.readAll();
         MainMenu.currentUser = MainMenu.guest;
         System.out.println(Manager.hasManager);
-//        SignUpAndLoginMenu.init();
-//        ProductsMenu.init();
-//        if (MainMenu.currentUser instanceof Manager) {
-//            ManagerMenu.init();
-//        }
-//        else if (MainMenu.currentUser instanceof Seller) {
-//            SellerMenu.init();
-//        }
-//        else {
-//            CustomerMenu.init();
-//        }
+        SignUpAndLoginMenu.init();
+        if (MainMenu.currentUser instanceof Manager) {
+            ManagerMenu.init();
+        }
+        else if (MainMenu.currentUser instanceof Seller) {
+            SellerMenu.init();
+        }
+        else {
+            CustomerMenu.init();
+        }
 
         MainMenu.init();
     }

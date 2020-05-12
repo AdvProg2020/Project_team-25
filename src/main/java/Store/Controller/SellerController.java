@@ -89,7 +89,7 @@ public class SellerController {
     }
 
     public static boolean isValidField(String field) {
-        if (field.equalsIgnoreCase("name") || field.equalsIgnoreCase("family name")) {
+        if (field.equalsIgnoreCase("first name") || field.equalsIgnoreCase("family name")) {
             return true;
         }
         else if (field.equalsIgnoreCase("email") || field.equalsIgnoreCase("phone number")) {

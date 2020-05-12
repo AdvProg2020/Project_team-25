@@ -38,7 +38,7 @@ public class SellerModelTest {
 
     @Test
     public void viewEditFirstNameTest() {
-        System.setIn(new ByteArrayInputStream("view personal info\nedit name\nali\nback\nback".getBytes()));
+        System.setIn(new ByteArrayInputStream("view personal info\nedit first name\nali\nback\nback".getBytes()));
         SellerMenu.init();
         Assert.assertEquals("ali", seller.getName());
     }

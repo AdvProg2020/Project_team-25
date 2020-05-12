@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 public class CustomerMenu {
 
     private static Customer customer;
-    private static final String EDIT_PERSONAL_INFO = "^edit (password|family name|first name|email|phone number) ([^\\s]+)$";
+    private static final String EDIT_PERSONAL_INFO = "^edit (.+)$";
     private static final String SHOW_PRODUCT = "^view (\\d+)$";
     private static final String INCREASE_PRODUCT = "^increase (\\d+)$";
     private static final String DECREASE_PRODUCT = "^decrease (\\d+)$";
@@ -69,15 +69,40 @@ public class CustomerMenu {
         System.out.println(customer);//
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if ((matcher = InputManager.getMatcher(input, EDIT_PERSONAL_INFO)).find()) {
-                editPersonalInfoWrapper(matcher.group(1), matcher.group(2));
+                editPersonalInfoWrapper(matcher.group(1));
             } else {
                 System.out.println("Invalid command!");
             }
         }
     }
 
-    private static void editPersonalInfoWrapper(String field, String value) {
-        ManagerController.editPersonalInfo(customer, field, value);
+    private static void editPersonalInfoWrapper(String field) {
+        if (field.equalsIgnoreCase("username")) {
+            System.out.println("This field cannot be edited!");
+        }
+        else if (!ManagerController.isValidField(field)) {
+            System.out.println("This is not a valid field!");
+        }
+        else {
+            String value;
+            if (field.equalsIgnoreCase("password")) {
+                System.out.println("Please enter your password: ");
+                String passwordGuess = InputManager.getNextLine();
+                if (customer.validatePassword(passwordGuess)) {
+                    System.out.println("Please enter your new password: ");
+                    value = InputManager.getNextLine();
+                }
+                else {
+                    System.out.println("The password you entered is incorrect!");
+                    return;
+                }
+            }
+            else {
+                System.out.println("Value: ");
+                value = InputManager.getNextLine();
+            }
+            System.out.println(ManagerController.editPersonalInfo(customer, field, value));
+        }
     }
 
     private static void viewCart() {
@@ -205,6 +230,7 @@ public class CustomerMenu {
     }
 
     private static void printHelp() {
+        System.out.println("*******\n");
         System.out.println("List of main commands: ");
         System.out.println("view personal info");
         System.out.println("view cart");
@@ -218,7 +244,7 @@ public class CustomerMenu {
         System.out.println("*******");
 
         System.out.println("\nList of commands in the view personal info submenu: ");
-        System.out.println("edit [password|family name|first name|email|phone number] [value]");
+        System.out.println("edit [filed]");
         System.out.println("back");
 
         System.out.println("\nList of commands in the view cart submenu: ");

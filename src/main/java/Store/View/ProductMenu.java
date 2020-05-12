@@ -268,6 +268,7 @@ public class ProductMenu {
     }
 
     private static void printHelp() {
+        System.out.println("*******\n");
         System.out.println("List of main commands: ");
         System.out.println("digest");
         System.out.println("attributes");

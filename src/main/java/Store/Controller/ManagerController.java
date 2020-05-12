@@ -111,6 +111,19 @@ public class ManagerController {
         return "Invalid command!";
     }
 
+    public static boolean isValidField(String field) {
+        if (field.equalsIgnoreCase("first name") || field.equalsIgnoreCase("family name")) {
+            return true;
+        }
+        else if (field.equalsIgnoreCase("email") || field.equalsIgnoreCase("phone number")) {
+            return true;
+        }
+        else if (field.equalsIgnoreCase("password")) {
+            return true;
+        }
+        return false;
+    }
+
     public static void handleRequest(Manager manager, boolean status, Request request) {
         manager.handleRequest(request, status);
     }

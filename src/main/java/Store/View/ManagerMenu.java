@@ -16,7 +16,7 @@ public class ManagerMenu {
 
     private static Manager currentUser;
 
-    private static final String EDIT_PERSONAL_INFO = "^edit (password|family name|first name|email|phone number) ([^\\s]+)$";
+    private static final String EDIT_PERSONAL_INFO = "^edit (.+)$";
     private static final String SHOW_USER_BY_NAME = "^view ([^\\s]+)$";
     private static final String DELETE_USER_BY_NAME = "^delete user ([^\\s]+)$";
     private static final String REMOVE_PRODUCTS = "^remove (\\d+)$";
@@ -84,15 +84,40 @@ public class ManagerMenu {
         System.out.println(currentUser);//
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if ((matcher = InputManager.getMatcher(input, EDIT_PERSONAL_INFO)).find()) {
-                editPersonalInfoWrapper(matcher.group(1), matcher.group(2));
+                editPersonalInfoWrapper(matcher.group(1));
             } else {
                 System.out.println("Invalid command!");
             }
         }
     }
 
-    private static void editPersonalInfoWrapper(String field, String value) {
-        System.out.println(ManagerController.editPersonalInfo(currentUser, field, value));
+    private static void editPersonalInfoWrapper(String field) {
+        if (field.equalsIgnoreCase("username")) {
+            System.out.println("This field cannot be edited!");
+        }
+        else if (!ManagerController.isValidField(field)) {
+            System.out.println("This is not a valid field!");
+        }
+        else {
+            String value;
+            if (field.equalsIgnoreCase("password")) {
+                System.out.println("Please enter your password: ");
+                String passwordGuess = InputManager.getNextLine();
+                if (currentUser.validatePassword(passwordGuess)) {
+                    System.out.println("Please enter your new password: ");
+                    value = InputManager.getNextLine();
+                }
+                else {
+                    System.out.println("The password you entered is incorrect!");
+                    return;
+                }
+            }
+            else {
+                System.out.println("Value: ");
+                value = InputManager.getNextLine();
+            }
+            System.out.println(ManagerController.editPersonalInfo(currentUser, field, value));
+        }
     }
 
     private static void manageUsers() {
@@ -407,6 +432,7 @@ public class ManagerMenu {
     }
 
     private static void printHelp() {
+        System.out.println("*******\n");
         System.out.println("List of main commands: ");
         System.out.println("view personal info");
         System.out.println("manage users");
@@ -423,7 +449,7 @@ public class ManagerMenu {
         System.out.println("*******");
 
         System.out.println("\nList of commands in the view personal info submenu: ");
-        System.out.println("edit [password|family name|first name|email|phone number] [value]");
+        System.out.println("edit [field]");
         System.out.println("back");
         System.out.println("*******");
 

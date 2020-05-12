@@ -2,8 +2,9 @@ package Store.View;
 
 import Store.Controller.OffersController;
 import Store.InputManager;
-import Store.Main;
-import Store.Model.*;
+import Store.Model.Customer;
+import Store.Model.Offer;
+import Store.Model.Product;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,8 +36,10 @@ public class OffersMenu {
                 showProducts(matcher.group(1));
             } else if (input.equalsIgnoreCase("filter")) {
                 filtering();
+                System.out.println("\nOffers menu\n");
             } else if (input.equalsIgnoreCase("sorting")) {
                 sorting();
+                System.out.println("\nOffers menu\n");
             } else if (input.equalsIgnoreCase("login")) {
                 handleLogin();
                 System.out.println("\nOffers menu\n");
@@ -189,6 +192,7 @@ public class OffersMenu {
     }
 
     private static void printHelp() {
+        System.out.println("*******\n");
         System.out.println("List of main commands: ");
         System.out.println("show product [productId]");
         System.out.println("filter");
@@ -219,7 +223,7 @@ public class OffersMenu {
         System.out.println("login");
         System.out.println("logout");
         System.out.println("back");
-        System.out.println("*******");
+        System.out.println("*******\n");
     }
 
     private static void handleLogin() {

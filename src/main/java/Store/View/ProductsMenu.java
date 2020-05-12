@@ -36,8 +36,10 @@ public class ProductsMenu {
                 viewCategories();
             } else if (input.equalsIgnoreCase("filter")) {
                 filtering();
+                System.out.println("\nProducts Menu\n");
             } else if (input.equalsIgnoreCase("sorting")) {
                 sorting();
+                System.out.println("\nProducts Menu\n");
             } else if (input.equalsIgnoreCase("show products")) {
                 showAllProducts();
             } else if ((matcher = InputManager.getMatcher(input, SHOW_PRODUCT_REGEX)).find()) {
@@ -66,6 +68,7 @@ public class ProductsMenu {
         String input;
         Matcher matcher;
         showAllProducts();
+        System.out.println("\nProducts menu -> Filtering submenu\n");
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if (input.equalsIgnoreCase("show available filters")) {
                 showAvailableFilters();
@@ -129,6 +132,7 @@ public class ProductsMenu {
         String input;
         Matcher matcher;
         showAllProducts();
+        System.out.println("\nOffers menu -> Sorting submenu\n");
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if (input.equalsIgnoreCase("show available sorts")) {
                 showAvailableSorts();
@@ -182,7 +186,7 @@ public class ProductsMenu {
         productsToBeShown = ProductsController.sort(currentSort, productsToBeShown);
         for (Product product : productsToBeShown)
             System.out.println(product);
-        System.out.println("*********");
+        System.out.println("*******");
     }
 
     private static void showProduct(String attribute) {
@@ -191,6 +195,7 @@ public class ProductsMenu {
     }
 
     private static void printHelp() {
+        System.out.println("*******\n");
         System.out.println("List of main commands:");
         System.out.println("view categories");
         System.out.println("show products");

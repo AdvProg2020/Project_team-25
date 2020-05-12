@@ -6,7 +6,6 @@ import Store.Model.Request;
 import Store.Model.User;
 import Store.View.MainMenu;
 import Store.View.ManagerMenu;
-import Store.View.OffersMenu;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,7 +22,7 @@ public class ManagerModelTest {
         Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
-        System.setIn(new ByteArrayInputStream("view personal info\nedit phone number 123\nback\nback".getBytes()));
+        System.setIn(new ByteArrayInputStream("view personal info\nedit phone number\n123\nback\nback".getBytes()));
         ManagerMenu.init();
         Assert.assertEquals("123", manager.getPhoneNumber());
     }
@@ -33,7 +32,7 @@ public class ManagerModelTest {
         Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
-        System.setIn(new ByteArrayInputStream("view personal info\nedit email test@test.com\nback\nback".getBytes()));
+        System.setIn(new ByteArrayInputStream("view personal info\nedit email\ntest@test.com\nback\nback".getBytes()));
         ManagerMenu.init();
         Assert.assertEquals("test@test.com", manager.getEmail());
     }
@@ -43,7 +42,7 @@ public class ManagerModelTest {
         Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
-        System.setIn(new ByteArrayInputStream("view personal info\nedit first name ali\nback\nback".getBytes()));
+        System.setIn(new ByteArrayInputStream("view personal info\nedit first name\nali\nback\nback".getBytes()));
         ManagerMenu.init();
         Assert.assertEquals("ali", manager.getName());
     }
@@ -53,7 +52,7 @@ public class ManagerModelTest {
         Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
-        System.setIn(new ByteArrayInputStream("view personal info\nedit family name test\nback\nback".getBytes()));
+        System.setIn(new ByteArrayInputStream("view personal info\nedit family name\ntest\nback\nback".getBytes()));
         ManagerMenu.init();
         Assert.assertEquals("test", manager.getFamilyName());
     }
@@ -63,7 +62,7 @@ public class ManagerModelTest {
         Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
-        System.setIn(new ByteArrayInputStream("view personal info\nedit password test\nback\nback".getBytes()));
+        System.setIn(new ByteArrayInputStream("view personal info\nedit password\n1234\ntest\nback\nback".getBytes()));
         ManagerMenu.init();
         Assert.assertEquals("test", manager.getPassword());
     }

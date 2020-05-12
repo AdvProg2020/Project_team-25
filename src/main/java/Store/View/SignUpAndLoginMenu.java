@@ -2,7 +2,6 @@ package Store.View;
 
 import Store.Controller.SignUpAndLoginController;
 import Store.InputManager;
-import Store.Model.Manager;
 import Store.Model.User;
 
 import java.util.ArrayList;
@@ -97,11 +96,13 @@ public class SignUpAndLoginMenu {
     }
 
     private static void printHelp() {
+        System.out.println("*******\n");
+        System.out.println("List of main commands:");
         System.out.println("create account [type] [username]");
         System.out.println("login [username]");
         System.out.println("help");
         System.out.println("offs");
         System.out.println("products");
-        System.out.println("back");
+        System.out.println("back\n*******");
     }
 }
