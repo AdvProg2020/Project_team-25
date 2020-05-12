@@ -2,6 +2,7 @@ package Store.View;
 
 import Store.Controller.ProductsController;
 import Store.InputManager;
+import Store.Model.Customer;
 import Store.Model.Manager;
 import Store.Model.Product;
 
@@ -225,18 +226,30 @@ public class ProductsMenu {
     }
 
     private static void handleLogin() {
-        if (MainMenu.currentUser == null) {
+        if (MainMenu.currentUser == MainMenu.guest) {
             SignUpAndLoginMenu.init();
+            if (MainMenu.currentUser != MainMenu.guest) {
+                moveShoppingCart();
+            }
         } else {
             System.out.println("You have signed in!");
         }
     }
 
+    private static void moveShoppingCart() {
+        if (MainMenu.currentUser instanceof Customer) {
+            for (Product product : MainMenu.guest.getCart()) {
+                ((Customer) MainMenu.currentUser).addToCart(product);
+            }
+        }
+        MainMenu.guest.getCart().clear();
+    }
+
     private static void handleLogout() {
-        if (MainMenu.currentUser == null) {
+        if (MainMenu.currentUser == MainMenu.guest) {
             System.out.println("You haven't signed in!");
         } else {
-            MainMenu.currentUser = null;
+            MainMenu.currentUser = MainMenu.guest;
             MainMenu.init();
         }
     }

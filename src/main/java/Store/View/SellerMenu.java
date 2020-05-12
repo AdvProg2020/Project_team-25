@@ -542,10 +542,10 @@ public class SellerMenu {
     }
 
     private static void handleLogout() {
-        if (MainMenu.currentUser == null) {
+        if (MainMenu.currentUser == MainMenu.guest) {
             System.out.println("You haven't signed in!");
         } else {
-            MainMenu.currentUser = null;
+            MainMenu.currentUser = MainMenu.guest;
             MainMenu.init();
         }
     }
