@@ -207,8 +207,8 @@ public class Product implements Serializable {
         this.description = description;
     }
 
-    public void setBrand(String brand) {
-        this.brand = brand;
+    public void setBrand(String brand) { //////////////////////////////////////
+        this.visited++;
     }
 
     public void setPrice(double price) {
@@ -235,11 +235,11 @@ public class Product implements Serializable {
         return new HashSet<>(allFilters);
     }
 
-    public static void addFilterToAllFilters(String filter)
-    {
+    public static void addFilterToAllFilters(String filter) {
         if (!allFilters.contains(filter))
             allFilters.add(filter);
     }
+
     public void addFilter(String filter) {
        this.filters.add(filter);
        addFilterToAllFilters(filter);
@@ -247,12 +247,19 @@ public class Product implements Serializable {
 
     public void deleteFilter(String filter) {
         this.filters.remove(filter);
+        deleteFilterFromAllFilters("");
     }
 
-    public static void deleteFilterFromAllFilters(String filter)
+    public static void deleteFilterFromAllFilters(String filter) //////////////////////////////////////
     {
-        if (allFilters.contains(filter))
-            allFilters.remove(filter);
+        allFilters.clear();
+        for (Product product : allProducts) {
+            for (String currentFilter : product.getFilters()) {
+                addFilterToAllFilters(currentFilter);
+            }
+        }
+//        if (allFilters.contains(filter))
+//            allFilters.remove(filter);
     }
 
     public boolean hasFilter(String filter) {
@@ -284,6 +291,6 @@ public class Product implements Serializable {
     @Override
     public String toString() {
         return "(" + this.name + " ID:" + this.productID + " Seller:" + this.getSeller().getName()
-                + " Price:" + this.getPrice() + ")";
+                + " Price:" + this.getPrice() + ", " + this.filters + ")";
     }
 }

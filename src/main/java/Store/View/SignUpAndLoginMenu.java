@@ -2,6 +2,9 @@ package Store.View;
 
 import Store.Controller.SignUpAndLoginController;
 import Store.InputManager;
+import Store.Model.Customer;
+import Store.Model.Manager;
+import Store.Model.Seller;
 import Store.Model.User;
 
 import java.util.ArrayList;
@@ -81,7 +84,8 @@ public class SignUpAndLoginMenu {
     }
 
     private static boolean handleLogin(String username) {
-        if (User.getUserByUsername(username) == null) {
+        User user;
+        if ((user = User.getUserByUsername(username)) == null) {
             System.out.println("No user with this username exists!");
             return false;
         }
@@ -90,19 +94,18 @@ public class SignUpAndLoginMenu {
         String message = SignUpAndLoginController.handleLogin(username, password);
         System.out.println(message);
         if (message.equals("Login successful.")) {
+            MainMenu.currentUser = user;
             return true;
         }
         return false;
     }
 
     private static void printHelp() {
-        System.out.println("*******\n");
-        System.out.println("List of main commands:");
         System.out.println("create account [type] [username]");
         System.out.println("login [username]");
         System.out.println("help");
         System.out.println("offs");
         System.out.println("products");
-        System.out.println("back\n*******");
+        System.out.println("back");
     }
 }

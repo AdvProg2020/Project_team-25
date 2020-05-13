@@ -20,6 +20,7 @@ public class ProductMenu {
     private static final String COMPARE_PRODUCT_REGEX = "^compare (\\d+|[^\\s]+)$";
 
     public static void init(Product product) {
+        product.setBrand("");
         String input;
         Matcher matcher;
         System.out.println("\nProduct menu of: " + product.getName() + "\n");

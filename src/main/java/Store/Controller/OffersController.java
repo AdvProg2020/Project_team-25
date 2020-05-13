@@ -1,108 +1,62 @@
 package Store.Controller;
 
 import Store.Model.Offer;
-import Store.Model.Product;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class OffersController {
 
-    public static ArrayList<Product> getFilteredList(ArrayList<String> filters) {
-        ArrayList<Product> products = Offer.getAllOffProducts();
+    public static ArrayList<Offer> getFilteredList(ArrayList<String> filters) {
+        ArrayList<Offer> offers = Offer.getAllOffers();
         try {
-            return products.stream()
+            return offers.stream()
                     .filter(product -> product.getFilters().containsAll(filters))
                     .collect(Collectors.toCollection(ArrayList::new));
         } catch (Exception exception) {
-            return products;
+            return offers;
         }
 
     }
 
-    public static ArrayList<Product> sortOffers(String mode, ArrayList<String> filters) {
+    public static ArrayList<Offer> sortOffers(String mode, ArrayList<String> filters) {
         if (mode.equalsIgnoreCase("time of starting")) {
             return timeOfStartSort(filters);
-        } else if (mode.equalsIgnoreCase("time of ending")) {
-            return timeOfEndingSort(filters);
-        } else if (mode.equalsIgnoreCase("rating")) {
-            return ratingSort(filters);
-        } else if (mode.equalsIgnoreCase("visit")) {
-            return visitSort(filters);
         } else {
-            return lexicographySort(filters);
+            return timeOfEndingSort(filters);
         }
 
     }
 
-    private static ArrayList<Product> timeOfStartSort(ArrayList<String> filters) {
-        ArrayList<Product> products = new ArrayList<Product>();
-        products.addAll(getFilteredList(filters));
+    private static ArrayList<Offer> timeOfStartSort(ArrayList<String> filters) {
+        ArrayList<Offer> offers = new ArrayList<Offer>();
+        offers.addAll(getFilteredList(filters));
         try {
-            return products.stream()
-                    .sorted(Comparator.comparing(Product::getStartingDate))
+            return offers.stream()
+                    .sorted(Comparator.comparing(Offer::getStartingTime))
                     .collect(Collectors.toCollection(ArrayList::new));
         } catch (Exception exception) {
-            return products;
+            return offers;
         }
     }
 
-    private static ArrayList<Product> timeOfEndingSort(ArrayList<String> filters) {
-        ArrayList<Product> products = new ArrayList<Product>();
-        products.addAll(getFilteredList(filters));
+    private static ArrayList<Offer> timeOfEndingSort(ArrayList<String> filters) {
+        ArrayList<Offer> offers = new ArrayList<Offer>();
+        offers.addAll(getFilteredList(filters));
         try {
-            return products.stream()
-                    .sorted(Comparator.comparing(Product::getEndingDate))
+            return offers.stream()
+                    .sorted(Comparator.comparing(Offer::getEndingTime))
                     .collect(Collectors.toCollection(ArrayList::new));
         } catch (Exception exception) {
-            return products;
-        }
-    }
-
-    private static ArrayList<Product> ratingSort(ArrayList<String> filters) {
-        ArrayList<Product> products = new ArrayList<Product>();
-        products.addAll(getFilteredList(filters));
-        try {
-            return products.stream()
-                    .sorted(Comparator.comparing(Product::getAverageRating))
-                    .collect(Collectors.toCollection(ArrayList::new));
-        } catch (Exception exception) {
-            return products;
-        }
-    }
-
-    private static ArrayList<Product> lexicographySort(ArrayList<String> filters) {
-        ArrayList<Product> products = new ArrayList<Product>();
-        products.addAll(getFilteredList(filters));
-        try {
-            return products.stream()
-                    .sorted(Comparator.comparing(Product::getName))
-                    .collect(Collectors.toCollection(ArrayList::new));
-        } catch (Exception exception) {
-            return products;
-        }
-    }
-
-    private static ArrayList<Product> visitSort(ArrayList<String> filters) {
-        ArrayList<Product> products = new ArrayList<Product>();
-        products.addAll(getFilteredList(filters));
-        try {
-            return products.stream()
-                    .sorted(Comparator.comparing(Product::getVisited))
-                    .collect(Collectors.toCollection(ArrayList::new));
-        } catch (Exception exception) {
-            return products;
+            return offers;
         }
     }
 
     public static ArrayList<Offer> sort(String mode, ArrayList<Offer> offers) {
         if (mode.equalsIgnoreCase("time of starting")) {
             return sortByStartingTime(offers);
-        }
-        else if (mode.equalsIgnoreCase("time of ending")) {
+        } else if (mode.equalsIgnoreCase("time of ending")) {
             return sortByEndingTime(offers);
         }
         return offers;

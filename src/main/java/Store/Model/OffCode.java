@@ -85,7 +85,6 @@ public class OffCode implements Serializable {
     }
 
 
-
     public void setStartingTime(Date startingTime) {
         this.startingTime = startingTime;
     }
@@ -100,10 +99,6 @@ public class OffCode implements Serializable {
 
     public void setOffPercentage(double offPercentage) {
         this.offPercentage = offPercentage;
-    }
-
-    public void setUsageCount(int usageCount) {
-        this.usageCount = usageCount;
     }
 
     @Override

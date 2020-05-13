@@ -27,7 +27,7 @@ public class Offer implements Serializable {
     public Offer(User user, CheckingStatus offerStatus, double offPercent) {
         this.offID = idCounter++;
         this.user = user;
-        this.products = products;
+        this.products = new ArrayList<Product>();
         this.offerStatus = offerStatus;
         this.offPercent = offPercent;
         allOffProducts.addAll(products);
@@ -200,6 +200,7 @@ public class Offer implements Serializable {
                 ", startingTime=" + startingTime +
                 ", endingTime=" + endingTime +
                 ", offPercent=" + offPercent +
+                ", Products=" + this.products +
                 '}';
     }
 }

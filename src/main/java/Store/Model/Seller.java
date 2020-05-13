@@ -142,8 +142,8 @@ public class Seller extends User {
             products.add(request.getProduct());
         } else if (request.getRequestType() == RequestType.CHANGE_OFFER) {
             Offer.deleteOfferFromAllOffers(request.getOffer());
-            Offer.addOfferToAllOffers(request.getOffer());
             offers.remove(request.getOffer());
+            Offer.addOfferToAllOffers(request.getNewOffer());
             offers.add(request.getNewOffer());
         } else if (request.getRequestType() == RequestType.CHANGE_PRODUCT) {
             Product.deleteProduct(request.getProduct());
