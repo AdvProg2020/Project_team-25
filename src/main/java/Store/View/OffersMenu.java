@@ -14,7 +14,7 @@ public class OffersMenu {
     private static ArrayList<String> filters = new ArrayList<String>();
     private static ArrayList<String> availableSorts = new ArrayList<String>(Arrays.asList("time of starting", "time of ending"));
     private static ArrayList<String> availableFilters = new ArrayList<String>();
-    private static String currentSort = "visit";
+    private static String currentSort = "time of starting";
 
     private static String SHOW_PRODUCT_REGEX = "^show product (\\d+)$";
     private static String DISABLE_FILTER_REGEX = "^disable filter ([^\\s]+)$";
