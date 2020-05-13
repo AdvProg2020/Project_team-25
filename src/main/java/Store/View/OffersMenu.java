@@ -57,6 +57,10 @@ public class OffersMenu {
     public static void viewOffs() {
         for (Product product : OffersController.sortOffers(currentSort, filters)) {
             Offer offer = Offer.getOfferOfProduct(product);
+            if (offer == null) {
+                continue;
+            }
+            //System.out.println("CURRENT OFFER: " + offer);
             System.out.println("Name: " + product.getName());
             System.out.println("ID: " + product.getProductID());
             System.out.println("Actual Price: " + product.getPrice() + "You Have To Pay: " + (product.getPrice() - (product.getPrice() * offer.getOffPercent() / 100.0)));

@@ -54,6 +54,7 @@ public class SellerMenu {
             }
             else if (input.equalsIgnoreCase("add product")) {
                 addProductWrapper((Seller) MainMenu.currentUser);
+                System.out.println("\nSeller menu\n");
             }
             else if ((matcher = InputManager.getMatcher(input, REMOVE_PRODUCT_REGEX)).find()) {
                 removeProductWrapper((Seller) MainMenu.currentUser, matcher.group(1));
@@ -271,7 +272,7 @@ public class SellerMenu {
 
         System.out.println("Product price: ");
         attribute = InputManager.getNextLine();
-        if (!attribute.matches("^\\d+\\.\\d+$")) {
+        if (!attribute.matches("^\\d+(\\.\\d+)?$")) {
             System.out.println("Invalid price value!");
             return null;
         }
@@ -302,7 +303,7 @@ public class SellerMenu {
 
         Product product = new Product(CheckingStatus.CREATION, parent, name, seller, brand, price, availability, description);
         for (String filterToAdd : filters) {
-            product.addFilter(filter);
+            product.addFilter(filterToAdd);
         }
         return product;
     }
@@ -311,6 +312,14 @@ public class SellerMenu {
         showCategories();
         System.out.println("Please enter the required information for this product: ");
         Product product = createProduct(seller);
+
+        ArrayList<Product> products = seller.getProducts();
+        for (Product currentProduct : products) {
+            if (currentProduct.getName().equalsIgnoreCase(product.getName())) {
+                System.out.println("You already have a product with this name!");
+                return;
+            }
+        }
         if (product != null) {
             SellerController.addProduct(seller, product);
         }
@@ -412,8 +421,8 @@ public class SellerMenu {
     }
 
     private static Offer createOffer(Seller seller) {
-        System.out.println("Please enter dates and times in the following format: dd-M-yyyy hh:mm:ss");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        System.out.println("Please enter dates and times in the following format: dd-M-yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy");
 
         System.out.println("Starting time: ");
         String input = InputManager.getNextLine();

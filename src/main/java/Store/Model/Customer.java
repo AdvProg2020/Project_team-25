@@ -140,7 +140,7 @@ public class Customer extends User {
             if (Offer.getOfferOfProduct(product) == null)
                 totalPrice += product.getPrice();
             else if(Offer.getOfferOfProduct(product).canBeUsedInDate(new Date()))
-                totalPrice += product.getPrice() * Offer.getOfferOfProduct(product).getOffPercent() / 100.0;
+                totalPrice += product.getPrice() * (100.0 - Offer.getOfferOfProduct(product).getOffPercent()) / 100.0;
             else
                 totalPrice += product.getPrice();
         }

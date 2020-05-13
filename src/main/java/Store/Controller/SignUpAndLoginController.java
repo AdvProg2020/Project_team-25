@@ -19,8 +19,8 @@ public class SignUpAndLoginController {
     }
 
     public static void createCustomer(ArrayList<String> attributes, double money) {
-        new Customer(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4),
-                attributes.get(5), money);
+        Customer.addCustomer(new Customer(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3),
+                attributes.get(4), attributes.get(5), money));
     }
 
     public static String handleLogin(String username, String password) {

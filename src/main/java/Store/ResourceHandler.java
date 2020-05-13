@@ -27,6 +27,8 @@ public class ResourceHandler {
             Manager.setOffCodes((ArrayList<OffCode>) objectInputStream.readObject());
             Manager.setPendingRequests((ArrayList<Request>) objectInputStream.readObject());
 
+            Product.deleteFilterFromAllFilters("");
+
             objectInputStream.close();
             inputStream.close();
         }

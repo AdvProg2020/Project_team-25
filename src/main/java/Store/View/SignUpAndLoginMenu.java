@@ -7,7 +7,6 @@ import Store.Model.Manager;
 import Store.Model.Seller;
 import Store.Model.User;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -96,15 +95,6 @@ public class SignUpAndLoginMenu {
         System.out.println(message);
         if (message.equals("Login successful.")) {
             MainMenu.currentUser = user;
-            if (user instanceof Manager) {
-                ManagerMenu.init();
-            }
-            else if (user instanceof Seller) {
-                SellerMenu.init();
-            }
-            else if (user instanceof Customer) {
-                CustomerMenu.init();
-            }
             return true;
         }
         return false;

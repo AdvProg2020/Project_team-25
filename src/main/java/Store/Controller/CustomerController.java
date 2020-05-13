@@ -13,8 +13,11 @@ public class CustomerController {
         if (product == null) {
             return "There isn't any product with this name!";
         }
-        customer.addToCart(product);
-        return "Product added to cart successfully.";
+        if (product.getAvailablity()) {
+            customer.addToCart(product);
+            return "Product added to cart successfully.";
+        }
+        return "This product is not available!";
     }
 
     public static String decreaseProduct(Customer customer, Product product) {
