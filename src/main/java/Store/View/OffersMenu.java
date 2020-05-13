@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 public class OffersMenu {
 
     private static ArrayList<String> filters = new ArrayList<String>();
-    private static ArrayList<String> availableSorts = new ArrayList<String>(Arrays.asList("time of starting", "time of ending", "rating", "lexicographical", "visit"));
+    private static ArrayList<String> availableSorts = new ArrayList<String>(Arrays.asList("time of starting", "time of ending"));
     private static ArrayList<String> availableFilters = new ArrayList<String>();
     private static String currentSort = "visit";
 
@@ -55,18 +55,11 @@ public class OffersMenu {
     }
 
     public static void viewOffs() {
-        for (Product product : OffersController.sortOffers(currentSort, filters)) {
-            Offer offer = Offer.getOfferOfProduct(product);
-            if (offer == null) {
-                continue;
-            }
-            //System.out.println("CURRENT OFFER: " + offer);
-            System.out.println("Name: " + product.getName());
-            System.out.println("ID: " + product.getProductID());
-            System.out.println("Actual Price: " + product.getPrice() + "You Have To Pay: " + (product.getPrice() - (product.getPrice() * offer.getOffPercent() / 100.0)));
-            System.out.println("Offer Info :" + offer);
+        for (Offer offer : OffersController.sortOffers(currentSort, filters)) {
+            System.out.println(offer);
             System.out.println("*******");
         }
+        System.out.println();
     }
 
     public static void showProducts(String attribute) {
