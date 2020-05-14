@@ -46,7 +46,7 @@ public class CustomerController {
         if (input.equalsIgnoreCase("null")) {
             if (customer.canBuy()) {
                 customer.buy();
-                return "Bought successfully. " + customer.getBuyLog().get(customer.getBuyLog().size() - 1);
+                return "Bought successfully. \n" + customer.getNewFactor();
             }
             return "You don't have enough money!";
         } else {
@@ -54,7 +54,7 @@ public class CustomerController {
             if (offCode != null && offCode.canBeUsedInDate(new Date()) && offCode.isUserIncluded(customer)) {
                 if (customer.canBuy(offCode)) {
                     customer.buy(offCode);
-                    return "Bought successfully. " + customer.getBuyLog().get(customer.getBuyLog().size() - 1);
+                    return "Bought successfully. \n" + customer.getNewFactor();
                 }
                 return "You don't have enough money!";
             }

@@ -145,6 +145,12 @@ public class Manager extends User {
         Product.deleteProduct(product);
     }
 
+    public void assignOffCodeToUser(OffCode offcode, Customer customer)
+    {
+        customer.addOffCode(offcode);
+        offcode.addUser(customer);
+    }
+
     private static void removeProductFromCatagory(Product product) {
         for (Category category : allCategories) {
             if (category.include(product))

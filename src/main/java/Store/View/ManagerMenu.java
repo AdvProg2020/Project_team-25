@@ -58,6 +58,9 @@ public class ManagerMenu {
             } else if (input.equalsIgnoreCase("manage requests")) {
                 manageRequests();
                 System.out.println("\nManager menu\n");
+            } else if (input.equalsIgnoreCase("assign discount code")) {
+                assignOffCode();
+                System.out.println("\nManager menu\n");
             } else if (input.equalsIgnoreCase("manage categories")) {
                 manageCategories();
                 System.out.println("\nManager menu\n");
@@ -74,6 +77,25 @@ public class ManagerMenu {
             } else {
                 System.out.println("Invalid command!");
             }
+        }
+    }
+
+    private static void assignOffCode()
+    {
+        OffCode offCode = null;
+        String input;
+        System.out.println("discount code: ");
+        input = InputManager.getNextLine();
+        if(Manager.getOffCodeByCode(input) == null)
+            System.out.println("Wrong code");
+        else {
+            offCode = Manager.getOffCodeByCode(input);
+            System.out.println("Customer: ");
+            input = InputManager.getNextLine();
+            if(User.getUserByUsername(input) == null || !(User.getUserByUsername(input) instanceof Customer))
+                System.out.println("Wrong customer username");
+            else if(!offCode.isUserIncluded(User.getUserByUsername(input)))
+                currentUser.assignOffCodeToUser(offCode, (Customer)User.getUserByUsername(input));
         }
     }
 
@@ -439,6 +461,7 @@ public class ManagerMenu {
         System.out.println("manage all products");
         System.out.println("create discount code");
         System.out.println("view discount codes");
+        System.out.println("assign discount code");
         System.out.println("manage requests");
         System.out.println("manage categories");
         System.out.println("offs");

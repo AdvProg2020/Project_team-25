@@ -10,10 +10,10 @@ public class Main {
 
     public static void main(String[] args) {
 
-        ResourceHandler.resetFile();
+//        ResourceHandler.resetFile();
 //        ResourceHandler.writeAll();
 
-//        ResourceHandler.readAll();
+        ResourceHandler.readAll();
         MainMenu.currentUser = MainMenu.guest;
         System.out.println(Manager.hasManager);
         SignUpAndLoginMenu.init();

@@ -78,10 +78,22 @@ public class Customer extends User {
         cart.clear();
     }
 
+    public String getNewFactor()
+    {
+        String output = "";
+        for (BuyLogItem buyLogItem: buyLog)
+        {
+            if(!buyLogItem.isShowed())
+                output += buyLogItem + "\n";
+        }
+        return output;
+    }
+
     private void handleLogs(double discount) {
         double totalPrice = getTotalCartPrice();
         Product product = null;
         Seller seller = null;
+        double offerOff = 0;
         Date date = new Date();
         ArrayList<Product> productsOfOneSeller = new ArrayList<Product>();
         while (cart.size() > 0) {
@@ -103,11 +115,21 @@ public class Customer extends User {
                     }
                 }
             }
-            buyLog.add(new BuyLogItem(buyLog.size() + 1, date, productsOfOneSeller, (discount / totalPrice) * priceOfList(productsOfOneSeller), seller.getName(), false));
-            seller.handleLogs(discount, productsOfOneSeller, date, this, priceOfList(productsOfOneSeller));
+            offerOff = calOfferOff(productsOfOneSeller);
+            buyLog.add(new BuyLogItem(buyLog.size() + 1, date, productsOfOneSeller, priceOfList(productsOfOneSeller) - (priceOfList(productsOfOneSeller) - offerOff) * (1.0 - (discount / totalPrice)), seller.getName(), false));
+            seller.handleLogs(offerOff, productsOfOneSeller, date, this, priceOfList(productsOfOneSeller) - offerOff);
            // seller.removeProducts(productsOfOneSeller);
             seller.setMoney(seller.getMoney() + priceOfList(productsOfOneSeller));
         }
+    }
+
+    private double calOfferOff(ArrayList<Product> products)
+    {
+        double off = 0;
+        for(Product product: products)
+            if(Offer.getOfferOfProduct(product) != null)
+                off += (Offer.getOfferOfProduct(product).getOffPercent()) * product.getPrice() / 100.0;
+        return off;
     }
 
     private double priceOfList(ArrayList<Product> list) {
