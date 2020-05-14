@@ -14,6 +14,7 @@ public class Main {
 //        ResourceHandler.writeAll();
 
         ResourceHandler.readAll();
+        Manager.checkPeriodOffCode();
         MainMenu.currentUser = MainMenu.guest;
 
 //        System.out.println(Manager.hasManager);

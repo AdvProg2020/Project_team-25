@@ -4,6 +4,7 @@ import Store.Model.*;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ResourceHandler {
 
@@ -26,6 +27,7 @@ public class ResourceHandler {
             Manager.setAllCategories((ArrayList<Category>) objectInputStream.readObject());
             Manager.setOffCodes((ArrayList<OffCode>) objectInputStream.readObject());
             Manager.setPendingRequests((ArrayList<Request>) objectInputStream.readObject());
+            Manager.setPeriodOffCodeDate((Date) objectInputStream.readObject());
 
             Product.calculateAllFilters();
 
@@ -62,6 +64,7 @@ public class ResourceHandler {
             objectOutputStream.writeObject(Manager.getAllCategories());
             objectOutputStream.writeObject(Manager.getOffCodes());
             objectOutputStream.writeObject(Manager.getPendingRequests());
+            objectOutputStream.writeObject(Manager.getPeriodOffCodeDate());
 
             objectOutputStream.close();
             outputStream.close();

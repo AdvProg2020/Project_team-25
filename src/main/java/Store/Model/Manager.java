@@ -2,6 +2,7 @@ package Store.Model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 
 import static Store.Model.Enums.VerifyStatus.ACCEPTED;
 import static Store.Model.Enums.VerifyStatus.REJECTED;
@@ -11,6 +12,8 @@ public class Manager extends User {
     private static ArrayList<Category> allCategories = new ArrayList<Category>();
     private static ArrayList<Request> pendingRequests = new ArrayList<Request>();
     private static ArrayList<OffCode> offCodes = new ArrayList<OffCode>();
+    private static Date periodOffCodeDate;
+    private static boolean periodOffTillNow;
     public static boolean hasManager = false;
 
     public Manager(String username, String name, String familyName, String email, String phoneNumber, String password) {
@@ -21,6 +24,15 @@ public class Manager extends User {
         this.type = "Manager";
     }
 
+    public static void setPeriodOffCodeDate(Date nextPeriodOffCodeDate)
+    {
+        periodOffCodeDate = nextPeriodOffCodeDate;
+    }
+
+    public static Date getPeriodOffCodeDate()
+    {
+        return periodOffCodeDate;
+    }
     public static void setAllCategories(ArrayList<Category> allCategories) {
         Manager.allCategories = allCategories;
     }
@@ -72,6 +84,31 @@ public class Manager extends User {
             if(offCode.getCode().equals(code))
                 return offCode;
         return null;
+    }
+
+    public static void checkPeriodOffCode()
+    {
+        if (periodOffTillNow == false || !new Date().before(periodOffCodeDate)) {
+            periodOffTillNow = true;
+            int rand, numberOfCustomers = User.numberOfCustomers();
+            Random random = new Random();
+            ArrayList<Integer> helpRand = new ArrayList<>();
+            if(numberOfCustomers < 3)
+            {
+                for(int i = 0; i < numberOfCustomers; i++)
+                    helpRand.add(helpRand.size());
+                for (int i = 0; i < numberOfCustomers; i++)
+                    assignOffCodeToUser(OffCode.randomOffCode(10), User.findIndexOfNthCustomer(helpRand.get(i) + 1));
+            }
+            else {
+                while (helpRand.size() <= 2)
+                    if (!helpRand.contains(rand = random.nextInt(numberOfCustomers)))
+                        helpRand.add(rand);
+                for (int i = 0; i < 3; i++)
+                    assignOffCodeToUser(OffCode.randomOffCode(10), User.findIndexOfNthCustomer(helpRand.get(i) + 1));
+            }
+            setPeriodOffCodeDate(new Date(new Date().getTime() + 24*3600*1000));
+        }
     }
 
     public static ArrayList<Request> getPendingRequests() {

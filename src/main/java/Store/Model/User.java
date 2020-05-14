@@ -46,6 +46,29 @@ public class User implements Serializable {
         return null;
     }
 
+    public static int numberOfCustomers()
+    {
+        int numOfCustomers = 0;
+        for (User user: allUsers) {
+            if(user instanceof Customer)
+                numOfCustomers++;
+        }
+        return numOfCustomers;
+    }
+
+    public static Customer findIndexOfNthCustomer(int num)
+    {
+        int count = 1;
+        for(int i = 0; i < allUsers.size(); i++)
+            if (allUsers.get(i) instanceof Customer)
+            {
+                if(count == num)
+                    return (Customer)allUsers.get(i);
+                count++;
+            }
+        return null;
+    }
+
     public static ArrayList<User> getAllUsers() {
         return allUsers;
     }
