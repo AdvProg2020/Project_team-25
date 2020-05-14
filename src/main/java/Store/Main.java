@@ -15,17 +15,18 @@ public class Main {
 
         ResourceHandler.readAll();
         MainMenu.currentUser = MainMenu.guest;
-        System.out.println(Manager.hasManager);
-        SignUpAndLoginMenu.init();
-        if (MainMenu.currentUser instanceof Manager) {
-            ManagerMenu.init();
-        }
-        else if (MainMenu.currentUser instanceof Seller) {
-            SellerMenu.init();
-        }
-        else {
-            CustomerMenu.init();
-        }
+
+//        System.out.println(Manager.hasManager);
+//        SignUpAndLoginMenu.init();
+//        if (MainMenu.currentUser instanceof Manager) {
+//            ManagerMenu.init();
+//        }
+//        else if (MainMenu.currentUser instanceof Seller) {
+//            SellerMenu.init();
+//        }
+//        else {
+//            CustomerMenu.init();
+//        }
 
         MainMenu.init();
     }

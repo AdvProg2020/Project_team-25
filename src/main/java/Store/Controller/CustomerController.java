@@ -32,8 +32,11 @@ public class CustomerController {
     }
 
     public static String rateProduct(Customer customer, Product product, double rating) {
+        if (product.hasBeenRatedBefore(customer)) {
+            return "You have already rated this product!";
+        }
         if (product == null) {
-            return "There isn't any product with this name!";
+            return "There isn't any product with this ID!";
         }
         if (!customer.hasBoughtProduct(product)) {
             return "You haven't bought this product!";

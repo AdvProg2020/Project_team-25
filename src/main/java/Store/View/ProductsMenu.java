@@ -16,6 +16,7 @@ public class ProductsMenu {
     private static final String FILTER_REGEX = "^filter (\\w+)$";
     private static final String DISABLE_FILTER_REGEX = "^disable filter (\\w+)$";
     private static final String SORT_REGEX = "^sort (\\w+)$";
+    private static final String SEARCH_REGEX = "^search (.+)$";
 
     private static ArrayList<String> filters = new ArrayList<String>();
     private static ArrayList<String> availableFilters = new ArrayList<String>();
@@ -42,6 +43,8 @@ public class ProductsMenu {
                 System.out.println("\nProducts Menu\n");
             } else if (input.equalsIgnoreCase("show products")) {
                 showAllProducts();
+            } else if ((matcher = InputManager.getMatcher(input, SEARCH_REGEX)).find()) {
+                showProductsWithSearchQuery(matcher.group(1));
             } else if ((matcher = InputManager.getMatcher(input, SHOW_PRODUCT_REGEX)).find()) {
                 showProduct(matcher.group(1));
             } else if (input.equalsIgnoreCase("help")) {
@@ -189,6 +192,17 @@ public class ProductsMenu {
         System.out.println("*******");
     }
 
+    public static void showProductsWithSearchQuery(String query) {
+        productsToBeShown = ProductsController.getFilteredList(filters);
+        productsToBeShown = ProductsController.sort(currentSort, productsToBeShown);
+        for (Product product : productsToBeShown) {
+            if (InputManager.getMatcher(product.getName(), query).find()) {
+                System.out.println(product);
+            }
+        }
+        System.out.println("*******");
+    }
+
     private static void showProduct(String attribute) {
         int productId = Integer.parseInt(attribute);
         ProductMenu.init(Product.getProductByID(productId));
@@ -200,6 +214,7 @@ public class ProductsMenu {
         System.out.println("view categories");
         System.out.println("show products");
         System.out.println("show product [productId]");
+        System.out.println("search [REGEX]");
         System.out.println("filter");
         System.out.println("sorting");
         System.out.println("offs");

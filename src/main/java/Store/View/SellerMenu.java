@@ -414,6 +414,9 @@ public class SellerMenu {
             if (offer.containsProduct(product)) {
                 System.out.println("Already added this product");
             }
+            else if (Offer.getOfferOfProduct(product) != null) {
+                System.out.println("This product is already in another offer!");
+            }
             else {
                 offer.addProduct(product);
             }
@@ -532,8 +535,8 @@ public class SellerMenu {
         System.out.println("view [productId]");
         System.out.println("view buyers [productId]");
         System.out.println("edit [productId]");
-        System.out.println("add filter");
-        System.out.println("remove filter");
+        System.out.println("add filter [Product ID] [Filter]");
+        System.out.println("remove filter [Product ID] [Filter]");
         System.out.println("sort by [rating | price | visit | lexicographical]");
         System.out.println("logout");
         System.out.println("back");
@@ -543,8 +546,8 @@ public class SellerMenu {
         System.out.println("view [offId]");
         System.out.println("edit [offId]");
         System.out.println("add off");
-        System.out.println("add filter");
-        System.out.println("remove filter");
+        System.out.println("add filter [Product ID] [Filter]");
+        System.out.println("remove filter [Product ID] [Filter]");
         System.out.println("sort by [time of starting | time of ending]");
         System.out.println("logout");
         System.out.println("back");

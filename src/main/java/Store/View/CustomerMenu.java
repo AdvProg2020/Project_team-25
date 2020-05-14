@@ -4,6 +4,7 @@ import Store.Controller.CustomerController;
 import Store.Controller.ManagerController;
 import Store.InputManager;
 import Store.Model.Customer;
+import Store.Model.Log.BuyLogItem;
 import Store.Model.OffCode;
 import Store.Model.Product;
 
@@ -193,7 +194,10 @@ public class CustomerMenu {
         String input;
         Matcher matcher;
         System.out.println("\nCustomer menu -> View Orders\n");
-        System.out.println(customer.getBuyLog());
+        for (BuyLogItem buyLogItem : customer.getBuyLog()) {
+            System.out.println(buyLogItem);
+        }
+        System.out.println("_________________________");
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if ((matcher = InputManager.getMatcher(input, SHOW_ORDER)).find()) {
                 showOrder(Integer.parseInt(matcher.group(1)));
@@ -237,7 +241,7 @@ public class CustomerMenu {
         System.out.println("purchase");
         System.out.println("view orders");
         System.out.println("view balance");
-        System.out.println("view discount code");
+        System.out.println("view discount codes");
         System.out.println("logout");
         System.out.println("help");
         System.out.println("back");

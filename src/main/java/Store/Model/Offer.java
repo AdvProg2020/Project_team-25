@@ -30,7 +30,6 @@ public class Offer implements Serializable {
         this.products = new ArrayList<Product>();
         this.offerStatus = offerStatus;
         this.offPercent = offPercent;
-        allOffProducts.addAll(products);
     }
 
     public static void setIdCounter(int idCounter) {
@@ -117,8 +116,11 @@ public class Offer implements Serializable {
         return offPercent;
     }
 
-    public void setOffPercent(double offPercent) {
-        this.offPercent = offPercent;
+    public void calculateAllOffProducts() {
+        allOffProducts.clear();
+        for (Offer offer : allOffers) {
+            allOffProducts.addAll(offer.getProducts());
+        }
     }
 
     public boolean canBeUsedInDate(Date now) {

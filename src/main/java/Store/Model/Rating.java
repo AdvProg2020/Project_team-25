@@ -2,7 +2,9 @@ package Store.Model;
 
 import Store.Model.Product;
 
-public class Rating {
+import java.io.Serializable;
+
+public class Rating implements Serializable {
     private User user;
     private double rating;
     private Product product;

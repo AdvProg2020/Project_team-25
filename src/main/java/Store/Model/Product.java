@@ -100,6 +100,15 @@ public class Product implements Serializable {
         return true;
     }
 
+    public boolean hasBeenRatedBefore(Customer customer) {
+        for (Rating rating : this.ratings) {
+            if (rating.getUser() == customer) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static ArrayList<Product> getAllProducts() {
         return allProducts;
     }
@@ -207,7 +216,7 @@ public class Product implements Serializable {
         this.description = description;
     }
 
-    public void setBrand(String brand) { //////////////////////////////////////
+    public void addToVisited(String brand) {
         this.visited++;
     }
 
@@ -247,19 +256,17 @@ public class Product implements Serializable {
 
     public void deleteFilter(String filter) {
         this.filters.remove(filter);
-        deleteFilterFromAllFilters("");
+        calculateAllFilters();
     }
 
-    public static void deleteFilterFromAllFilters(String filter) //////////////////////////////////////
-    {
+    public static void calculateAllFilters() {
         allFilters.clear();
         for (Product product : allProducts) {
             for (String currentFilter : product.getFilters()) {
                 addFilterToAllFilters(currentFilter);
             }
         }
-//        if (allFilters.contains(filter))
-//            allFilters.remove(filter);
+
     }
 
     public boolean hasFilter(String filter) {
