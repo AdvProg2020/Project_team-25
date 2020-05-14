@@ -20,7 +20,7 @@ public class ProductMenu {
     private static final String COMPARE_PRODUCT_REGEX = "^compare (\\d+|[^\\s]+)$";
 
     public static void init(Product product) {
-        product.setBrand("");
+        product.addToVisited("");
         String input;
         Matcher matcher;
         System.out.println("\nProduct menu of: " + product.getName() + "\n");
@@ -226,6 +226,10 @@ public class ProductMenu {
     }
 
     private static void addComment(Product product) {
+        if (MainMenu.currentUser == MainMenu.guest) {
+            System.out.println("You must login first to post a comment!");
+            return;
+        }
         System.out.print("Title: ");
         String title = InputManager.getNextLine();
         System.out.println("Content: ");
@@ -241,8 +245,8 @@ public class ProductMenu {
                 System.out.print("_");
             }
             System.out.println("");
-            System.out.printf("%150s %50s", "Commenting user: " + comment.getCommentingUser().getName(),
-                    (comment.getHasBought() ? "--Has bought this product" : "--Has not bought this product"));
+            System.out.println("Commenting user: " + comment.getCommentingUser().getName() + "    ### " + comment.getCommentTitle() +
+                    " ###   " + (comment.getHasBought() ? "--Has bought this product" : "--Has not bought this product"));
             System.out.println("---> " + comment.getCommentText());
         }
         for (int column = 0; column < COLUMN_COUNT; column++) {

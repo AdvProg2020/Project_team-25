@@ -137,6 +137,7 @@ public class Seller extends User {
         if (request.getRequestType() == RequestType.ADD_NEW_OFFER) {
             Offer.addOfferToAllOffers(request.getOffer());
             offers.add(request.getOffer());
+            request.getOffer().calculateAllOffProducts();
         } else if (request.getRequestType() == RequestType.ADD_NEW_PRODUCT) {
             Product.addProduct(request.getProduct());
             products.add(request.getProduct());
@@ -145,6 +146,7 @@ public class Seller extends User {
             offers.remove(request.getOffer());
             Offer.addOfferToAllOffers(request.getNewOffer());
             offers.add(request.getNewOffer());
+            request.getOffer().calculateAllOffProducts();
         } else if (request.getRequestType() == RequestType.CHANGE_PRODUCT) {
             Product.deleteProduct(request.getProduct());
             Product.addProduct(request.getNewProduct());

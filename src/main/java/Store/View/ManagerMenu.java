@@ -199,9 +199,10 @@ public class ManagerMenu {
             System.out.println("There is similar username and it's invalid!");
         }
         System.out.println("Password: ");
-        while ((password = InputManager.getNextLine()).matches("^[a-zA-Z]\\w{3,14}$")) {
-            System.out.println("The format is invalid!");
-        }
+        password = InputManager.getNextLine();
+//        while (!(password = InputManager.getNextLine()).matches("^[a-zA-Z]\\w{3,14}$")) {
+//            System.out.println("The format is invalid!");
+//        }
         System.out.println("First Name: ");
         firstName = InputManager.getNextLine();
         System.out.println("Last Name: ");
@@ -427,7 +428,7 @@ public class ManagerMenu {
 
     private static void showAllCategories() {
         for (Category category : Manager.getAllCategories()) {
-            System.out.println(category);
+            System.out.println(category.getFullName() + ", ID: " + category.getId());
             System.out.println("*******");
         }
     }
@@ -506,7 +507,7 @@ public class ManagerMenu {
 
         System.out.println("\nList of commands in the manage categories submenu: ");
         System.out.println("add [name]");
-        System.out.println("edit [code] [add filter|add product|change name|remove filter|remove product] [value (must be an ID for product options)]");
+        System.out.println("edit [name] [add filter|add product|change name|remove filter|remove product] [value (must be an ID for product options)]");
         System.out.println("remove [name]");
         System.out.println("back");
         System.out.println("*******");

@@ -92,7 +92,7 @@ public class Request implements Serializable {
 
     @Override
     public String toString() {
-        return "Request{" +
+        String result =  "Request{" +
                 "requestType=" + requestType +
                 ", id=" + this.getId() +
                 ", status=" + status +
@@ -101,7 +101,20 @@ public class Request implements Serializable {
                 ", offer=" + offer +
                 ", newObject=" + newObject +
                 ", change=" + change +
-                '}';
+                '}' + "\nDetails: \n";
+        if (requestType == RequestType.ADD_NEW_OFFER) {
+            result = result.concat(this.offer.toString());
+        }
+        else if (requestType == RequestType.ADD_NEW_PRODUCT) {
+            result = result.concat(this.product.toString());
+        }
+        else if (requestType == RequestType.CHANGE_OFFER) {
+            result = result.concat(this.offer.toString() + "\n ---- TO ---- \n" + ((Offer) this.newObject).toString());
+        }
+        else if (requestType == RequestType.CHANGE_PRODUCT) {
+            result = result.concat(this.product.toString() + "\n ---- TO ---- \n" + ((Product) this.newObject).toString());
+        }
+        return result;
     }
 
     public VerifyStatus getStatus() {

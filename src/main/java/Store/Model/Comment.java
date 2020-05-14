@@ -3,7 +3,9 @@ package Store.Model;
 import Store.Model.Product;
 import Store.Model.Enums.VerifyStatus;
 
-public class Comment {
+import java.io.Serializable;
+
+public class Comment implements Serializable {
     private User commentingUser;
     private Product product;
     private String commentTitle;

@@ -2,10 +2,11 @@ package Store.Model.Log;
 
 import Store.Model.Product;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public abstract class LogItem {
+public abstract class LogItem implements Serializable {
     protected int id;
     protected Date date;
     protected ArrayList<Product> productList = new ArrayList<Product>();
