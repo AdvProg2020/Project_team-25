@@ -12,8 +12,8 @@ public class Main {
 
 //        ResourceHandler.resetFile();
 //        ResourceHandler.writeAll();
-
-        ResourceHandler.readAll();
+//
+ /*       ResourceHandler.readAll();
         MainMenu.currentUser = MainMenu.guest;
         System.out.println(Manager.hasManager);
         SignUpAndLoginMenu.init();
@@ -26,7 +26,8 @@ public class Main {
         else {
             CustomerMenu.init();
         }
-
+*/
+        Manager.checkPeriodOffCode();
         MainMenu.init();
     }
 

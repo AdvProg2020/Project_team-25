@@ -58,6 +58,7 @@ public class Customer extends User {
     }
 
     public void buy(OffCode offCode) {
+        offCodeAfterBuy();
         money -= getTotalCartPriceWithDiscount(offCode);
         handleLogs(getTotalCartPrice() - getTotalCartPriceWithDiscount(offCode));
         cart.clear();
@@ -73,9 +74,18 @@ public class Customer extends User {
     }
 
     public void buy() {
+        offCodeAfterBuy();
         money -= getTotalCartPrice();
         handleLogs(0);
         cart.clear();
+    }
+
+    private void offCodeAfterBuy()
+    {
+        if(priceOfList(cart) >= 200)
+            Manager.assignOffCodeToUser(OffCode.randomOffCode(20), this);
+        else if (priceOfList(cart) >= 100)
+            Manager.assignOffCodeToUser(OffCode.randomOffCode(10), this);
     }
 
     public String getNewFactor()

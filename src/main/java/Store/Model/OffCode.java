@@ -3,6 +3,7 @@ package Store.Model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 
 public class OffCode implements Serializable {
     private String code;
@@ -33,6 +34,26 @@ public class OffCode implements Serializable {
             }
         }
         return false;
+    }
+
+    public static OffCode randomOffCode(int offPercentage)
+    {
+        Random random = new Random();
+        String code = "";
+        int helpRand = 0;
+        for (int i = 0; i < 8; i++)
+        {
+            helpRand = random.nextInt(62);
+            if(helpRand <= 9)
+                code += ((char)(helpRand + 48));
+            else if(helpRand <= 35)
+                code += ((char)(helpRand + 55));
+            else
+                code += ((char)(helpRand + 61));
+        }
+        OffCode offCode = new OffCode(code, offPercentage, 200, 3);
+        Manager.addOffCode(offCode);
+        return offCode;
     }
 
     public void addUser(User user) {

@@ -130,7 +130,7 @@ public class Manager extends User {
         offCodes.remove(offCode);
     }
 
-    public void addOffCode(OffCode offCode) {
+    public static void addOffCode(OffCode offCode) {
         offCodes.add(offCode);
         offCode.setStartingTime(new Date());
     }
@@ -145,7 +145,7 @@ public class Manager extends User {
         Product.deleteProduct(product);
     }
 
-    public void assignOffCodeToUser(OffCode offcode, Customer customer)
+    public static void assignOffCodeToUser(OffCode offcode, Customer customer)
     {
         customer.addOffCode(offcode);
         offcode.addUser(customer);
