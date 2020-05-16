@@ -49,7 +49,8 @@ public class CustomerModelTest {
     @Test
     public void cartShowingTest()
     {
-        String input = "view cart\nshow product\nback\nback\n";
+
+        String input = "view cart\nshow products\nback\nback\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         ((Customer)MainMenu.currentUser).addToCart(Product.getAllProducts().get(0));
         ((Customer)MainMenu.currentUser).addToCart(Product.getAllProducts().get(1));
@@ -158,10 +159,19 @@ public class CustomerModelTest {
     @Test
     public void openOtherMenusAndLogoutTest()
     {
-        String input = "products\nback\noffs\nback\nlogout\nback\nback";
+        System.setOut(originalOut);
+        String input = "products\nback\noffs\nback\nlogout\nexit\nback\nback";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         CustomerMenu.init();
-        Assert.assertEquals(MainMenu.currentUser, null);
+        Assert.assertEquals(MainMenu.currentUser, MainMenu.guest);
+    }
+
+    @Test
+    public void logoutTest() {  // should comment exitAll in MainMenu
+        System.setOut(new PrintStream(outContent));
+        System.setIn(new ByteArrayInputStream(("logout\nlogout\nexit\nback").getBytes()));
+        CustomerMenu.init();
+        Assert.assertTrue(outContent.toString().contains("You haven't signed in!"));
     }
 
 }

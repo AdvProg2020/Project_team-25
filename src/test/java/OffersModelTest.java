@@ -1,6 +1,9 @@
 import Store.Main;
 import Store.Model.Product;
+import Store.View.CustomerMenu;
+import Store.View.MainMenu;
 import Store.View.OffersMenu;
+import Store.View.ProductsMenu;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +31,7 @@ public class OffersModelTest {
 
     @Test
     public void productSortTest() {
-        System.setIn(new ByteArrayInputStream(("sorting\nsort visit\nsort lexicographical\nsort rating\nsort time of starting\nsort time of ending\nback\nback").getBytes()));
+        System.setIn(new ByteArrayInputStream(("sorting\nsort visit\nsort lexicographical\nsort rating\nsort price\nsort visit\nback\nback").getBytes()));
         OffersMenu.init();
         Assert.assertTrue(true);
     }
@@ -38,7 +41,7 @@ public class OffersModelTest {
         System.setOut(new PrintStream(outContent));
         System.setIn(new ByteArrayInputStream(("sorting\nshow available sorts\nback\nback").getBytes()));
         OffersMenu.init();
-        Assert.assertTrue(outContent.toString().contains("time of starting\ttime of ending\trating\tlexicographical\tvisit\t"));
+        Assert.assertTrue(outContent.toString().contains("price\trating\tlexicographical\tvisit\t"));
     }
 
     @Test
@@ -104,5 +107,22 @@ public class OffersModelTest {
         System.setIn(new ByteArrayInputStream(("show product 0\nback\nback").getBytes()));
         OffersMenu.init();
         Assert.assertTrue(outContent.toString().contains("Product menu of: product1"));
+    }
+
+    @Test
+    public void logoutTest() {  // should comment exitAll in MainMenu
+        System.setOut(new PrintStream(outContent));
+        System.setIn(new ByteArrayInputStream(("logout\nlogout\nexit\nback").getBytes()));
+        OffersMenu.init();
+        Assert.assertTrue(outContent.toString().contains("You haven't signed in!"));
+    }
+
+    @Test
+    public void loginTest() {  // should comment exitAll in MainMenu
+        System.setOut(new PrintStream(outContent));
+        MainMenu.currentUser = MainMenu.guest;
+        System.setIn(new ByteArrayInputStream(("login\nback\nback").getBytes()));
+        OffersMenu.init();
+        Assert.assertTrue(outContent.toString().contains("Sign up and Login menu"));
     }
 }

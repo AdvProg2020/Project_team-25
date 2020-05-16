@@ -9,7 +9,6 @@ import java.util.HashSet;
 
 public class Product implements Serializable {
 
-    //Deboo: it needs buyer
     private int productID;
     private CheckingStatus productStatus;
     private Category category;
@@ -17,7 +16,6 @@ public class Product implements Serializable {
     private Seller seller;
     private String brand;
     private double price;
-    // private ArrayList<Seller> sellers = new ArrayList<Seller>();
     private boolean availablity;
     private String attributes;
     private String description;
@@ -40,7 +38,6 @@ public class Product implements Serializable {
         this.brand = brand;
         this.price = price;
         this.availablity = availablity;
-     //   this.attributes = attributes;
         this.description = description;
         this.averageRating = 0;
         this.seller = seller;
@@ -63,10 +60,24 @@ public class Product implements Serializable {
         return idCounter;
     }
 
+    public void changeProduct(Product product) {
+        this.productID = product.productID;
+        this.productStatus = product.productStatus;
+        this.category = product.category;
+        this.name = product.name;
+        this.seller = product.seller;
+        this.brand = product.brand;
+        this.price = product.price;
+        this.availablity = product.availablity;
+        this.attributes = product.attributes;
+        this.description = product.description;
+        this.filters = product.filters;
+    }
+
     public boolean equals(Product other) {
         if (productStatus != other.getProductStatus()) {
             return false;
-        }//????
+        }
         else if (category != other.getCategory()) {
             return false;
         }
@@ -79,24 +90,9 @@ public class Product implements Serializable {
         else if (availablity != other.getAvailablity()) {
             return false;
         }
-/*        else if (!attributes.equals(other.getAttributes())) {
-            return false;
-        }*/
-       /* else if (!description.equals(other.getDescription())) {
-            return false;
-        }*/ //???
-      /*  else if (!comments.equals(other.comments)) {
-            return false;
-        }*/
-      /*  else if (!ratings.equals(other.ratings)) {
-            return false;
-        }*/
         else if (!filters.equals(other.filters)) {
             return false;
         }
-        /*else if (visited != other.getVisited()) {
-            return false;
-        }*/
         return true;
     }
 
@@ -208,14 +204,6 @@ public class Product implements Serializable {
 
 
 
-    public void setAvailablity(boolean availablity) {
-        this.availablity = availablity;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public void addToVisited(String brand) {
         this.visited++;
     }
@@ -273,14 +261,14 @@ public class Product implements Serializable {
         return this.filters.contains(filter);
     }
 
-    public Date getStartingDate() {  //just call when the product is in a offer
+    public Date getStartingDate() {  // just call when the product is in an offer
         if (Offer.getOfferOfProduct(this) == null) {
             return null;
         }
         return Offer.getOfferOfProduct(this).getStartingTime();
     }
 
-    public Date getEndingDate() {  // just call when the product is in a offer
+    public Date getEndingDate() {  // just call when the product is in an offer
         if (Offer.getOfferOfProduct(this) == null) {
             return null;
         }

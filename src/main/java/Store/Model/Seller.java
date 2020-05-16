@@ -45,9 +45,6 @@ public class Seller extends User {
     {
         products.add(product);
     }
-    public void requestAddProduct(Product product) {
-        new Request(product, false, null);
-    }
 
     public String getCompanyName() {
         return companyName;
@@ -68,13 +65,6 @@ public class Seller extends User {
              buyers.add(sellLogItem.getCustomerName());
         return buyers;
     }
-    public void requestChangeProduct(Product product, Product newProduct) {
-        new Request(product, true, newProduct);
-    }
-
-    public void requestRegisterSeller() {
-        new Request(this);
-    }
 
     public void handleLogs(double offValue, ArrayList<Product> sellProducts, Date date, Customer customer, double income) {
         sellLog.add(new SellLogItem(sellLog.size() + 1, date, sellProducts, income, offValue, customer.getName(), false));
@@ -93,7 +83,7 @@ public class Seller extends User {
     }
 
     public void removeProducts(ArrayList<Product> productsToRemove) {
-        for(Product product: productsToRemove) {
+        for (Product product: productsToRemove) {
             this.removeProduct(product);
         }
     }
@@ -104,15 +94,7 @@ public class Seller extends User {
         products.remove(productToRemove);
         Offer.removeProductFromOffer(productToRemove);
     }
-    //showing categories handled in controller
-
-    public void requestAddOffer(Offer offer) {
-        new Request(this, offer, false, null);
-    }
-
-    public void requestChangeOffer(Offer offer, Offer newOffer) {
-        new Request(this, offer, true, newOffer);
-    }
+    // showing categories handled in controller
 
     public void setMoney(double money) {
         this.money = money;
@@ -137,7 +119,7 @@ public class Seller extends User {
         if (request.getRequestType() == RequestType.ADD_NEW_OFFER) {
             Offer.addOfferToAllOffers(request.getOffer());
             offers.add(request.getOffer());
-            request.getOffer().calculateAllOffProducts();
+            Offer.calculateAllOffProducts();
         } else if (request.getRequestType() == RequestType.ADD_NEW_PRODUCT) {
             Product.addProduct(request.getProduct());
             products.add(request.getProduct());
@@ -146,12 +128,9 @@ public class Seller extends User {
             offers.remove(request.getOffer());
             Offer.addOfferToAllOffers(request.getNewOffer());
             offers.add(request.getNewOffer());
-            request.getOffer().calculateAllOffProducts();
+            Offer.calculateAllOffProducts();
         } else if (request.getRequestType() == RequestType.CHANGE_PRODUCT) {
-            Product.deleteProduct(request.getProduct());
-            Product.addProduct(request.getNewProduct());
-            products.remove(request.getProduct());
-            products.add(request.getNewProduct());
+            request.getProduct().changeProduct(request.getNewProduct());
         } else if (request.getRequestType() == RequestType.REGISTER_SELLER) {
             allUsers.add(request.getSeller());
         }

@@ -52,16 +52,15 @@ public class OffCode implements Serializable {
                 code += ((char)(helpRand + 61));
         }
         OffCode offCode = new OffCode(code, offPercentage, 200, 3);
+        offCode.setStartingTime(new Date());
+        offCode.setEndingTime(new Date(new Date().getTime() + 2 * 24 * 3600 *1000));
+        System.out.println("DATES: " + offCode.getStartingTime() + "  " + offCode.getEndingTime());
         Manager.addOffCode(offCode);
         return offCode;
     }
 
     public void addUser(User user) {
         this.users.add(user);
-    }
-
-    public boolean hasUser(User user) {
-        return this.users.contains(user);
     }
 
     public void removeUser(User user) {
@@ -72,17 +71,8 @@ public class OffCode implements Serializable {
         return this.usageCount;
     }
 
-    public User getUserByIndex(int index) {
-        return this.users.get(index);
-    }
-
     public boolean canBeUsedInDate(Date now) {
         return (this.startingTime.before(now) && this.endingTime.after(now));
-    }
-
-
-    public int getAmountOfUsers() {
-        return this.users.size();
     }
 
     public String getCode() {

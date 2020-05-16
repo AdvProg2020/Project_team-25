@@ -2,7 +2,7 @@ package Store;
 
 import Store.Model.*;
 import Store.Model.Enums.CheckingStatus;
-import Store.View.MainMenu;
+import Store.View.*;
 
 import java.util.Date;
 
@@ -10,26 +10,14 @@ public class Main {
 
     public static void main(String[] args) {
 
-//          ResourceHandler.resetFile();
+//        ResourceHandler.resetFile();
 //        ResourceHandler.writeAll();
 
-          ResourceHandler.readAll();
-          Manager.checkPeriodOffCode();
-          MainMenu.currentUser = MainMenu.guest;
+        ResourceHandler.readAll();
+        Manager.checkPeriodOffCode();
+        MainMenu.currentUser = MainMenu.guest;
 
-//        System.out.println(Manager.hasManager);
-//        SignUpAndLoginMenu.init();
-//        if (MainMenu.currentUser instanceof Manager) {
-//            ManagerMenu.init();
-//        }
-//        else if (MainMenu.currentUser instanceof Seller) {
-//            SellerMenu.init();
-//        }
-//        else {
-//            CustomerMenu.init();
-//        }
-
-          MainMenu.init();
+        MainMenu.init();
     }
 
     public static void setTest() {
@@ -61,8 +49,11 @@ public class Main {
         offCode1.setEndingTime(new Date(2020, 5, 4));
         OffCode offCode2 = new OffCode("AP2",60,5,1);
         offCode2.setEndingTime(new Date(2020, 5, 4));
+        OffCode offCode3 = new OffCode("AP333",60,5,1);
+        offCode2.setEndingTime(new Date(2020, 5, 4));
         manager1.addOffCode(offCode1);
         manager1.addOffCode(offCode2);
+        manager1.addOffCode(offCode3);
         offCode1.addUser(customer);
         offCode2.addUser(customer);
         customer.addOffCode(offCode1);

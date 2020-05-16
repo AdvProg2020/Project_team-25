@@ -30,6 +30,14 @@ public class SellerModelTest {
     }
 
     @Test
+    public void invalidEditTest() {
+        System.setOut(new PrintStream(outContent));
+        System.setIn(new ByteArrayInputStream("view personal info\nedit first name\n@@@_\nback\nback".getBytes()));
+        SellerMenu.init();
+        Assert.assertTrue(outContent.toString().contains("The value you entered for this field is invalid!"));
+    }
+
+    @Test
     public void viewEditEmailTest() {
         System.setIn(new ByteArrayInputStream("view personal info\nedit email\ntest@test.com\nback\nback".getBytes()));
         SellerMenu.init();
@@ -182,8 +190,7 @@ public class SellerModelTest {
         String input = "view offs\n.dsa\nview 1\nback\nback\nback";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         SellerMenu.init();
-        Assert.assertTrue(outContent.toString().contains("(product3 ID:3 Seller:seller2 Price:15.5)\r\n" +
-                "(product5 ID:4 Seller:jack Price:980.0)"));
+        Assert.assertTrue(outContent.toString().contains("(product3 ID:3 Seller:seller2 Price:15.5, [AB, CD])"));
     }
     @Test
     public void sortOffsTest()
@@ -237,5 +244,13 @@ public class SellerModelTest {
         System.setIn(new ByteArrayInputStream(("help\nback").getBytes()));
         SellerMenu.init();
         Assert.assertTrue(outContent.toString().contains("List of main commands: "));
+    }
+
+    @Test
+    public void logoutTest() {  // should comment exitAll in MainMenu
+        System.setOut(new PrintStream(outContent));
+        System.setIn(new ByteArrayInputStream(("logout\nlogout\nexit\nback").getBytes()));
+        SellerMenu.init();
+        Assert.assertTrue(outContent.toString().contains("You haven't signed in!"));
     }
 }

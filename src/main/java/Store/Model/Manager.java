@@ -1,6 +1,5 @@
 package Store.Model;
 
-import Store.Model.Enums.RequestType;
 import Store.Model.Enums.VerifyStatus;
 
 import java.util.ArrayList;
@@ -110,7 +109,7 @@ public class Manager extends User {
                 for (int i = 0; i < 3; i++)
                     assignOffCodeToUser(OffCode.randomOffCode(10), User.findIndexOfNthCustomer(helpRand.get(i) + 1));
             }
-            setPeriodOffCodeDate(new Date(new Date().getTime() + /*24*3600*/2*60*1000));
+            setPeriodOffCodeDate(new Date(new Date().getTime() + 24 * 3600 *1000));
         }
     }
 
@@ -147,10 +146,10 @@ public class Manager extends User {
     public void handleRequest(Request request, boolean accepted) {
         if (accepted) {
             Seller.doRequest(request);
-            request.setStatus(ACCEPTED);//????
+            request.setStatus(ACCEPTED);
             eraseRequestsInCommonWithThisRequest(request);
         } else {
-            request.setStatus(REJECTED);  //????
+            request.setStatus(REJECTED);
         }
         pendingRequests.remove(request);
     }
@@ -254,89 +253,6 @@ public class Manager extends User {
         }
     }
 
-    private static void eraseRequestsIncludeProduct(Product product, Seller seller, Request mainRequest)
-    {
-        ArrayList<Request> delRequests = new ArrayList<>();
-        if(mainRequest.getRequestType() == RequestType.CHANGE_PRODUCT)
-        {
-            for (Request request: pendingRequests)
-            {
-                if (mainRequest != request && request.getSeller().equals(seller)) {
-                    if(request.getRequestType() == RequestType.CHANGE_PRODUCT)
-                    {
-
-                    }
-                    else if(request.getRequestType() == RequestType.ADD_NEW_PRODUCT)
-                    {
-
-                    }
-                }
-            }
-        }
-        else if(mainRequest.getRequestType() == RequestType.ADD_NEW_PRODUCT)
-        {
-            for (Request request: pendingRequests)
-            {
-                if (mainRequest != request && request.getSeller().equals(seller)) {
-                    if(request.getRequestType() == RequestType.CHANGE_PRODUCT)
-                    {
-
-                    }
-                    else if(request.getRequestType() == RequestType.ADD_NEW_PRODUCT)
-                    {
-
-                    }
-                }
-            }
-        }
-        else if (mainRequest.getRequestType() == RequestType.ADD_NEW_OFFER)
-        {
-            for (Request request: pendingRequests)
-            {
-                if (mainRequest != request && request.getSeller().equals(seller)) {
-                    if(request.getRequestType() == RequestType.CHANGE_OFFER)
-                    {
-
-                    }
-                    else if(request.getRequestType() == RequestType.ADD_NEW_OFFER)
-                    {
-
-                    }
-                }
-            }
-        }
-        else if (mainRequest.getRequestType() == RequestType.CHANGE_OFFER)
-        {
-            for (Request request: pendingRequests)
-            {
-                if (mainRequest != request && request.getSeller().equals(seller)) {
-                    if(request.getRequestType() == RequestType.CHANGE_OFFER)
-                    {
-
-                    }
-                    else if(request.getRequestType() == RequestType.ADD_NEW_OFFER)
-                    {
-
-                    }
-                }
-            }
-        }
-        for (Request request: delRequests)
-            pendingRequests.remove(request);
-    }
-
-    private static void eraseRequestsIncludeSeller(Seller seller, Request mainRequest)
-    {
-        ArrayList<Request> delRequests = new ArrayList<>();
-        for(Request request: pendingRequests)
-        {
-            if (mainRequest != request)
-                if(request.getSeller().equals(seller))
-                    delRequests.add(request);
-        }
-        for (Request request: delRequests)
-            pendingRequests.remove(request);
-    }
 
     public void addNewManager(Manager manager) {
         allUsers.add(manager);

@@ -44,10 +44,14 @@ public class OffersController {
         }
     }
 
+    public static double getPriceToPay(Product product) {
+        return (product.getPrice() - (product.getPrice() * Offer.getOfferOfProduct(product).getOffPercent() / 100.0));
+    }
+
     private static ArrayList<Product> sortByPrice(ArrayList<Product> products) {
         try {
             return products.stream()
-                    .sorted(Comparator.comparing(Product::getPrice))
+                    .sorted(Comparator.comparing(OffersController::getPriceToPay))
                     .collect(Collectors.toCollection(ArrayList::new));
         } catch (Exception exception) {
             return products;

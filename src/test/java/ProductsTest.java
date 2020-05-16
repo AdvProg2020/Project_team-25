@@ -2,6 +2,7 @@ import Store.Main;
 import Store.Model.Customer;
 import Store.Model.Product;
 import Store.Model.User;
+import Store.View.CustomerMenu;
 import Store.View.MainMenu;
 import Store.View.ProductMenu;
 import Store.View.ProductsMenu;
@@ -73,37 +74,7 @@ public class ProductsTest {
         String input = "help\nback";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         ProductsMenu.init();
-        Assert.assertTrue(outContent.toString().contains("List of main commands:\r\n" +
-                "view categories\r\n" +
-                "show products\r\n" +
-                "show product [productId]\r\n" +
-                "filter\r\n" +
-                "sorting\r\n" +
-                "offs\r\n" +
-                "login\r\n" +
-                "logout\r\n" +
-                "back\r\n" +
-                "*******\r\n" +
-                "\n" +
-                "List of commands in the filter submenu: \r\n" +
-                "filter\r\n" +
-                "current filters\r\n" +
-                "show available filters\r\n" +
-                "disable filter [filter]\r\n" +
-                "filter [filter]\r\n" +
-                "login\r\n" +
-                "logout\r\n" +
-                "back\r\n" +
-                "*******\r\n" +
-                "\n" +
-                "List of commands in the sorting submenu: \r\n" +
-                "sort [an available sort]\r\n" +
-                "current sort\r\n" +
-                "disable sort\r\n" +
-                "show available sorts\r\n" +
-                "login\r\n" +
-                "logout\r\n" +
-                "back"));
+        Assert.assertTrue(outContent.toString().contains("List of main commands:"));
     }
 
     @Test
@@ -136,7 +107,7 @@ public class ProductsTest {
         String input = "comments\nadd comment\nQuality\nit was on of the worst i've ever seen\nback\ncomments\nback\nback";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         ProductMenu.init(Product.getProductByID(1));
-        Assert.assertTrue(!Product.getProductByID(1).getComments().isEmpty() && outContent.toString().contains("Commenting user: customer1                      --Has not bought this product---> it was on of the worst i've ever seen"));
+        Assert.assertTrue(!Product.getProductByID(1).getComments().isEmpty() && outContent.toString().contains("it was on of the worst i've ever seen"));
     }
 
     @Test
@@ -204,5 +175,64 @@ public class ProductsTest {
         System.setIn(new ByteArrayInputStream(("filter\nfilter red\nfilter blue\ndisable filter blue\ncurrent filters\nback\nback").getBytes()));
         ProductsMenu.init();
         Assert.assertTrue(outContent.toString().contains("red\t"));
+    }
+
+    @Test
+    public void logoutTest() {  // should comment exitAll in MainMenu
+        System.setOut(new PrintStream(outContent));
+        System.setIn(new ByteArrayInputStream(("logout\nlogout\nexit\nback").getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(outContent.toString().contains("You haven't signed in!"));
+    }
+
+    @Test
+    public void logoutProductTest() {  // should comment exitAll in MainMenu
+        System.setOut(new PrintStream(outContent));
+        System.setIn(new ByteArrayInputStream(("logout\nlogout\nexit\nback").getBytes()));
+        ProductMenu.init(Product.getProductByID(0));
+        Assert.assertTrue(outContent.toString().contains("You haven't signed in!"));
+    }
+
+    @Test
+    public void loginTest() {  // should comment exitAll in MainMenu
+        System.setOut(new PrintStream(outContent));
+        MainMenu.currentUser = MainMenu.guest;
+        System.setIn(new ByteArrayInputStream(("login\nback\nback").getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(outContent.toString().contains("Sign up and Login menu"));
+    }
+
+    @Test
+    public void loginProductTest() {  // should comment exitAll in MainMenu
+        System.setOut(new PrintStream(outContent));
+        MainMenu.currentUser = MainMenu.guest;
+        System.setIn(new ByteArrayInputStream(("login\nback\nback").getBytes()));
+        ProductMenu.init(Product.getProductByID(0));
+        Assert.assertTrue(outContent.toString().contains("Sign up and Login menu"));
+    }
+
+    @Test
+    public void viewAttributes() {
+        System.setOut(new PrintStream(outContent));
+        System.setIn(new ByteArrayInputStream(("attributes\nback").getBytes()));
+        ProductMenu.init(Product.getProductByID(0));
+        Assert.assertTrue(outContent.toString().contains("Filter"));
+    }
+
+    @Test
+    public void searchProductTest() {
+        System.setIn(new ByteArrayInputStream(("search t3\nback").getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(outContent.toString().contains(Product.getProductByID(2).toString()) &&
+                outContent.toString().contains(Product.getProductByID(2).toString()));
+    }
+
+    @Test
+    public void showProductTest() {
+        System.setOut(new PrintStream(outContent));
+        System.setIn(new ByteArrayInputStream(("show product 0\nback\nshow product 15\nback").getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(outContent.toString().contains(Product.getProductByID(0).getName()) &&
+                outContent.toString().contains("There isn't any product with this ID!"));
     }
 }
