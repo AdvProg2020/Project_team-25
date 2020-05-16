@@ -205,4 +205,20 @@ public class Offer implements Serializable {
                 ", Products=" + this.products +
                 '}';
     }
+    @Override
+    public boolean equals(Object object)
+    {
+        Offer offer = (Offer) object;
+        if(user.equals(offer.getUser()))
+        {
+            for(Product product: products)
+                if (!offer.isProductInOffer(product))
+                    return false;
+            for(Product product: offer.getProducts())
+                if (!this.isProductInOffer(product))
+                    return false;
+            return true;
+        }
+        return false;
+    }
 }

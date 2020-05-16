@@ -2,7 +2,7 @@ package Store;
 
 import Store.Model.*;
 import Store.Model.Enums.CheckingStatus;
-import Store.View.*;
+import Store.View.MainMenu;
 
 import java.util.Date;
 
@@ -10,12 +10,12 @@ public class Main {
 
     public static void main(String[] args) {
 
-//        ResourceHandler.resetFile();
+ //       ResourceHandler.resetFile();
 //        ResourceHandler.writeAll();
 
-        ResourceHandler.readAll();
-        Manager.checkPeriodOffCode();
-        MainMenu.currentUser = MainMenu.guest;
+          ResourceHandler.readAll();
+          Manager.checkPeriodOffCode();
+          MainMenu.currentUser = MainMenu.guest;
 
 //        System.out.println(Manager.hasManager);
 //        SignUpAndLoginMenu.init();
@@ -29,7 +29,7 @@ public class Main {
 //            CustomerMenu.init();
 //        }
 
-        MainMenu.init();
+          MainMenu.init();
     }
 
     public static void setTest() {

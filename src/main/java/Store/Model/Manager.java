@@ -107,7 +107,7 @@ public class Manager extends User {
                 for (int i = 0; i < 3; i++)
                     assignOffCodeToUser(OffCode.randomOffCode(10), User.findIndexOfNthCustomer(helpRand.get(i) + 1));
             }
-            setPeriodOffCodeDate(new Date(new Date().getTime() + 24*3600*1000));
+            setPeriodOffCodeDate(new Date(new Date().getTime() + /*24*3600*/2*60*1000));
         }
     }
 
@@ -138,7 +138,16 @@ public class Manager extends User {
     }
 
     public static void addRequest(Request request) {
-        pendingRequests.add(request);
+        if(!Manager.isInPendingRequests(request))
+            pendingRequests.add(request);
+    }
+
+    public static boolean isInPendingRequests(Request request)
+    {
+        for(Request request1: pendingRequests)
+            if(request1.equals(request))
+                return true;
+        return false;
     }
 
     public void handleRequest(Request request, boolean accepted) {
