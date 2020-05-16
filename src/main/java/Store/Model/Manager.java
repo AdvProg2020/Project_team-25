@@ -1,5 +1,6 @@
 package Store.Model;
 
+import Store.Model.Enums.RequestType;
 import Store.Model.Enums.VerifyStatus;
 
 import java.util.ArrayList;
@@ -253,6 +254,89 @@ public class Manager extends User {
         }
     }
 
+    private static void eraseRequestsIncludeProduct(Product product, Seller seller, Request mainRequest)
+    {
+        ArrayList<Request> delRequests = new ArrayList<>();
+        if(mainRequest.getRequestType() == RequestType.CHANGE_PRODUCT)
+        {
+            for (Request request: pendingRequests)
+            {
+                if (mainRequest != request && request.getSeller().equals(seller)) {
+                    if(request.getRequestType() == RequestType.CHANGE_PRODUCT)
+                    {
+
+                    }
+                    else if(request.getRequestType() == RequestType.ADD_NEW_PRODUCT)
+                    {
+
+                    }
+                }
+            }
+        }
+        else if(mainRequest.getRequestType() == RequestType.ADD_NEW_PRODUCT)
+        {
+            for (Request request: pendingRequests)
+            {
+                if (mainRequest != request && request.getSeller().equals(seller)) {
+                    if(request.getRequestType() == RequestType.CHANGE_PRODUCT)
+                    {
+
+                    }
+                    else if(request.getRequestType() == RequestType.ADD_NEW_PRODUCT)
+                    {
+
+                    }
+                }
+            }
+        }
+        else if (mainRequest.getRequestType() == RequestType.ADD_NEW_OFFER)
+        {
+            for (Request request: pendingRequests)
+            {
+                if (mainRequest != request && request.getSeller().equals(seller)) {
+                    if(request.getRequestType() == RequestType.CHANGE_OFFER)
+                    {
+
+                    }
+                    else if(request.getRequestType() == RequestType.ADD_NEW_OFFER)
+                    {
+
+                    }
+                }
+            }
+        }
+        else if (mainRequest.getRequestType() == RequestType.CHANGE_OFFER)
+        {
+            for (Request request: pendingRequests)
+            {
+                if (mainRequest != request && request.getSeller().equals(seller)) {
+                    if(request.getRequestType() == RequestType.CHANGE_OFFER)
+                    {
+
+                    }
+                    else if(request.getRequestType() == RequestType.ADD_NEW_OFFER)
+                    {
+
+                    }
+                }
+            }
+        }
+        for (Request request: delRequests)
+            pendingRequests.remove(request);
+    }
+
+    private static void eraseRequestsIncludeSeller(Seller seller, Request mainRequest)
+    {
+        ArrayList<Request> delRequests = new ArrayList<>();
+        for(Request request: pendingRequests)
+        {
+            if (mainRequest != request)
+                if(request.getSeller().equals(seller))
+                    delRequests.add(request);
+        }
+        for (Request request: delRequests)
+            pendingRequests.remove(request);
+    }
 
     public void addNewManager(Manager manager) {
         allUsers.add(manager);
