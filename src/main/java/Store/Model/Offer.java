@@ -16,7 +16,6 @@ public class Offer implements Serializable {
     private static ArrayList<String> allFilters = new ArrayList<>();
     private CheckingStatus offerStatus;
     private Date startingTime, endingTime;
-    // StartingTime and EndingTime?
     private double offPercent;
 
     private static ArrayList<Offer> allOffers = new ArrayList<Offer>();
@@ -116,7 +115,7 @@ public class Offer implements Serializable {
         return offPercent;
     }
 
-    public void calculateAllOffProducts() {
+    public static void calculateAllOffProducts() {
         allOffProducts.clear();
         for (Offer offer : allOffers) {
             allOffProducts.addAll(offer.getProducts());

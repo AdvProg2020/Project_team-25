@@ -396,7 +396,7 @@ public class SellerMenu {
         }
     }
 
-    private static void getOfferProducts(Seller seller, Offer offer) {
+    private static void getOfferProducts(Seller seller, Offer offer, Offer changeOffer) {
         String input;
 
         System.out.println("Your products: ");
@@ -414,7 +414,7 @@ public class SellerMenu {
             if (offer.containsProduct(product)) {
                 System.out.println("Already added this product");
             }
-            else if (Offer.getOfferOfProduct(product) != null) {
+            else if ((changeOffer == null || !changeOffer.getProducts().contains(product)) && Offer.getOfferOfProduct(product) != null) {
                 System.out.println("This product is already in another offer!");
             }
             else {
@@ -423,7 +423,7 @@ public class SellerMenu {
         }
     }
 
-    private static Offer createOffer(Seller seller) {
+    private static Offer createOffer(Seller seller, Offer changeOffer) {
         System.out.println("Please enter dates and times in the following format: dd-M-yyyy");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy");
 
@@ -460,7 +460,7 @@ public class SellerMenu {
         offer.setStartingTime(startingTime);
         offer.setEndingTime(endingTime);
 
-        getOfferProducts(seller, offer);
+        getOfferProducts(seller, offer, changeOffer);
 
         System.out.println("Select filters for this off, finish by inputting -1");
         while (!(input = InputManager.getNextLine()).equals("-1")) {
@@ -489,14 +489,14 @@ public class SellerMenu {
             System.out.println("Invalid ID!");
             return;
         }
-        Offer offer = createOffer(seller);
+        Offer offer = createOffer(seller, Offer.getOfferByID(Integer.parseInt(attribute)));
         if (offer != null) {
             SellerController.editOff(seller, Offer.getOfferByID(Integer.parseInt(attribute)), offer);
         }
     }
 
     private static void addOffWrapper(Seller seller) {
-        Offer offer = createOffer(seller);
+        Offer offer = createOffer(seller, null);
         if (offer != null) {
             SellerController.addOff(seller, offer);
         }

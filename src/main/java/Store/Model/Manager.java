@@ -107,7 +107,7 @@ public class Manager extends User {
                 for (int i = 0; i < 3; i++)
                     assignOffCodeToUser(OffCode.randomOffCode(10), User.findIndexOfNthCustomer(helpRand.get(i) + 1));
             }
-            setPeriodOffCodeDate(new Date(new Date().getTime() + 24*3600*1000));
+            setPeriodOffCodeDate(new Date(new Date().getTime() + 24 * 3600 *1000));
         }
     }
 
@@ -144,9 +144,9 @@ public class Manager extends User {
     public void handleRequest(Request request, boolean accepted) {
         if (accepted) {
             Seller.doRequest(request);
-            request.setStatus(ACCEPTED);  //????
+            request.setStatus(ACCEPTED);
         } else {
-            request.setStatus(REJECTED);  //????
+            request.setStatus(REJECTED);
         }
         pendingRequests.remove(request);
     }
