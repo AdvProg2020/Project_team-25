@@ -182,8 +182,7 @@ public class SellerModelTest {
         String input = "view offs\n.dsa\nview 1\nback\nback\nback";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         SellerMenu.init();
-        Assert.assertTrue(outContent.toString().contains("(product3 ID:3 Seller:seller2 Price:15.5)\r\n" +
-                "(product5 ID:4 Seller:jack Price:980.0)"));
+        Assert.assertTrue(outContent.toString().contains("(product3 ID:3 Seller:seller2 Price:15.5, [AB, CD])"));
     }
     @Test
     public void sortOffsTest()

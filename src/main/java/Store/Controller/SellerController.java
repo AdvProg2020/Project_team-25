@@ -16,7 +16,7 @@ public class SellerController {
     }
 
     public static void editPersonalInfo(Seller seller, String field, String value) throws InvalidValueException {
-        if (field.equalsIgnoreCase("name")) {
+        if (field.equalsIgnoreCase("first name")) {
             if (!StringUtils.isAlpha(value)) {
                 throw new InvalidValueException(INVALID_VALUE_ERROR);
             }

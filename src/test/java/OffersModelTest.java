@@ -38,7 +38,7 @@ public class OffersModelTest {
         System.setOut(new PrintStream(outContent));
         System.setIn(new ByteArrayInputStream(("sorting\nshow available sorts\nback\nback").getBytes()));
         OffersMenu.init();
-        Assert.assertTrue(outContent.toString().contains("time of starting\ttime of ending\trating\tlexicographical\tvisit\t"));
+        Assert.assertTrue(outContent.toString().contains("price\trating\tlexicographical\tvisit\t"));
     }
 
     @Test
