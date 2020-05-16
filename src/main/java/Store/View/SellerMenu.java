@@ -247,7 +247,7 @@ public class SellerMenu {
         if (StringUtils.isNumeric(attribute) && SellerController.isValidID(seller, Integer.parseInt(attribute))) {
             Product product = createProduct(seller);
             if (product != null) {
-                SellerController.editProduct(seller, Product.getProductByID(Integer.parseInt(attribute)), product);
+                System.out.println(SellerController.editProduct(seller, Product.getProductByID(Integer.parseInt(attribute)), product));
             }
         }
         else {
@@ -491,7 +491,7 @@ public class SellerMenu {
         }
         Offer offer = createOffer(seller);
         if (offer != null) {
-            SellerController.editOff(seller, Offer.getOfferByID(Integer.parseInt(attribute)), offer);
+            System.out.println(SellerController.editOff(seller, Offer.getOfferByID(Integer.parseInt(attribute)), offer));
         }
     }
 

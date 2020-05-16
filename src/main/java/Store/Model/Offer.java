@@ -1,12 +1,10 @@
 package Store.Model;
 
-import Store.Model.Product;
 import Store.Model.Enums.CheckingStatus;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 
 public class Offer implements Serializable {
     private int offID;
@@ -212,12 +210,8 @@ public class Offer implements Serializable {
         if(user.equals(offer.getUser()))
         {
             for(Product product: products)
-                if (!offer.isProductInOffer(product))
-                    return false;
-            for(Product product: offer.getProducts())
-                if (!this.isProductInOffer(product))
-                    return false;
-            return true;
+                if (offer.isProductInOffer(product))
+                    return true;
         }
         return false;
     }

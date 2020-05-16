@@ -374,6 +374,7 @@ public class ManagerMenu {
             }
             else if ((matcher = InputManager.getMatcher(input, ACCEPT_REQUEST)).find()) {
                 handleRequestWrapper(true, Integer.parseInt(matcher.group(1)));
+                showAllRequests();
             }
             else if ((matcher = InputManager.getMatcher(input, DECLINE_REQUEST)).find()) {
                 handleRequestWrapper(false, Integer.parseInt(matcher.group(1)));

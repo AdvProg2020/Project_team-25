@@ -210,6 +210,6 @@ public class Seller extends User {
             return false;
         }
         Seller seller = (Seller) object;
-        return super.equals(object);
+        return (super.equals(object));
     }
 }

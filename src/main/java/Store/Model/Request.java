@@ -20,8 +20,7 @@ public class Request implements Serializable {
         this.requestType = RequestType.REGISTER_SELLER;
         this.seller = seller;
         this.status = VerifyStatus.WAITING;
-        if(!Manager.isInPendingRequests(this))
-            allRequests.add(this);
+        allRequests.add(this);
     }
 
     public Request(Product product, boolean change, Object newObject) {
@@ -34,9 +33,7 @@ public class Request implements Serializable {
             this.newObject = newObject;
         }
         this.status = VerifyStatus.WAITING;
-
-        if(!Manager.isInPendingRequests(this))
-            allRequests.add(this);
+        allRequests.add(this);
     }
 
     public Request(Seller seller, Offer offer, boolean change, Object newObject) {
@@ -50,8 +47,7 @@ public class Request implements Serializable {
         }
         this.status = VerifyStatus.WAITING;
 
-        if(!Manager.isInPendingRequests(this))
-            allRequests.add(this);
+        allRequests.add(this);
     }
 
     public static ArrayList<Request> getAllRequests() {
@@ -119,33 +115,6 @@ public class Request implements Serializable {
             result = result.concat(this.product.toString() + "\n ---- TO ---- \n" + ((Product) this.newObject).toString());
         }
         return result;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        Request request = (Request)obj;
-        if (requestType == request.getRequestType() && requestType == RequestType.ADD_NEW_OFFER) {
-            if (seller.equals(request.getSeller()) && offer.equals(request.getOffer()))
-                return true;
-        }
-        else if (requestType == request.getRequestType() && requestType == RequestType.ADD_NEW_PRODUCT) {
-            if (seller.equals(request.getSeller()) && product.equals(request.getProduct()))
-                return true;
-        }
-        else if (requestType == request.getRequestType() && requestType == RequestType.CHANGE_OFFER) {
-            if (seller.equals(request.getSeller()) && offer.equals(request.getOffer()) && ((Offer)newObject).equals(request.getNewOffer()))
-                return true;
-        }
-        else if (requestType == request.getRequestType() && requestType == RequestType.CHANGE_PRODUCT) {
-            if (seller.equals(request.getSeller()) && product.equals(request.getProduct()) && ((Product)newObject).equals(request.getNewProduct()))
-                return true;
-        }
-        else if (requestType == request.getRequestType() && requestType == RequestType.REGISTER_SELLER) {
-            if (seller.equals(request.getSeller()) && User.getUserByUsername(seller.getUsername()) != null)
-                return true;
-        }
-        return false;
     }
 
     public VerifyStatus getStatus() {
