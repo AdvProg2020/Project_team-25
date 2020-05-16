@@ -33,4 +33,12 @@ public class MainMenuTest {
         MainMenu.init();
         Assert.assertTrue(outContent.toString().contains("Sign up and Login menu"));
     }
+
+    @Test
+    public void quitTest() {  // should comment system.quit(0) in MainMenu
+        System.setOut(new PrintStream(outContent));
+        System.setIn(new ByteArrayInputStream(("exit\nN").getBytes()));
+        MainMenu.init();
+        Assert.assertTrue(outContent.toString().contains("Save Current Database?"));
+    }
 }

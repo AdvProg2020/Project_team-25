@@ -1,9 +1,7 @@
 import Store.Main;
+import Store.Model.*;
 import Store.Model.Enums.VerifyStatus;
-import Store.Model.Manager;
-import Store.Model.Product;
-import Store.Model.Request;
-import Store.Model.User;
+import Store.View.CustomerMenu;
 import Store.View.MainMenu;
 import Store.View.ManagerMenu;
 import org.junit.Assert;
@@ -312,6 +310,27 @@ public class ManagerModelTest {
         System.setIn(new ByteArrayInputStream(("view discount codes\nsort by time of starting\nsort by time of ending\nsort by code\nsort by usage count\nsort by maximum off\nsort by off percentage\nback\nback").getBytes()));
         ManagerMenu.init();
         Assert.assertTrue(true);
+    }
+
+    @Test
+    public void logoutTest() {  // should comment exitAll in MainMenu
+        System.setOut(new PrintStream(outContent));
+        Main.setTest();
+        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
+        MainMenu.currentUser = manager;
+        System.setIn(new ByteArrayInputStream(("logout\nlogout\nexit\nback").getBytes()));
+        ManagerMenu.init();
+        Assert.assertTrue(outContent.toString().contains("You haven't signed in!"));
+    }
+
+    @Test
+    public void assignOffCodeTest() {
+        Main.setTest();
+        Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
+        MainMenu.currentUser = manager;
+        System.setIn(new ByteArrayInputStream(("assign discount code\nAP333\ncustomer1\nback").getBytes()));
+        ManagerMenu.init();
+        Assert.assertTrue(((Customer)User.getUserByUsername("customer1")).getOffCodes().containsKey(Manager.getOffCodeByCode("AP333")));
     }
 
 }

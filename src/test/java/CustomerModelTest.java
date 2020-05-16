@@ -166,4 +166,12 @@ public class CustomerModelTest {
         Assert.assertEquals(MainMenu.currentUser, MainMenu.guest);
     }
 
+    @Test
+    public void logoutTest() {  // should comment exitAll in MainMenu
+        System.setOut(new PrintStream(outContent));
+        System.setIn(new ByteArrayInputStream(("logout\nlogout\nexit\nback").getBytes()));
+        CustomerMenu.init();
+        Assert.assertTrue(outContent.toString().contains("You haven't signed in!"));
+    }
+
 }

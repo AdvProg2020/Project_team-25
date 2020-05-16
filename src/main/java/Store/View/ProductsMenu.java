@@ -205,6 +205,11 @@ public class ProductsMenu {
 
     private static void showProduct(String attribute) {
         int productId = Integer.parseInt(attribute);
+        Product product = Product.getProductByID(productId);
+        if (product == null) {
+            System.out.println("There isn't any product with this ID!");
+            return;
+        }
         ProductMenu.init(Product.getProductByID(productId));
     }
 

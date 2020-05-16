@@ -49,8 +49,11 @@ public class Main {
         offCode1.setEndingTime(new Date(2020, 5, 4));
         OffCode offCode2 = new OffCode("AP2",60,5,1);
         offCode2.setEndingTime(new Date(2020, 5, 4));
+        OffCode offCode3 = new OffCode("AP333",60,5,1);
+        offCode2.setEndingTime(new Date(2020, 5, 4));
         manager1.addOffCode(offCode1);
         manager1.addOffCode(offCode2);
+        manager1.addOffCode(offCode3);
         offCode1.addUser(customer);
         offCode2.addUser(customer);
         customer.addOffCode(offCode1);
