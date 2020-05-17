@@ -1,10 +1,9 @@
 package Store.View;
 
 import Store.Controller.OffersController;
+import Store.Controller.ProductsController;
 import Store.InputManager;
-import Store.Model.Customer;
-import Store.Model.Offer;
-import Store.Model.Product;
+import Store.Model.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +20,17 @@ public class OffersMenu {
     private static String DISABLE_FILTER_REGEX = "^disable filter ([^\\s]+)$";
     private static String FILTER_REGEX = "^filter ([^\\s]+)$";
     private static String SORT_REGEX = "^sort (.+)$";
+
+    private static final String FILTER_STATIC_REGEX = "^filter (category|priceLow|priceHigh|brand|name|sellerUsername|availability) (\\w+)$";
+    private static final String DISABLE_FILTER_STATIC_REGEX = "^disable (category|priceLow|priceHigh|brand|name|sellerUsername|availability) filter$";
+
+    private static String categoryFilter = "null";
+    private static double priceLowFilter = -1;
+    private static double priceHighFilter = -1;
+    private static String brandFilter = "null";
+    private static String nameFilter = "null";
+    private static String sellerUsernameFilter = "null";
+    private static String availabilityFilter = "null";
 
     public static void init() {
         currentSort = "visit";
@@ -58,7 +68,10 @@ public class OffersMenu {
     }
 
     public static void viewOffs() {
-        for (Product product : OffersController.sortProductsInOffers(currentSort, filters)) {
+        ArrayList<Product> products = OffersController.sortProductsInOffers(currentSort, filters);
+        products = ProductsController.handleStaticFiltering(products, categoryFilter, priceLowFilter,
+                priceHighFilter, brandFilter, nameFilter, sellerUsernameFilter, availabilityFilter);
+        for (Product product : products) {
             Offer offer = Offer.getOfferOfProduct(product);
             if (offer == null) {
                 continue;
@@ -93,6 +106,10 @@ public class OffersMenu {
                 disableFilter(matcher.group(1));
             } else if ((matcher = InputManager.getMatcher(input, FILTER_REGEX)).find()) {
                 filter(matcher.group(1));
+            } else if ((matcher = InputManager.getMatcher(input, FILTER_STATIC_REGEX)).find()) {
+                staticFilter(matcher.group(1), matcher.group(2));
+            } else if ((matcher = InputManager.getMatcher(input, DISABLE_FILTER_STATIC_REGEX)).find()) {
+                disableStaticFilter(matcher.group(1));
             } else if (input.equalsIgnoreCase("login")) {
                 handleLogin();
                 System.out.println("\nOffers menu -> Filtering submenu\n");
@@ -135,11 +152,94 @@ public class OffersMenu {
 
     }
 
+    private static void staticFilter(String filter, String value) {
+        if (filter.equalsIgnoreCase("category")) {
+            if (Category.getCategoryByName(value) == null) {
+                System.out.println("There is no category with this name!");
+            }
+            else {
+                categoryFilter = value;
+            }
+        }
+        else if (filter.equalsIgnoreCase("priceLow")) {
+            if (value.matches("\\d+(\\.\\d+)?")) {
+                priceLowFilter = Double.parseDouble(value);
+            }
+            else {
+                System.out.println("Invalid value!");
+            }
+        }
+        else if (filter.equalsIgnoreCase("priceHigh")) {
+            if (value.matches("\\d+(\\.\\d+)?")) {
+                priceHighFilter = Double.parseDouble(value);
+            }
+            else {
+                System.out.println("Invalid value!");
+            }
+        }
+        else if (filter.equalsIgnoreCase("brand")) {
+            brandFilter = value;
+        }
+        else if (filter.equalsIgnoreCase("name")) {
+            nameFilter = value;
+        }
+        else if (filter.equalsIgnoreCase("sellerUsername")) {
+            if (User.getUserByUsername(value) == null || !(User.getUserByUsername(value) instanceof Seller)) {
+                System.out.println("There is no seller with this username!");
+            }
+            else {
+                sellerUsernameFilter = value;
+            }
+        }
+        else if (filter.equalsIgnoreCase("availability")) {
+            if (value.equalsIgnoreCase("1") || value.equalsIgnoreCase("0")) {
+                availabilityFilter = value;
+            }
+            else {
+                System.out.println("Invalid value!");
+            }
+        }
+        viewOffs();
+    }
+
+    private static void disableStaticFilter(String filter) {
+        if (filter.equalsIgnoreCase("category")) {
+            categoryFilter = "null";
+        }
+        else if (filter.equalsIgnoreCase("priceLow")) {
+            priceLowFilter = -1;
+        }
+        else if (filter.equalsIgnoreCase("priceHigh")) {
+            priceHighFilter = -1;
+        }
+        else if (filter.equalsIgnoreCase("brand")) {
+            brandFilter = "null";
+        }
+        else if (filter.equalsIgnoreCase("name")) {
+            nameFilter = "null";
+        }
+        else if (filter.equalsIgnoreCase("sellerUsername")) {
+            sellerUsernameFilter = "null";
+        }
+        else if (filter.equalsIgnoreCase("availability")) {
+            availabilityFilter = "null";
+        }
+        viewOffs();
+    }
+
     private static void printCurrentFilters() {
         for (String filter : filters) {
             System.out.print(filter + "\t");
         }
         System.out.println();
+        System.out.println("Category: " + categoryFilter);
+        System.out.println("Price Range: " + (priceLowFilter == -1 ? "none" : priceLowFilter) + " " + (priceHighFilter == -1 ? "none" : priceHighFilter));
+        System.out.println("Brand: " + brandFilter);
+        System.out.println("Name: " + nameFilter);
+        System.out.println("Seller Username: " + sellerUsernameFilter);
+        System.out.println("Category: " + categoryFilter);
+        System.out.println("Availability: " + availabilityFilter);
+        System.out.println("*******");
         System.out.println("*******");
     }
 
@@ -213,6 +313,8 @@ public class OffersMenu {
         System.out.println("show available filters");
         System.out.println("disable filter [filter]");
         System.out.println("filter [filter]");
+        System.out.println("disable [category|priceLow|priceHigh|brand|name|sellerUsername|availability] filter");
+        System.out.println("filter [category|priceLow|priceHigh|brand|name|sellerUsername|availability] [value]");
         System.out.println("login");
         System.out.println("logout");
         System.out.println("back");

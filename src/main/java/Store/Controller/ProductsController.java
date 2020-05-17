@@ -19,6 +19,52 @@ public class ProductsController {
             return products;
         }
     }
+
+    public static ArrayList<Product> handleStaticFiltering(ArrayList<Product> products, String category, double priceLow, double priceHigh, String brand, String name, String sellerUsername, String availability) {
+        ArrayList<Product> result = new ArrayList<Product>();
+        for (Product product : products) {
+            if (!category.equalsIgnoreCase("null") && !product.getCategory().getName().equalsIgnoreCase(category)) {
+                continue;
+            }
+            if (priceLow >= 0 || priceHigh >= 0) {
+                if (priceLow >= 0 && priceHigh >= 0) {
+                    if (!(priceLow <= product.getPrice() && product.getPrice() <= priceHigh)) {
+                        continue;
+                    }
+                }
+                else if (priceHigh >= 0) {
+                    if (!(product.getPrice() <= priceHigh)) {
+                        continue;
+                    }
+                }
+                else {
+                    if (!(priceLow <= product.getPrice())) {
+                        continue;
+                    }
+                }
+            }
+            if (!brand.equalsIgnoreCase("null") && !product.getBrand().equalsIgnoreCase(brand)) {
+                continue;
+            }
+            if (!name.equalsIgnoreCase("null") && !product.getName().contains(name)) {
+                continue;
+            }
+            if (!sellerUsername.equalsIgnoreCase("null") && !product.getSeller().getUsername().equalsIgnoreCase(sellerUsername)) {
+                continue;
+            }
+            if (!availability.equalsIgnoreCase("null")) {
+                if (availability.equalsIgnoreCase("1") && !product.getAvailablity()) {
+                    continue;
+                }
+                if (availability.equalsIgnoreCase("0") && product.getAvailablity()) {
+                    continue;
+                }
+            }
+            result.add(product);
+        }
+        return result;
+    }
+
     public static ArrayList<Product> sort(String currentSort, ArrayList<Product> products)
     {
         /*extra: sort by off */

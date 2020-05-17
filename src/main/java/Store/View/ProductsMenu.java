@@ -2,9 +2,7 @@ package Store.View;
 
 import Store.Controller.ProductsController;
 import Store.InputManager;
-import Store.Model.Customer;
-import Store.Model.Manager;
-import Store.Model.Product;
+import Store.Model.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,11 +16,22 @@ public class ProductsMenu {
     private static final String SORT_REGEX = "^sort (\\w+)$";
     private static final String SEARCH_REGEX = "^search (.+)$";
 
+    private static final String FILTER_STATIC_REGEX = "^filter (category|priceLow|priceHigh|brand|name|sellerUsername|availability) (\\w+)$";
+    private static final String DISABLE_FILTER_STATIC_REGEX = "^disable (category|priceLow|priceHigh|brand|name|sellerUsername|availability) filter$";
+
     private static ArrayList<String> filters = new ArrayList<String>();
     private static ArrayList<String> availableFilters = new ArrayList<String>();
     private static ArrayList<String> availableSorts = new ArrayList<String>(Arrays.asList("rating", "price", "visit", "lexicographical"));
     private static ArrayList<Product> productsToBeShown = new ArrayList<Product>();
     private static String currentSort = "visit";
+
+    private static String categoryFilter = "null";
+    private static double priceLowFilter = -1;
+    private static double priceHighFilter = -1;
+    private static String brandFilter = "null";
+    private static String nameFilter = "null";
+    private static String sellerUsernameFilter = "null";
+    private static String availabilityFilter = "null";
 
     public static void init() {
         currentSort = "visit";
@@ -81,7 +90,11 @@ public class ProductsMenu {
                 filter(matcher.group(1));
             } else if ((matcher = InputManager.getMatcher(input, DISABLE_FILTER_REGEX)).find()) {
                 disableFilter(matcher.group(1));
-            } else if (input.equalsIgnoreCase("login")) {
+            } else if ((matcher = InputManager.getMatcher(input, FILTER_STATIC_REGEX)).find()) {
+                staticFilter(matcher.group(1), matcher.group(2));
+            } else if ((matcher = InputManager.getMatcher(input, DISABLE_FILTER_STATIC_REGEX)).find()) {
+                disableStaticFilter(matcher.group(1));
+            }  else if (input.equalsIgnoreCase("login")) {
                 handleLogin();
                 System.out.println("\nProducts menu -> Filtering submenu\n");
             } else if (input.equalsIgnoreCase("logout")) {
@@ -97,6 +110,13 @@ public class ProductsMenu {
             System.out.print(filter + "\t");
         }
         System.out.println();
+        System.out.println("Category: " + categoryFilter);
+        System.out.println("Price Range: " + (priceLowFilter == -1 ? "none" : priceLowFilter) + " " + (priceHighFilter == -1 ? "none" : priceHighFilter));
+        System.out.println("Brand: " + brandFilter);
+        System.out.println("Name: " + nameFilter);
+        System.out.println("Seller Username: " + sellerUsernameFilter);
+        System.out.println("Category: " + categoryFilter);
+        System.out.println("Availability: " + availabilityFilter);
         System.out.println("*******");
     }
 
@@ -106,6 +126,79 @@ public class ProductsMenu {
         }
         System.out.println();
         System.out.println("*******");
+    }
+
+    private static void staticFilter(String filter, String value) {
+        if (filter.equalsIgnoreCase("category")) {
+            if (Category.getCategoryByName(value) == null) {
+                System.out.println("There is no category with this name!");
+            }
+            else {
+                categoryFilter = value;
+            }
+        }
+        else if (filter.equalsIgnoreCase("priceLow")) {
+            if (value.matches("\\d+(\\.\\d+)?")) {
+                priceLowFilter = Double.parseDouble(value);
+            }
+            else {
+                System.out.println("Invalid value!");
+            }
+        }
+        else if (filter.equalsIgnoreCase("priceHigh")) {
+            if (value.matches("\\d+(\\.\\d+)?")) {
+                priceHighFilter = Double.parseDouble(value);
+            }
+            else {
+                System.out.println("Invalid value!");
+            }
+        }
+        else if (filter.equalsIgnoreCase("brand")) {
+            brandFilter = value;
+        }
+        else if (filter.equalsIgnoreCase("name")) {
+            nameFilter = value;
+        }
+        else if (filter.equalsIgnoreCase("sellerUsername")) {
+            if (User.getUserByUsername(value) == null || !(User.getUserByUsername(value) instanceof Seller)) {
+                System.out.println("There is no seller with this username!");
+            }
+            else {
+                sellerUsernameFilter = value;
+            }
+        }
+        else if (filter.equalsIgnoreCase("availability")) {
+            if (value.equalsIgnoreCase("1") || value.equalsIgnoreCase("0")) {
+                availabilityFilter = value;
+            }
+            else {
+                System.out.println("Invalid value!");
+            }
+        }
+    }
+
+    private static void disableStaticFilter(String filter) {
+        if (filter.equalsIgnoreCase("category")) {
+            categoryFilter = "null";
+        }
+        else if (filter.equalsIgnoreCase("priceLow")) {
+            priceLowFilter = -1;
+        }
+        else if (filter.equalsIgnoreCase("priceHigh")) {
+            priceHighFilter = -1;
+        }
+        else if (filter.equalsIgnoreCase("brand")) {
+            brandFilter = "null";
+        }
+        else if (filter.equalsIgnoreCase("name")) {
+            nameFilter = "null";
+        }
+        else if (filter.equalsIgnoreCase("sellerUsername")) {
+            sellerUsernameFilter = "null";
+        }
+        else if (filter.equalsIgnoreCase("availability")) {
+            availabilityFilter = "null";
+        }
     }
 
     private static void filter(String filter) {
@@ -186,6 +279,8 @@ public class ProductsMenu {
 
     public static void showAllProducts() {
         productsToBeShown = ProductsController.getFilteredList(filters);
+        productsToBeShown = ProductsController.handleStaticFiltering(productsToBeShown, categoryFilter, priceLowFilter,
+                priceHighFilter, brandFilter, nameFilter, sellerUsernameFilter, availabilityFilter);
         productsToBeShown = ProductsController.sort(currentSort, productsToBeShown);
         for (Product product : productsToBeShown)
             System.out.println(product);
@@ -234,6 +329,8 @@ public class ProductsMenu {
         System.out.println("show available filters");
         System.out.println("disable filter [filter]");
         System.out.println("filter [filter]");
+        System.out.println("disable [category|priceLow|priceHigh|brand|name|sellerUsername|availability] filter");
+        System.out.println("filter [category|priceLow|priceHigh|brand|name|sellerUsername|availability] [value]");
         System.out.println("login");
         System.out.println("logout");
         System.out.println("back");

@@ -65,8 +65,7 @@ public class ProductMenu {
         return result;
     }
 
-    private static void digest(Product product) {
-        System.out.println("\nProduct menu of: " + product.getName() + " -> digest\n");
+    private static void digestPrintData(Product product) {
         System.out.println("Product Name: " + product.getName());
         System.out.println("Product Brand: " + product.getBrand());
         System.out.println("Description: " + product.getDescription());
@@ -88,6 +87,11 @@ public class ProductMenu {
             System.out.printf("--- This product is not available");
         }
         System.out.println();
+    }
+
+    private static void digest(Product product) {
+        System.out.println("\nProduct menu of: " + product.getName() + " -> digest\n");
+        digestPrintData(product);
 
         String input;
         Matcher matcher;
@@ -97,6 +101,7 @@ public class ProductMenu {
             }
             else if ((matcher = InputManager.getMatcher(input, SELECT_SELLER_REGEX)).find()) {
                 product = selectSeller(product, matcher.group(1));
+                digestPrintData(product);
             }
             else if (input.equalsIgnoreCase("login")) {
                 handleLogin();

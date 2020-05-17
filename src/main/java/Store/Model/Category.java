@@ -56,6 +56,15 @@ public class Category implements Serializable {
         return null;
     }
 
+    public static Category getCategoryByName(String name) {
+        for (Category category : Manager.getAllCategories()) {
+            if (category.getName().equalsIgnoreCase(name)) {
+                return category;
+            }
+        }
+        return null;
+    }
+
     public void addToCategory(Product product) {
         if (this.parent == null) {
             this.immediateProducts.add(product);
