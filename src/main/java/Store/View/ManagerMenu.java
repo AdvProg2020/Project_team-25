@@ -356,7 +356,7 @@ public class ManagerMenu {
     }
 
     private static void viewOffCode(String attribute) {
-        if (Manager.getOffCodeByCode(attribute) == null) {
+        if (Manager.getOffCodeByCode(attribute) != null) {
             System.out.println(Manager.getOffCodeByCode(attribute));
             return;
         }
