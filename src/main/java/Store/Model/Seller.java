@@ -189,9 +189,6 @@ public class Seller extends User {
             return false;
         }
         Seller seller = (Seller) object;
-        if(super.equals(seller))
-            if(companyName.equals(seller.getCompanyName()) && companyDescription.equals(seller.getCompanyDescription()) && offers.equals(seller.getOffers()) && sellLog.equals(seller.getSellLog()) && products.equals(seller.getProducts()))
-                return true;
-        return false;
+        return (super.equals(object));
     }
 }

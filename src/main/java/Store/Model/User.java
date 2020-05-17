@@ -157,10 +157,8 @@ public class User implements Serializable {
             return true;
         }
         if ((user != null && object != null)) {
-            if (username.equals(user.getUsername()) && email.equals(user.getEmail()) && phoneNumber.equals(user.getPhoneNumber()) && familyName.equals(user.getFamilyName()) && name.equals(user.getName())) {
-                if ((type == null && user.getType() == null) || type.equals(user.getType())) {
-                    return true;
-                }
+            if (username.equals(user.getUsername())) {
+                return true;
             }
         }
         return false;

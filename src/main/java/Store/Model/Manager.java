@@ -1,5 +1,8 @@
 package Store.Model;
 
+import Store.Model.Enums.RequestType;
+import Store.Model.Enums.VerifyStatus;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
@@ -145,10 +148,194 @@ public class Manager extends User {
         if (accepted) {
             Seller.doRequest(request);
             request.setStatus(ACCEPTED);
+            eraseRequestsInCommonWithThisRequest(request);
         } else {
             request.setStatus(REJECTED);
         }
         pendingRequests.remove(request);
+    }
+
+    public static void eraseRequestsInCommonWithThisRequest(Request mainRequest)
+    {
+        ArrayList<Request> delRequests = new ArrayList<>();
+        Seller seller = mainRequest.getSeller();
+        if(mainRequest.getRequestType() == RequestType.CHANGE_PRODUCT)
+        {
+            for (Request request: pendingRequests)
+            {
+                if (mainRequest != request && request.getSeller().equals(seller)) {
+                    if(request.getRequestType() == RequestType.CHANGE_PRODUCT)
+                    {
+                        if (request.getProduct().equals(mainRequest.getProduct()))
+                            delRequests.add(request);
+                        else if (mainRequest.getNewProduct().equals(request.getNewProduct()))
+                            delRequests.add(request);
+                    }
+                    else if(request.getRequestType() == RequestType.ADD_NEW_PRODUCT)
+                    {
+                        if (mainRequest.getNewProduct().equals(request.getProduct()))
+                            delRequests.add(request);
+                    }
+                }
+            }
+        }
+        else if(mainRequest.getRequestType() == RequestType.ADD_NEW_PRODUCT)
+        {
+            for (Request request: pendingRequests)
+            {
+                if (mainRequest != request && request.getSeller().equals(seller)) {
+                    if(request.getRequestType() == RequestType.CHANGE_PRODUCT)
+                    {
+                        if (request.getNewProduct().equals(mainRequest.getProduct()))
+                            delRequests.add(request);
+                    }
+                    else if(request.getRequestType() == RequestType.ADD_NEW_PRODUCT)
+                    {
+                        if (request.getProduct().equals(mainRequest.getProduct()))
+                            delRequests.add(request);
+                    }
+                }
+            }
+        }
+        else if (mainRequest.getRequestType() == RequestType.ADD_NEW_OFFER)
+        {
+            for (Request request: pendingRequests)
+            {
+                if (mainRequest != request && request.getSeller().equals(seller)) {
+                    if(request.getRequestType() == RequestType.CHANGE_OFFER)
+                    {
+                        if (mainRequest.getOffer().equals(request.getNewOffer()))
+                            delRequests.add(request);
+                    }
+                    else if(request.getRequestType() == RequestType.ADD_NEW_OFFER)
+                    {
+                        if (mainRequest.getOffer().equals(request.getOffer()))
+                            delRequests.add(request);
+                    }
+                }
+            }
+        }
+        else if (mainRequest.getRequestType() == RequestType.CHANGE_OFFER)
+        {
+            for (Request request: pendingRequests)
+            {
+                if (mainRequest != request && request.getSeller().equals(seller)) {
+                    if(request.getRequestType() == RequestType.CHANGE_OFFER)
+                    {
+                        if (request.getOffer().equals(mainRequest.getOffer()))
+                            delRequests.add(request);
+                        else if(request.getNewOffer().equals(mainRequest.getNewOffer()))
+                            delRequests.add(request);
+                    }
+                    else if(request.getRequestType() == RequestType.ADD_NEW_OFFER)
+                    {
+                        if (mainRequest.getNewOffer().equals(request.getOffer()))
+                            delRequests.add(request);
+                    }
+                }
+            }
+        }
+        else if (mainRequest.getRequestType() == RequestType.REGISTER_SELLER)
+        {
+            for (Request request: pendingRequests)
+            {
+                if (mainRequest != request && request.getSeller().equals(seller)) {
+                    if(request.getRequestType() == RequestType.REGISTER_SELLER)
+                    {
+                        if (request.getSeller().equals(mainRequest.getSeller()))
+                            delRequests.add(request);
+                    }
+                }
+            }
+        }
+        for (Request request: delRequests) {
+            request.setStatus(VerifyStatus.REJECTED);
+            pendingRequests.remove(request);
+        }
+    }
+
+    private static void eraseRequestsIncludeProduct(Product product, Seller seller, Request mainRequest)
+    {
+        ArrayList<Request> delRequests = new ArrayList<>();
+        if(mainRequest.getRequestType() == RequestType.CHANGE_PRODUCT)
+        {
+            for (Request request: pendingRequests)
+            {
+                if (mainRequest != request && request.getSeller().equals(seller)) {
+                    if(request.getRequestType() == RequestType.CHANGE_PRODUCT)
+                    {
+
+                    }
+                    else if(request.getRequestType() == RequestType.ADD_NEW_PRODUCT)
+                    {
+
+                    }
+                }
+            }
+        }
+        else if(mainRequest.getRequestType() == RequestType.ADD_NEW_PRODUCT)
+        {
+            for (Request request: pendingRequests)
+            {
+                if (mainRequest != request && request.getSeller().equals(seller)) {
+                    if(request.getRequestType() == RequestType.CHANGE_PRODUCT)
+                    {
+
+                    }
+                    else if(request.getRequestType() == RequestType.ADD_NEW_PRODUCT)
+                    {
+
+                    }
+                }
+            }
+        }
+        else if (mainRequest.getRequestType() == RequestType.ADD_NEW_OFFER)
+        {
+            for (Request request: pendingRequests)
+            {
+                if (mainRequest != request && request.getSeller().equals(seller)) {
+                    if(request.getRequestType() == RequestType.CHANGE_OFFER)
+                    {
+
+                    }
+                    else if(request.getRequestType() == RequestType.ADD_NEW_OFFER)
+                    {
+
+                    }
+                }
+            }
+        }
+        else if (mainRequest.getRequestType() == RequestType.CHANGE_OFFER)
+        {
+            for (Request request: pendingRequests)
+            {
+                if (mainRequest != request && request.getSeller().equals(seller)) {
+                    if(request.getRequestType() == RequestType.CHANGE_OFFER)
+                    {
+
+                    }
+                    else if(request.getRequestType() == RequestType.ADD_NEW_OFFER)
+                    {
+
+                    }
+                }
+            }
+        }
+        for (Request request: delRequests)
+            pendingRequests.remove(request);
+    }
+
+    private static void eraseRequestsIncludeSeller(Seller seller, Request mainRequest)
+    {
+        ArrayList<Request> delRequests = new ArrayList<>();
+        for(Request request: pendingRequests)
+        {
+            if (mainRequest != request)
+                if(request.getSeller().equals(seller))
+                    delRequests.add(request);
+        }
+        for (Request request: delRequests)
+            pendingRequests.remove(request);
     }
 
     public void addNewManager(Manager manager) {

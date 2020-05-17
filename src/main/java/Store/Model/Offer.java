@@ -1,12 +1,10 @@
 package Store.Model;
 
-import Store.Model.Product;
 import Store.Model.Enums.CheckingStatus;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 
 public class Offer implements Serializable {
     private int offID;
@@ -203,5 +201,17 @@ public class Offer implements Serializable {
                 ", offPercent=" + offPercent +
                 ", Products=" + this.products +
                 '}';
+    }
+    @Override
+    public boolean equals(Object object)
+    {
+        Offer offer = (Offer) object;
+        if(user.equals(offer.getUser()))
+        {
+            for(Product product: products)
+                if (offer.isProductInOffer(product))
+                    return true;
+        }
+        return false;
     }
 }

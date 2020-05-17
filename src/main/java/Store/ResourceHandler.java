@@ -18,6 +18,7 @@ public class ResourceHandler {
             Offer.setIdCounter((int) objectInputStream.readObject());
             Category.setIdCounter((int) objectInputStream.readObject());
             Manager.hasManager = (boolean) objectInputStream.readObject();
+            Manager.setPeriodOffCodeDate((Date) objectInputStream.readObject());
 
             User.setAllUsers((ArrayList<User>) objectInputStream.readObject());
             Request.setAllRequests((ArrayList<Request>) objectInputStream.readObject());
@@ -27,7 +28,6 @@ public class ResourceHandler {
             Manager.setAllCategories((ArrayList<Category>) objectInputStream.readObject());
             Manager.setOffCodes((ArrayList<OffCode>) objectInputStream.readObject());
             Manager.setPendingRequests((ArrayList<Request>) objectInputStream.readObject());
-            Manager.setPeriodOffCodeDate((Date) objectInputStream.readObject());
 
             Product.calculateAllFilters();
 
@@ -55,6 +55,7 @@ public class ResourceHandler {
             objectOutputStream.writeObject(Offer.getIdCounter());
             objectOutputStream.writeObject(Category.getIdCounter());
             objectOutputStream.writeObject(Manager.hasManager);
+            objectOutputStream.writeObject(Manager.getPeriodOffCodeDate());
 
             objectOutputStream.writeObject(User.getAllUsers());
             objectOutputStream.writeObject(Request.getAllRequests());
@@ -64,7 +65,6 @@ public class ResourceHandler {
             objectOutputStream.writeObject(Manager.getAllCategories());
             objectOutputStream.writeObject(Manager.getOffCodes());
             objectOutputStream.writeObject(Manager.getPendingRequests());
-            objectOutputStream.writeObject(Manager.getPeriodOffCodeDate());
 
             objectOutputStream.close();
             outputStream.close();

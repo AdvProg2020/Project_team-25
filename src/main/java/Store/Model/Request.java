@@ -1,6 +1,5 @@
 package Store.Model;
 
-import Store.Model.Product;
 import Store.Model.Enums.RequestType;
 import Store.Model.Enums.VerifyStatus;
 
@@ -47,6 +46,7 @@ public class Request implements Serializable {
             this.newObject = newObject;
         }
         this.status = VerifyStatus.WAITING;
+
         allRequests.add(this);
     }
 
