@@ -42,11 +42,11 @@ public class MainMenu {
                 System.out.println("\nMain menu\n");
             }
             else if (input.equalsIgnoreCase("login")) {
-                handleLogin();
+                SignUpAndLoginMenu.loginWrapper();
                 System.out.println("\nMain menu\n");
             }
             else if (input.equalsIgnoreCase("logout")) {
-                handleLogout();
+                SignUpAndLoginMenu.logoutWrapper();
             }
             else if (input.equalsIgnoreCase("help")) {
                 printHelp();
@@ -79,33 +79,5 @@ public class MainMenu {
         System.out.println("help");
         System.out.println("exit");
         System.out.println("*******");
-    }
-
-    private static void handleLogin() {
-        if (MainMenu.currentUser == MainMenu.guest) {
-            SignUpAndLoginMenu.init();
-            if (MainMenu.currentUser != MainMenu.guest) {
-                moveShoppingCart();
-            }
-        } else {
-            System.out.println("You have signed in!");
-        }
-    }
-
-    private static void moveShoppingCart() {
-        if (MainMenu.currentUser instanceof Customer) {
-            for (Product product : MainMenu.guest.getCart()) {
-                ((Customer) MainMenu.currentUser).addToCart(product);
-            }
-        }
-        MainMenu.guest.getCart().clear();
-    }
-
-    private static void handleLogout() {
-        if (MainMenu.currentUser == MainMenu.guest) {
-            System.out.println("You haven't signed in!");
-        } else {
-            MainMenu.currentUser = MainMenu.guest;
-        }
     }
 }

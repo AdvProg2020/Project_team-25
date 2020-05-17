@@ -40,11 +40,11 @@ public class ProductMenu {
                 System.out.println("\nProduct menu of: " + product.getName() + "\n");
             }
             else if (input.equalsIgnoreCase("login")) {
-                handleLogin();
+                SignUpAndLoginMenu.loginWrapper();
                 System.out.println("\nProduct menu of: " + product.getName() + "\n");
             }
             else if (input.equalsIgnoreCase("logout")) {
-                handleLogout();
+                SignUpAndLoginMenu.logoutWrapper();
             }
             else if (input.equalsIgnoreCase("help")) {
                 printHelp();
@@ -104,11 +104,11 @@ public class ProductMenu {
                 digestPrintData(product);
             }
             else if (input.equalsIgnoreCase("login")) {
-                handleLogin();
+                SignUpAndLoginMenu.loginWrapper();
                 System.out.println("\nProduct menu of: " + product.getName() + " -> digest\n");
             }
             else if (input.equalsIgnoreCase("logout")) {
-                handleLogout();
+                SignUpAndLoginMenu.logoutWrapper();
             }
             else {
                 System.out.println("Invalid command!");
@@ -265,11 +265,11 @@ public class ProductMenu {
                 addComment(product);
             }
             else if (input.equalsIgnoreCase("login")) {
-                handleLogin();
+                SignUpAndLoginMenu.loginWrapper();
                 System.out.println("\nProduct menu of: " + product.getName() + " -> Show Comments\n");
             }
             else if (input.equalsIgnoreCase("logout")) {
-                handleLogout();
+                SignUpAndLoginMenu.logoutWrapper();
             }
             else {
                 System.out.println("Invalid command!");
@@ -304,34 +304,5 @@ public class ProductMenu {
         System.out.println("logout");
         System.out.println("back");
         System.out.println("*******");
-    }
-
-    private static void handleLogin() {
-        if (MainMenu.currentUser == MainMenu.guest) {
-            SignUpAndLoginMenu.init();
-            if (MainMenu.currentUser != MainMenu.guest) {
-                moveShoppingCart();
-            }
-        } else {
-            System.out.println("You have signed in!");
-        }
-    }
-
-    private static void moveShoppingCart() {
-        if (MainMenu.currentUser instanceof Customer) {
-            for (Product product : MainMenu.guest.getCart()) {
-                ((Customer) MainMenu.currentUser).addToCart(product);
-            }
-        }
-        MainMenu.guest.getCart().clear();
-    }
-
-    private static void handleLogout() {
-        if (MainMenu.currentUser == MainMenu.guest) {
-            System.out.println("You haven't signed in!");
-        } else {
-            MainMenu.currentUser = MainMenu.guest;
-            MainMenu.init();
-        }
     }
 }

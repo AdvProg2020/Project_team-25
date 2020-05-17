@@ -52,7 +52,7 @@ public class CustomerMenu {
                 OffersMenu.init();
                 System.out.println("\nCustomer menu\n");
             } else if (input.equalsIgnoreCase("logout")) {
-                handleLogout();
+                SignUpAndLoginMenu.logoutWrapper();
             } else {
                 System.out.println("Invalid command!");
             }
@@ -71,6 +71,8 @@ public class CustomerMenu {
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if ((matcher = InputManager.getMatcher(input, EDIT_PERSONAL_INFO)).find()) {
                 editPersonalInfoWrapper(matcher.group(1));
+            } else if (input.equalsIgnoreCase("logout")) {
+                SignUpAndLoginMenu.logoutWrapper();
             } else {
                 System.out.println("Invalid command!");
             }
@@ -124,6 +126,8 @@ public class CustomerMenu {
             } else if (input.equalsIgnoreCase("purchase")) {
                 purchaseWrapper();
                 break;
+            } else if (input.equalsIgnoreCase("logout")) {
+                SignUpAndLoginMenu.logoutWrapper();
             } else {
                 System.out.println("Invalid command!");
             }
@@ -134,7 +138,6 @@ public class CustomerMenu {
         for (Product product : customer.getCart()) {
             System.out.println(product);
             System.out.println("*******");
-            ;
         }
     }
 
@@ -267,14 +270,5 @@ public class CustomerMenu {
         System.out.println("back");
         System.out.println("*******");
 
-    }
-
-    private static void handleLogout() {
-        if (MainMenu.currentUser == MainMenu.guest) {
-            System.out.println("You haven't signed in!");
-        } else {
-            MainMenu.currentUser = MainMenu.guest;
-            MainMenu.init();
-        }
     }
 }

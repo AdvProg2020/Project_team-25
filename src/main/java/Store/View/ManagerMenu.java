@@ -73,7 +73,7 @@ public class ManagerMenu {
                 OffersMenu.init();
                 System.out.println("\nManager menu\n");
             } else if (input.equalsIgnoreCase("logout")) {
-                handleLogout();
+                SignUpAndLoginMenu.logoutWrapper();
             } else {
                 System.out.println("Invalid command!");
             }
@@ -84,7 +84,7 @@ public class ManagerMenu {
     {
         OffCode offCode = null;
         String input;
-        System.out.println("discount code: ");
+        System.out.println("Discount code: ");
         input = InputManager.getNextLine();
         if(Manager.getOffCodeByCode(input) == null)
             System.out.println("Wrong code");
@@ -93,7 +93,7 @@ public class ManagerMenu {
             System.out.println("Customer: ");
             input = InputManager.getNextLine();
             if(User.getUserByUsername(input) == null || !(User.getUserByUsername(input) instanceof Customer))
-                System.out.println("Wrong customer username");
+                System.out.println("Wrong customer username!");
             else if(!offCode.isUserIncluded(User.getUserByUsername(input)))
                 currentUser.assignOffCodeToUser(offCode, (Customer)User.getUserByUsername(input));
         }
@@ -156,6 +156,8 @@ public class ManagerMenu {
                 deleteUserByNameWrapper(matcher.group(1));
             } else if ((input.equalsIgnoreCase("create manager profile"))) {
                 createManagerProfileWrapper();
+            } else if (input.equalsIgnoreCase("logout")) {
+                SignUpAndLoginMenu.logoutWrapper();
             } else {
                 System.out.println("Invalid command!");
             }
@@ -226,6 +228,8 @@ public class ManagerMenu {
                 removeProductsWrapper(matcher.group(1));
             } else if ((matcher = InputManager.getMatcher(input, SORT_BY_REGEX)).find()) {
                 sortProductsAndOutput(matcher.group(1));
+            } else if (input.equalsIgnoreCase("logout")) {
+                SignUpAndLoginMenu.logoutWrapper();
             } else {
                 System.out.println("Invalid command!");
             }
@@ -323,6 +327,8 @@ public class ManagerMenu {
                 removeOffCodeWrapper(matcher.group(1));
             } else if ((matcher = InputManager.getMatcher(input, EDIT_DISCOUNT_CODE)).find()) {
                 editOffCodeWrapper(matcher.group(1), matcher.group(2), matcher.group(3));
+            } else if (input.equalsIgnoreCase("logout")) {
+                SignUpAndLoginMenu.logoutWrapper();
             } else {
                 System.out.println("Invalid command!");
             }
@@ -378,6 +384,8 @@ public class ManagerMenu {
             }
             else if ((matcher = InputManager.getMatcher(input, DECLINE_REQUEST)).find()) {
                 handleRequestWrapper(false, Integer.parseInt(matcher.group(1)));
+            } else if (input.equalsIgnoreCase("logout")) {
+                SignUpAndLoginMenu.logoutWrapper();
             } else {
                 System.out.println("Invalid command!");
             }
@@ -421,6 +429,8 @@ public class ManagerMenu {
             }
             else if ((matcher = InputManager.getMatcher(input, REMOVE_CATEGORY)).find()) {
                 removeCategoryWrapper(matcher.group(1));
+            } else if (input.equalsIgnoreCase("logout")) {
+                SignUpAndLoginMenu.logoutWrapper();
             } else {
                 System.out.println("Invalid command!");
             }
@@ -512,14 +522,5 @@ public class ManagerMenu {
         System.out.println("remove [name]");
         System.out.println("back");
         System.out.println("*******");
-    }
-
-    private static void handleLogout() {
-        if (MainMenu.currentUser == MainMenu.guest) {
-            System.out.println("You haven't signed in!");
-        } else {
-            MainMenu.currentUser = MainMenu.guest;
-            MainMenu.init();
-        }
     }
 }

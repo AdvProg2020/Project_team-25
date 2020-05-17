@@ -62,9 +62,9 @@ public class ProductsMenu {
                 OffersMenu.init();
                 System.out.println("\nProducts Menu\n");
             } else if (input.equalsIgnoreCase("logout")) {
-                handleLogout();
+                SignUpAndLoginMenu.logoutWrapper();
             } else if (input.equalsIgnoreCase("login")) {
-                handleLogin();
+                SignUpAndLoginMenu.loginWrapper();
                 System.out.println("\nProducts Menu\n");
             } else {
                 System.out.println("Invalid command!");
@@ -95,10 +95,10 @@ public class ProductsMenu {
             } else if ((matcher = InputManager.getMatcher(input, DISABLE_FILTER_STATIC_REGEX)).find()) {
                 disableStaticFilter(matcher.group(1));
             }  else if (input.equalsIgnoreCase("login")) {
-                handleLogin();
+                SignUpAndLoginMenu.loginWrapper();
                 System.out.println("\nProducts menu -> Filtering submenu\n");
             } else if (input.equalsIgnoreCase("logout")) {
-                handleLogout();
+                SignUpAndLoginMenu.logoutWrapper();
             } else {
                 System.out.println("Invalid command!");
             }
@@ -239,10 +239,10 @@ public class ProductsMenu {
             } else if ((matcher = InputManager.getMatcher(input, SORT_REGEX)).find()) {
                 sort(matcher.group(1));
             } else if (input.equalsIgnoreCase("login")) {
-                handleLogin();
+                SignUpAndLoginMenu.loginWrapper();
                 System.out.println("\nProducts menu -> Sorting submenu\n");
             } else if (input.equalsIgnoreCase("logout")) {
-                handleLogout();
+                SignUpAndLoginMenu.logoutWrapper();
             } else {
                 System.out.println("Invalid command!");
             }
@@ -290,10 +290,9 @@ public class ProductsMenu {
     public static void showProductsWithSearchQuery(String query) {
         productsToBeShown = ProductsController.getFilteredList(filters);
         productsToBeShown = ProductsController.sort(currentSort, productsToBeShown);
+        productsToBeShown = ProductsController.filterProductsWithSearchQuery(productsToBeShown, query);
         for (Product product : productsToBeShown) {
-            if (InputManager.getMatcher(product.getName(), query).find()) {
-                System.out.println(product);
-            }
+            System.out.println(product);
         }
         System.out.println("*******");
     }
@@ -345,34 +344,5 @@ public class ProductsMenu {
         System.out.println("logout");
         System.out.println("back");
         System.out.println("*******");
-    }
-
-    private static void handleLogin() {
-        if (MainMenu.currentUser == MainMenu.guest) {
-            SignUpAndLoginMenu.init();
-            if (MainMenu.currentUser != MainMenu.guest) {
-                moveShoppingCart();
-            }
-        } else {
-            System.out.println("You have signed in!");
-        }
-    }
-
-    private static void moveShoppingCart() {
-        if (MainMenu.currentUser instanceof Customer) {
-            for (Product product : MainMenu.guest.getCart()) {
-                ((Customer) MainMenu.currentUser).addToCart(product);
-            }
-        }
-        MainMenu.guest.getCart().clear();
-    }
-
-    private static void handleLogout() {
-        if (MainMenu.currentUser == MainMenu.guest) {
-            System.out.println("You haven't signed in!");
-        } else {
-            MainMenu.currentUser = MainMenu.guest;
-            MainMenu.init();
-        }
     }
 }
