@@ -285,7 +285,7 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return "(" + this.name + " ID:" + this.productID + " Seller:" + this.getSeller().getName()
+        return "(" + this.name + " ID:" + this.productID + " Seller:" + this.getSeller().getUsername()
                 + " Price:" + this.getPrice() + ", " + this.filters + ")";
     }
 }
