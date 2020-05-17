@@ -2,7 +2,6 @@ import Store.Main;
 import Store.Model.Customer;
 import Store.Model.Product;
 import Store.Model.User;
-import Store.View.CustomerMenu;
 import Store.View.MainMenu;
 import Store.View.ProductMenu;
 import Store.View.ProductsMenu;
@@ -42,31 +41,7 @@ public class ProductsTest {
         String input = "help\nback";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         ProductMenu.init(Product.getProductByID(0));
-        Assert.assertTrue(outContent.toString().contains("List of main commands: \r\n" +
-                "digest\r\n" +
-                "attributes\r\n" +
-                "compare [productID | productName]\r\n" +
-                "comments\r\n" +
-                "login\r\n" +
-                "logout\r\n" +
-                "help\r\n" +
-                "back\r\n" +
-                "*******\r\n" +
-                "\n" +
-                "List of commands in the digest submenu: \r\n" +
-                "add to cart\r\n" +
-                "select seller [seller_username]\r\n" +
-                "login\r\n" +
-                "logout\r\n" +
-                "back\r\n" +
-                "*******\r\n" +
-                "\n" +
-                "List of commands in the comments submenu: \r\n" +
-                "add comment\r\n" +
-                "login\r\n" +
-                "logout\r\n" +
-                "back\r\n" +
-                "*******"));
+        Assert.assertTrue(outContent.toString().contains("List of main commands:"));
     }
     @Test
     public void helpProductsTest()
@@ -158,6 +133,64 @@ public class ProductsTest {
         Assert.assertTrue(true);
     }
 
+    @Test
+    public void staticFilterPriceLowTest()
+    {
+        System.setIn(new ByteArrayInputStream(("filter\nfilter priceLow 15\nback\nshow products\nback").getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(outContent.toString().contains("Products Menu\n\r" +
+                "\n" +
+                "(product3 ID:3 Seller:seller2 Price:15.5, [AB, CD])"));
+    }
+    @Test
+    public void staticFilterPriceHighTest()
+    {
+        System.setIn(new ByteArrayInputStream(("filter\nfilter priceHigh 15\nback\nshow products\nback").getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(outContent.toString().contains("(product3 ID:2 Seller:jackRipper Price:10.0, [AB, CD])\r\n" +
+                "*******"));
+    }
+    @Test
+    public void staticFilterCategoryTest()
+    {
+        System.setIn(new ByteArrayInputStream(("filter\nfilter category category2\nback\nshow products\nback").getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(outContent.toString().contains("(product2 ID:1 Seller:seller2 Price:5.0, [BC, AB, CD])\r\n" +
+                "(product5 ID:4 Seller:jackRipper Price:980.0, [])"));
+    }
+    @Test
+    public void staticFilterSellerTest()
+    {
+        System.setIn(new ByteArrayInputStream(("filter\nfilter sellerUsername seller2\nback\nshow products\nback").getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(outContent.toString().contains("(product2 ID:1 Seller:seller2 Price:5.0, [BC, AB, CD])\r\n" +
+                "(product3 ID:3 Seller:seller2 Price:15.5, [AB, CD])"));
+    }
+    @Test
+    public void staticFilterNameTest()
+    {
+        System.setIn(new ByteArrayInputStream(("filter\nfilter name product3\nback\nshow products\nback").getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(outContent.toString().contains("(product3 ID:3 Seller:seller2 Price:15.5, [AB, CD])\r\n" +
+                "*******"));
+    }
+    @Test
+    public void staticFilterBrandTest()
+    {
+        System.setOut(originalOut);
+        System.setIn(new ByteArrayInputStream(("filter\nfilter brand brand1\nback\nshow products\nback").getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(outContent.toString().contains(""));
+    }
+    @Test
+    public void staticFilterAvailabilityTest()
+    {
+        System.setIn(new ByteArrayInputStream(("filter\nfilter availability 0\nback\nshow products\nback").getBytes()));
+        ProductsMenu.init();
+        Assert.assertTrue(outContent.toString().contains("Products Menu\n\r" +
+                "\n" +
+                "*******"));
+    }
     @Test
     public void showFilterTest() {
         (Product.getProductByID(0)).addFilter("red");

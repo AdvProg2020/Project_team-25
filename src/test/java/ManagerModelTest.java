@@ -1,7 +1,6 @@
 import Store.Main;
 import Store.Model.*;
 import Store.Model.Enums.VerifyStatus;
-import Store.View.CustomerMenu;
 import Store.View.MainMenu;
 import Store.View.ManagerMenu;
 import org.junit.Assert;
@@ -78,11 +77,12 @@ public class ManagerModelTest {
     @Test
     public void DeleteSellerTest() {
         Main.setTest();
+        Main.setOffers();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
-        System.setIn(new ByteArrayInputStream(("manage users\ndelete user seller1\nback\nback\n").getBytes()));
+        System.setIn(new ByteArrayInputStream(("manage users\ndelete user seller2\nback\nback\n").getBytes()));
         ManagerMenu.init();
-        Assert.assertEquals(null, Manager.getUserByUsername("seller1"));
+        Assert.assertEquals(null, Manager.getUserByUsername("seller2"));
     }
 
     @Test

@@ -22,8 +22,9 @@ public class OffCode implements Serializable {
     }
 
     public void remove() {
-        for (User user : this.users) {
-            ((Customer) user).removeOffCodeOfUser(this);
+        for (User user : User.getAllUsers()) {
+            if(user instanceof Customer && this.isUserIncluded(user))
+                ((Customer) user).removeOffCodeOfUser(this);
         }
     }
 
