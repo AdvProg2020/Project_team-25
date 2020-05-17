@@ -1,5 +1,6 @@
 package Store.Controller;
 
+import Store.InputManager;
 import Store.Model.Product;
 
 import java.util.ArrayList;
@@ -127,5 +128,15 @@ public class ProductsController {
         {
             return products;
         }
+    }
+
+    public static ArrayList<Product> filterProductsWithSearchQuery(ArrayList<Product> productsToBeShown, String query) {
+        ArrayList<Product> result = new ArrayList<Product>();
+        for (Product product : productsToBeShown) {
+            if (InputManager.getMatcher(product.getName(), query).find()) {
+                result.add(product);
+            }
+        }
+        return result;
     }
 }

@@ -78,7 +78,7 @@ public class SellerMenu {
                 System.out.println("\nSeller menu\n");
             }
             else if (input.equalsIgnoreCase("logout")) {
-                handleLogout();
+                SignUpAndLoginMenu.logoutWrapper();
             }
             else if (input.equalsIgnoreCase("help")) {
                 printHelp();
@@ -100,7 +100,7 @@ public class SellerMenu {
                 editPersonalInfoWrapper(seller, matcher.group(1));
             }
             else if (input.equalsIgnoreCase("logout")) {
-                handleLogout();
+                SignUpAndLoginMenu.logoutWrapper();
             }
             else if (input.equalsIgnoreCase("help")) {
                 printHelp();
@@ -188,7 +188,7 @@ public class SellerMenu {
                 System.out.println(SellerController.removeFilterFromProduct(seller, matcher.group(1), matcher.group(2)));
             }
             else if (input.equalsIgnoreCase("logout")) {
-                handleLogout();
+                SignUpAndLoginMenu.logoutWrapper();
             }
             else if (input.equalsIgnoreCase("help")) {
                 printHelp();
@@ -375,7 +375,7 @@ public class SellerMenu {
                 System.out.println(SellerController.removeFilterFromOffer(seller, matcher.group(1), matcher.group(2)));
             }
             else if (input.equalsIgnoreCase("logout")) {
-                handleLogout();
+                SignUpAndLoginMenu.logoutWrapper();
             }
             else if (input.equalsIgnoreCase("help")) {
                 printHelp();
@@ -552,14 +552,5 @@ public class SellerMenu {
         System.out.println("logout");
         System.out.println("back");
         System.out.println("*******");
-    }
-
-    private static void handleLogout() {
-        if (MainMenu.currentUser == MainMenu.guest) {
-            System.out.println("You haven't signed in!");
-        } else {
-            MainMenu.currentUser = MainMenu.guest;
-            MainMenu.init();
-        }
     }
 }

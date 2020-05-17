@@ -2,10 +2,7 @@ package Store.View;
 
 import Store.Controller.SignUpAndLoginController;
 import Store.InputManager;
-import Store.Model.Customer;
-import Store.Model.Manager;
-import Store.Model.Seller;
-import Store.Model.User;
+import Store.Model.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -100,6 +97,15 @@ public class SignUpAndLoginMenu {
         return false;
     }
 
+    public static void logoutWrapper() {
+        if (MainMenu.currentUser == MainMenu.guest) {
+            System.out.println("You haven't signed in!");
+        } else {
+            MainMenu.currentUser = MainMenu.guest;
+            MainMenu.init();
+        }
+    }
+
     private static void printHelp() {
         System.out.println("create account [type] [username]");
         System.out.println("login [username]");
@@ -107,5 +113,25 @@ public class SignUpAndLoginMenu {
         System.out.println("offs");
         System.out.println("products");
         System.out.println("back");
+    }
+
+    public static void loginWrapper() {
+        if (MainMenu.currentUser == MainMenu.guest) {
+            SignUpAndLoginMenu.init();
+            if (MainMenu.currentUser != MainMenu.guest) {
+                moveShoppingCart();
+            }
+        } else {
+            System.out.println("You have signed in!");
+        }
+    }
+
+    private static void moveShoppingCart() {
+        if (MainMenu.currentUser instanceof Customer) {
+            for (Product product : MainMenu.guest.getCart()) {
+                ((Customer) MainMenu.currentUser).addToCart(product);
+            }
+        }
+        MainMenu.guest.getCart().clear();
     }
 }

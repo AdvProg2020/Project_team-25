@@ -51,10 +51,10 @@ public class OffersMenu {
                 sorting();
                 System.out.println("\nOffers menu\n");
             } else if (input.equalsIgnoreCase("login")) {
-                handleLogin();
+                SignUpAndLoginMenu.loginWrapper();
                 System.out.println("\nOffers menu\n");
             } else if (input.equalsIgnoreCase("logout")) {
-                handleLogout();
+                SignUpAndLoginMenu.logoutWrapper();
             } else if (input.equalsIgnoreCase("help")) {
                 printHelp();
             } else if (input.equalsIgnoreCase("products")) {
@@ -111,10 +111,10 @@ public class OffersMenu {
             } else if ((matcher = InputManager.getMatcher(input, DISABLE_FILTER_STATIC_REGEX)).find()) {
                 disableStaticFilter(matcher.group(1));
             } else if (input.equalsIgnoreCase("login")) {
-                handleLogin();
+                SignUpAndLoginMenu.loginWrapper();
                 System.out.println("\nOffers menu -> Filtering submenu\n");
             } else if (input.equalsIgnoreCase("logout")) {
-                handleLogout();
+                SignUpAndLoginMenu.logoutWrapper();
             } else {
                 System.out.println("Invalid command!");
             }
@@ -257,10 +257,10 @@ public class OffersMenu {
             } else if ((matcher = InputManager.getMatcher(input, SORT_REGEX)).find()) {
                 sort(matcher.group(1));
             } else if (input.equalsIgnoreCase("login")) {
-                handleLogin();
+                SignUpAndLoginMenu.loginWrapper();
                 System.out.println("\nOffers menu -> Sorting submenu\n");
             } else if (input.equalsIgnoreCase("logout")) {
-                handleLogout();
+                SignUpAndLoginMenu.logoutWrapper();
             } else {
                 System.out.println("Invalid command!");
             }
@@ -329,34 +329,5 @@ public class OffersMenu {
         System.out.println("logout");
         System.out.println("back");
         System.out.println("*******\n");
-    }
-
-    private static void handleLogin() {
-        if (MainMenu.currentUser == MainMenu.guest) {
-            SignUpAndLoginMenu.init();
-            if (MainMenu.currentUser != MainMenu.guest) {
-                moveShoppingCart();
-            }
-        } else {
-            System.out.println("You have signed in!");
-        }
-    }
-
-    private static void moveShoppingCart() {
-        if (MainMenu.currentUser instanceof Customer) {
-            for (Product product : MainMenu.guest.getCart()) {
-                ((Customer) MainMenu.currentUser).addToCart(product);
-            }
-        }
-        MainMenu.guest.getCart().clear();
-    }
-
-    private static void handleLogout() {
-        if (MainMenu.currentUser == MainMenu.guest) {
-            System.out.println("You haven't signed in!");
-        } else {
-            MainMenu.currentUser = MainMenu.guest;
-            MainMenu.init();
-        }
     }
 }
