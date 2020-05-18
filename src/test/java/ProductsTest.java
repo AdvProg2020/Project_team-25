@@ -138,41 +138,37 @@ public class ProductsTest {
     {
         System.setIn(new ByteArrayInputStream(("filter\nfilter priceLow 15\nback\nshow products\nback").getBytes()));
         ProductsMenu.init();
-        Assert.assertTrue(outContent.toString().contains("Products Menu\n\r" +
-                "\n" +
-                "(product3 ID:3 Seller:seller2 Price:15.5, [AB, CD])"));
+        Assert.assertTrue(outContent.toString().contains("product3 ID:3 Seller:seller2 Price:15.5, [AB, CD]"));
     }
     @Test
     public void staticFilterPriceHighTest()
     {
         System.setIn(new ByteArrayInputStream(("filter\nfilter priceHigh 15\nback\nshow products\nback").getBytes()));
         ProductsMenu.init();
-        Assert.assertTrue(outContent.toString().contains("(product3 ID:2 Seller:jackRipper Price:10.0, [AB, CD])\r\n" +
-                "*******"));
+        Assert.assertTrue(outContent.toString().contains("product3 ID:2 Seller:jackRipper Price:10.0, [AB, CD]"));
     }
     @Test
     public void staticFilterCategoryTest()
     {
         System.setIn(new ByteArrayInputStream(("filter\nfilter category category2\nback\nshow products\nback").getBytes()));
         ProductsMenu.init();
-        Assert.assertTrue(outContent.toString().contains("(product2 ID:1 Seller:seller2 Price:5.0, [BC, AB, CD])\r\n" +
-                "(product5 ID:4 Seller:jackRipper Price:980.0, [])"));
+        Assert.assertTrue(outContent.toString().contains("product2 ID:1 Seller:seller2 Price:5.0, [BC, AB, CD]") &&
+                outContent.toString().contains("product5 ID:4 Seller:jackRipper Price:980.0, []"));
     }
     @Test
     public void staticFilterSellerTest()
     {
         System.setIn(new ByteArrayInputStream(("filter\nfilter sellerUsername seller2\nback\nshow products\nback").getBytes()));
         ProductsMenu.init();
-        Assert.assertTrue(outContent.toString().contains("(product2 ID:1 Seller:seller2 Price:5.0, [BC, AB, CD])\r\n" +
-                "(product3 ID:3 Seller:seller2 Price:15.5, [AB, CD])"));
+        Assert.assertTrue(outContent.toString().contains("product2 ID:1 Seller:seller2 Price:5.0, [BC, AB, CD]") &&
+                outContent.toString().contains("product3 ID:3 Seller:seller2 Price:15.5, [AB, CD]"));
     }
     @Test
     public void staticFilterNameTest()
     {
         System.setIn(new ByteArrayInputStream(("filter\nfilter name product3\nback\nshow products\nback").getBytes()));
         ProductsMenu.init();
-        Assert.assertTrue(outContent.toString().contains("(product3 ID:3 Seller:seller2 Price:15.5, [AB, CD])\r\n" +
-                "*******"));
+        Assert.assertTrue(outContent.toString().contains("product3 ID:3 Seller:seller2 Price:15.5, [AB, CD]"));
     }
     @Test
     public void staticFilterBrandTest()
@@ -227,7 +223,7 @@ public class ProductsTest {
     }
 
     @Test
-    public void loginTest() {  // should comment exitAll in MainMenu
+    public void loginTest() {
         System.setOut(new PrintStream(outContent));
         MainMenu.currentUser = MainMenu.guest;
         System.setIn(new ByteArrayInputStream(("login\nback\nback").getBytes()));
@@ -236,7 +232,7 @@ public class ProductsTest {
     }
 
     @Test
-    public void loginProductTest() {  // should comment exitAll in MainMenu
+    public void loginProductTest() {
         System.setOut(new PrintStream(outContent));
         MainMenu.currentUser = MainMenu.guest;
         System.setIn(new ByteArrayInputStream(("login\nback\nback").getBytes()));
