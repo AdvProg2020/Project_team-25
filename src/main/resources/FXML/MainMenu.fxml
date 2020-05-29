@@ -16,7 +16,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" styleClass="backgroundAnchor" stylesheets="@../CSS/general_stylesheet.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="247.0" style="-fx-background-color: #3F2563;" styleClass="quickAccess" stylesheets="@../CSS/general_stylesheet.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="247.0" style="-fx-background-color: #3F2563; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" styleClass="quickAccess" stylesheets="@../CSS/general_stylesheet.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="77.0" prefWidth="247.0" style="-fx-background-color: #FA2C56; -fx-background-radius: 5;">
                <children>
@@ -111,12 +111,12 @@
             <VBox prefHeight="600.0" prefWidth="171.0" spacing="5.0">
                <children>
                   <Separator orientation="VERTICAL" prefHeight="131.0" prefWidth="10.0" visible="false" />
-                  <ImageView fitHeight="206.0" fitWidth="212.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="206.0" fitWidth="212.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
                      <image>
                         <Image url="@../Images/Your_Ad_Here.png" />
                      </image>
                   </ImageView>
-                  <ImageView fitHeight="208.0" fitWidth="214.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="208.0" fitWidth="214.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
                      <image>
                         <Image url="@../Images/Your_Ad_Here.png" />
                      </image>
@@ -124,7 +124,7 @@
                   <Separator orientation="VERTICAL" prefHeight="133.0" prefWidth="7.0" visible="false" />
                </children>
             </VBox>
-            <ImageView fitHeight="425.0" fitWidth="630.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="425.0" fitWidth="630.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
                <image>
                   <Image url="@../Images/Place_Your_Ads_Here.jpg" />
                </image>
