@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="148.0" prefWidth="309.0" style="-fx-background-color: #6a47ad;" stylesheets="@../CSS/general_stylesheet.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox alignment="TOP_CENTER" prefHeight="313.0" prefWidth="270.0" spacing="10.0" stylesheets="@../CSS/general_stylesheet.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <Label stylesheets="@../CSS/login_stylesheet.css" text="Username: " textFill="WHITE" />
+                  <TextField id="usernameField" fx:id="usernameField" prefHeight="30.0" prefWidth="190.0" promptText="Username" styleClass="text-field" stylesheets="@../CSS/login_stylesheet.css" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <Label stylesheets="@../CSS/login_stylesheet.css" text="Password:  " textFill="WHITE" />
+                  <PasswordField id="passwordField" fx:id="passwordField" prefHeight="30.0" prefWidth="190.0" promptText="Password" styleClass="text-field" stylesheets="@../CSS/login_stylesheet.css" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="190.0">
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="90.0" stylesheets="@../CSS/login_stylesheet.css" text="Login" />
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </VBox>
+   </children>
+</AnchorPane>
