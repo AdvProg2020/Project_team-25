@@ -1,0 +1,51 @@
+* {
+	-fx-font-family: "Proxima Nova";
+}
+
+.quickAccessMenuButton {
+	-fx-background-color: #3F2B63;
+	-fx-text-fill: white;
+	-fx-border-radius: 30 0 0 30;
+	-fx-background-radius: 30 0 0 30;
+	-fx-font-family: "Bookman";
+	-fx-font-size: 16;
+	-fx-alignment: BASELINE_LEFT;
+}
+.quickAccessMenuButton:hover {
+	-fx-background-color: #524A7B;
+}
+.quickAccessMenuButton:pressed {
+	-fx-background-color: #7156DD;
+}
+.quickAccessMenuButton:disabled, .button:disabled > * {
+  -fx-opacity: 0.4;
+}
+
+.quickAccessLoginSignUpButton {
+	-fx-background-color: #3F2B63;
+	-fx-text-fill: white;
+	-fx-border-radius: 10 0 0 10;
+	-fx-background-radius: 10 0 0 10;
+	-fx-font-family: "Bookman";
+	-fx-font-size: 12;
+	-fx-alignment: BASELINE_LEFT;
+}
+.quickAccessLoginSignUpButton:hover {
+	-fx-background-color: #524A7B;
+}
+.quickAccessLoginSignUpButton:pressed {
+	-fx-background-color: #7156DD;
+}
+.quickAccessLoginSignUpButton:disabled, .button:disabled > * {
+  -fx-opacity: 0.4;
+}
+
+.quickAccess {
+	-fx-spacing: 5;
+	-fx-alignment: center-right;
+}
+
+.backgroundAnchor {
+	-fx-background-color: grey;
+	-fx-background-image: url('../Images/Market_Background_Retouch.png');
+}

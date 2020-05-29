@@ -2,14 +2,29 @@ package Store;
 
 import Store.Model.*;
 import Store.Model.Enums.CheckingStatus;
-import Store.View.*;
+import Store.View.MainMenu;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 import java.util.Date;
 
-public class Main {
+public class Main extends Application {
+    private static Stage applicationStage;
+
+    @Override
+    public void start(Stage primaryStage) throws Exception{
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/MainMenu.fxml"));
+        applicationStage = primaryStage;
+        primaryStage.setTitle("Shop");
+        primaryStage.setScene(new Scene(root));
+        primaryStage.show();
+    }
+
 
     public static void main(String[] args) {
-
 //        ResourceHandler.resetFile();
 //        ResourceHandler.writeAll();
 
@@ -17,7 +32,7 @@ public class Main {
         Manager.checkPeriodOffCode();
         MainMenu.currentUser = MainMenu.guest;
 
-        MainMenu.init();
+        launch(args);
     }
 
     public static void setTest() {
