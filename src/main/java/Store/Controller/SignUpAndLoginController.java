@@ -55,4 +55,20 @@ public class SignUpAndLoginController {
         return "Register successfully.";
     }
 
+    public static void handleCreateAccount(String type, ArrayList<String> attributes) {
+        if (type.equalsIgnoreCase("seller")) {
+            double initialMoney = Double.parseDouble(attributes.get(6));
+            String companyName = attributes.get(7);
+            String companyDescription = attributes.get(8);
+            SignUpAndLoginController.createSeller(new ArrayList<>(attributes.subList(0, 6)), initialMoney, companyName, companyDescription);
+        }
+        else if (type.equalsIgnoreCase("customer")) {
+            double initialMoney = Double.parseDouble(attributes.get(6));
+            SignUpAndLoginController.createCustomer(new ArrayList<>(attributes.subList(0, 6)), initialMoney);
+        }
+        else {
+            SignUpAndLoginController.createManager(attributes);
+        }
+    }
+
 }

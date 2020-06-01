@@ -3,20 +3,26 @@ package Store;
 import Store.Model.*;
 import Store.Model.Enums.CheckingStatus;
 import Store.View.MainMenu;
+import Store.View.MainMenuUI;
+import Store.View.SignUpCustomerAndSellerMenuUI;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.Date;
 
 public class Main extends Application {
     private static Stage applicationStage;
+    private static Stage otherStage = new Stage();
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/MainMenu.fxml"));
+        otherStage.initModality(Modality.APPLICATION_MODAL);
+
+        Parent root = MainMenuUI.getContent();
         applicationStage = primaryStage;
         primaryStage.setTitle("Shop");
         primaryStage.setScene(new Scene(root));
@@ -28,11 +34,17 @@ public class Main extends Application {
 //        ResourceHandler.resetFile();
 //        ResourceHandler.writeAll();
 
-        ResourceHandler.readAll();
-        Manager.checkPeriodOffCode();
+//        ResourceHandler.readAll();
+//        Manager.checkPeriodOffCode();
         MainMenu.currentUser = MainMenu.guest;
 
         launch(args);
+    }
+
+    public static void setupOtherStage(Scene scene, String title) {
+        otherStage.setScene(scene);
+        otherStage.setTitle(title);
+        otherStage.showAndWait();
     }
 
     public static void setTest() {
