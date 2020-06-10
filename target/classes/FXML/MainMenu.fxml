@@ -132,22 +132,22 @@
                         <Image url="@../Images/Place_Your_Ads_Here.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="slideshowSlide2" fx:id="slideshowSlide2" fitHeight="425.0" fitWidth="630.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" visible="false">
+                  <ImageView id="slideshowSlide2" fx:id="slideshowSlide2" fitHeight="425.0" fitWidth="630.0" opacity="0.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
                      <image>
                         <Image url="@../Images/Place_Your_Ads_Here.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="slideshowSlide3" fx:id="slideshowSlide3" fitHeight="425.0" fitWidth="630.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" visible="false">
+                  <ImageView id="slideshowSlide3" fx:id="slideshowSlide3" fitHeight="425.0" fitWidth="630.0" opacity="0.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
                      <image>
                         <Image url="@../Images/Place_Your_Ads_Here.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="slideshowSlide4" fx:id="slideshowSlide4" fitHeight="425.0" fitWidth="630.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" visible="false">
+                  <ImageView id="slideshowSlide4" fx:id="slideshowSlide4" fitHeight="425.0" fitWidth="630.0" opacity="0.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
                      <image>
                         <Image url="@../Images/Place_Your_Ads_Here.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="slideshowSlide5" fx:id="slideshowSlide5" fitHeight="425.0" fitWidth="630.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" visible="false">
+                  <ImageView id="slideshowSlide5" fx:id="slideshowSlide5" fitHeight="425.0" fitWidth="630.0" opacity="0.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
                      <image>
                         <Image url="@../Images/Place_Your_Ads_Here.jpg" />
                      </image>

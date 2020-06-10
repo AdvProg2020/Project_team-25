@@ -44,6 +44,7 @@ public class Main extends Application {
     public static void setupOtherStage(Scene scene, String title) {
         otherStage.setScene(scene);
         otherStage.setTitle(title);
+        otherStage.setResizable(false);
         otherStage.showAndWait();
     }
 

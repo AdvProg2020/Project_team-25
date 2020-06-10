@@ -9,6 +9,9 @@ import java.util.HashSet;
 
 public class Product implements Serializable {
 
+    private String imagePath;
+    private String videoPath;
+
     private int productID;
     private CheckingStatus productStatus;
     private Category category;
@@ -42,6 +45,24 @@ public class Product implements Serializable {
         this.averageRating = 0;
         this.seller = seller;
         this.visited = 0;
+    }
+
+    public Product(CheckingStatus productStatus, Category category, String name, Seller seller, String brand, double price,
+                   boolean availablity, String description, String imagePath, String videoPath) {
+        this.productID = idCounter++;
+        this.productStatus = productStatus;
+        this.category = category;
+        this.name = name;
+        this.brand = brand;
+        this.price = price;
+        this.availablity = availablity;
+        this.description = description;
+        this.averageRating = 0;
+        this.seller = seller;
+        this.visited = 0;
+
+        this.imagePath = imagePath;
+        this.videoPath = videoPath;
     }
 
     public void assignToSeller() {
@@ -202,7 +223,13 @@ public class Product implements Serializable {
         return this.productStatus;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
 
+    public String getVideoPath() {
+        return videoPath;
+    }
 
     public void addToVisited(String brand) {
         this.visited++;

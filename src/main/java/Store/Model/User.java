@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 public class User implements Serializable {
 
+    protected String profilePicturePath;
+
     int id;
     protected String type;
     protected String username;
@@ -25,6 +27,18 @@ public class User implements Serializable {
         this.phoneNumber = phoneNumber;
         this.password = password;
         id = ++idTillNow;
+    }
+
+    public User(String username, String name, String familyName, String email, String phoneNumber, String password, String profilePicturePath) {
+        this.username = username;
+        this.name = name;
+        this.familyName = familyName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        id = ++idTillNow;
+
+        this.profilePicturePath = profilePicturePath;
     }
 
     public static void setAllUsers(ArrayList<User> allUsers) {
@@ -129,6 +143,10 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getProfilePicturePath() {
+        return profilePicturePath;
     }
 
     public String getType() {

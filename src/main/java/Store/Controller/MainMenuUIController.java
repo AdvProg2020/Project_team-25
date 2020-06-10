@@ -1,9 +1,12 @@
 package Store.Controller;
 
 import Store.Model.Customer;
+import Store.Model.Product;
 import Store.Model.User;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+
+import java.util.ArrayList;
 
 public class MainMenuUIController {
     public static User currentUser;
@@ -12,6 +15,22 @@ public class MainMenuUIController {
     public static SimpleStringProperty currentUserUsername = new SimpleStringProperty("Not Logged In");
     public static SimpleBooleanProperty isLoggedIn = new SimpleBooleanProperty(false);
     public static SimpleStringProperty loginLogoutButtonText = new SimpleStringProperty("Login");
+
+    private static Product staticAdUpper;
+    private static Product staticAdLower;
+    private static Product[] slideshowAd = new Product[5];
+
+    public static Product getStaticAdLower() {
+        return staticAdLower;
+    }
+
+    public static Product getStaticAdUpper() {
+        return staticAdUpper;
+    }
+
+    public static Product[] getSlideshowAd() {
+        return slideshowAd;
+    }
 
     public static void setCurrentUser(User user) {
         currentUser = user;
