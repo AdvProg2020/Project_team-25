@@ -90,6 +90,7 @@ public class MainMenuUI {
     public void setupBindings() {
         loginLogoutButton.setOnAction((e) -> LoginMenuUI.handleEvent());
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
+        productsButton.setOnAction((e) -> ProductsMenuUI.showProductsMenu());
     }
 
 }

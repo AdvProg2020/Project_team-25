@@ -1,0 +1,88 @@
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-opacity: 0;
+}
+
+.tab-pane
+{
+    -fx-tab-min-width:90px;
+}
+
+.tab{
+    -fx-background-insets: 0 1 0 1,0,0;
+}
+.tab-pane .tab
+{
+    -fx-background-color: #e6e6e6;
+
+}
+
+.tab-pane .tab:selected
+{
+    -fx-background-color: #3c3c3c;
+}
+
+.tab .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: #828282;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.tab:selected .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: #96b946;
+}
+
+.tab-pane:top *.tab-header-area {
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.416667em 0.166667em 0.0em 0.0em;
+}
+
+#showCategoryButton {
+    -fx-background-color: rgba(0, 0, 0, 0);
+    -fx-font-size: 20px;
+}
+
+#showCategoryButton:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+}
+
+#productName {
+    -fx-font-size: 25px;
+}
+
+#productPrice {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+}
+
+#productRating {
+    -fx-font-style: italic;
+}
+
+#productInfo:hover {
+   -fx-background-color: rgba(0, 0, 0, 0.4);
+}
+
+.scroll-pane {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-background-color:transparent;
+}
+
+* {
+    -fx-border-color:transparent;
+}
+
+.scroll-pane:focused {
+    -fx-background-insets: 0;
+}
+
+.separator *.line {
+    -fx-border-style: solid;
+    -fx-border-width: 2px;
+    -fx-border-color: linear-gradient(to right, #4b6cb7, #182848);
+}
+
+
+
