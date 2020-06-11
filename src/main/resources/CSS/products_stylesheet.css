@@ -101,5 +101,42 @@
     -fx-background-radius: 3.4, 2, 2;
 }
 
+.combo-box .list-view .list-cell { -fx-background-color: white; }
 
+.combo-box .list-cell { -fx-text-fill: black; }
+
+.combo-box .list-view .list-cell:hover { -fx-background-color: orange; }
+
+.combo-box .list-view .list-cell:focused { -fx-background-color: orange; }
+
+.combo-box {
+   -fx-font-size: 16px;
+   -fx-font-style: italic;
+   -fx-background-color: white;
+   -fx-mark-color: orange;
+}
+
+#previousPageButton {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(0, 0, 170);
+    -fx-font-size: 16px;
+}
+
+#previousPageButton:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.3);
+    -fx-text-fill: rgba(0, 0, 255);
+    -fx-font-size: 16px;
+}
+
+#nextPageButton {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(0, 0, 170);
+    -fx-font-size: 16px;
+}
+
+#nextPageButton:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.3);
+    -fx-text-fill: rgba(0, 0, 255);
+    -fx-font-size: 16px;
+}
 

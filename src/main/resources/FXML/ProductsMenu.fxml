@@ -121,9 +121,9 @@
                      <children>
                         <HBox prefHeight="50.0" prefWidth="200.0">
                            <children>
-                              <Button id="showCategoryButton" mnemonicParsing="false" prefHeight="75.0" prefWidth="200.0" text="Category">
+                              <Button id="showCategoryButton" mnemonicParsing="false" prefHeight="75.0" prefWidth="200.0" text="Categories">
                                  <graphic>
-                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="48.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@../Icons/MainMenu.png" />
                                        </image>
@@ -131,7 +131,7 @@
                                  </graphic>
                               </Button>
                               <Region prefHeight="200.0" prefWidth="500.0" />
-                              <Button id="searchButton" fx:id="searchButton" mnemonicParsing="false" prefHeight="51.0" prefWidth="49.0">
+                              <Button id="searchButton" fx:id="searchButton" disable="true" mnemonicParsing="false" prefHeight="51.0" prefWidth="49.0">
                                  <graphic>
                                     <ImageView fitHeight="33.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -143,7 +143,19 @@
                               <TextField fx:id="searchString" prefHeight="50.0" prefWidth="240.0" />
                            </children>
                         </HBox>
-                        <HBox prefHeight="50.0" prefWidth="200.0" />
+                        <HBox prefHeight="50.0" prefWidth="200.0">
+                           <children>
+                              <Label alignment="TOP_CENTER" contentDisplay="CENTER" prefHeight="41.0" prefWidth="100.0" text="Sort By" wrapText="true">
+                                 <font>
+                                    <Font name="System Italic" size="20.0" />
+                                 </font></Label>
+                              <ComboBox id="sortChoiceBox" fx:id="sortChoiceBox" prefWidth="150.0" promptText="---" />
+                              <Region prefHeight="50.0" prefWidth="150.0" />
+                              <Button id="previousPageButton" fx:id="previousPageButton" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" text="&lt;&lt;" textAlignment="RIGHT" />
+                              <TextField fx:id="pageNumberField" alignment="CENTER" prefHeight="50.0" prefWidth="70.0" text="1" />
+                              <Button id="nextPageButton" fx:id="nextPageButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" text="&gt;&gt;" />
+                           </children></HBox>
+                        <Separator prefWidth="200.0" style="-fx-border-color: black;" />
                         <ScrollPane fx:id="productsList" prefHeight="450.0" prefWidth="950.0">
                            <content>
                               <HBox prefHeight="450.0" prefWidth="950.0">

@@ -4,6 +4,12 @@ import Store.Controller.MainMenuUIController;
 import Store.Controller.ProductsController;
 import Store.Main;
 import Store.Model.Product;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
@@ -19,11 +25,13 @@ import javafx.scene.layout.VBox;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ProductsMenuUI {
     private static ArrayList<String> filters = new ArrayList<String>();
     private static ArrayList<String> availableFilters = new ArrayList<String>();
     private static ArrayList<Product> productsToBeShown = new ArrayList<Product>();
+    private static String[] availableSorts = new String[]{"visit", "rating", "price", "lexicographical"};
     private static String currentSort = "visit";
 
     private static String categoryFilter = "null";
@@ -34,6 +42,8 @@ public class ProductsMenuUI {
     private static String sellerUsernameFilter = "null";
     private static String availabilityFilter = "null";
     private static String searchQuery = "(.*)";
+    private static int pageNumber = 1;
+    private static int totalPages;
 
     public Button mainMenuButton;
     public Button productsButton;
@@ -48,6 +58,10 @@ public class ProductsMenuUI {
     public VBox thirdColumn;
     public Button searchButton;
     public TextField searchString;
+    public ComboBox sortChoiceBox;
+    public Button previousPageButton;
+    public Button nextPageButton;
+    public TextField pageNumberField;
 
 
     public static Parent getContent() throws IOException {
@@ -65,9 +79,11 @@ public class ProductsMenuUI {
 
     @FXML
     private void initialize() {
+        sortChoiceBox.setItems(FXCollections.observableArrayList(availableSorts));
         initialSetup();
         setupBindings();
         showProducts();
+
     }
 
 
@@ -75,21 +91,79 @@ public class ProductsMenuUI {
         loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
         signUpButton.disableProperty().bind(MainMenuUIController.isLoggedIn);
         loginLogoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
-
     }
 
     public void setupBindings() {
         loginLogoutButton.setOnAction((e) -> LoginMenuUI.handleEvent());
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
-        searchButton.setOnMouseClicked((e) -> giveSearchedProducts());
+//        searchButton.setOnMouseClicked((e) -> giveSearchedProducts());
+        searchString.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (newValue.isEmpty()) {
+                    searchQuery = "(.*)";
+                } else {
+                    searchQuery = newValue;
+                }
+                pageNumber = 1;
+                pageNumberField.setText(Integer.toString(pageNumber));
+                showProducts();
+            }
+        });
+
+        sortChoiceBox.valueProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                currentSort = newValue.toString();
+                showProducts();
+            }
+        });
+
+        pageNumberField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                try {
+                    if (Integer.parseInt(newValue) <= totalPages && Integer.parseInt(newValue) >= 1) {
+                        pageNumber = Integer.parseInt(newValue);
+                        showProducts();
+                        return;
+                    }
+                    pageNumberField.setText(Integer.toString(pageNumber));
+                } catch (Exception exception) {
+                    // do nothing
+                }
+            }
+        });
+
+        nextPageButton.setOnMouseClicked(event -> showNextPage());
+        previousPageButton.setOnMouseClicked(event -> showPreviousPage());
+
 //        mainMenuButton.setOnAction((e) -> ProductsMenuUI.showProductsMenu());
+    }
+
+    private void showNextPage() {
+        if (pageNumber == totalPages) {
+            return;
+        }
+        pageNumber++;
+        showProducts();
+        pageNumberField.setText(Integer.toString(pageNumber));
+
+    }
+
+    private void showPreviousPage() {
+        if (pageNumber == 1) {
+            return;
+        }
+        pageNumber--;
+        showProducts();
+        pageNumberField.setText(Integer.toString(pageNumber));
     }
 
     private void giveSearchedProducts() {
         if (searchString.getText().isEmpty()) {
             searchQuery = "(.*)";
-        }
-        else {
+        } else {
             searchQuery = searchString.getText();
         }
         showProducts();
@@ -119,6 +193,7 @@ public class ProductsMenuUI {
     }
 
     private void setGraphicsOfProducts(VBox vBox, Product product) {
+
         VBox productInfo = new VBox();
         productInfo.setAlignment(Pos.TOP_CENTER);
         productInfo.setId("productInfo");
@@ -127,9 +202,8 @@ public class ProductsMenuUI {
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(80);
         File file = new File("src/main/resources/Images/images.jpg");
-        ImageView imageView = new ImageView();
+        ImageView imageView = new ImageView(new Image(file.toURI().toString()));
         imageView.setFitWidth(productInfo.getPrefWidth());
-        imageView.setImage(new Image(file.toURI().toString()));
         Label productName = new Label(product.getName());
         Label productPrice = new Label(Double.toString(product.getPrice()) + "$");
         Label productRating = new Label(Double.toString(product.getAverageRating()) + "/5");
@@ -149,8 +223,19 @@ public class ProductsMenuUI {
         productsToBeShown = ProductsController.getFilteredList(filters);
         productsToBeShown = ProductsController.handleStaticFiltering(productsToBeShown, categoryFilter, priceLowFilter,
                 priceHighFilter, brandFilter, nameFilter, sellerUsernameFilter, availabilityFilter);
-        productsToBeShown = ProductsController.sort(currentSort, productsToBeShown);
         productsToBeShown = ProductsController.filterProductsWithSearchQuery(productsToBeShown, searchQuery);
+        productsToBeShown = ProductsController.sort(currentSort, productsToBeShown);
+        totalPages = (productsToBeShown.size() + 17) / 18;
+        ArrayList<Product> productsInThisPage = new ArrayList<>();
+        try {
+            for (int i = 0; i < 18; i++) {
+                productsInThisPage.add(productsToBeShown.get(18 * (pageNumber - 1) + i));
+            }
+        } catch (Exception exception) {
+            //do nothing
+        }
+
+        productsToBeShown = productsInThisPage;
     }
 
 }

@@ -72,16 +72,16 @@ public class Main extends Application {
         Product product2 = new Product(CheckingStatus.CREATION, null, "product2", seller2, "brand1", 5, true, "describe");
         Product product3 = new Product(CheckingStatus.CREATION, null, "product3", seller1, "brand1", 10, true, "describe");
         Product product4 = new Product(CheckingStatus.CREATION, null, "product3", seller2, "brand1", 15.5, true, "describe");
-        Product product5 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
-        Product product6 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
-        Product product7 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
-        Product product8 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
+        Product product5 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, false, "describe");
+        Product product6 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, false, "describe");
+        Product product7 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, false, "describe");
+        Product product8 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, false, "describe");
         Product product9 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
-        Product product10 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
+        Product product10 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, false, "describe");
         Product product11 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
         Product product12 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
         Product product13 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
-        Product product14 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
+        Product product14 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, false, "describe");
 
         Category category1 = new Category("category1", null);
         Category category2 = new Category("category2", null);
@@ -117,6 +117,11 @@ public class Main extends Application {
         product11.assignToSeller();
         product12.assignToSeller();
         product13.assignToSeller();
+        for (int i = 0; i < 1000; i++) {
+            Product product = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", i, false, "describe");
+            Product.addProduct(product1);
+            product.assignToSeller();
+        }
 
         category1.addToCategory(product1);
         category2.addToCategory(product2);
