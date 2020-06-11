@@ -36,6 +36,7 @@ public class Main extends Application {
 
 //        ResourceHandler.readAll();
 //        Manager.checkPeriodOffCode();
+        setTest();
         MainMenu.currentUser = MainMenu.guest;
 
         launch(args);
@@ -44,8 +45,12 @@ public class Main extends Application {
     public static void setupOtherStage(Scene scene, String title) {
         otherStage.setScene(scene);
         otherStage.setTitle(title);
-        otherStage.setResizable(false);
         otherStage.showAndWait();
+    }
+
+    public static void setApplicationStage(Scene scene) {
+        applicationStage.setScene(scene);
+        applicationStage.show();
     }
 
     public static void setTest() {
@@ -68,6 +73,15 @@ public class Main extends Application {
         Product product3 = new Product(CheckingStatus.CREATION, null, "product3", seller1, "brand1", 10, true, "describe");
         Product product4 = new Product(CheckingStatus.CREATION, null, "product3", seller2, "brand1", 15.5, true, "describe");
         Product product5 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
+        Product product6 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
+        Product product7 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
+        Product product8 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
+        Product product9 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
+        Product product10 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
+        Product product11 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
+        Product product12 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
+        Product product13 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
+        Product product14 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
 
         Category category1 = new Category("category1", null);
         Category category2 = new Category("category2", null);
@@ -95,6 +109,14 @@ public class Main extends Application {
         product3.assignToSeller();
         product4.assignToSeller();
         product5.assignToSeller();
+        product6.assignToSeller();
+        product7.assignToSeller();
+        product8.assignToSeller();
+        product9.assignToSeller();
+        product10.assignToSeller();
+        product11.assignToSeller();
+        product12.assignToSeller();
+        product13.assignToSeller();
 
         category1.addToCategory(product1);
         category2.addToCategory(product2);
@@ -111,6 +133,14 @@ public class Main extends Application {
         Product.addProduct(product3);
         Product.addProduct(product4);
         Product.addProduct(product5);
+        Product.addProduct(product6);
+        Product.addProduct(product7);
+        Product.addProduct(product8);
+        Product.addProduct(product9);
+        Product.addProduct(product10);
+        Product.addProduct(product11);
+        Product.addProduct(product12);
+        Product.addProduct(product13);
 
         Product.addFilterToAllFilters("AB");
         Product.addFilterToAllFilters("BC");
@@ -143,5 +173,5 @@ public class Main extends Application {
         offer2.setStartingTime(new Date());
         offer1.setEndingTime(new Date(2020,6,10));
         offer2.setEndingTime(new Date(2020,6,9));
-        }
+    }
 }

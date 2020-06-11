@@ -10,10 +10,7 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -36,6 +33,7 @@ public class ProductsMenuUI {
     private static String nameFilter = "null";
     private static String sellerUsernameFilter = "null";
     private static String availabilityFilter = "null";
+    private static String searchQuery = "(.*)";
 
     public Button mainMenuButton;
     public Button productsButton;
@@ -48,6 +46,8 @@ public class ProductsMenuUI {
     public VBox firstColumn;
     public VBox secondColumn;
     public VBox thirdColumn;
+    public Button searchButton;
+    public TextField searchString;
 
 
     public static Parent getContent() throws IOException {
@@ -75,22 +75,31 @@ public class ProductsMenuUI {
         loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
         signUpButton.disableProperty().bind(MainMenuUIController.isLoggedIn);
         loginLogoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
+
     }
 
     public void setupBindings() {
         loginLogoutButton.setOnAction((e) -> LoginMenuUI.handleEvent());
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
+        searchButton.setOnMouseClicked((e) -> giveSearchedProducts());
 //        mainMenuButton.setOnAction((e) -> ProductsMenuUI.showProductsMenu());
     }
 
+    private void giveSearchedProducts() {
+        if (searchString.getText().isEmpty()) {
+            searchQuery = "(.*)";
+        }
+        else {
+            searchQuery = searchString.getText();
+        }
+        showProducts();
+    }
+
     private void showProducts() {
-        productsToBeShown = ProductsController.getFilteredList(filters);
-        productsToBeShown = ProductsController.handleStaticFiltering(productsToBeShown, categoryFilter, priceLowFilter,
-                priceHighFilter, brandFilter, nameFilter, sellerUsernameFilter, availabilityFilter);
-        productsToBeShown = ProductsController.sort(currentSort, productsToBeShown);
-        firstColumn.getChildren().removeAll();
-        secondColumn.getChildren().removeAll();
-        thirdColumn.getChildren().removeAll();
+        setTobeShownProducts();
+        firstColumn.getChildren().clear();
+        secondColumn.getChildren().clear();
+        thirdColumn.getChildren().clear();
 
         int productsNumber = 0;
         for (Product product : productsToBeShown) {
@@ -135,4 +144,13 @@ public class ProductsMenuUI {
         productInfo.getChildren().addAll(imageView, productName, gridPane, separator);
         vBox.getChildren().add(productInfo);
     }
+
+    private void setTobeShownProducts() {
+        productsToBeShown = ProductsController.getFilteredList(filters);
+        productsToBeShown = ProductsController.handleStaticFiltering(productsToBeShown, categoryFilter, priceLowFilter,
+                priceHighFilter, brandFilter, nameFilter, sellerUsernameFilter, availabilityFilter);
+        productsToBeShown = ProductsController.sort(currentSort, productsToBeShown);
+        productsToBeShown = ProductsController.filterProductsWithSearchQuery(productsToBeShown, searchQuery);
+    }
+
 }
