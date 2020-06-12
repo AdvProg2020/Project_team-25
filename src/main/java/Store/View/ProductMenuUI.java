@@ -104,6 +104,9 @@ public class ProductMenuUI {
 
     public VBox commentSectionVBox;
 
+    public TextField compareProductIDTextField;
+    public Button compareButton;
+
     private ArrayList<Button> sellerButtons = new ArrayList<Button>();
 
 
@@ -195,7 +198,7 @@ public class ProductMenuUI {
     }
 
     private void setupLabels() {
-        nameLabel.setText(productToShow.getName());
+        nameLabel.setText(productToShow.getName() + "   (ID: " + productToShow.getProductID() + ")");
         brandLabel.setText(productToShow.getBrand());
         descriptionLabel.setText(productToShow.getDescription());
         priceLabel.setText("" + productToShow.getPrice());
@@ -297,6 +300,7 @@ public class ProductMenuUI {
 
         submitCommentButton.setOnAction((e) -> handleSubmitComment());
         addToCartButton.setOnAction((e) -> addToCart(productToShow));
+        compareButton.setOnAction((e) -> handleCompare());
     }
 
     private void setRatingDisable(boolean disable) {
@@ -453,5 +457,21 @@ public class ProductMenuUI {
         result.setAlignment(Pos.TOP_LEFT);
         result.setPrefHeight(Region.USE_COMPUTED_SIZE);
         return result;
+    }
+
+    private void handleCompare() {
+        String otherID = compareProductIDTextField.getText();
+        if (otherID.isEmpty() || !otherID.matches("^\\d+$")) {
+            setError(compareProductIDTextField, true);
+            return;
+        }
+        if (Product.getProductByID(Integer.parseInt(otherID)) == null) {
+            setError(compareProductIDTextField, true);
+            return;
+        }
+
+        setError(compareProductIDTextField, false);
+        compareProductIDTextField.setText("");
+        CompareProducts.showLoginMenu(productToShow, Product.getProductByID(Integer.parseInt(otherID)));
     }
 }

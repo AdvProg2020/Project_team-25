@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="461.0" prefWidth="609.0" style="-fx-background-color: #6a47ad;" stylesheets="@../CSS/general_stylesheet.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Store.View.CompareProducts">
+   <children>
+      <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+         <children>
+            <HBox prefHeight="303.0" prefWidth="422.0" spacing="5.0">
+               <children>
+                  <VBox prefHeight="238.0" prefWidth="291.0" styleClass="viewport" stylesheets="@../CSS/compare_product.css">
+                     <children>
+                        <HBox>
+                           <VBox.margin>
+                              <Insets left="5.0" />
+                           </VBox.margin>
+                           <children>
+                              <Label styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Product Name: " />
+                              <Label fx:id="nameFirst" styleClass="digestData" stylesheets="@../CSS/compare_product.css" text="Label" wrapText="true" />
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Product Brand: " />
+                              <Label fx:id="brandFirst" prefHeight="16.0" styleClass="digestData" stylesheets="@../CSS/compare_product.css" text="Label" textOverrun="CLIP" wrapText="true" />
+                           </children>
+                           <VBox.margin>
+                              <Insets left="5.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Product Description: " />
+                              <Label fx:id="descriptionFirst" styleClass="digestData" stylesheets="@../CSS/compare_product.css" text="Label" wrapText="true" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Price: " />
+                              <Label fx:id="priceFirst" styleClass="digestData" stylesheets="@../CSS/compare_product.css" text="Label" wrapText="true" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Category: " />
+                              <Label fx:id="categoryFirst" styleClass="digestData" stylesheets="@../CSS/compare_product.css" text="Label" wrapText="true" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Sellers: " />
+                              <Label fx:id="sellersFirst" styleClass="digestData" stylesheets="@../CSS/compare_product.css" text="Label" wrapText="true" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Average Rating: " />
+                              <Label fx:id="ratingFirst" styleClass="digestData" stylesheets="@../CSS/compare_product.css" text="Label" wrapText="true" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Date of Offer: " />
+                              <Label fx:id="dateOfOfferFirst" styleClass="digestData" stylesheets="@../CSS/compare_product.css" text="Label" wrapText="true" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Product Status: " />
+                              <Label fx:id="statusFirst" styleClass="digestData" stylesheets="@../CSS/compare_product.css" text="Label" wrapText="true" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="238.0" prefWidth="292.0" styleClass="viewport" stylesheets="@../CSS/compare_product.css">
+                     <children>
+                        <HBox>
+                           <children>
+                              <Label styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Product Name: " />
+                              <Label fx:id="nameSecond" styleClass="digestData" stylesheets="@../CSS/compare_product.css" text="Label" wrapText="true" />
+                           </children>
+                           <VBox.margin>
+                              <Insets left="5.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Product Brand: " />
+                              <Label fx:id="brandSecond" styleClass="digestData" stylesheets="@../CSS/compare_product.css" text="Label" textOverrun="CLIP" wrapText="true" />
+                           </children>
+                           <VBox.margin>
+                              <Insets left="5.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Product Description: " />
+                              <Label fx:id="descriptionSecond" styleClass="digestData" stylesheets="@../CSS/compare_product.css" text="Label" wrapText="true" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Price: " />
+                              <Label fx:id="priceSecond" styleClass="digestData" stylesheets="@../CSS/compare_product.css" text="Label" wrapText="true" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Category: " />
+                              <Label fx:id="categorySecond" styleClass="digestData" stylesheets="@../CSS/compare_product.css" text="Label" wrapText="true" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Sellers: " />
+                              <Label fx:id="sellersSecond" styleClass="digestData" stylesheets="@../CSS/compare_product.css" text="Label" wrapText="true" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Average Rating: " />
+                              <Label fx:id="ratingSecond" styleClass="digestData" stylesheets="@../CSS/compare_product.css" text="Label" wrapText="true" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Date of Offer: " />
+                              <Label fx:id="dateOfOfferSecond" styleClass="digestData" stylesheets="@../CSS/compare_product.css" text="Label" wrapText="true" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Product Status: " />
+                              <Label fx:id="statusSecond" styleClass="digestData" stylesheets="@../CSS/compare_product.css" text="Label" wrapText="true" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="136.0" prefWidth="589.0" spacing="5.0">
+               <children>
+                  <VBox alignment="TOP_CENTER" prefHeight="136.0" prefWidth="198.0" styleClass="viewport" stylesheets="@../CSS/compare_product.css">
+                     <children>
+                        <Label fx:id="filtersFirstTitle" styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Filters Only in " wrapText="true" />
+                        <Label fx:id="filtersOnlyFirst" styleClass="digestFilters" stylesheets="@../CSS/compare_product.css" text="Label" wrapText="true" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="TOP_CENTER" prefHeight="136.0" prefWidth="202.0" styleClass="viewport" stylesheets="@../CSS/compare_product.css">
+                     <children>
+                        <Label styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Shared Filters" wrapText="true" />
+                        <Label fx:id="filtersBoth" styleClass="digestFilters" stylesheets="@../CSS/compare_product.css" text="Label" wrapText="true" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="TOP_CENTER" prefHeight="136.0" prefWidth="190.0" styleClass="viewport" stylesheets="@../CSS/compare_product.css">
+                     <children>
+                        <Label fx:id="filtersSecondTitle" styleClass="digestLabels" stylesheets="@../CSS/compare_product.css" text="Filters Only in " wrapText="true" />
+                        <Label fx:id="filtersOnlySecond" styleClass="digestFilters" stylesheets="@../CSS/compare_product.css" text="Label" wrapText="true" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
