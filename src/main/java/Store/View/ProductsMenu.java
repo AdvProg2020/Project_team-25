@@ -41,7 +41,7 @@ public class ProductsMenu {
         String input;
         Matcher matcher;
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
-            availableFilters = new ArrayList(Product.getAllFilters());
+            availableFilters = new ArrayList(Product.getAllFilters(categoryFilter));
             if (input.equalsIgnoreCase("view categories")) {
                 viewCategories();
             } else if (input.equalsIgnoreCase("filter")) {

@@ -68,6 +68,14 @@ public class Main extends Application {
         Seller.addSeller(seller2);
         manager1.addNewManager(manager2);
 
+        Category category1 = new Category("category1", null);
+        Category category2 = new Category("category2", null);
+        Category category3 = new Category("category3", category1);
+
+        category1.addToFilter("AA");
+        category1.addToFilter("BC");
+        category1.addToFilter("CD");
+
         Product product1 = new Product(CheckingStatus.CREATION, null, "product1", seller1, "brand1", 10, true, "describe");
         Product product2 = new Product(CheckingStatus.CREATION, null, "product2", seller2, "brand1", 5, true, "describe");
         Product product3 = new Product(CheckingStatus.CREATION, null, "product3", seller1, "brand1", 10, true, "describe");
@@ -83,9 +91,6 @@ public class Main extends Application {
         Product product13 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand3", 980, true, "describe");
         Product product14 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand3", 980, false, "describe");
 
-        Category category1 = new Category("category1", null);
-        Category category2 = new Category("category2", null);
-        Category category3 = new Category("category3", category1);
 
         OffCode offCode1 = new OffCode("ce98",30,10,2);
         offCode1.setEndingTime(new Date(2020, 5, 4));

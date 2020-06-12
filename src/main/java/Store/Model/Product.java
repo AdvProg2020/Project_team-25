@@ -255,7 +255,10 @@ public class Product implements Serializable {
         return filters;
     }
 
-    public static HashSet<String> getAllFilters() {
+    public static HashSet<String> getAllFilters(String categoryName) {
+        if (!categoryName.equals("null")) {
+            return new HashSet<>(Manager.categoryByName(categoryName).getFilters());
+        }
         return new HashSet<>(allFilters);
     }
 

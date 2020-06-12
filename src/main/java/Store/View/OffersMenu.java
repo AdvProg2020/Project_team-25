@@ -41,7 +41,7 @@ public class OffersMenu {
         System.out.println("\nOffers menu\n");
         viewOffs();
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
-            availableFilters = new ArrayList<>(Product.getAllFilters());
+            availableFilters = new ArrayList<>(Product.getAllFilters(categoryFilter));
             if ((matcher = InputManager.getMatcher(input, SHOW_PRODUCT_REGEX)).find()) {
                 showProducts(matcher.group(1));
             } else if (input.equalsIgnoreCase("filter")) {

@@ -138,6 +138,7 @@ public class Category implements Serializable {
 
     public void addToFilter(String string) {
         filters.add(string);
+        Product.addFilterToAllFilters(string);
     }
 
     public boolean isInFilter(String string) {

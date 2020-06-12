@@ -254,7 +254,23 @@
                            </children>
                         </VBox>
                         <Separator orientation="VERTICAL" prefHeight="200.0" />
-                        <VBox prefHeight="200.0" prefWidth="475.0" />
+                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="475.0">
+                           <children>
+                              <Label alignment="BOTTOM_CENTER" contentDisplay="TOP" text="Category Filters" textAlignment="CENTER">
+                                 <font>
+                                    <Font size="36.0" />
+                                 </font>
+                              </Label>
+                              <HBox alignment="CENTER" prefHeight="472.0" prefWidth="467.0">
+                                 <children>
+                                    <ScrollPane prefHeight="470.0" prefWidth="225.0" style="-fx-background-color: silver;">
+                                       <content>
+                                          <VBox fx:id="categoryFiltersVBox" alignment="TOP_CENTER" prefHeight="469.0" prefWidth="223.0" />
+                                       </content>
+                                    </ScrollPane>
+                                 </children>
+                              </HBox>
+                           </children></VBox>
                      </children>
                   </HBox>
                </content></Tab>

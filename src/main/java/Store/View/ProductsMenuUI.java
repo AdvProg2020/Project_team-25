@@ -69,6 +69,7 @@ public class ProductsMenuUI {
     public Slider priceLowSlider;
     public TextField searchBrandName;
     public TextField searchSellerName;
+    public VBox categoryFiltersVBox;
 
 
     public static Parent getContent() throws IOException {
@@ -87,9 +88,10 @@ public class ProductsMenuUI {
     @FXML
     private void initialize() {
         sortChoiceBox.setItems(FXCollections.observableArrayList(availableSorts));
-        setRangeOfSliders();
         initialSetup();
         setupBindings();
+        setCategoryFiltersVBox();
+        setRangeOfSliders();
         showProducts();
 
     }
@@ -315,8 +317,29 @@ public class ProductsMenuUI {
         } catch (Exception exception) {
             //do nothing
         }
-
         productsToBeShown = productsInThisPage;
+    }
+
+    private void setCategoryFiltersVBox() {
+        categoryFiltersVBox.getChildren().clear();
+        availableFilters = new ArrayList(Product.getAllFilters(categoryFilter));
+        for (String filter : availableFilters) {
+            CheckBox checkBox = new CheckBox(filter);
+            categoryFiltersVBox.getChildren().add(checkBox);
+            checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    pageNumber = 1;
+                    pageNumberField.setText(Integer.toString(pageNumber));
+                    if (newValue) {
+                        filters.add(filter);
+                    } else {
+                        filters.remove(filter);
+                    }
+                    showProducts();
+                }
+            });
+        }
     }
 
 }
