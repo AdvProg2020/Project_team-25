@@ -1,0 +1,29 @@
+* {
+	-fx-font-family: "Proxima Nova";
+}
+
+.viewport {
+	-fx-background-color: rgba(250, 250, 250, 1);
+	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0.0, 0.0);
+}
+
+.digestLabels {
+	-fx-text-fill: black;
+	-fx-font-weight: bold;
+}
+
+.digestData {
+	-fx-text-fill: #7f0055;
+}
+
+.digestFilters {
+	-fx-text-fill: #486cfa;
+}
+
+.digestData.available {
+	-fx-text-fill: #137a00;
+}
+
+.digestData.unavailable {
+	-fx-text-fill: red;
+}

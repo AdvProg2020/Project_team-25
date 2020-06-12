@@ -30,12 +30,14 @@ public class Main extends Application {
 //        product.setImagePath("Iino_Miko.png");
 //        product.addFilter("Pashm");
 //        product.addFilter("Pashmak");
+//        product.addFilter("HITOTSU");
 //
 //        Seller seller2 = new Seller("JOJO", "jack", "ripper", "lab@lab.com", "0950", "1234", 1000, "company1", "describe");
 //        Product product1 = new Product(CheckingStatus.CREATION, null, "product1", seller2, "brand1", 10, true, "describe");
 //        product1.setImagePath("Iino_Miko.png");
 //        product1.addFilter("Pashm");
 //        product1.addFilter("Pashmak");
+//        product1.addFilter("FUTATSU");
 //
 //        Offer offer = new Offer(seller2, CheckingStatus.CREATION, 20);
 //        offer.addProduct(product1);
