@@ -18,7 +18,12 @@ public class Comment implements Serializable {
         this.product = product;
         this.commentTitle = commentTitle;
         this.commentText = commentText;
-        this.hasBought = ((Customer) commentingUser).hasBoughtProduct(product); // Bound to change
+        if (commentingUser instanceof Customer) {
+            this.hasBought = ((Customer) commentingUser).hasBoughtProduct(product); // Bound to change
+        }
+        else {
+            this.hasBought = false;
+        }
         this.acceptanceStatus = VerifyStatus.WAITING;
     }
 

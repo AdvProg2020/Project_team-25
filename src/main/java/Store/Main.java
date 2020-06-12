@@ -1,9 +1,11 @@
 package Store;
 
+import Store.Controller.MainMenuUIController;
 import Store.Model.*;
 import Store.Model.Enums.CheckingStatus;
 import Store.View.MainMenu;
 import Store.View.MainMenuUI;
+import Store.View.ProductMenuUI;
 import Store.View.SignUpCustomerAndSellerMenuUI;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +24,29 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         otherStage.initModality(Modality.APPLICATION_MODAL);
 
+////        Parent root = MainMenuUI.getContent();
+//        Seller seller1 = new Seller("jackRipper", "jack", "ripper", "lab@lab.com", "0950", "1234", 1000, "company1", "describe");
+//        Product product = new Product(CheckingStatus.CREATION, null, "product1", seller1, "brand1", 10, false, "describe");
+//        product.setImagePath("Iino_Miko.png");
+//        product.addFilter("Pashm");
+//        product.addFilter("Pashmak");
+//
+//        Seller seller2 = new Seller("JOJO", "jack", "ripper", "lab@lab.com", "0950", "1234", 1000, "company1", "describe");
+//        Product product1 = new Product(CheckingStatus.CREATION, null, "product1", seller2, "brand1", 10, true, "describe");
+//        product1.setImagePath("Iino_Miko.png");
+//        product1.addFilter("Pashm");
+//        product1.addFilter("Pashmak");
+//
+//        Offer offer = new Offer(seller2, CheckingStatus.CREATION, 20);
+//        offer.addProduct(product1);
+//        Offer.addOfferToAllOffers(offer);
+//
+//        Product.addProduct(product);
+//        Product.addProduct(product1);
+//
+//        product.addComment(MainMenuUIController.currentUser, "Very Cool", "Loved It!");
+//
+//        MainMenuUIController.currentUser = seller2;
         Parent root = MainMenuUI.getContent();
         applicationStage = primaryStage;
         primaryStage.setTitle("Shop");
@@ -36,7 +61,7 @@ public class Main extends Application {
 
 //        ResourceHandler.readAll();
 //        Manager.checkPeriodOffCode();
-        MainMenu.currentUser = MainMenu.guest;
+        MainMenuUIController.currentUser = MainMenuUIController.guest;
 
         launch(args);
     }
@@ -46,6 +71,10 @@ public class Main extends Application {
         otherStage.setTitle(title);
         otherStage.setResizable(false);
         otherStage.showAndWait();
+    }
+
+    public static void setPrimaryStageScene(Scene scene) {
+        applicationStage.setScene(scene);
     }
 
     public static void setTest() {

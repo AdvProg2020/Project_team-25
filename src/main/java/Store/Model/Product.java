@@ -9,8 +9,8 @@ import java.util.HashSet;
 
 public class Product implements Serializable {
 
-    private String imagePath;
-    private String videoPath;
+    private String imagePath = "";
+    private String videoPath = "";
 
     private int productID;
     private CheckingStatus productStatus;
@@ -106,9 +106,6 @@ public class Product implements Serializable {
             return false;
         }
         else if (!brand.equals(other.getBrand())) {
-            return false;
-        }
-        else if (availablity != other.getAvailablity()) {
             return false;
         }
         else if (!filters.equals(other.filters)) {
@@ -257,6 +254,14 @@ public class Product implements Serializable {
 
     public static HashSet<String> getAllFilters() {
         return new HashSet<>(allFilters);
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public void setVideoPath(String videoPath) {
+        this.videoPath = videoPath;
     }
 
     public static void addFilterToAllFilters(String filter) {

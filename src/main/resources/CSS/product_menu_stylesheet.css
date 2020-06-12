@@ -1,0 +1,126 @@
+* {
+	-fx-font-family: "Proxima Nova";
+}
+
+.viewport {
+	-fx-background-color: rgba(230, 230, 230, 0.7);
+}
+
+.digestLabels {
+	-fx-text-fill: black;
+	-fx-font-size: 18;
+	-fx-font-weight: bold;
+}
+
+
+.offPercentageLabel {
+	-fx-text-fill: #ff8800;
+	-fx-font-size: 18;
+	-fx-font-weight: bold;
+	-fx-border-color: white;
+	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0.0, 0.0);
+}
+
+.commentLabel {
+	-fx-text-fill: black;
+	-fx-font-size: 16;
+}
+
+.digestData {
+	-fx-text-fill: #7f0055;
+	-fx-font-size: 18;
+}
+
+.digestFilters {
+	-fx-text-fill: #486cfa;
+	-fx-font-size: 18;
+}
+
+.digestData.available {
+	-fx-text-fill: #137a00;
+	-fx-font-size: 18;
+}
+
+.digestData.unavailable {
+	-fx-text-fill: red;
+	-fx-font-size: 18;
+}
+
+.addToCartButton {
+	-fx-background-color: #4afc47;
+	-fx-text-fill: white;
+	-fx-border-radius: 30 30 30 30;
+	-fx-background-radius: 30 30 30 30;
+	-fx-font-size: 14;
+	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0.0, 0.0);
+}
+.addToCartButton:hover {
+	-fx-background-color: #73ff70;
+}
+.addToCartButton:pressed {
+	-fx-background-color: #31b82e;
+}
+
+.rateButton {
+	-fx-background-color: #808080;
+	-fx-text-fill: white;
+	-fx-border-radius: 30 30 30 30;
+	-fx-background-radius: 30 30 30 30;
+	-fx-font-size: 12;
+	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0.0, 0.0);
+}
+.rateButton:hover {
+	-fx-background-color: #9e9e9e;
+}
+.rateButton:pressed {
+	-fx-background-color: #5e5e5e;
+}
+
+.sellerButton {
+	-fx-background-color: #808080;
+	-fx-text-fill: white;
+	-fx-border-radius: 30 30 30 30;
+	-fx-background-radius: 30 30 30 30;
+	-fx-font-size: 12;
+	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0.0, 0.0);
+}
+.sellerButton:hover {
+	-fx-background-color: #9e9e9e;
+}
+.sellerButton:pressed {
+	-fx-background-color: #5e5e5e;
+}
+
+.text-field {
+	-fx-background-color: #a9a9a9 , white , white;
+    -fx-background-insets: 0 -1 -1 -1, 0 0 0 0, 0 -1 3 -1;
+    -fx-background-radius: 10 10 10 10;
+	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0.0, 0.0);
+}
+
+.text-field.error {
+	-fx-background-color: #f23b2e , #f5473b , #f5473b;
+}
+
+.ratingButton{
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+    -fx-font-family:"Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 1em; /* 12 */
+    -fx-text-fill: #828282;
+}
+
+.ratingButton:focused {
+    -fx-border-color: transparent, black;
+    -fx-border-width: 1, 1;
+    -fx-border-style: solid, segments(1, 2);
+    -fx-border-radius: 0, 0;
+    -fx-border-insets: 1 1 1 1, 0;
+}
+
+.ratingButton:pressed {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}
