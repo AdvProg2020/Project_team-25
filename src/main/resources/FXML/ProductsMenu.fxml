@@ -154,6 +154,8 @@
                               <Button id="previousPageButton" fx:id="previousPageButton" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" text="&lt;&lt;" textAlignment="RIGHT" />
                               <TextField fx:id="pageNumberField" alignment="CENTER" prefHeight="50.0" prefWidth="70.0" text="1" />
                               <Button id="nextPageButton" fx:id="nextPageButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" text="&gt;&gt;" />
+                              <Region prefHeight="200.0" prefWidth="200.0" />
+                              <CheckBox fx:id="showAvailableCheckBox" mnemonicParsing="false" text="Show Available" />
                            </children></HBox>
                         <Separator prefWidth="200.0" style="-fx-border-color: black;" />
                         <ScrollPane fx:id="productsList" prefHeight="450.0" prefWidth="950.0">
@@ -174,7 +176,88 @@
                      </children>
                   </VBox>
                </content></Tab>
-          <Tab text="Advanced Search" />
+          <Tab text="Advanced Search">
+               <content>
+                  <HBox prefHeight="458.0" prefWidth="945.0">
+                     <children>
+                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="475.0">
+                           <children>
+                              <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" text="Static Filters" textAlignment="CENTER">
+                                 <font>
+                                    <Font size="36.0" />
+                                 </font>
+                              </Label>
+                              <HBox prefHeight="149.0" prefWidth="467.0">
+                                 <children>
+                                    <VBox alignment="TOP_CENTER" prefHeight="98.0" prefWidth="328.0">
+                                       <children>
+                                          <Label text="Price Low" />
+                                          <Slider fx:id="priceLowSlider" showTickMarks="true" snapToTicks="true" />
+                                          <Label text="Price High" />
+                                          <Slider fx:id="priceHighSlider" showTickMarks="true" snapToTicks="true" />
+                                       </children>
+                                    </VBox>
+                                    <VBox prefHeight="147.0" prefWidth="138.0">
+                                       <children>
+                                          <Label fx:id="priceLowLabel" alignment="TOP_CENTER" prefHeight="63.0" prefWidth="136.0" textAlignment="CENTER">
+                                             <font>
+                                                <Font size="25.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="priceHighLabel" alignment="TOP_CENTER" layoutX="50.0" layoutY="65.0" prefHeight="74.0" prefWidth="136.0" textAlignment="CENTER">
+                                             <font>
+                                                <Font size="25.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label prefHeight="53.0" prefWidth="155.0" text="Brand Name">
+                                       <font>
+                                          <Font size="25.0" />
+                                       </font>
+                                    </Label>
+                                    <Button id="searchButton" fx:id="searchButton1" disable="true" mnemonicParsing="false" prefHeight="51.0" prefWidth="49.0">
+                                       <graphic>
+                                          <ImageView fitHeight="33.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../Icons/Search.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                    <TextField fx:id="searchBrandName" prefHeight="50.0" prefWidth="240.0" />
+                                 </children>
+                              </HBox>
+                              <HBox layoutX="11.0" layoutY="215.0" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label prefHeight="53.0" prefWidth="155.0" text="Seller Name">
+                                       <font>
+                                          <Font size="25.0" />
+                                       </font>
+                                    </Label>
+                                    <Button id="searchButton" disable="true" mnemonicParsing="false" prefHeight="51.0" prefWidth="49.0">
+                                       <graphic>
+                                          <ImageView fitHeight="33.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../Icons/Search.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                    <TextField fx:id="searchSellerName" prefHeight="50.0" prefWidth="240.0" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                        <VBox prefHeight="200.0" prefWidth="475.0" />
+                     </children>
+                  </HBox>
+               </content></Tab>
         </tabs>
       </TabPane>
    </children>

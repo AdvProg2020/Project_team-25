@@ -139,4 +139,26 @@ public class ProductsController {
         }
         return result;
     }
+
+    public static double getPriceHigh() {
+        ArrayList<Product> products = Product.getAllProducts();
+        double max = -1;
+        for (Product product : products) {
+            if (max < product.getPrice()) {
+                max = product.getPrice();
+            }
+        }
+        return max;
+    }
+
+    public static double getPriceLow() {
+        ArrayList<Product> products = Product.getAllProducts();
+        double min = getPriceHigh();
+        for (Product product : products) {
+            if (min > product.getPrice()) {
+                min = product.getPrice();
+            }
+        }
+        return min;
+    }
 }

@@ -62,6 +62,13 @@ public class ProductsMenuUI {
     public Button previousPageButton;
     public Button nextPageButton;
     public TextField pageNumberField;
+    public CheckBox showAvailableCheckBox;
+    public Label priceLowLabel;
+    public Label priceHighLabel;
+    public Slider priceHighSlider;
+    public Slider priceLowSlider;
+    public TextField searchBrandName;
+    public TextField searchSellerName;
 
 
     public static Parent getContent() throws IOException {
@@ -80,12 +87,22 @@ public class ProductsMenuUI {
     @FXML
     private void initialize() {
         sortChoiceBox.setItems(FXCollections.observableArrayList(availableSorts));
+        setRangeOfSliders();
         initialSetup();
         setupBindings();
         showProducts();
 
     }
 
+    private void setRangeOfSliders() {
+        priceHighSlider.setMax((int)ProductsController.getPriceHigh() + 1);
+        priceHighSlider.setValue(priceHighSlider.getMax());
+        priceHighSlider.setMin((int)ProductsController.getPriceLow());
+        priceLowSlider.setMax((int)ProductsController.getPriceHigh() + 1);
+        priceLowSlider.setMin((int)ProductsController.getPriceLow());
+        priceHighLabel.setText(Integer.toString((int)priceHighSlider.getMax() + 1) + "$");
+        priceLowLabel.setText(Integer.toString((int)priceHighSlider.getMin()) + "$");
+    }
 
     private void initialSetup() {
         loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
@@ -135,8 +152,72 @@ public class ProductsMenuUI {
             }
         });
 
+        showAvailableCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                pageNumber = 1;
+                pageNumberField.setText(Integer.toString(pageNumber));
+                if (newValue) {
+                    availabilityFilter = "1";
+                } else {
+                    availabilityFilter = "null";
+                }
+                showProducts();
+            }
+        });
+
         nextPageButton.setOnMouseClicked(event -> showNextPage());
         previousPageButton.setOnMouseClicked(event -> showPreviousPage());
+
+        priceHighSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                priceHighLabel.setText(Integer.toString((int)newValue.doubleValue()) + "$");
+                priceHighFilter = newValue.doubleValue();
+                pageNumber = 1;
+                pageNumberField.setText(Integer.toString(pageNumber));
+                showProducts();
+            }
+        });
+
+        priceLowSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                priceLowLabel.setText(Integer.toString((int)newValue.doubleValue()) + "$");
+                priceLowFilter = newValue.doubleValue();
+                pageNumber = 1;
+                pageNumberField.setText(Integer.toString(pageNumber));
+                showProducts();
+            }
+        });
+
+        searchBrandName.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (newValue.isEmpty()) {
+                    brandFilter = "null";
+                } else {
+                    brandFilter = newValue;
+                }
+                pageNumber = 1;
+                pageNumberField.setText(Integer.toString(pageNumber));
+                showProducts();
+            }
+        });
+
+        searchSellerName.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (newValue.isEmpty()) {
+                    sellerUsernameFilter = "null";
+                } else {
+                    sellerUsernameFilter = newValue;
+                }
+                pageNumber = 1;
+                pageNumberField.setText(Integer.toString(pageNumber));
+                showProducts();
+            }
+        });
 
 //        mainMenuButton.setOnAction((e) -> ProductsMenuUI.showProductsMenu());
     }
