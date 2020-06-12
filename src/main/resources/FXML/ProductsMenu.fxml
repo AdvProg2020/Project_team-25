@@ -155,7 +155,7 @@
                               <TextField fx:id="pageNumberField" alignment="CENTER" prefHeight="50.0" prefWidth="70.0" text="1" />
                               <Button id="nextPageButton" fx:id="nextPageButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" text="&gt;&gt;" />
                               <Region prefHeight="200.0" prefWidth="200.0" />
-                              <CheckBox fx:id="showAvailableCheckBox" mnemonicParsing="false" text="Show Available" />
+                              <CheckBox fx:id="showAvailableCheckBox" mnemonicParsing="false" text="Show Availables" />
                            </children></HBox>
                         <Separator prefWidth="200.0" style="-fx-border-color: black;" />
                         <ScrollPane fx:id="productsList" prefHeight="450.0" prefWidth="950.0">

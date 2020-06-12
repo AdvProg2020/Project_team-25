@@ -79,7 +79,7 @@ public class ProductsMenuUI {
 
     public static void showProductsMenu() {
         try {
-            Main.setApplicationStage(new Scene(getContent()));
+            Main.setPrimaryStageScene(new Scene(getContent()));
         } catch (IOException exception) {
             exception.printStackTrace();
         }
@@ -97,13 +97,13 @@ public class ProductsMenuUI {
     }
 
     private void setRangeOfSliders() {
-        priceHighSlider.setMax((int)ProductsController.getPriceHigh() + 1);
+        priceHighSlider.setMax((int) ProductsController.getPriceHigh() + 1);
         priceHighSlider.setValue(priceHighSlider.getMax());
-        priceHighSlider.setMin((int)ProductsController.getPriceLow());
-        priceLowSlider.setMax((int)ProductsController.getPriceHigh() + 1);
-        priceLowSlider.setMin((int)ProductsController.getPriceLow());
-        priceHighLabel.setText(Integer.toString((int)priceHighSlider.getMax() + 1) + "$");
-        priceLowLabel.setText(Integer.toString((int)priceHighSlider.getMin()) + "$");
+        priceHighSlider.setMin((int) ProductsController.getPriceLow());
+        priceLowSlider.setMax((int) ProductsController.getPriceHigh() + 1);
+        priceLowSlider.setMin((int) ProductsController.getPriceLow());
+        priceHighLabel.setText(Integer.toString((int) priceHighSlider.getMax() + 1) + "$");
+        priceLowLabel.setText(Integer.toString((int) priceHighSlider.getMin()) + "$");
     }
 
     private void initialSetup() {
@@ -113,6 +113,13 @@ public class ProductsMenuUI {
     }
 
     public void setupBindings() {
+        mainMenuButton.setOnAction((e) -> {
+            try {
+                Main.setPrimaryStageScene(new Scene(MainMenuUI.getContent()));
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        });
         loginLogoutButton.setOnAction((e) -> LoginMenuUI.handleEvent());
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
 //        searchButton.setOnMouseClicked((e) -> giveSearchedProducts());
@@ -174,7 +181,7 @@ public class ProductsMenuUI {
         priceHighSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                priceHighLabel.setText(Integer.toString((int)newValue.doubleValue()) + "$");
+                priceHighLabel.setText(Integer.toString((int) newValue.doubleValue()) + "$");
                 priceHighFilter = newValue.doubleValue();
                 pageNumber = 1;
                 pageNumberField.setText(Integer.toString(pageNumber));
@@ -185,7 +192,7 @@ public class ProductsMenuUI {
         priceLowSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                priceLowLabel.setText(Integer.toString((int)newValue.doubleValue()) + "$");
+                priceLowLabel.setText(Integer.toString((int) newValue.doubleValue()) + "$");
                 priceLowFilter = newValue.doubleValue();
                 pageNumber = 1;
                 pageNumberField.setText(Integer.toString(pageNumber));
@@ -284,9 +291,17 @@ public class ProductsMenuUI {
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(80);
-        File file = new File("src/main/resources/Images/images.jpg");
+        product.getImagePath();
+        File file = null;
+        if (product.getImagePath().equals("")) {
+            file = new File("src/main/resources/Images/images.jpg");
+        } else {
+            file = new File("src/main/resources/Images/" + product.getImagePath());
+        }
+
         ImageView imageView = new ImageView(new Image(file.toURI().toString()));
-        imageView.setFitWidth(productInfo.getPrefWidth());
+        imageView.setFitWidth(225);
+        imageView.setFitHeight(225);
         Label productName = new Label(product.getName());
         Label productPrice = new Label(Double.toString(product.getPrice()) + "$");
         Label productRating = new Label(Double.toString(product.getAverageRating()) + "/5");
@@ -300,6 +315,13 @@ public class ProductsMenuUI {
 
         productInfo.getChildren().addAll(imageView, productName, gridPane, separator);
         vBox.getChildren().add(productInfo);
+        productInfo.setOnMouseClicked(event -> {
+            try {
+                Main.setPrimaryStageScene(new Scene(ProductMenuUI.getContent(product)));
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        });
     }
 
     private void setTobeShownProducts() {
@@ -309,6 +331,9 @@ public class ProductsMenuUI {
         productsToBeShown = ProductsController.filterProductsWithSearchQuery(productsToBeShown, searchQuery);
         productsToBeShown = ProductsController.sort(currentSort, productsToBeShown);
         totalPages = (productsToBeShown.size() + 17) / 18;
+        if (productsToBeShown.isEmpty()) {
+            totalPages = 1;
+        }
         ArrayList<Product> productsInThisPage = new ArrayList<>();
         try {
             for (int i = 0; i < 18; i++) {
