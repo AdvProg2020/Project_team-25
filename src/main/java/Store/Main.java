@@ -48,9 +48,10 @@ public class Main extends Application {
 
         product.addComment(MainMenuUIController.currentUser, "Very Cool", "Loved It!");
 
-        MainMenuUIController.currentUser = seller2;
+//        MainMenuUIController.currentUser = seller2;
         Parent root = MainMenuUI.getContent();
         applicationStage = primaryStage;
+        primaryStage.setResizable(false);
         primaryStage.setTitle("Shop");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();

@@ -5,10 +5,6 @@ import Store.Controller.ProductsController;
 import Store.Main;
 import Store.Model.Product;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,24 +21,23 @@ import javafx.scene.layout.VBox;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ProductsMenuUI {
-    private static ArrayList<String> filters = new ArrayList<String>();
-    private static ArrayList<String> availableFilters = new ArrayList<String>();
-    private static ArrayList<Product> productsToBeShown = new ArrayList<Product>();
+    private static ArrayList<String> filters;
+    private static ArrayList<String> availableFilters;
+    private static ArrayList<Product> productsToBeShown;
     private static String[] availableSorts = new String[]{"visit", "rating", "price", "lexicographical"};
-    private static String currentSort = "visit";
+    private static String currentSort;
 
-    private static String categoryFilter = "null";
-    private static double priceLowFilter = -1;
-    private static double priceHighFilter = -1;
-    private static String brandFilter = "null";
-    private static String nameFilter = "null";
-    private static String sellerUsernameFilter = "null";
-    private static String availabilityFilter = "null";
-    private static String searchQuery = "(.*)";
-    private static int pageNumber = 1;
+    private static String categoryFilter;
+    private static double priceLowFilter;
+    private static double priceHighFilter;
+    private static String brandFilter;
+    private static String nameFilter;
+    private static String sellerUsernameFilter;
+    private static String availabilityFilter;
+    private static String searchQuery;
+    private static int pageNumber;
     private static int totalPages;
 
     public Button mainMenuButton;
@@ -87,7 +82,7 @@ public class ProductsMenuUI {
 
     @FXML
     private void initialize() {
-        sortChoiceBox.setItems(FXCollections.observableArrayList(availableSorts));
+        resetAllFields();
         initialSetup();
         setupBindings();
         setCategoryFiltersVBox();
@@ -96,15 +91,6 @@ public class ProductsMenuUI {
 
     }
 
-    private void setRangeOfSliders() {
-        priceHighSlider.setMax((int) ProductsController.getPriceHigh() + 1);
-        priceHighSlider.setValue(priceHighSlider.getMax());
-        priceHighSlider.setMin((int) ProductsController.getPriceLow());
-        priceLowSlider.setMax((int) ProductsController.getPriceHigh() + 1);
-        priceLowSlider.setMin((int) ProductsController.getPriceLow());
-        priceHighLabel.setText(Integer.toString((int) priceHighSlider.getMax() + 1) + "$");
-        priceLowLabel.setText(Integer.toString((int) priceHighSlider.getMin()) + "$");
-    }
 
     private void initialSetup() {
         loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
@@ -113,6 +99,11 @@ public class ProductsMenuUI {
     }
 
     public void setupBindings() {
+        nextPageButton.setOnMouseClicked(event -> showNextPage());
+        previousPageButton.setOnMouseClicked(event -> showPreviousPage());
+        loginLogoutButton.setOnAction((e) -> LoginMenuUI.handleEvent());
+        signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
+
         mainMenuButton.setOnAction((e) -> {
             try {
                 Main.setPrimaryStageScene(new Scene(MainMenuUI.getContent()));
@@ -120,115 +111,88 @@ public class ProductsMenuUI {
                 exception.printStackTrace();
             }
         });
-        loginLogoutButton.setOnAction((e) -> LoginMenuUI.handleEvent());
-        signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
-//        searchButton.setOnMouseClicked((e) -> giveSearchedProducts());
-        searchString.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (newValue.isEmpty()) {
-                    searchQuery = "(.*)";
-                } else {
-                    searchQuery = newValue;
+
+
+        searchString.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                searchQuery = "(.*)";
+            } else {
+                searchQuery = newValue;
+            }
+            pageNumber = 1;
+            pageNumberField.setText(Integer.toString(pageNumber));
+            showProducts();
+        });
+
+        sortChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            currentSort = newValue.toString();
+            showProducts();
+        });
+
+        pageNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (Integer.parseInt(newValue) <= totalPages && Integer.parseInt(newValue) >= 1) {
+                    pageNumber = Integer.parseInt(newValue);
+                    showProducts();
+                    return;
                 }
-                pageNumber = 1;
                 pageNumberField.setText(Integer.toString(pageNumber));
-                showProducts();
+            } catch (Exception exception) {
+                // do nothing
             }
         });
 
-        sortChoiceBox.valueProperty().addListener(new ChangeListener() {
-            @Override
-            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                currentSort = newValue.toString();
-                showProducts();
+        showAvailableCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            pageNumber = 1;
+            pageNumberField.setText(Integer.toString(pageNumber));
+            if (newValue) {
+                availabilityFilter = "1";
+            } else {
+                availabilityFilter = "null";
             }
+            showProducts();
         });
 
-        pageNumberField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                try {
-                    if (Integer.parseInt(newValue) <= totalPages && Integer.parseInt(newValue) >= 1) {
-                        pageNumber = Integer.parseInt(newValue);
-                        showProducts();
-                        return;
-                    }
-                    pageNumberField.setText(Integer.toString(pageNumber));
-                } catch (Exception exception) {
-                    // do nothing
-                }
-            }
+        priceHighSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            priceHighLabel.setText("Price High: " + (int) newValue.doubleValue() + "$");
+            priceHighFilter = newValue.doubleValue();
+            pageNumber = 1;
+            pageNumberField.setText(Integer.toString(pageNumber));
+            showProducts();
         });
 
-        showAvailableCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                pageNumber = 1;
-                pageNumberField.setText(Integer.toString(pageNumber));
-                if (newValue) {
-                    availabilityFilter = "1";
-                } else {
-                    availabilityFilter = "null";
-                }
-                showProducts();
-            }
+        priceLowSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            priceLowLabel.setText("Price Low:   " + (int) newValue.doubleValue() + "$");
+            priceLowFilter = newValue.doubleValue();
+            pageNumber = 1;
+            pageNumberField.setText(Integer.toString(pageNumber));
+            showProducts();
         });
 
-        nextPageButton.setOnMouseClicked(event -> showNextPage());
-        previousPageButton.setOnMouseClicked(event -> showPreviousPage());
-
-        priceHighSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                priceHighLabel.setText(Integer.toString((int) newValue.doubleValue()) + "$");
-                priceHighFilter = newValue.doubleValue();
-                pageNumber = 1;
-                pageNumberField.setText(Integer.toString(pageNumber));
-                showProducts();
+        searchBrandName.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                brandFilter = "null";
+            } else {
+                brandFilter = newValue;
             }
+            pageNumber = 1;
+            pageNumberField.setText(Integer.toString(pageNumber));
+            showProducts();
         });
 
-        priceLowSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                priceLowLabel.setText(Integer.toString((int) newValue.doubleValue()) + "$");
-                priceLowFilter = newValue.doubleValue();
-                pageNumber = 1;
-                pageNumberField.setText(Integer.toString(pageNumber));
-                showProducts();
+        searchSellerName.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                sellerUsernameFilter = "null";
+            } else {
+                sellerUsernameFilter = newValue;
             }
-        });
-
-        searchBrandName.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (newValue.isEmpty()) {
-                    brandFilter = "null";
-                } else {
-                    brandFilter = newValue;
-                }
-                pageNumber = 1;
-                pageNumberField.setText(Integer.toString(pageNumber));
-                showProducts();
-            }
-        });
-
-        searchSellerName.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (newValue.isEmpty()) {
-                    sellerUsernameFilter = "null";
-                } else {
-                    sellerUsernameFilter = newValue;
-                }
-                pageNumber = 1;
-                pageNumberField.setText(Integer.toString(pageNumber));
-                showProducts();
-            }
+            pageNumber = 1;
+            pageNumberField.setText(Integer.toString(pageNumber));
+            showProducts();
         });
 
 //        mainMenuButton.setOnAction((e) -> ProductsMenuUI.showProductsMenu());
+//        searchButton.setOnMouseClicked((e) -> giveSearchedProducts());
     }
 
     private void showNextPage() {
@@ -250,35 +214,30 @@ public class ProductsMenuUI {
         pageNumberField.setText(Integer.toString(pageNumber));
     }
 
-    private void giveSearchedProducts() {
-        if (searchString.getText().isEmpty()) {
-            searchQuery = "(.*)";
-        } else {
-            searchQuery = searchString.getText();
-        }
-        showProducts();
-    }
 
     private void showProducts() {
-        setTobeShownProducts();
-        firstColumn.getChildren().clear();
-        secondColumn.getChildren().clear();
-        thirdColumn.getChildren().clear();
+        Platform.runLater(() -> {
+            setTobeShownProducts();
+            firstColumn.getChildren().clear();
+            secondColumn.getChildren().clear();
+            thirdColumn.getChildren().clear();
 
-        int productsNumber = 0;
-        for (Product product : productsToBeShown) {
-            switch (productsNumber % 3) {
-                case 0:
-                    setGraphicsOfProducts(firstColumn, product);
-                    break;
-                case 1:
-                    setGraphicsOfProducts(secondColumn, product);
-                    break;
-                default:
-                    setGraphicsOfProducts(thirdColumn, product);
+            int productsNumber = 0;
+            for (Product product : productsToBeShown) {
+                switch (productsNumber % 3) {
+                    case 0:
+                        setGraphicsOfProducts(firstColumn, product);
+                        break;
+                    case 1:
+                        setGraphicsOfProducts(secondColumn, product);
+                        break;
+                    default:
+                        setGraphicsOfProducts(thirdColumn, product);
+                }
+                productsNumber++;
             }
-            productsNumber++;
-        }
+
+        });
 
     }
 
@@ -303,8 +262,8 @@ public class ProductsMenuUI {
         imageView.setFitWidth(225);
         imageView.setFitHeight(225);
         Label productName = new Label(product.getName());
-        Label productPrice = new Label(Double.toString(product.getPrice()) + "$");
-        Label productRating = new Label(Double.toString(product.getAverageRating()) + "/5");
+        Label productPrice = new Label(product.getPrice() + "$");
+        Label productRating = new Label(product.getAverageRating() + "/5");
 
         gridPane.add(productRating, 1, 0);
         gridPane.add(productPrice, 0, 0);
@@ -351,20 +310,52 @@ public class ProductsMenuUI {
         for (String filter : availableFilters) {
             CheckBox checkBox = new CheckBox(filter);
             categoryFiltersVBox.getChildren().add(checkBox);
-            checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
-                @Override
-                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                    pageNumber = 1;
-                    pageNumberField.setText(Integer.toString(pageNumber));
-                    if (newValue) {
-                        filters.add(filter);
-                    } else {
-                        filters.remove(filter);
-                    }
-                    showProducts();
+            checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                pageNumber = 1;
+                pageNumberField.setText(Integer.toString(pageNumber));
+                if (newValue) {
+                    filters.add(filter);
+                } else {
+                    filters.remove(filter);
                 }
+                showProducts();
             });
         }
     }
 
+    private void resetAllFields() {
+        sortChoiceBox.setItems(FXCollections.observableArrayList(availableSorts));
+        filters = new ArrayList<>();
+        availableFilters = new ArrayList<>();
+        productsToBeShown = new ArrayList<>();
+        currentSort = "";
+        categoryFilter = "null";
+        priceLowFilter = -1;
+        priceHighFilter = -1;
+        brandFilter = "null";
+        nameFilter = "null";
+        sellerUsernameFilter = "null";
+        availabilityFilter = "null";
+        searchQuery = "(.*)";
+        pageNumber = 1;
+    }
+
+    private void setRangeOfSliders() {
+        priceHighSlider.setMax((int) ProductsController.getPriceHigh() + 1);
+        priceHighSlider.setValue(priceHighSlider.getMax());
+        priceHighSlider.setMin((int) ProductsController.getPriceLow());
+        priceLowSlider.setMax((int) ProductsController.getPriceHigh() + 1);
+        priceLowSlider.setMin((int) ProductsController.getPriceLow());
+        priceHighLabel.setText("Price High: " + ((int) priceHighSlider.getMax() + 1) + "$");
+        priceLowLabel.setText("Price Low:   " + (int) priceHighSlider.getMin() + "$");
+    }
+
+//    private void giveSearchedProducts() {
+//        if (searchString.getText().isEmpty()) {
+//            searchQuery = "(.*)";
+//        } else {
+//            searchQuery = searchString.getText();
+//        }
+//        showProducts();
+//    }
 }
