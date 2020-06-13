@@ -131,6 +131,7 @@ public class ProductMenuUI {
         loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
         signUpButton.disableProperty().bind(MainMenuUIController.isLoggedIn);
         loginLogoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
+        addToCartButton.setDisable(!productToShow.getAvailablity());
 
 //        Media media = new Media(ProductMenuUI.class.getResource("/Undertale_Enemy_Approaching_Yellow_Trimmed.wav").toExternalForm());
 //        MediaPlayer mediaPlayer = new MediaPlayer(media);
@@ -277,6 +278,7 @@ public class ProductMenuUI {
         setupImageAndVideo();
         handleAvailabilityLabel();
         setupCommentsSection();
+        addToCartButton.setDisable(!productToShow.getAvailablity());
     }
 
     public void setupBindings() {
