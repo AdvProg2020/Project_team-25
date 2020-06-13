@@ -70,24 +70,6 @@ public class Seller extends User {
         sellLog.add(new SellLogItem(sellLog.size() + 1, date, sellProducts, income, offValue, customer.getName(), false));
     }
 
-    public void removeProduct(int id) {
-        Product removeProduct = null;
-        for (Product product : products)
-            if (product.getProductID() == id) {
-                removeProduct = product;
-                break;
-            }
-        Product.deleteProduct(removeProduct);
-        products.remove(removeProduct);
-        Offer.removeProductFromOffer(removeProduct);
-    }
-
-    public void removeProducts(ArrayList<Product> productsToRemove) {
-        for (Product product: productsToRemove) {
-            this.removeProduct(product);
-        }
-    }
-
     public void removeProduct(Product productToRemove)
     {
         Product.deleteProduct(productToRemove);

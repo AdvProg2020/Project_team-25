@@ -111,6 +111,26 @@ public class CustomerModelTest {
         Assert.assertTrue(((Customer)MainMenu.currentUser).getMoney() == 979 && seller1.getMoney() == 1030);
     }
     @Test
+    public void endUsageCount()
+    {
+        String input = "purchase\nImamAliHighWay\n0912\nlab@lab.com\nce98\nback\npurchase\nImamAliHighWay\n0912\nlab@lab.com\nce98\nback\npurchase\nImamAliHighWay\n0912\nlab@lab.com\nce98\nback";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
+        ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
+        ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
+        Seller seller1 = Product.getProductByID(0).getSeller();
+        CustomerMenu.init();
+        ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
+        ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
+        ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
+        CustomerMenu.init();
+        ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
+        ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
+        ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
+        CustomerMenu.init();
+        Assert.assertTrue(outContent.toString().contains("The offCode is invalid!"));
+    }
+    @Test
     public void purchaseOtherTests()
     {
         System.setOut(originalOut);

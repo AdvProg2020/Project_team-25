@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Store.View.CustomerMenuUI">
+    <children>
+        <HBox layoutX="250.0" layoutY="-1.0" prefHeight="144.0" prefWidth="952.0" style="-fx-background-color: #FA2C56;">
+            <children>
+                <Button alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#myProductsButtonClicked" prefHeight="37.0" prefWidth="120.0" style="-fx-rotate: -90;" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="My Products">
+               <HBox.margin>
+                  <Insets top="35.0" />
+               </HBox.margin></Button>
+                <Button mnemonicParsing="false" onAction="#personalButtonClicked" prefHeight="37.0" prefWidth="120.0" style="-fx-rotate: -90;" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Personal">
+               <HBox.margin>
+                  <Insets top="35.0" />
+               </HBox.margin></Button>
+                <Button mnemonicParsing="false" onAction="#cartButtonClicked" prefHeight="37.0" prefWidth="120.0" style="-fx-rotate: -90;" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Cart">
+               <HBox.margin>
+                  <Insets top="35.0" />
+               </HBox.margin>
+            </Button>
+            <Pane prefHeight="144.0" prefWidth="592.0">
+               <children>
+                  <Label layoutX="269.0" layoutY="29.0" text="balance: ">
+                     <font>
+                        <Font name="Book Antiqua Bold Italic" size="33.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="balance" layoutX="425.0" layoutY="29.0" text="lable">
+                     <font>
+                        <Font name="Book Antiqua Italic" size="33.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            </children>
+        </HBox>
+        <VBox prefHeight="600.0" prefWidth="250.0" style="-fx-background-color: #3F2563;" styleClass="quickAccess" stylesheets="@../CSS/general_stylesheet.css">
+            <children>
+                <HBox alignment="CENTER_LEFT" prefHeight="77.0" prefWidth="247.0" style="-fx-background-color: #FA2C56;">
+                    <children>
+                        <Label fx:id="currentScreenTitle" text="Customer Page" textFill="WHITE">
+                            <font>
+                                <Font name="Dyuthi" size="24.0" />
+                            </font>
+                        </Label>
+                    </children>
+                    <padding>
+                        <Insets left="25.0" />
+                    </padding>
+                </HBox>
+                <Separator orientation="VERTICAL" prefHeight="75.0" prefWidth="0.0" visible="false" />
+                <Button fx:id="mainMenuButton" mnemonicParsing="false" onAction="#mainMenuButtonClicked" prefHeight="37.0" prefWidth="209.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Main Menu" />
+                <Button mnemonicParsing="false" onAction="#productsButtonClicked" prefHeight="37.0" prefWidth="209.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Products" />
+                <Button mnemonicParsing="false" onAction="#offersButtonClicked" prefHeight="37.0" prefWidth="209.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Offers" />
+                <Separator orientation="VERTICAL" prefHeight="84.0" prefWidth="10.0" visible="false" />
+                <GridPane alignment="BOTTOM_LEFT" vgap="5.0">
+                    <children>
+                        <Button fx:id="signUpButton" disable="true" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="110.0" styleClass="quickAccessLoginSignUpButton" stylesheets="@../CSS/general_stylesheet.css" text="Sign Up" GridPane.columnIndex="1">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../Icons/SignUp.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button graphicTextGap="6.0" mnemonicParsing="false" onAction="#logoutButtonClicked" prefHeight="30.0" prefWidth="110.0" styleClass="quickAccessLoginSignUpButton" stylesheets="@../CSS/general_stylesheet.css" text="Logout" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <graphic>
+                                <ImageView id="loginLogoutButtonIcon" fx:id="loginLogoutButtonIcon" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../Icons/Login.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Label text="Login Status:" textFill="#7f7f7f" />
+                        <Label id="loggedInStatusText" fx:id="loggedInStatusText" text="Not Logged In" textFill="#7f7f7f" GridPane.rowIndex="1" />
+                    </children>
+                    <columnConstraints>
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                </GridPane>
+            </children>
+        </VBox>
+        <ScrollPane layoutX="250.0" layoutY="129.0" prefHeight="471.0" prefWidth="952.0">
+            <content>
+                <AnchorPane prefHeight="470.0" prefWidth="950.0" style="-fx-background-color: #95ca6b;" />
+            </content></ScrollPane>
+    </children>
+</AnchorPane>

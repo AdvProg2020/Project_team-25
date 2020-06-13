@@ -60,7 +60,7 @@ public class SellerController {
 
     public static String editProduct(Seller seller, Product product, Product newProduct) {
         for (Product product1: seller.getProducts())
-            if (product1.equals(newProduct))
+            if (!product1.equals(product) && product1.equals(newProduct))
                 return "Your new product is in current seller's products!";
         Manager.addRequest(new Request(product, true, newProduct));
         return "Request has been sent.";
@@ -76,7 +76,7 @@ public class SellerController {
 
     public static String editOff(Seller seller, Offer offer, Offer newOffer) {
         for (Offer offer1: seller.getOffers())
-            if (offer1.equals(newOffer))
+            if (!offer1.equals(offer) && offer1.equals(newOffer))
                 return "Your new offer has at least one product which is in off!";
         Manager.addRequest(new Request(seller, offer, true, newOffer));
         return "Request has been sent.";
