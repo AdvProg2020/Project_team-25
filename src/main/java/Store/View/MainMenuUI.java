@@ -1,10 +1,15 @@
 package Store.View;
 
 import Store.Controller.MainMenuUIController;
+import Store.Main;
+import Store.Model.Customer;
+import Store.Model.Manager;
+import Store.Model.Seller;
 import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -91,6 +96,23 @@ public class MainMenuUI {
         loginLogoutButton.setOnAction((e) -> LoginMenuUI.handleEvent());
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
         productsButton.setOnAction((e) -> ProductsMenuUI.showProductsMenu());
+        userPageButton.setOnAction(e -> {
+            if (MainMenuUIController.currentUser instanceof Customer) {
+                CustomerMenuUI.showCustomerMenu();
+            }
+            else if (MainMenuUIController.currentUser instanceof Seller)
+                try {
+                    Main.setPrimaryStageScene(new Scene(CustomerMenuUI.getContent(), 1200, 600));
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            else if (MainMenuUIController.currentUser instanceof Manager)
+                try {
+                    Main.setPrimaryStageScene(new Scene(CustomerMenuUI.getContent(), 1200, 600));
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+        });
     }
 
 }

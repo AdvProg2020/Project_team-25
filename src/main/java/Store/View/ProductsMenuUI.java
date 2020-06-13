@@ -79,7 +79,7 @@ public class ProductsMenuUI {
 
     public static void showProductsMenu() {
         try {
-            Main.setApplicationStage(new Scene(getContent()));
+            Main.setPrimaryStageScene(new Scene(getContent()));
         } catch (IOException exception) {
             exception.printStackTrace();
         }
