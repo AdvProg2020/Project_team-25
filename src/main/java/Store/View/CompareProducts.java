@@ -1,8 +1,10 @@
 package Store.View;
 
 import Store.Controller.MainMenuUIController;
+import Store.Controller.ProductController;
 import Store.Main;
 import Store.Model.Product;
+import Store.Model.Seller;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -110,6 +112,8 @@ public class CompareProducts {
             categoryFirst.setText("None");
         }
 
+        sellersFirst.setText(getSellerNameTextList(firstProduct));
+
         ratingFirst.setText("" + firstProduct.getAverageRating());
 
         if (firstProduct.getStartingDate() != null) {
@@ -118,9 +122,7 @@ public class CompareProducts {
         else {
             dateOfOfferFirst.setText("None");
         }
-
         handleAvailabilityLabel(firstProduct, statusFirst);
-
 
         nameSecond.setText(secondProduct.getName() + "   (ID: " + secondProduct.getProductID() + ")");
         brandSecond.setText(secondProduct.getBrand());
@@ -132,6 +134,7 @@ public class CompareProducts {
         else {
             categorySecond.setText("None");
         }
+        sellersSecond.setText(getSellerNameTextList(secondProduct));
 
         ratingSecond.setText("" + secondProduct.getAverageRating());
 
@@ -141,8 +144,17 @@ public class CompareProducts {
         else {
             dateOfOfferSecond.setText("None");
         }
-
         handleAvailabilityLabel(secondProduct, statusSecond);
+    }
+
+    private String getSellerNameTextList(Product product) {
+        ArrayList<Seller> allSellersOfProduct = new ArrayList<>();
+        allSellersOfProduct = ProductController.getAllSellersOfProduct(product);
+        String result = "";
+        for (Seller seller : allSellersOfProduct) {
+            result = result.concat(seller.getUsername() + "   ");
+        }
+        return result;
     }
 
     private void handleAvailabilityLabel(Product productToShow, Label productStatusLabel) {
