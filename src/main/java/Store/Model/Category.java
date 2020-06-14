@@ -146,7 +146,12 @@ public class Category implements Serializable {
     }
 
     public ArrayList<String> getFilters() {
-        return filters;
+        ArrayList allFilters = new ArrayList();
+        allFilters.addAll(filters);
+        for (Product product : immediateProducts) {
+            allFilters.addAll(product.getFilters());
+        }
+        return allFilters;
     }
 
     public void removeFromFilter(String string) {

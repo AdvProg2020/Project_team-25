@@ -131,6 +131,7 @@ public class ProductMenuUI {
         loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
         signUpButton.disableProperty().bind(MainMenuUIController.isLoggedIn);
         loginLogoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
+        addToCartButton.setDisable(!productToShow.getAvailablity());
 
 //        Media media = new Media(ProductMenuUI.class.getResource("/Undertale_Enemy_Approaching_Yellow_Trimmed.wav").toExternalForm());
 //        MediaPlayer mediaPlayer = new MediaPlayer(media);
@@ -277,6 +278,7 @@ public class ProductMenuUI {
         setupImageAndVideo();
         handleAvailabilityLabel();
         setupCommentsSection();
+        addToCartButton.setDisable(!productToShow.getAvailablity());
     }
 
     public void setupBindings() {
@@ -290,6 +292,7 @@ public class ProductMenuUI {
 
         loginLogoutButton.setOnAction((e) -> LoginMenuUI.handleEvent());
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
+        productsButton.setOnAction((e) -> ProductsMenuUI.showProductsMenu());
 
         Button[] starButtons = new Button[] {ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5};
         for (int buttonIndex = 0; buttonIndex < 5; buttonIndex++) {

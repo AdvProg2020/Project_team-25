@@ -416,18 +416,18 @@ public class CustomerMenuUI implements Initializable {
         //putPaneInGridPane();
     }
 
-    private void putPaneInGridPane()
-    {
-        Pane pane;
-        for (int i = 0; i < gridPane.getRowCount(); i++)
-            for (int j = 0; j < gridPane.getColumnCount(); j++)
-            {
-                pane = new Pane();
-                pane.setMinWidth(462);      pane.setMaxWidth(464);
-                pane.setMinHeight(250);     pane.setMaxHeight(250);
-                gridPane.add(pane, j, i);
-            }
-    }
+//    private void putPaneInGridPane()
+//    {
+//        Pane pane;
+//        for (int i = 0; i < gridPane.getRowCount(); i++)
+//            for (int j = 0; j < gridPane.getColumnCount(); j++)
+//            {
+//                pane = new Pane();
+//                pane.setMinWidth(462);      pane.setMaxWidth(464);
+//                pane.setMinHeight(250);     pane.setMaxHeight(250);
+//                gridPane.add(pane, j, i);
+//            }
+//    }
 
     public void configurePositionsInGridPane(ImageView productImage, Label info, Button ratingStar1, Button ratingStar2, Button ratingStar3, Button ratingStar4, Button ratingStar5, Button rateProductButton)
     {

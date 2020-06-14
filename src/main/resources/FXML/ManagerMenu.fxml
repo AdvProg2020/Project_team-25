@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" stylesheets="@../CSS/manager_menu_stylesheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Store.View.ManagerMenuUI">
+   <children>
+      <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="250.0" style="-fx-background-color: #3F2563; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" styleClass="quickAccess" stylesheets="@../CSS/general_stylesheet.css">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="77.0" prefWidth="247.0" style="-fx-background-color: #FA2C56; -fx-background-radius: 5;">
+               <children>
+                  <Label fx:id="currentScreenTitle" text="Main Menu" textFill="WHITE">
+                     <font>
+                        <Font name="Dyuthi" size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets left="25.0" />
+               </padding>
+            </HBox>
+            <Separator orientation="VERTICAL" prefHeight="48.0" prefWidth="6.0" visible="false" />
+            <Button id="mainMenuButton" fx:id="mainMenuButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Main Menu">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Icons/MainMenu.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button id="productsButton" fx:id="productsButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Products">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Icons/Products.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button id="offersButton" fx:id="offersButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Offers">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Icons/Offers.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="userPageButton" disable="true" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="User Page">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Icons/User_Page.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Separator orientation="VERTICAL" prefHeight="98.0" prefWidth="6.0" visible="false" />
+            <GridPane vgap="5.0">
+               <children>
+                  <Button fx:id="signUpButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="110.0" styleClass="quickAccessLoginSignUpButton" stylesheets="@../CSS/general_stylesheet.css" text="Sign Up" GridPane.columnIndex="1">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Icons/SignUp.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="loginLogoutButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="110.0" styleClass="quickAccessLoginSignUpButton" stylesheets="@../CSS/general_stylesheet.css" text="Login" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <graphic>
+                        <ImageView id="loginLogoutButtonIcon" fx:id="loginLogoutButtonIcon" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Icons/Login.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Label text="Login Status:" textFill="#7f7f7f" />
+                  <Label id="loggedInStatusText" fx:id="loggedInStatusText" text="Not Logged In" textFill="#7f7f7f" GridPane.rowIndex="1" />
+               </children>
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+            </GridPane>
+            <Separator orientation="VERTICAL" prefHeight="27.0" prefWidth="7.0" visible="false" />
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </VBox>
+      <TabPane prefHeight="600.0" prefWidth="950.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Personal Info">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="950.0" />
+            </content>
+          </Tab>
+          <Tab text="Requests">
+               <content>
+                  <VBox prefHeight="100.0" prefWidth="950.0">
+                     <children>
+                        <Region prefHeight="100.0" prefWidth="200.0" />
+                        <ScrollPane prefHeight="500.0" prefWidth="200.0">
+                           <content>
+                              <VBox fx:id="requestsList" alignment="TOP_CENTER" prefHeight="500.0" prefWidth="950.0" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+               </content>
+          </Tab>
+            <Tab text="Categories">
+               <content>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="950.0">
+                           <children>
+                              <Button id="add" fx:id="addCategoryButton" mnemonicParsing="false" prefHeight="68.0" prefWidth="140.0" text="Add">
+                                 <graphic>
+                                    <ImageView fitHeight="46.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../Icons/Plus.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Region prefHeight="64.0" prefWidth="613.0" />
+                           </children></HBox>
+                        <ScrollPane prefHeight="500.0" prefWidth="200.0">
+                           <content>
+                              <VBox fx:id="categoriesList" prefHeight="500.0" prefWidth="950.0" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+            <Tab text="Mange Products">
+               <content>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="950.0">
+                           <children>
+                              <Region prefHeight="62.0" prefWidth="736.0" />
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="43.0" prefWidth="68.0" text="Sort By" wrapText="true">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="sortProductsChoiceBox" prefWidth="150.0" promptText="---" />
+                           </children>
+                        </HBox>
+                        <ScrollPane prefHeight="500.0" prefWidth="200.0">
+                           <content>
+                              <VBox fx:id="productsList" prefHeight="500.0" prefWidth="950.0" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+            <Tab text="Mange Users">
+               <content>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="950.0">
+                           <children>
+                              <Button id="add" fx:id="addManagerButton" mnemonicParsing="false" prefHeight="64.0" prefWidth="231.0" text="Add Manager">
+                                 <graphic>
+                                    <ImageView fitHeight="46.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../Icons/Plus.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Region prefHeight="64.0" prefWidth="493.0" />
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="43.0" prefWidth="68.0" text="Sort By" wrapText="true">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="sortUsersChoiceBox" prefWidth="150.0" promptText="---" />
+                           </children>
+                        </HBox>
+                        <ScrollPane prefHeight="500.0" prefWidth="200.0">
+                           <content>
+                              <VBox fx:id="usersList" prefHeight="500.0" prefWidth="950.0" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+            <Tab text="Mange OffCodes">
+               <content>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="950.0">
+                           <children>
+                              <Button id="add" fx:id="addOffCodeButton" mnemonicParsing="false" prefHeight="68.0" prefWidth="140.0" text="Add">
+                                 <graphic>
+                                    <ImageView fitHeight="46.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../Icons/Plus.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Region prefHeight="64.0" prefWidth="613.0" />
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="43.0" prefWidth="68.0" text="Sort By" wrapText="true">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="sortOffCodesChoiceBox" prefWidth="150.0" promptText="---" />
+                           </children>
+                        </HBox>
+                        <ScrollPane prefHeight="500.0" prefWidth="200.0">
+                           <content>
+                              <VBox fx:id="offCodesList" prefHeight="500.0" prefWidth="950.0" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</HBox>
