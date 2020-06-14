@@ -152,6 +152,9 @@ public class Manager extends User {
         } else {
             request.setStatus(REJECTED);
         }
+    }
+
+    public static void removeRequest(Request request) {
         pendingRequests.remove(request);
     }
 

@@ -74,7 +74,7 @@ public class ProductsMenuUI {
 
 
     public static Parent getContent() throws IOException {
-        Parent root = FXMLLoader.load(SignUpCustomerAndSellerMenuUI.class.getClassLoader().getResource("FXML/ProductsMenu.fxml"));
+        Parent root = FXMLLoader.load(ProductsMenuUI.class.getClassLoader().getResource("FXML/ProductsMenu.fxml"));
         return root;
     }
 

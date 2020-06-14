@@ -46,8 +46,8 @@ public class Main extends Application {
         product.addComment(MainMenuUIController.currentUser, "Very Cool", "Loved It!");
         Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
 
-//        MainMenuUIController.currentUser = manager1;
-        Parent root = MainMenuUI.getContent();
+        MainMenuUIController.currentUser = manager1;
+        Parent root = ManagerMenuUI.getContent();
         applicationStage = primaryStage;
         primaryStage.setResizable(false);
         primaryStage.setTitle("Shop");
@@ -132,6 +132,7 @@ public class Main extends Application {
 
         Request request = new Request(seller1);
         Manager.addRequest(request);
+        manager1.handleRequest(request, true);
 
         product1.assignToSeller();
         product2.assignToSeller();
