@@ -24,7 +24,7 @@ public class ProductsController {
     public static ArrayList<Product> handleStaticFiltering(ArrayList<Product> products, String category, double priceLow, double priceHigh, String brand, String name, String sellerUsername, String availability) {
         ArrayList<Product> result = new ArrayList<Product>();
         for (Product product : products) {
-            if (!category.equalsIgnoreCase("null") && !product.getCategory().getName().equalsIgnoreCase(category)) {
+            if (!category.equalsIgnoreCase("null") && (product.getCategory() == null || !product.getCategory().getName().equalsIgnoreCase(category))) {
                 continue;
             }
             if (priceLow >= 0 || priceHigh >= 0) {

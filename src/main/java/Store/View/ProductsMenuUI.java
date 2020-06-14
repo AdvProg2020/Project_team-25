@@ -3,6 +3,8 @@ package Store.View;
 import Store.Controller.MainMenuUIController;
 import Store.Controller.ProductsController;
 import Store.Main;
+import Store.Model.Category;
+import Store.Model.Manager;
 import Store.Model.Product;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -16,11 +18,14 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class ProductsMenuUI {
     private static ArrayList<String> filters;
@@ -65,6 +70,7 @@ public class ProductsMenuUI {
     public TextField searchBrandName;
     public TextField searchSellerName;
     public VBox categoryFiltersVBox;
+    public Button showCategoryButton;
 
 
     public static Parent getContent() throws IOException {
@@ -103,6 +109,7 @@ public class ProductsMenuUI {
         previousPageButton.setOnMouseClicked(event -> showPreviousPage());
         loginLogoutButton.setOnAction((e) -> LoginMenuUI.handleEvent());
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
+        showCategoryButton.setOnAction(event -> showCategories());
 
         mainMenuButton.setOnAction((e) -> {
             try {
@@ -193,6 +200,47 @@ public class ProductsMenuUI {
 
 //        mainMenuButton.setOnAction((e) -> ProductsMenuUI.showProductsMenu());
 //        searchButton.setOnMouseClicked((e) -> giveSearchedProducts());
+    }
+
+    private void showCategories() {
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.getStylesheets().add("CSS/products_stylesheet.css");
+        scrollPane.setPrefSize(400, 300);
+        VBox vBox = new VBox();
+        vBox.setPrefSize(400, 300);
+        vBox.setAlignment(Pos.TOP_CENTER);
+        Label base = new Label("All Categories");
+        base.setId("categoryButton");
+        base.setOnMouseClicked(event -> {
+            categoryFilter = "null";
+            pageNumber = 1;
+            pageNumberField.setText(Integer.toString(pageNumber));
+            showProducts();
+        });
+        vBox.getChildren().addAll(base, new Separator(),new Separator());
+        for (Category category : Manager.getAllCategories()) {
+            Label categoryName = new Label(category.getName());
+            categoryName.setId("categoryButton");
+            categoryName.setOnMouseClicked(event -> {
+                categoryFilter = category.getName();
+                pageNumber = 1;
+                pageNumberField.setText(Integer.toString(pageNumber));
+                showProducts();
+            });
+            HBox hBox = new HBox();
+            for (String filter : new HashSet<>(category.getFilters())) {
+                Button button = new Button(filter);
+                button.setId("filter");
+                Region region = new Region();
+                region.setPrefHeight(5);
+                hBox.getChildren().addAll(button, region);
+            }
+            Region region = new Region();
+            region.setPrefHeight(10);
+            vBox.getChildren().addAll(categoryName, hBox, new Separator(), region);
+        }
+        scrollPane.setContent(vBox);
+        Main.setupOtherStage(new Scene(scrollPane), "Select Category");
     }
 
     private void showNextPage() {
@@ -349,6 +397,8 @@ public class ProductsMenuUI {
         priceHighLabel.setText("Price High: " + ((int) priceHighSlider.getMax() + 1) + "$");
         priceLowLabel.setText("Price Low:   " + (int) priceHighSlider.getMin() + "$");
     }
+
+
 
 //    private void giveSearchedProducts() {
 //        if (searchString.getText().isEmpty()) {

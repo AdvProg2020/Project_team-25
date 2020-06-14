@@ -174,3 +174,24 @@
     -fx-background-color: orange;
 }
 
+#filter {
+    -fx-background-radius: 5em;
+    -fx-font-size: 18px;
+    -fx-background-color: #D8BFD8;
+    -fx-text-fill: orange;
+}
+
+#filter:hover {
+    -fx-background-color: purple;
+}
+
+#categoryButton {
+    -fx-background-radius: 2em;
+    -fx-font-size: 24px;
+    -fx-background-color: rgba(0, 0, 0, 1);
+    -fx-text-fill: white;
+}
+
+#categoryButton:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.6);
+}

@@ -121,7 +121,7 @@
                      <children>
                         <HBox prefHeight="50.0" prefWidth="200.0">
                            <children>
-                              <Button id="showCategoryButton" mnemonicParsing="false" prefHeight="75.0" prefWidth="200.0" text="Categories">
+                              <Button fx:id="showCategoryButton" id="showCategoryButton" mnemonicParsing="false" prefHeight="75.0" prefWidth="200.0" text="Categories">
                                  <graphic>
                                     <ImageView fitHeight="48.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
                                        <image>

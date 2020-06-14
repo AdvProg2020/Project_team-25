@@ -3,10 +3,7 @@ package Store;
 import Store.Controller.MainMenuUIController;
 import Store.Model.*;
 import Store.Model.Enums.CheckingStatus;
-import Store.View.MainMenu;
-import Store.View.MainMenuUI;
-import Store.View.ProductMenuUI;
-import Store.View.SignUpCustomerAndSellerMenuUI;
+import Store.View.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -47,8 +44,9 @@ public class Main extends Application {
         Product.addProduct(product1);
 
         product.addComment(MainMenuUIController.currentUser, "Very Cool", "Loved It!");
+        Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
 
-//        MainMenuUIController.currentUser = seller2;
+//        MainMenuUIController.currentUser = manager1;
         Parent root = MainMenuUI.getContent();
         applicationStage = primaryStage;
         primaryStage.setResizable(false);
@@ -100,7 +98,7 @@ public class Main extends Application {
         Product product2 = new Product(CheckingStatus.CREATION, null, "product2", seller2, "brand1", 5, true, "describe");
         Product product3 = new Product(CheckingStatus.CREATION, null, "product3", seller1, "brand1", 10, true, "describe");
         Product product4 = new Product(CheckingStatus.CREATION, null, "product3", seller2, "brand1", 15.5, true, "describe");
-        Product product5 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
+        Product product5 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, false, "describe");
         Product product6 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
         Product product7 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
         Product product8 = new Product(CheckingStatus.CREATION, null, "product5", seller1, "brand1", 980, true, "describe");
@@ -116,6 +114,7 @@ public class Main extends Application {
         Category category1 = new Category("category1", null);
         Category category2 = new Category("category2", null);
         Category category3 = new Category("category3", category1);
+        Category category4 = new Category("category4", category1);
 
         OffCode offCode1 = new OffCode("ce98",30,10,2);
         offCode1.setEndingTime(new Date(2020, 5, 4));
@@ -145,10 +144,12 @@ public class Main extends Application {
         category3.addToCategory(product3);
         category3.addToCategory(product4);
         category2.addToCategory(product5);
+        category4.addToCategory(product5);
 
         manager1.addCategory(category1);
         manager1.addCategory(category3);
         manager2.addCategory(category2);
+        manager2.addCategory(category4);
 
         Product.addProduct(product1);
         Product.addProduct(product2);
