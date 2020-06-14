@@ -17,6 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -41,8 +42,7 @@ public class CustomerMenuUI implements Initializable {
     private static Customer customer;
     private static String menuState = "CustomerMenu";
 
-    public AnchorPane anchorPane;
-    public GridPane gridPane;
+    public VBox myProductVBox, cartVBox, discountVBox;
 
     public Label balance;
     public Button personalInfoButton;
@@ -87,51 +87,7 @@ public class CustomerMenuUI implements Initializable {
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
         customer = (Customer) MainMenuUIController.currentUser;
-        if (menuState.equals("CustomerMenuMyProducts"))
-        {
-            setupInitial();
-            //calculate size of my products
-            int sizeOfMyProducts = 0;
-            ArrayList<Product> showProducts = new ArrayList<>();
-            for (BuyLogItem buyLogItem: customer.getBuyLog()) {
-                sizeOfMyProducts += buyLogItem.getProducts().size();
-                for (Product product : buyLogItem.getProducts())
-                    showProducts.add(product);
-            }
-            if (sizeOfMyProducts > 4)
-                configureGridPane(sizeOfMyProducts);
-            showProductsInGridPane(showProducts);
-
-            averageRatingLabels = new Label[sizeOfMyProducts];
-            currentRatings = new int[sizeOfMyProducts];
-            for (int currentRating: currentRatings)
-                currentRating = 0;
-
-        }
-        else if (menuState.equals("CustomerMenuCart"))
-        {
-            setupInitial();
-            //calculate size of my products
-            int sizeOfCart = customer.getCart().size();
-            if (sizeOfCart > 4)
-                configureGridPane(sizeOfCart);
-            showProductsInGridPaneCart(customer.getCart());
-            setupInitialCart();
-        }
-        else if (menuState.equals("CustomerMenuPersonal"))
-        {
-            setupInitial();
-            int sizeOfMyDiscounts = customer.getOffCodes().size();
-            if (sizeOfMyDiscounts > 2)
-                configureGridPane(sizeOfMyDiscounts);
-            showDiscountsInGridPane(customer.getOffCodes());
-            setupInitialPersonalMenu();
-        }
-        else if (menuState.equalsIgnoreCase("customerMenu"))
-        {
-            setupInitial();
-        }
-        else if (menuState.equalsIgnoreCase("changePass"))
+        if (menuState.equalsIgnoreCase("changePass"))
         {
 
         }
@@ -143,22 +99,50 @@ public class CustomerMenuUI implements Initializable {
         {
 
         }
+        else
+        {
+            setupInitial();
+        }
     }
 
     @FXML
     private void setupInitial()
     {
-        sliceButton(myDiscountButton, "My Discount");
-        sliceButton(personalInfoButton, "Personal Information");
-        sliceButton(myProductsButton, "My Products");
-        sliceButton(cartButton, "Cart");
-        loggedInStatusText.setText(customer.getUsername());
+        loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
+        logoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
         balance.textProperty().bind(new SimpleStringProperty(String.valueOf(customer.getMoney())));
+        setupInitialMyDiscount();
+        setupInitialCart();
+        setupInitialMyProducts();
+        setupInitialPersonalMenu();
     }
 
+    private void setupInitialMyProducts()
+    {
+        ArrayList<Product> showProducts = new ArrayList<>();
+        for (BuyLogItem buyLogItem: customer.getBuyLog()) {
+            for (Product product : buyLogItem.getProducts())
+                showProducts.add(product);
+        }
+        int i = 0;
+        for (Product product: showProducts)
+            showEachProductInHBox(product, i++);
+        averageRatingLabels = new Label[showProducts.size()];
+        currentRatings = new int[showProducts.size()];
+        for (int currentRating: currentRatings)
+            currentRating = 0;
+    }
+
+    private void setupInitialMyDiscount()
+    {
+        for (OffCode offCode: customer.getOffCodes().keySet())
+            showEachDiscountInHBox(offCode, customer.getOffCodes().get(offCode));
+    }
     @FXML
     private void setupInitialCart()
     {
+        for (Product product: customer.getCart())
+            showEachProductInHBoxCart(product);
         totalPriceCart.textProperty().bind(new SimpleStringProperty(String.valueOf(customer.getTotalCartPrice())));
     }
 
@@ -196,37 +180,10 @@ public class CustomerMenuUI implements Initializable {
         }
     }
 
-    private void sliceButton(Button button, String string)
+    private void showEachProductInHBox(Product product, int i)
     {
-
-    }
-
-    private void showProductsInGridPaneCart(ArrayList<Product> products)
-    {
-        for (int i = 0; i < (products.size() + 1) / 2; i++)
-            for (int j = 0; j < 2; j++)
-                showEachProductInGridPaneCart(i, j, products.get(2 * i + j));
-    }
-
-    private void showProductsInGridPane(ArrayList<Product> products)
-    {
-        for (int i = 0; i < (products.size() + 1) / 2; i++)
-            for (int j = 0; j < 2; j++)
-                showEachProductInGridPane(i, j, products.get(2 * i + j));
-    }
-
-    private void showDiscountsInGridPane(HashMap<OffCode, Integer> offCodes)
-    {
-        int i = 0;
-        for (OffCode offCode: offCodes.keySet())
-            showEachDiscountInGridPane(i++, offCode, offCodes.get(offCode));
-    }
-
-    private void showEachProductInGridPane(int i, int j, Product product)
-    {
+        HBox hBox = new HBox();
         String starPath = "resources\\Icons\\StarSelected.png";
-        Label info = new Label();
-        info.setText(product.getName() + "-------" + product.getCategory() + "-------" + product.getBrand() + "-------" + product.getAverageRating());
         Image productImage = new Image(product.getImagePath());
         ImageView productView = new ImageView(productImage);
         productView.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
@@ -260,21 +217,61 @@ public class CustomerMenuUI implements Initializable {
         Button[] starButtons = new Button[] {ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5};
         for (int buttonIndex = 0; buttonIndex < 5; buttonIndex++) {
             int finalButtonIndex = buttonIndex + 1;
-            starButtons[buttonIndex].setOnAction((e) -> handleRatingChange(finalButtonIndex, activeStar, activeStar1, activeStar2, activeStar3, activeStar4, i, j));
+            starButtons[buttonIndex].setOnAction((e) -> handleRatingChange(finalButtonIndex, activeStar, activeStar1, activeStar2, activeStar3, activeStar4, i));
         }
-        rateProductButton.setOnAction((e) -> handleRating(product, currentRatings[2 * i + j], ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5, rateProductButton, activeStar, activeStar1, activeStar2, activeStar3, activeStar4, i, j));
+        rateProductButton.setOnAction((e) -> handleRating(product, currentRatings[i], ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5, rateProductButton, activeStar, activeStar1, activeStar2, activeStar3, activeStar4, i));
 
         handleCanRate(product, ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5, rateProductButton, activeStar, activeStar1, activeStar2, activeStar3, activeStar4);
 
-        gridPane.add(productView, j, i);
-        gridPane.add(info, j, i);
-        gridPane.add(ratingStar1, j, i);
-        gridPane.add(ratingStar2, j, i);
-        gridPane.add(ratingStar3, j, i);
-        gridPane.add(ratingStar4, j, i);
-        gridPane.add(ratingStar5, j, i);
-        gridPane.add(rateProductButton, j, i);
-        configurePositionsInGridPane(productView, info, ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5, rateProductButton);
+        hBox.setMinHeight(165);
+        VBox vBox = new VBox(), vBox1 = new VBox(), vBox2 = new VBox();
+        vBox.setMinHeight(165);         vBox.setMaxHeight(165);
+        vBox.setMinWidth(752);          vBox.setMaxWidth(752);
+        hBox.getChildren().addAll(vBox, productView);
+        vBox1.setMinHeight(89);         vBox1.setMaxHeight(89);
+        vBox1.setMinWidth(752);         vBox1.setMaxWidth(752);
+        vBox2.setMinHeight(89);         vBox2.setMaxHeight(89);
+        vBox2.setMinWidth(752);         vBox2.setMaxWidth(752);
+        vBox.getChildren().addAll(vBox1, vBox2);
+        HBox hBox1 = new HBox(), hBox2 = new HBox(), hBox3 = new HBox(), hBox4 = new HBox();
+        Label label = new Label(), label1 = new Label("Name"), label2 = new Label("Seller"), label3 = new Label("Average Rating"), label4 = new Label("Category"), label5 = new Label("Brand"), label6 = new Label("Price"), label7 = new Label("Filters"), label8 = new Label("Description");
+        hBox1.getChildren().addAll(label1, label2, label3, label4, label5);
+        hBox1.setSpacing(70);
+        Separator separator = new Separator(), separator1 = new Separator(), separator2 = new Separator(), separator3 = new Separator(), separator4 = new Separator(), separator5 = new Separator(), separator6 = new Separator();
+        separator.setMinWidth(134);     separator.setMaxWidth(134);     separator.setMaxHeight(7);         separator.setVisible(false);
+        hBox3.getChildren().addAll(label6, label7, separator, label8);
+        Label label9 = new Label(), label10 = new Label(), label11 = new Label(), label12 = new Label(), label13 = new Label(), label14 = new Label(), label15 = new Label(), label16 = new Label();
+        label9.setMaxWidth(84);        label9.setMinWidth(84);        label9.setMaxHeight(40);      label9.setMinHeight(40);
+        label10.setMaxWidth(96);        label10.setMinWidth(96);        label10.setMaxHeight(40);      label10.setMinHeight(40);
+        label11.setMaxWidth(87);        label11.setMinWidth(87);        label11.setMaxHeight(40);      label11.setMinHeight(40);
+        label12.setMaxWidth(101);        label12.setMinWidth(101);        label12.setMaxHeight(40);      label12.setMinHeight(40);
+        label13.setMaxWidth(101);        label13.setMinWidth(101);        label13.setMaxHeight(40);      label13.setMinHeight(40);
+        label14.setMaxWidth(85);        label14.setMinWidth(85);        label14.setMaxHeight(40);      label14.setMinHeight(40);
+        label15.setMaxWidth(309);        label15.setMinWidth(309);        label15.setMaxHeight(40);      label15.setMinHeight(40);
+        label16.setMaxWidth(286);        label16.setMinWidth(286);        label16.setMaxHeight(40);      label16.setMinHeight(40);
+        label9.setText(product.getName());      label10.setText(product.getSeller().getUsername());     label11.setText(product.getAverageRating() + "");
+        label12.setText(product.getCategory() + "");        label13.setText(product.getBrand());        label14.setText(product.getPrice() + "");
+        label16.setText(product.getDescription());
+        for (String filter: product.getFilters())
+            label15.setText(filter + "- ");
+        separator1.setMinWidth(50);     separator1.setMaxWidth(50);     separator1.setMaxHeight(7);         separator1.setVisible(false);
+        separator2.setMinWidth(56);     separator2.setMaxWidth(56);     separator2.setMaxHeight(7);         separator2.setVisible(false);
+        separator3.setMinWidth(121);     separator3.setMaxWidth(121);     separator3.setMaxHeight(7);         separator3.setVisible(false);
+        separator4.setMinWidth(57);     separator4.setMaxWidth(57);     separator4.setMaxHeight(7);         separator4.setVisible(false);
+        separator5.setMinWidth(42);     separator5.setMaxWidth(42);     separator5.setMaxHeight(7);         separator5.setVisible(false);
+        separator6.setMinWidth(31);     separator6.setMaxWidth(31);     separator6.setMaxHeight(7);         separator6.setVisible(false);
+        hBox2.getChildren().addAll(label9, separator1, label10, separator2, label11, separator3, label12, separator4, label13);
+        hBox4.getChildren().addAll(label14, separator5, label15, separator6, label16);
+        vBox1.getChildren().addAll(hBox1, hBox2);
+        vBox2.getChildren().addAll(hBox3, hBox4);
+
+        productView.setFitHeight(138);      productView.setFitWidth(182);
+        HBox hBox5 = new HBox();
+        hBox5.getChildren().addAll(ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5);
+        VBox vBox3 = new VBox();
+        vBox3.getChildren().addAll(productView, hBox5, rateProductButton);
+        hBox.getChildren().addAll(vBox3);
+        myProductVBox.getChildren().addAll(hBox);
     }
 
     private void handleCanRate(Product product, Button ratingStar1, Button ratingStar2, Button ratingStar3, Button ratingStar4, Button ratingStar5, Button rateProductButton, ImageView activeStar, ImageView activeStar1, ImageView activeStar2, ImageView activeStar3, ImageView activeStar4) {
@@ -292,8 +289,8 @@ public class CustomerMenuUI implements Initializable {
         }
     }
 
-    private void handleRatingChange(int index, ImageView activeStar, ImageView activeStar1, ImageView activeStar2, ImageView activeStar3, ImageView activeStar4, int i, int j) {
-        currentRatings[2 * i + j] = index;
+    private void handleRatingChange(int index, ImageView activeStar, ImageView activeStar1, ImageView activeStar2, ImageView activeStar3, ImageView activeStar4, int i) {
+        currentRatings[i] = index;
         ImageView[] starImages = new ImageView[] {activeStar, activeStar1, activeStar2, activeStar3, activeStar4};
         resetStars(activeStar, activeStar1, activeStar2, activeStar3, activeStar4);
         for (int buttonIndex = 0; buttonIndex < index; buttonIndex++) {
@@ -301,11 +298,11 @@ public class CustomerMenuUI implements Initializable {
         }
     }
 
-    private void handleRating(Product product, int currentRating, Button ratingStar1, Button ratingStar2, Button ratingStar3, Button ratingStar4, Button ratingStar5, Button rateProductButton, ImageView activeStar, ImageView activeStar1, ImageView activeStar2, ImageView activeStar3, ImageView activeStar4, int i, int j) {
+    private void handleRating(Product product, int currentRating, Button ratingStar1, Button ratingStar2, Button ratingStar3, Button ratingStar4, Button ratingStar5, Button rateProductButton, ImageView activeStar, ImageView activeStar1, ImageView activeStar2, ImageView activeStar3, ImageView activeStar4, int i) {
         CustomerController.rateProduct((Customer) MainMenuUIController.currentUser, product, currentRating);
         resetStars(activeStar, activeStar1, activeStar2, activeStar3, activeStar4);
         handleCanRate(product, ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5, rateProductButton, activeStar, activeStar1, activeStar2, activeStar3, activeStar4);
-        averageRatingLabels[2 * i + j].setText("" + product.getAverageRating());
+        averageRatingLabels[i].setText("" + product.getAverageRating());
     }
 
 
@@ -325,14 +322,10 @@ public class CustomerMenuUI implements Initializable {
         rateProductButton.setDisable(disable);
     }
 
-    private void showEachProductInGridPaneCart(int i, int j, Product product)
+    private void showEachProductInHBoxCart(Product product)
     {
-        Image plus = new Image("resources\\Icons\\Plus.png");
-        Image mines = new Image("resources\\Icons\\Negative.png");
-        ImageView plusView = new ImageView(plus);
-        ImageView minesView = new ImageView(mines);
-        Label info = new Label();
-        info.setText(product.getName() + "-------" + product.getCategory() + "-------" + product.getBrand() + "--------" + product.getAverageRating());
+        HBox hBox = new HBox();
+        String starPath = "resources\\Icons\\StarSelected.png";
         Image productImage = new Image(product.getImagePath());
         ImageView productView = new ImageView(productImage);
         productView.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
@@ -342,10 +335,10 @@ public class CustomerMenuUI implements Initializable {
                 ioException.printStackTrace();
             }
         });
-        gridPane.add(productView, j, i);
-        gridPane.add(info, j, i);
-        gridPane.add(plusView, j, i);
-        gridPane.add(minesView, j, i);
+        Image plus = new Image("resources\\Icons\\Plus.png");
+        Image mines = new Image("resources\\Icons\\Negative.png");
+        ImageView plusView = new ImageView(plus);
+        ImageView minesView = new ImageView(mines);
         plusView.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
             try {
                 CustomerUIController.increaseProduct(customer, product);
@@ -366,133 +359,103 @@ public class CustomerMenuUI implements Initializable {
                 throwError(exception.getMessage());
             }
         });
-        configurePositionsInCartGridPane(productView, info, plusView, minesView);
+        hBox.setMinHeight(165);
+        VBox vBox = new VBox(), vBox1 = new VBox(), vBox2 = new VBox();
+        vBox.setMinHeight(165);         vBox.setMaxHeight(165);
+        vBox.setMinWidth(752);          vBox.setMaxWidth(752);
+        hBox.getChildren().addAll(vBox, productView);
+        vBox1.setMinHeight(89);         vBox1.setMaxHeight(89);
+        vBox1.setMinWidth(752);         vBox1.setMaxWidth(752);
+        vBox2.setMinHeight(89);         vBox2.setMaxHeight(89);
+        vBox2.setMinWidth(752);         vBox2.setMaxWidth(752);
+        vBox.getChildren().addAll(vBox1, vBox2);
+        HBox hBox1 = new HBox(), hBox2 = new HBox(), hBox3 = new HBox(), hBox4 = new HBox();
+        Label label = new Label(), label1 = new Label("Name"), label2 = new Label("Seller"), label3 = new Label("Average Rating"), label4 = new Label("Category"), label5 = new Label("Brand"), label6 = new Label("Price"), label7 = new Label("Filters"), label8 = new Label("Description");
+        hBox1.getChildren().addAll(label1, label2, label3, label4, label5);
+        hBox1.setSpacing(70);
+        Separator separator = new Separator(), separator1 = new Separator(), separator2 = new Separator(), separator3 = new Separator(), separator4 = new Separator(), separator5 = new Separator(), separator6 = new Separator();
+        separator.setMinWidth(134);     separator.setMaxWidth(134);     separator.setMaxHeight(7);         separator.setVisible(false);
+        hBox3.getChildren().addAll(label6, label7, separator, label8);
+        Label label9 = new Label(), label10 = new Label(), label11 = new Label(), label12 = new Label(), label13 = new Label(), label14 = new Label(), label15 = new Label(), label16 = new Label();
+        label9.setMaxWidth(84);        label9.setMinWidth(84);        label9.setMaxHeight(40);      label9.setMinHeight(40);
+        label10.setMaxWidth(96);        label10.setMinWidth(96);        label10.setMaxHeight(40);      label10.setMinHeight(40);
+        label11.setMaxWidth(87);        label11.setMinWidth(87);        label11.setMaxHeight(40);      label11.setMinHeight(40);
+        label12.setMaxWidth(101);        label12.setMinWidth(101);        label12.setMaxHeight(40);      label12.setMinHeight(40);
+        label13.setMaxWidth(101);        label13.setMinWidth(101);        label13.setMaxHeight(40);      label13.setMinHeight(40);
+        label14.setMaxWidth(85);        label14.setMinWidth(85);        label14.setMaxHeight(40);      label14.setMinHeight(40);
+        label15.setMaxWidth(309);        label15.setMinWidth(309);        label15.setMaxHeight(40);      label15.setMinHeight(40);
+        label16.setMaxWidth(286);        label16.setMinWidth(286);        label16.setMaxHeight(40);      label16.setMinHeight(40);
+        label9.setText(product.getName());      label10.setText(product.getSeller().getUsername());     label11.setText(product.getAverageRating() + "");
+        label12.setText(product.getCategory() + "");        label13.setText(product.getBrand());        label14.setText(product.getPrice() + "");
+        label16.setText(product.getDescription());
+        for (String filter: product.getFilters())
+            label15.setText(filter + "- ");
+        separator1.setMinWidth(50);     separator1.setMaxWidth(50);     separator1.setMaxHeight(7);         separator1.setVisible(false);
+        separator2.setMinWidth(56);     separator2.setMaxWidth(56);     separator2.setMaxHeight(7);         separator2.setVisible(false);
+        separator3.setMinWidth(121);     separator3.setMaxWidth(121);     separator3.setMaxHeight(7);         separator3.setVisible(false);
+        separator4.setMinWidth(57);     separator4.setMaxWidth(57);     separator4.setMaxHeight(7);         separator4.setVisible(false);
+        separator5.setMinWidth(42);     separator5.setMaxWidth(42);     separator5.setMaxHeight(7);         separator5.setVisible(false);
+        separator6.setMinWidth(31);     separator6.setMaxWidth(31);     separator6.setMaxHeight(7);         separator6.setVisible(false);
+        hBox2.getChildren().addAll(label9, separator1, label10, separator2, label11, separator3, label12, separator4, label13);
+        hBox4.getChildren().addAll(label14, separator5, label15, separator6, label16);
+        vBox1.getChildren().addAll(hBox1, hBox2);
+        vBox2.getChildren().addAll(hBox3, hBox4);
+
+        HBox hBox5 = new HBox();
+        hBox5.getChildren().addAll(minesView, plusView);
+        hBox5.setSpacing(20);
+        hBox5.setAlignment(Pos.TOP_CENTER);
+        VBox vBox3 = new VBox();
+        vBox3.getChildren().addAll(hBox5, productView);
+        hBox.getChildren().addAll(vBox3);
+        cartVBox.getChildren().addAll(hBox);
     }
 
-    private void showEachDiscountInGridPane(int i, OffCode offCode, int quantity)
+    private void showEachDiscountInHBox(OffCode offCode, int quantity)
     {
-        Label offCodeText = new Label();
-        Label maximumOff = new Label();
-        Label offPercent = new Label();
-        Label endingTime = new Label();
-        Label numberCanBeUsed = new Label();
-        offCodeText.setText(offCode.getCode());
-        maximumOff.setText(String.valueOf(offCode.getMaximumOff()));
-        numberCanBeUsed.setText(String.valueOf(quantity));
-        offPercent.setText(String.valueOf(offCode.getOffPercentage()));
-        endingTime.setText(String.valueOf(offCode.getEndingTime()));
-        gridPane.add(offCodeText, 0, i);
-        gridPane.add(maximumOff, 0, i);
-        gridPane.add(offPercent, 0, i);
-        gridPane.add(endingTime, 0, i);
-        gridPane.add(numberCanBeUsed, 0, i);
-        configurePositionsInDiscountGridPane(offCodeText, offPercent, maximumOff, endingTime, numberCanBeUsed);
-    }
+        HBox hBox = new HBox();
+        Label offCodeText = new Label("Code");
+        Label maximumOff = new Label("Maximum Off");
+        Label offPercent = new Label("Off Percent");
+        Label endingTime = new Label("Ending Date");
+        Label numberCanBeUsed = new Label("Remaining Number");
+        Label startingTime = new Label("Starting Date");
+        Label offCodeText2 = new Label();
+        Label maximumOff2 = new Label();
+        Label offPercent2 = new Label();
+        Label endingTime2 = new Label();
+        Label numberCanBeUsed2 = new Label();
+        Label startingTime2 = new Label();
+        offCodeText2.setText(offCode.getCode());
+        maximumOff2.setText(String.valueOf(offCode.getMaximumOff()));
+        numberCanBeUsed2.setText(String.valueOf(quantity));
+        offPercent2.setText(String.valueOf(offCode.getOffPercentage()));
+        endingTime2.setText(String.valueOf(offCode.getEndingTime()));
+        startingTime2.setText(String.valueOf(offCode.getStartingTime()));
+        VBox vBox1 = new VBox(), vBox2 = new VBox(), vBox3 = new VBox(), vBox4 = new VBox(), vBox5 = new VBox(), vBox6 = new VBox();
+        vBox1.getChildren().addAll(offCodeText, offCodeText2);
+        vBox2.getChildren().addAll(offPercent, offPercent2);
+        vBox3.getChildren().addAll(maximumOff, maximumOff2);
+        vBox4.getChildren().addAll(startingTime, startingTime2);
+        vBox5.getChildren().addAll(endingTime,endingTime2);
+        vBox6.getChildren().addAll(numberCanBeUsed, numberCanBeUsed2);
+        hBox.setMinHeight(100);     hBox.setMaxHeight(100);
+        hBox.setMinWidth(940);      hBox.setMaxWidth(940);
+        hBox.setSpacing(15);
+        HBox.setMargin(vBox1, new Insets(0, 0, 0, 10));            vBox1.setSpacing(30);
+        HBox.setMargin(vBox2, new Insets(0, 0, 0, 10));            vBox2.setSpacing(30);
+        HBox.setMargin(vBox3, new Insets(0, 0, 0, 10));            vBox3.setSpacing(30);
+        HBox.setMargin(vBox4, new Insets(0, 0, 0, 10));            vBox4.setSpacing(30);
+        HBox.setMargin(vBox5, new Insets(0, 0, 0, 10));            vBox5.setSpacing(30);
+        HBox.setMargin(vBox6, new Insets(0, 0, 0, 10));            vBox6.setSpacing(30);
+        vBox1.setAlignment(Pos.TOP_CENTER);         vBox4.setAlignment(Pos.TOP_CENTER);         vBox5.setAlignment(Pos.TOP_CENTER);
+        vBox2.setAlignment(Pos.TOP_CENTER);         vBox3.setAlignment(Pos.TOP_CENTER);         vBox6.setAlignment(Pos.TOP_CENTER);
 
+        vBox1.setMaxWidth(97);      vBox1.setMinWidth(97);
 
-    private void configureGridPane(int size)
-    {
-        RowConstraints newRow;
-        if (!menuState.equals("CustomerMenuMyDiscounts")) {
-            for (int i = 0; i < (size - 1) / 2; i++) {
-                anchorPane.setPrefHeight(anchorPane.getPrefHeight() + 250);
-                gridPane.setPrefHeight(gridPane.getPrefHeight() + 250);
-                newRow = new RowConstraints();
-                newRow.setMinHeight(250);
-                newRow.setMaxHeight(250);
-                gridPane.getRowConstraints().add(newRow);
-            }
-        }
-        else{
-            for (int i = 0; i < (size - 2); i++) {
-                anchorPane.setPrefHeight(anchorPane.getPrefHeight() + 100);
-                gridPane.setPrefHeight(gridPane.getPrefHeight() + 100);
-                newRow = new RowConstraints();
-                newRow.setMinHeight(100);
-                newRow.setMaxHeight(100);
-                gridPane.getRowConstraints().add(newRow);
-            }
-        }
-        //putPaneInGridPane();
-    }
+        hBox.getChildren().addAll(vBox1, vBox2, vBox3, vBox4, vBox5, vBox6);
 
-//    private void putPaneInGridPane()
-//    {
-//        Pane pane;
-//        for (int i = 0; i < gridPane.getRowCount(); i++)
-//            for (int j = 0; j < gridPane.getColumnCount(); j++)
-//            {
-//                pane = new Pane();
-//                pane.setMinWidth(462);      pane.setMaxWidth(464);
-//                pane.setMinHeight(250);     pane.setMaxHeight(250);
-//                gridPane.add(pane, j, i);
-//            }
-//    }
-
-    public void configurePositionsInGridPane(ImageView productImage, Label info, Button ratingStar1, Button ratingStar2, Button ratingStar3, Button ratingStar4, Button ratingStar5, Button rateProductButton)
-    {
-        productImage.setFitHeight(184);
-        productImage.setFitWidth(200);
-        GridPane.setValignment(productImage, VPos.CENTER);
-        GridPane.setHalignment(productImage, HPos.RIGHT);
-        GridPane.setMargin(productImage, new Insets(-50, 10, 0, 0));
-        info.setPrefWidth(211);      info.setPrefHeight(172);
-        GridPane.setMargin(info, new Insets(10, 0, 0, 10));
-        GridPane.setHalignment(info, HPos.LEFT);
-        GridPane.setValignment(info, VPos.TOP);
-        Button[] ratings = new Button[]{ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5};
-        int count = 2;
-        for (Button rating: ratings)
-        {
-            rating.setPrefWidth(26);
-            rating.setPrefHeight(26);
-            GridPane.setValignment(rating, VPos.BOTTOM);
-            GridPane.setHalignment(rating, HPos.CENTER);
-            GridPane.setMargin(rating, new Insets(0, (count--) * 100, 12, 0));
-        }
-        rateProductButton.setPrefWidth(49);         rateProductButton.setPrefHeight(25);
-        GridPane.setValignment(rateProductButton, VPos.BOTTOM);
-        GridPane.setHalignment(rateProductButton, HPos.RIGHT);
-        GridPane.setMargin(rateProductButton, new Insets(0, 20, 12, 0));
-    }
-
-    public void configurePositionsInCartGridPane(ImageView productImage, Label info, ImageView plus, ImageView mines)
-    {
-        productImage.setFitWidth(220);          productImage.setFitHeight(219);
-        info.setPrefHeight(225);            info.setPrefWidth(211);
-        plus.setFitHeight(20);          plus.setFitWidth(20);
-        mines.setFitHeight(20);            mines.setFitWidth(20);
-        GridPane.setHalignment(productImage, HPos.RIGHT);
-        GridPane.setHalignment(info, HPos.LEFT);
-        GridPane.setHalignment(plus, HPos.RIGHT);
-        GridPane.setHalignment(mines, HPos.CENTER);
-        GridPane.setValignment(productImage, VPos.CENTER);
-        GridPane.setValignment(info, VPos.TOP);
-        GridPane.setValignment(plus, VPos.TOP);
-        GridPane.setValignment(mines, VPos.TOP);
-        GridPane.setMargin(productImage, new Insets(0, 10, 0, 0));
-        GridPane.setMargin(info, new Insets(10, 0, 0, 0));
-        GridPane.setMargin(plus, new Insets(10, 5, 0, 0));
-        GridPane.setMargin(mines, new Insets(10, 0, 0, 0));
-    }
-
-
-    public void configurePositionsInDiscountGridPane(Label offCodeText, Label offPercent, Label maximumOff, Label endingTime, Label numberRemain)
-    {
-        Label[] lables = new Label[5];
-        lables[0].setText("Code: ");
-        lables[1].setText("Percent: ");
-        lables[2].setText("Maximum Off: ");
-        lables[3].setText("End Time: ");
-        lables[4].setText("Remaining Number: ");
-        for (int i = 0; i < 5; i++) {
-            gridPane.add(lables[i], GridPane.getColumnIndex(offCodeText), GridPane.getRowIndex(offCodeText));
-            GridPane.setMargin(lables[i], new Insets(0, 0, 50, 200 * i + 10));
-        }
-        lables = new Label[]{offCodeText, offPercent, maximumOff, endingTime, numberRemain};
-        for (int i = 0; i < 5; i++)
-            GridPane.setMargin(lables[i], new Insets(30, 0, 0, 200 * i + 40));
-
+        discountVBox.getChildren().addAll(hBox);
     }
 
     public static Parent getContent() throws IOException {
@@ -525,10 +488,6 @@ public class CustomerMenuUI implements Initializable {
 
     public void myProductsButtonClicked() throws IOException {
         changeScene("CustomerMenuMyProducts");
-    }
-
-    public void logoutButtonClicked(){
-
     }
 
     public void purchaseButtonClicked() throws IOException {

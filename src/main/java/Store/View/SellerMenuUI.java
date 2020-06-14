@@ -85,67 +85,42 @@ public class SellerMenuUI implements Initializable {
     public PasswordField newPass;
     public PasswordField confirmationNewPass;
 
-    public TextField newFilterTextField;
-    public ComboBox availableFilters;
-
     public TextField startDateOffer;
     public TextField endDateOffer;
     public TextField offPercentOffer;
-    public Label productsOffer;
-    public ComboBox addNewProductOffer;
-    public Button addNewProductOfferButton;
-    public ComboBox removeProductOffer;
-    public Button removeProductOfferButton;
-    public Label filterOffers;
-    public TextField addNewFilterOffer;
-    public Button addNewFilterOfferButton;
-    public ComboBox removeFilterOffer;
-    public Button removeFilterOfferButton;
-    String newProductInOfferString, deleteProductInOfferString, newFilterOfferString, deleteFilterOfferString;
+    public TextField productNameInOffer;
+    public TextField productBrandInOffer;
+    public ImageView plusFilterOffer;
+    public ImageView minesFilterOffer;
+    public ImageView plusProductOffer;
+    public ImageView minesProductOffer;
+
+    public TextField filterTextField;
 
     public TextField imagePath;
     public TextField videoPath;
-    public TextField productID;
-    public Label productStatus;
-    public Label category;
+    public TextField category;
     public TextField productName;
-    public Label sellerName;
     public TextField brand;
     public TextField price;
     public ComboBox availablity;
     public TextField attributes;
     public TextField description;
-    public Label averageRating;
     public TextField productFilters;
-    public TextField addNewFilterProduct;
-    public ComboBox removeFilterProduct;
-    public TextField visited;
-    String deleteFilterProduct, newFilterProduct;
+    public ImageView plusFilterProduct;
+    public ImageView minesFilterProduct;
     String availablityString;
 
+    public Button doneAddOffer;
+    public Button doneEditOffer;
+    public Button doneAddProduct;
+    public Button doneEditProduct;
+
+    ArrayList<Product> offerProducts;
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
         seller = (Seller) MainMenuUIController.currentUser;
-        if (menuState.equals("SellerMenuMyOffers"))
-        {
-            setupInitial();
-            setupInitialMyOffers();
-        }
-        else if (menuState.equals("SellerMenuManageProducts"))
-        {
-            setupInitial();
-            setupInitialManageProducts();
-        }
-        else if (menuState.equals("SellerMenuPersonal"))
-        {
-            setupInitial();
-            setupInitialPersonalMenu();
-        }
-        else if (menuState.equalsIgnoreCase("sellerMenu"))
-        {
-            setupInitial();
-        }
-        else if (menuState.equalsIgnoreCase("changePass"))
+        if (menuState.equalsIgnoreCase("changePass"))
         {
 
         }
@@ -156,10 +131,6 @@ public class SellerMenuUI implements Initializable {
         else if(menuState.equalsIgnoreCase("addOffer"))
         {
             setupInitialAddOffer();
-        }
-        else if(menuState.equalsIgnoreCase("viewBuyers"))
-        {
-            setupInitialBuyers();
         }
         else if (menuState.equalsIgnoreCase("enterPass"))
         {
@@ -173,133 +144,86 @@ public class SellerMenuUI implements Initializable {
         {
             setupInitialEditProduct();
         }
+        else
+            setupInitial();
     }
 
-    private void addFilterOfferButtonClicked()
-    {
-        if (!addNewFilterOffer.getText().isEmpty())
-            try {
-                SellerUIController.addFilterToOffer(seller, selectedOffer, addNewFilterOffer.getText());
-                addNewFilterOffer.setText("");
-            }catch (Exception exception)
-            {
-                throwError(exception.getMessage());
-            }
-        else
-            throwError("Filter Field is empty");
-    }
 
-    private void addFilterProductButtonClicked()
-    {
-        if (!newFilterProduct.isEmpty()) {
-            try {
-                SellerUIController.addFilterToProduct(seller, selectedProduct, newFilterProduct);
-                newFilterProduct = "";
-            }catch (Exception exception)
-            {
-                throwError(exception.getMessage());
-            }
-        }
-        else
-            throwError("Filter Field is empty");
-    }
-
-    private void removeFilterOfferButtonClicked()
-    {
-        //get filter and remove
-        if (!deleteFilterOfferString.isEmpty()) {
-            try {
-                SellerUIController.removeFilterFromOffer(seller, selectedOffer, deleteFilterOfferString);
-                removeFilterOffer.getItems().remove(deleteFilterOfferString);
-                deleteFilterOfferString = "";
-            }catch (Exception exception)
-            {
-                throwError(exception.getMessage());
-            }
-        }
-        else
-            throwError("Filter Field is Empty");
-    }
-
-    private void removeFilterProductButtonClicked()
-    {
-        //get filter and remove
-        if (!deleteFilterProduct.isEmpty()) {
-            try {
-                SellerUIController.removeFilterFromProduct(seller, selectedProduct, deleteFilterProduct);
-                removeFilterProduct.getItems().remove(deleteFilterProduct);
-                deleteFilterProduct = "";
-            }catch (Exception exception)
-            {
-                throwError(exception.getMessage());
-            }
-        }
-        else
-            throwError("Filter Field is Empty");
-    }
-
-    private void addProductToOfferButtonClicked()
-    {
-        if (!newProductInOfferString.isEmpty())
-        {
-            try{
-                SellerUIController.addProductToOffer(seller, selectedOffer, newProductInOfferString);
-                addNewProductOffer.getItems().remove(newProductInOfferString);
-                newProductInOfferString = "";
-            }catch (Exception exception)
-            {
-                throwError(exception.getMessage());
-            }
-        }
-        else
-            throwError("Add Product Field is Empty");
-    }
-
-    private void removeProductFromOfferButtonClicked()
-    {
-        if (!deleteProductInOfferString.isEmpty())
-        {
-            try{
-                SellerUIController.removeProductFromOffer(seller, selectedOffer, deleteProductInOfferString);
-                removeProductOffer.getItems().remove(deleteProductInOfferString);
-                deleteProductInOfferString = "";
-            }catch (Exception exception)
-            {
-                throwError(exception.getMessage());
-            }
-        }
-        else
-            throwError("Add Product Field is Empty");
-    }
 
     @FXML
     private void setupInitialEditOffer()
     {
+        offerProducts = selectedOffer.getProducts();
         startDateOffer.setText(String.valueOf(selectedOffer.getStartingTime()));
         endDateOffer.setText(String.valueOf(selectedOffer.getEndingTime()));
         offPercentOffer.setText(String.valueOf(selectedOffer.getOffPercent()));
-        productsOffer.setText(String.valueOf(selectedOffer.getProducts()));
-        filterOffers.setText(String.valueOf(selectedOffer.getFilters()));
-        addNewProductOffer.setItems(FXCollections.observableArrayList(productsNotAddedToOffer()));
-        removeProductOffer.setItems(FXCollections.observableArrayList(productsAddedToOffer()));
-        removeFilterOffer.setItems(FXCollections.observableArrayList(selectedOffer.getFilters()));
-        addNewProductOffer.valueProperty().addListener(new ChangeListener() {
-            @Override
-            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                newProductInOfferString = newValue.toString();
+        plusFilterOffer.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+            if (!filterTextField.getText().isEmpty())
+            {
+                try {
+                    SellerUIController.addFilterToOffer(seller, selectedOffer, filterTextField.getText());
+                }catch (Exception exception)
+                {
+                    throwError(exception.getMessage());
+                }
             }
+            else
+                throwError("Filter Field is Empty");
         });
-        removeProductOffer.valueProperty().addListener(new ChangeListener() {
-            @Override
-            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                deleteProductInOfferString = newValue.toString();
+        minesFilterOffer.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+            if (!filterTextField.getText().isEmpty())
+            {
+                try {
+                    SellerUIController.removeFilterFromOffer(seller, selectedOffer, filterTextField.getText());
+                }catch (Exception exception)
+                {
+                    throwError(exception.getMessage());
+                }
             }
+            else
+                throwError("Filter Field is Empty");
         });
-        removeFilterOffer.valueProperty().addListener(new ChangeListener() {
-            @Override
-            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                deleteFilterOfferString = newValue.toString();
+        plusProductOffer.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+            if (!productNameInOffer.getText().isEmpty() && !productBrandInOffer.getText().isEmpty())
+            {
+
             }
+            else
+                throwError("Incomplete Fields");
+        });
+        minesProductOffer.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+            if (!productNameInOffer.getText().isEmpty() && !productBrandInOffer.getText().isEmpty())
+            {
+
+            }
+            else
+                throwError("Incomplete Fields");
+        });
+    }
+
+    @FXML
+    private void setupInitialAddOffer()
+    {
+        plusFilterOffer.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+            if (!filterTextField.getText().isEmpty())
+            {
+                try {
+                    SellerUIController.addFilterToOffer(seller, selectedOffer, filterTextField.getText());
+                }catch (Exception exception)
+                {
+                    throwError(exception.getMessage());
+                }
+            }
+            else
+                throwError("Filter Field is Empty");
+        });
+        plusProductOffer.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+            if (!productNameInOffer.getText().isEmpty() && !productBrandInOffer.getText().isEmpty())
+            {
+
+            }
+            else
+                throwError("Incomplete Fields");
         });
     }
 
@@ -328,35 +252,108 @@ public class SellerMenuUI implements Initializable {
     {
         imagePath.setText(selectedProduct.getImagePath());
         videoPath.setText(selectedProduct.getVideoPath());
-        productID.setText(selectedProduct.getProductID() + "");
-        productStatus.setText(selectedProduct.getProductStatus() + "");
         category.setText(selectedProduct.getCategory().getFullName());
         productName.setText(selectedProduct.getName());
-        sellerName.setText(selectedProduct.getSeller().getUsername());
         brand.setText(selectedProduct.getBrand());
         price.setText(selectedProduct.getPrice() + "");
         attributes.setText(selectedProduct.getAttributes());
         description.setText(selectedProduct.getDescription());
-        averageRating.setText(selectedProduct.getAverageRating() + "");
-        productFilters.setText(selectedProduct.getFilters() + "");
-        visited.setText(selectedProduct.getVisited() + "");
         availablity.setItems(FXCollections.observableArrayList("Available", "Inavailable"));
-        removeFilterProduct.setItems(FXCollections.observableArrayList(selectedProduct.getFilters()));
-        removeFilterProduct.valueProperty().addListener(new ChangeListener() {
-            @Override
-            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                deleteFilterProduct = newValue.toString();
-            }
-        });
         availablity.valueProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
                 availablityString = newValue.toString();
             }
         });
+        plusFilterProduct.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+            if (!filterTextField.getText().isEmpty())
+            {
+                try {
+                    SellerUIController.addFilterToProduct(seller, selectedProduct, filterTextField.getText());
+                }catch (Exception exception)
+                {
+                    throwError(exception.getMessage());
+                }
+            }
+            else
+                throwError("Filter Field is Empty");
+        });
+        minesFilterProduct.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+            if (!filterTextField.getText().isEmpty())
+            {
+                try {
+                    SellerUIController.removeFilterFromProduct(seller, selectedProduct, filterTextField.getText());
+                }catch (Exception exception)
+                {
+                    throwError(exception.getMessage());
+                }
+            }
+            else
+                throwError("Filter Field is Empty");
+        });
     }
 
-    public void editProductButtonClicked()
+    @FXML
+    private void setupInitialAddProduct()
+    {
+        plusFilterProduct.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+            if (!filterTextField.getText().isEmpty())
+            {
+                try {
+                    SellerUIController.addFilterToProduct(seller, selectedProduct, filterTextField.getText());
+                }catch (Exception exception)
+                {
+                    throwError(exception.getMessage());
+                }
+            }
+            else
+                throwError("Filter Field is Empty");
+        });
+    }
+
+   /* public void doneAddOffer()
+    {
+        try {
+            Offer offer = createOffer(seller);
+            for (Product product: selectedOffer.getProducts())
+                offer.addProduct(product);
+            ArrayList<String> filters = selectedOffer.getFilters();
+            for (String filter: filters)
+                offer.addFilter(filter);
+            SellerUIController.editOff(seller, selectedOffer, offer);
+        }catch (Exception exception)
+        {
+            throwError(exception.getMessage());
+        }
+    }
+
+    public void doneEditOffer()
+    {
+        try {
+            Offer offer = createOffer(seller);
+            for (Product product: selectedOffer.getProducts())
+                offer.addProduct(product);
+            ArrayList<String> filters = selectedOffer.getFilters();
+            for (String filter: filters)
+                offer.addFilter(filter);
+            SellerUIController.editOff(seller, selectedOffer, offer);
+        }catch (Exception exception)
+        {
+            throwError(exception.getMessage());
+        }
+    }
+    */
+    public void doneAddProduct()
+    {
+        try {
+            SellerUIController.addProduct(seller, createProduct(seller));
+        }catch (Exception exception)
+        {
+            throwError(exception.getMessage());
+        }
+    }
+
+    public void doneEditProduct()
     {
         try {
             SellerUIController.editProduct(seller, selectedProduct, createProduct(seller));
@@ -394,21 +391,6 @@ public class SellerMenuUI implements Initializable {
             product.addFilter(filterToAdd);
         }
         return product;
-    }
-    public void editOfferButtonClicked()
-    {
-        try {
-            Offer offer = createOffer(seller);
-            for (Product product: selectedOffer.getProducts())
-                offer.addProduct(product);
-            ArrayList<String> filters = selectedOffer.getFilters();
-            for (String filter: filters)
-                offer.addFilter(filter);
-            SellerUIController.editOff(seller, selectedOffer, offer);
-        }catch (Exception exception)
-        {
-            throwError(exception.getMessage());
-        }
     }
 
     private void getOfferProducts(Seller seller, Offer offer, Offer changeOffer) {
@@ -457,29 +439,6 @@ public class SellerMenuUI implements Initializable {
         showOffersInGridPane(seller.getOffers());
     }
 
-    private void finalAddProductButtonClicked(){
-        try {
-            SellerUIController.addProduct(seller, createProduct(seller));
-        }catch (Exception exception)
-        {
-            throwError(exception.getMessage());
-        }
-    }
-
-    @FXML
-    private void finalAddOfferButtonClicked(){
-        try {
-            Offer offer = createOffer(seller);
-            for (Product product: selectedOffer.getProducts())
-                offer.addProduct(product);
-            ArrayList<String> filters = selectedOffer.getFilters();
-            for (String filter: filters)
-                offer.addFilter(filter);
-            SellerUIController.addOff(seller, offer);
-        } catch (Exception exception) {
-            exception.getMessage();
-        }
-    }
 
     @FXML
     private void setupInitialBuyers()
@@ -490,10 +449,15 @@ public class SellerMenuUI implements Initializable {
     @FXML
     private void setupInitial()
     {
-        sliceButton(myOffersButton, "My Offer");
-        sliceButton(personalInfoButton, "Personal Information");
-        sliceButton(manageProductsButton, "Manage Products");
-        loggedInStatusText.setText(seller.getUsername());
+        loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
+        logoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
+        logoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            try {
+                mainMenuButtonClicked();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
         balance.textProperty().bind(new SimpleStringProperty(String.valueOf(seller.getMoney())));
     }
 
@@ -517,10 +481,9 @@ public class SellerMenuUI implements Initializable {
         usernameTextField.setEditable(false);
         companyNameTextField.setText(seller.getCompanyName());
         companyInformationTextField.setText(seller.getCompanyDescription());
-        setupSalesHistory();
     }
-
-    private void setupSalesHistory()
+    @FXML
+    private void setupInitialSalesHistory()
     {
         if (seller.getSellLog().size() > 2)
             configureGridPane(seller.getSellLog().size());
@@ -812,22 +775,6 @@ public class SellerMenuUI implements Initializable {
         Main.setPrimaryStageScene(new Scene(MainMenuUI.getContent()));
     }
 
-    public void myOffersButtonClicked() throws IOException {
-        changeScene("SellerMenuMyOffers");
-    }
-
-    public void personalButtonClicked() throws IOException {
-        changeScene("SellerMenuPersonal");
-    }
-
-    public void manageProductsButtonClicked() throws IOException {
-        changeScene("SellerMenuManageProducts");
-    }
-
-    public void logoutButtonClicked(){
-
-    }
-
     private void showFactor(String factor)
     {
 
@@ -866,16 +813,8 @@ public class SellerMenuUI implements Initializable {
             throwError("The entered password is invalid");
     }
 
-    public void viewBuyersButtonClicked() throws IOException {
-        if (seller.getBuyers() == null)
-            throwError("You have no buyer");
-        else{
-            openStage("viewBuyers");
-            Main.setupOtherStage(new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("FXML/ViewBuyers.fxml"))), "Buyers");
-        }
-    }
-
     public void addProductButtonClicked() throws IOException {
+        selectedProduct = new Product();
         openStage("addProduct");
     }
 
@@ -891,26 +830,6 @@ public class SellerMenuUI implements Initializable {
             Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/EditEnterPass.fxml"));
             Main.setupOtherStage(new Scene(root), "Check for apply edit");
         }
-        else if (lock.equalsIgnoreCase("addFilterOffer"))
-        {
-            Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/AddFilter.fxml"));
-            Main.setupOtherStage(new Scene(root), "Add New Filter To Offer");
-        }
-        else if (lock.equalsIgnoreCase("addFilterProduct"))
-        {
-            Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/AddFilter.fxml"));
-            Main.setupOtherStage(new Scene(root), "Add New Filter To Product");
-        }
-        else if (lock.equalsIgnoreCase("removeFilterOffer"))
-        {
-            Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/RemoveFilter.fxml"));
-            Main.setupOtherStage(new Scene(root), "Remove Filter From Offer");
-        }
-        else if (lock.equalsIgnoreCase("removeFilterProduct"))
-        {
-            Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/RemoveFilter.fxml"));
-            Main.setupOtherStage(new Scene(root), "Remove Filter From Product");
-        }
         else if (lock.equalsIgnoreCase("editOffer"))
         {
             Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/EditOffer.fxml"));
@@ -920,11 +839,6 @@ public class SellerMenuUI implements Initializable {
         {
             Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/EditProduct.fxml"));
             Main.setupOtherStage(new Scene(root), "Edit Product");
-        }
-        else if (lock.equalsIgnoreCase("viewBuyers"))
-        {
-            Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/ViewBuyers.fxml"));
-            Main.setupOtherStage(new Scene(root), "Buyers");
         }
         else if (lock.equalsIgnoreCase("addProduct"))
         {

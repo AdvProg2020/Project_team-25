@@ -3,6 +3,7 @@ package Store.Model;
 import Store.Model.Enums.CheckingStatus;
 
 import java.io.Serializable;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -32,6 +33,11 @@ public class Product implements Serializable {
     private static int idCounter = 0;
 
     private static ArrayList<Product> allProducts = new ArrayList<Product>();
+
+    public Product()
+    {
+
+    }
 
     public Product(CheckingStatus productStatus, Category category, String name, Seller seller, String brand, double price, boolean availablity, String description) {
         this.productID = idCounter++;

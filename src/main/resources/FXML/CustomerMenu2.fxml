@@ -11,42 +11,11 @@
 
 <AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Store.View.CustomerMenuUI">
     <children>
-        <HBox layoutX="250.0" layoutY="-1.0" prefHeight="144.0" prefWidth="952.0" style="-fx-background-color: #FA2C56;">
-            <children>
-                <Button alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#myProductsButtonClicked" prefHeight="37.0" prefWidth="120.0" style="-fx-rotate: -90;" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="My Products">
-               <HBox.margin>
-                  <Insets top="35.0" />
-               </HBox.margin></Button>
-                <Button mnemonicParsing="false" onAction="#personalButtonClicked" prefHeight="37.0" prefWidth="120.0" style="-fx-rotate: -90;" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Personal">
-               <HBox.margin>
-                  <Insets top="35.0" />
-               </HBox.margin></Button>
-                <Button mnemonicParsing="false" onAction="#cartButtonClicked" prefHeight="37.0" prefWidth="120.0" style="-fx-rotate: -90;" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Cart">
-               <HBox.margin>
-                  <Insets top="35.0" />
-               </HBox.margin>
-            </Button>
-            <Pane prefHeight="144.0" prefWidth="592.0">
-               <children>
-                  <Label layoutX="269.0" layoutY="29.0" text="balance: ">
-                     <font>
-                        <Font name="Book Antiqua Bold Italic" size="33.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="balance" layoutX="425.0" layoutY="29.0" text="lable">
-                     <font>
-                        <Font name="Book Antiqua Italic" size="33.0" />
-                     </font>
-                  </Label>
-               </children>
-            </Pane>
-            </children>
-        </HBox>
         <VBox prefHeight="600.0" prefWidth="250.0" style="-fx-background-color: #3F2563;" styleClass="quickAccess" stylesheets="@../CSS/general_stylesheet.css">
             <children>
                 <HBox alignment="CENTER_LEFT" prefHeight="77.0" prefWidth="247.0" style="-fx-background-color: #FA2C56;">
                     <children>
-                        <Label fx:id="currentScreenTitle" text="Customer Page" textFill="WHITE">
+                        <Label fx:id="currentScreenTitle" text="Customer Menu" textFill="WHITE">
                             <font>
                                 <Font name="Dyuthi" size="24.0" />
                             </font>
@@ -57,9 +26,42 @@
                     </padding>
                 </HBox>
                 <Separator orientation="VERTICAL" prefHeight="75.0" prefWidth="0.0" visible="false" />
-                <Button fx:id="mainMenuButton" mnemonicParsing="false" onAction="#mainMenuButtonClicked" prefHeight="37.0" prefWidth="209.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Main Menu" />
-                <Button mnemonicParsing="false" onAction="#productsButtonClicked" prefHeight="37.0" prefWidth="209.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Products" />
-                <Button mnemonicParsing="false" onAction="#offersButtonClicked" prefHeight="37.0" prefWidth="209.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Offers" />
+            <Button id="mainMenuButton" fx:id="mainMenuButton" graphicTextGap="6.0" mnemonicParsing="false" onAction="#mainMenuButtonClicked" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Main Menu">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Icons/MainMenu.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button id="productsButton" fx:id="productsButton" graphicTextGap="6.0" mnemonicParsing="false" onAction="#productsButtonClicked" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Products">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Icons/Products.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button id="offersButton" fx:id="offersButton" graphicTextGap="6.0" mnemonicParsing="false" onAction="#offersButtonClicked" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Offers">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Icons/Offers.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="userPageButton" disable="true" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="User Page">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Icons/User_Page.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
                 <Separator orientation="VERTICAL" prefHeight="84.0" prefWidth="10.0" visible="false" />
                 <GridPane alignment="BOTTOM_LEFT" vgap="5.0">
                     <children>
@@ -95,9 +97,161 @@
                 </GridPane>
             </children>
         </VBox>
-        <ScrollPane layoutX="250.0" layoutY="129.0" prefHeight="471.0" prefWidth="952.0">
+      <TabPane layoutX="250.0" prefHeight="600.0" prefWidth="951.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Personal Info">
             <content>
-                <AnchorPane prefHeight="470.0" prefWidth="950.0" style="-fx-background-color: #95ca6b;" />
-            </content></ScrollPane>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextField id="phoneNumberTextField" fx:id="phoneNumberTextField" layoutX="543.0" layoutY="186.0" promptText="Phone Number" stylesheets="@../CSS/signup_stylesheet.css" />
+                        <TextField id="emailTextField" fx:id="emailTextField" layoutX="183.0" layoutY="237.0" promptText="Email" stylesheets="@../CSS/signup_stylesheet.css" />
+                        <TextField id="lastNameTextField" fx:id="lastNameTextField" layoutX="543.0" layoutY="132.0" promptText="Last Name" stylesheets="@../CSS/signup_stylesheet.css" />
+                        <TextField id="firstNameTextField" fx:id="firstNameTextField" layoutX="184.0" layoutY="188.0" promptText="First Name" stylesheets="@../CSS/signup_stylesheet.css" />
+                        <TextField id="usernameTextField" fx:id="usernameTextField" disable="true" editable="false" layoutX="185.0" layoutY="136.0" promptText="Username" stylesheets="@../CSS/signup_stylesheet.css" />
+                        <Label layoutX="405.0" layoutY="187.0" text="Phone Number">
+                           <font>
+                              <Font name="Book Antiqua" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="86.0" layoutY="241.0" text="Email">
+                           <font>
+                              <Font name="Book Antiqua" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="405.0" layoutY="133.0" text="Last Name">
+                           <font>
+                              <Font name="Book Antiqua" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="84.0" layoutY="187.0" text="First Name">
+                           <font>
+                              <Font name="Book Antiqua" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="86.0" layoutY="133.0" text="Username">
+                           <font>
+                              <Font name="Book Antiqua" size="18.0" />
+                           </font>
+                        </Label>
+                        <Button layoutX="404.0" layoutY="271.0" mnemonicParsing="false" onAction="#submitEditButtonClicked" prefHeight="30.0" prefWidth="144.0" style="-fx-font-style: system;" styleClass="sellerButton" stylesheets="@../CSS/product_menu_stylesheet.css" text="Submit Edit" />
+                        <Button layoutX="564.0" layoutY="271.0" mnemonicParsing="false" onAction="#changePassAction" prefHeight="30.0" prefWidth="140.0" styleClass="sellerButton" stylesheets="@../CSS/product_menu_stylesheet.css" text="Change Password" />
+                        <Label layoutX="58.0" layoutY="57.0" prefHeight="34.0" prefWidth="374.0" text="Personal Information">
+                           <font>
+                              <Font name="Book Antiqua Italic" size="31.0" />
+                           </font>
+                        </Label>
+                        <ImageView fx:id="profile" fitHeight="150.0" fitWidth="138.0" layoutX="762.0" layoutY="124.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Discounts">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <HBox layoutY="-1.0" prefHeight="104.0" prefWidth="961.0">
+                           <children>
+                              <Label prefHeight="45.0" prefWidth="200.0" text="My Discounts">
+                                 <font>
+                                    <Font name="Book Antiqua Italic" size="31.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="20.0" top="20.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <ScrollPane layoutX="-3.0" layoutY="100.0" prefHeight="492.0" prefWidth="974.0">
+                           <content>
+                              <VBox prefHeight="473.0" prefWidth="950.0">
+                                 <children>
+                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                 </children>
+                                 <padding>
+                                    <Insets right="10.0" />
+                                 </padding>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="My Products">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ScrollPane layoutY="100.0" prefHeight="482.0" prefWidth="961.0">
+                           <content>
+                              <VBox prefHeight="470.0" prefWidth="969.0">
+                                 <children>
+                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
+                        <HBox layoutX="1.0" layoutY="-1.0" prefHeight="102.0" prefWidth="951.0">
+                           <children>
+                              <Label prefHeight="45.0" prefWidth="178.0" text="My Products">
+                                 <font>
+                                    <Font name="Book Antiqua Italic" size="31.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="20.0" top="20.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Separator prefHeight="84.0" prefWidth="335.0" visible="false" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Cart">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ScrollPane layoutY="100.0" prefHeight="482.0" prefWidth="961.0">
+                           <content>
+                              <VBox prefHeight="470.0" prefWidth="969.0">
+                                 <children>
+                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
+                        <HBox layoutX="1.0" layoutY="-1.0" prefHeight="102.0" prefWidth="951.0">
+                           <children>
+                              <Label prefHeight="45.0" prefWidth="237.0" text="Cart">
+                                 <font>
+                                    <Font name="Book Antiqua Italic" size="31.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="20.0" top="20.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Separator prefHeight="84.0" prefWidth="598.0" visible="false" />
+                              <Button mnemonicParsing="false" text="Purchase">
+                                 <HBox.margin>
+                                    <Insets top="77.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
     </children>
 </AnchorPane>

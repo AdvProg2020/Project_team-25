@@ -34,6 +34,26 @@ public class Offer implements Serializable {
         this.products = new ArrayList<Product>();
     }
 
+    public void setOffID(int offID) {
+        this.offID = offID;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setProducts(ArrayList<Product> products) {
+        this.products = products;
+    }
+
+    public void setFilters(ArrayList<String> filters) {
+        this.filters = filters;
+    }
+
+    public void setOffPercent(double offPercent) {
+        this.offPercent = offPercent;
+    }
+
     public static void setIdCounter(int idCounter) {
         Offer.idCounter = idCounter;
     }

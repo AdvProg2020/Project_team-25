@@ -194,4 +194,43 @@ public class SellerUIController {
         offer.removeFilter(filter);
         return "Filter removed.";
     }
+
+    public static void addProductToOffer(Seller seller, Offer offer, String productId) throws Exception {
+        Product product = Product.getProductByID(Integer.parseInt(productId));
+        Offer newOffer = new Offer();
+        newOffer.setStartingTime(offer.getStartingTime());
+        newOffer.setEndingTime(offer.getEndingTime());
+        newOffer.setOfferStatus(offer.getOfferStatus());
+        newOffer.setProducts(offer.getProducts());
+        newOffer.setFilters(offer.getFilters());
+        newOffer.setOffID(offer.getOffID());
+        newOffer.setOffPercent(offer.getOffPercent());
+        newOffer.setUser(offer.getUser());
+        if (offer.containsProduct(product))
+            throw new Exception("This product is in offer now!");
+        else if (Offer.hasOfferByID(Integer.parseInt(productId)))
+            throw new Exception("This product is in other offer!");
+        else {
+            newOffer.addProduct(product);
+            editOff(seller, offer, newOffer);
+        }
+    }
+    public static void removeProductFromOffer(Seller seller, Offer offer, String productId) throws Exception {
+        Product product = Product.getProductByID(Integer.parseInt(productId));
+        Offer newOffer = new Offer();
+        newOffer.setStartingTime(offer.getStartingTime());
+        newOffer.setEndingTime(offer.getEndingTime());
+        newOffer.setOfferStatus(offer.getOfferStatus());
+        newOffer.setProducts(offer.getProducts());
+        newOffer.setFilters(offer.getFilters());
+        newOffer.setOffID(offer.getOffID());
+        newOffer.setOffPercent(offer.getOffPercent());
+        newOffer.setUser(offer.getUser());
+        if (!offer.containsProduct(product))
+            throw new Exception("This product is not in offer now!");
+        else {
+            newOffer.getProducts().remove(product);
+            editOff(seller, offer, newOffer);
+        }
+    }
 }
