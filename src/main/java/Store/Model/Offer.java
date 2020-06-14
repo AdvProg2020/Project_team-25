@@ -29,6 +29,11 @@ public class Offer implements Serializable {
         this.offPercent = offPercent;
     }
 
+    public Offer()
+    {
+        this.products = new ArrayList<Product>();
+    }
+
     public static void setIdCounter(int idCounter) {
         Offer.idCounter = idCounter;
     }

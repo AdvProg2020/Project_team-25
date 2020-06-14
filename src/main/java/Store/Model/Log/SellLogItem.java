@@ -12,6 +12,18 @@ public class SellLogItem extends LogItem {
     private String customerName;
     private boolean sendStatus;
 
+    public double getIncomeValue() {
+        return incomeValue;
+    }
+
+    public double getOffValue() {
+        return offValue;
+    }
+
+    public boolean isSendStatus() {
+        return sendStatus;
+    }
+
     public SellLogItem(int id, Date date, ArrayList<Product> products, double incomeValue, double offValue, String customerName, boolean sendStatus) {
         super(id, date, products);
         this.incomeValue = incomeValue;

@@ -17,6 +17,10 @@ public abstract class LogItem implements Serializable {
         this.productList.addAll(products);
     }
 
+    public Date getDate() {
+        return date;
+    }
+
     public ArrayList<Product> getProducts() {
         return productList;
     }

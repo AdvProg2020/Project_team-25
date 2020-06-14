@@ -335,6 +335,13 @@ public class CustomerMenuUI implements Initializable {
         info.setText(product.getName() + "-------" + product.getCategory() + "-------" + product.getBrand() + "--------" + product.getAverageRating());
         Image productImage = new Image(product.getImagePath());
         ImageView productView = new ImageView(productImage);
+        productView.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+            try {
+                Main.setPrimaryStageScene(new Scene(ProductMenuUI.getContent(product)));
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
         gridPane.add(productView, j, i);
         gridPane.add(info, j, i);
         gridPane.add(plusView, j, i);
@@ -387,7 +394,7 @@ public class CustomerMenuUI implements Initializable {
     {
         RowConstraints newRow;
         if (!menuState.equals("CustomerMenuMyDiscounts")) {
-            for (int i = 0; i < (size - 3) / 2; i++) {
+            for (int i = 0; i < (size - 1) / 2; i++) {
                 anchorPane.setPrefHeight(anchorPane.getPrefHeight() + 250);
                 gridPane.setPrefHeight(gridPane.getPrefHeight() + 250);
                 newRow = new RowConstraints();
@@ -593,7 +600,7 @@ public class CustomerMenuUI implements Initializable {
         menuState = lock;
         if (lock.equalsIgnoreCase("enterPass"))
         {
-            Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/CustomerMenuEditEnterPass.fxml"));
+            Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/EditEnterPass.fxml"));
             Main.setupOtherStage(new Scene(root), "Check for apply edit");
         }
         else if (lock.equalsIgnoreCase("extraInfoPurchase"))
@@ -603,7 +610,7 @@ public class CustomerMenuUI implements Initializable {
         }
         else if (lock.equalsIgnoreCase("changePass"))
         {
-            Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/CustomerMenuChangePassword.fxml"));
+            Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/ChangePassword.fxml"));
             Main.setupOtherStage(new Scene(root), "Change password");
         }
     }

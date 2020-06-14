@@ -466,7 +466,6 @@ public class SellerMenu {
         while (!(input = InputManager.getNextLine()).equals("-1")) {
             offer.addFilter(input);
         }
-
         return offer;
     }
 
