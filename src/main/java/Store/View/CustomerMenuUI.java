@@ -325,7 +325,6 @@ public class CustomerMenuUI implements Initializable {
     private void showEachProductInHBoxCart(Product product)
     {
         HBox hBox = new HBox();
-        String starPath = "resources\\Icons\\StarSelected.png";
         Image productImage = new Image(product.getImagePath());
         ImageView productView = new ImageView(productImage);
         productView.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
