@@ -130,3 +130,18 @@
    -fx-background-color: white;
    -fx-mark-color: purple;
 }
+
+#categoryButton {
+    -fx-background-radius: 2em;
+    -fx-font-size: 24px;
+    -fx-background-color: rgba(100, 0, 100, 1);
+    -fx-text-fill: white;
+}
+
+#categoryButton:hover {
+    -fx-background-color: rgba(100, 0, 100, 0.6);
+}
+
+#categoryButton:selected {
+    -fx-background-color: orange;
+}

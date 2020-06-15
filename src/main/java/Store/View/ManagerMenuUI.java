@@ -8,12 +8,14 @@ import Store.Main;
 import Store.Model.*;
 import Store.Model.Enums.VerifyStatus;
 import javafx.collections.FXCollections;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -183,6 +185,62 @@ public class ManagerMenuUI {
     }
 
     private void editCategory(Category category) {
+        VBox addNewCategoryContainer = new VBox();
+        VBox vBox = new VBox();
+        TextField categoryNameTextField = new TextField();
+        Button okButton = new Button("Ok");
+        Button deleteButton = new Button("Delete");
+
+        addNewCategoryContainer.setAlignment(Pos.TOP_CENTER);
+        categoryNameTextField.setPromptText("Name");
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.getStylesheets().add("CSS/manager_menu_stylesheet.css");
+        scrollPane.setPrefSize(400, 300);
+
+        vBox.setPrefSize(400, 300);
+        vBox.setAlignment(Pos.TOP_CENTER);
+
+        deleteButton.setOnMouseClicked(event -> {
+            Main.errorPopUp(ManagerController.removeCategory((Manager) MainMenuUIController.currentUser, category), "confirm");
+            Stage stage = (Stage) deleteButton.getScene().getWindow();
+            stage.close();
+            showCategories();
+        });
+
+        okButton.setOnMouseClicked(event -> {
+            if (Manager.categoryByName(categoryNameTextField.getText()) != null) {
+                Main.errorPopUp("Process failed: the category exists.", "error");
+            }
+            else if (!categoryNameTextField.getText().isEmpty()) {
+                ManagerController.editCategory((Manager) MainMenuUIController.currentUser, category, "change name",categoryNameTextField.getText());
+                Main.errorPopUp("Category's name changed.", "confirm");
+            }
+            Stage stage = (Stage) okButton.getScene().getWindow();
+            stage.close();
+            showCategories();
+        });
+
+        for (String filter : Product.getAllFilters("null")) {
+            ToggleButton filterButton = new ToggleButton(filter);
+            filterButton.setId("categoryButton");
+            if (Product.getAllFilters(category.getName()).contains(filter)) {
+                filterButton.setSelected(true);
+            }
+            filterButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    ManagerController.editCategory((Manager) MainMenuUIController.currentUser, category, "add filter", filter);
+                }
+                else {
+                    ManagerController.editCategory((Manager) MainMenuUIController.currentUser, category, "remove filter", filter);
+                }
+            });
+            Region region = new Region();
+            region.setPrefHeight(10);
+            vBox.getChildren().addAll(filterButton, new Separator(), region);
+        }
+        scrollPane.setContent(vBox);
+        addNewCategoryContainer.getChildren().addAll(new Label("Enter Name: "), categoryNameTextField, new Label("Select Filters"), scrollPane, okButton, deleteButton);
+        Main.setupOtherStage(new Scene(addNewCategoryContainer), "Edit Category");
 
     }
 
