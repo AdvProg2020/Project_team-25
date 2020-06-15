@@ -128,9 +128,9 @@
                      <children>
                         <HBox prefHeight="100.0" prefWidth="950.0">
                            <children>
-                              <Button id="add" fx:id="addCategoryButton" mnemonicParsing="false" prefHeight="68.0" prefWidth="140.0" text="Add">
+                              <Button id="add" fx:id="addCategoryButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="150.0" text="Add">
                                  <graphic>
-                                    <ImageView fitHeight="46.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@../Icons/Plus.png" />
                                        </image>
@@ -178,9 +178,9 @@
                      <children>
                         <HBox prefHeight="100.0" prefWidth="950.0">
                            <children>
-                              <Button id="add" fx:id="addManagerButton" mnemonicParsing="false" prefHeight="64.0" prefWidth="231.0" text="Add Manager">
+                              <Button id="add" fx:id="addManagerButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="235.0" text="Add Manager">
                                  <graphic>
-                                    <ImageView fitHeight="46.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@../Icons/Plus.png" />
                                        </image>
@@ -211,9 +211,9 @@
                      <children>
                         <HBox prefHeight="100.0" prefWidth="950.0">
                            <children>
-                              <Button id="add" fx:id="addOffCodeButton" mnemonicParsing="false" prefHeight="68.0" prefWidth="140.0" text="Add">
+                              <Button id="add" fx:id="addOffCodeButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="150.0" text="Add">
                                  <graphic>
-                                    <ImageView fitHeight="46.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@../Icons/Plus.png" />
                                        </image>

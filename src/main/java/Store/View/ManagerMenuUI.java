@@ -13,13 +13,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -63,6 +61,7 @@ public class ManagerMenuUI {
     private void initialize() {
         initialSetup();
         setupBindings();
+        reset();
         showRequests();
         showCategories();
         showProducts();
@@ -187,6 +186,63 @@ public class ManagerMenuUI {
 
     }
 
+    private void addCategory() {
+        VBox addNewCategoryContainer = new VBox();
+        VBox vBox = new VBox();
+        TextField categoryNameTextField = new TextField();
+        ToggleGroup toggleGroup = new ToggleGroup();
+        Button button = new Button("Ok");
+        final String[] parentCategory = new String[1];
+        parentCategory[0] = "";
+
+        addNewCategoryContainer.setAlignment(Pos.TOP_CENTER);
+        categoryNameTextField.setPromptText("Name");
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.getStylesheets().add("CSS/manager_menu_stylesheet.css");
+        scrollPane.setPrefSize(400, 300);
+
+        vBox.setPrefSize(400, 300);
+        vBox.setAlignment(Pos.TOP_CENTER);
+
+        ToggleButton base = new ToggleButton("No Category");
+        base.setToggleGroup(toggleGroup);
+        base.setId("categoryButton");
+        button.setOnMouseClicked(event -> {
+            if (Manager.categoryByName(categoryNameTextField.getText()) != null) {
+                Main.errorPopUp("Process failed: the category exists.", "error");
+            }
+            else if (!parentCategory[0].isEmpty() && !categoryNameTextField.getText().isEmpty()) {
+                ManagerController.addCategory((Manager) MainMenuUIController.currentUser, categoryNameTextField.getText(), parentCategory[0]);
+                Main.errorPopUp("Category added.", "confirm");
+            }
+            else {
+                Main.errorPopUp("Process failed: fields should be filled.", "error");
+            }
+            Stage stage = (Stage) button.getScene().getWindow();
+            stage.close();
+            showCategories();
+        });
+        base.setOnMouseClicked(event -> {
+            parentCategory[0] = "null";
+        });
+        vBox.getChildren().addAll(base, new Separator());
+
+        for (Category category : Manager.getAllCategories()) {
+            ToggleButton categoryName = new ToggleButton(category.getName());
+            categoryName.setToggleGroup(toggleGroup);
+            categoryName.setId("categoryButton");
+            categoryName.setOnMouseClicked(event -> {
+                parentCategory[0] = category.getName();
+            });
+            Region region = new Region();
+            region.setPrefHeight(10);
+            vBox.getChildren().addAll(categoryName, new Separator(), region);
+        }
+        scrollPane.setContent(vBox);
+        addNewCategoryContainer.getChildren().addAll(new Label("Enter Name: "), categoryNameTextField, new Label("Select Parent Category"), scrollPane, button);
+        Main.setupOtherStage(new Scene(addNewCategoryContainer), "Create Category");
+    }
+
 
     private void showRequests() {
         requestsList.getChildren().clear();
@@ -244,9 +300,6 @@ public class ManagerMenuUI {
 
 
     private void initialSetup() {
-        sortProductsChoiceBox.setItems(FXCollections.observableArrayList(availableSortsProducts));
-        sortUsersChoiceBox.setItems(FXCollections.observableArrayList(availableSortsUsers));
-        sortOffCodesChoiceBox.setItems(FXCollections.observableArrayList(availableSortsOffCodes));
         loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
         signUpButton.disableProperty().bind(MainMenuUIController.isLoggedIn);
         loginLogoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
@@ -257,6 +310,7 @@ public class ManagerMenuUI {
     public void setupBindings() {
         loginLogoutButton.setOnAction((e) -> LoginMenuUI.handleEvent());
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
+        addCategoryButton.setOnMouseClicked(event -> addCategory());
         mainMenuButton.setOnAction((e) -> {
             try {
                 Main.setPrimaryStageScene(new Scene(MainMenuUI.getContent()));
@@ -285,5 +339,14 @@ public class ManagerMenuUI {
         });
 
 
+    }
+
+    private void reset() {
+        currentProductsSort = "";
+        currentUsersSort = "";
+        currentOffCodesSort = "";
+        sortProductsChoiceBox.setItems(FXCollections.observableArrayList(availableSortsProducts));
+        sortUsersChoiceBox.setItems(FXCollections.observableArrayList(availableSortsUsers));
+        sortOffCodesChoiceBox.setItems(FXCollections.observableArrayList(availableSortsOffCodes));
     }
 }

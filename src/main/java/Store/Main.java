@@ -5,10 +5,17 @@ import Store.Model.*;
 import Store.Model.Enums.CheckingStatus;
 import Store.View.*;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.util.Date;
@@ -73,6 +80,27 @@ public class Main extends Application {
         otherStage.setTitle(title);
         otherStage.setResizable(false);
         otherStage.showAndWait();
+    }
+
+    public static void errorPopUp(String Error, String type) {
+        Popup popup = new Popup();
+        Button okButton = new Button("Ok");
+        Label label = new Label(Error);
+        VBox pane = new VBox();
+        pane.setPrefSize(400, 300);
+        pane.getStylesheets().add("CSS/message_popup.css");
+        pane.setStyle("-fx-background-color: white;");
+        label.setStyle("-fx-font-size: 18px;");
+        okButton.setId(type);
+        okButton.setPrefHeight(100);
+        okButton.setPrefWidth(400);
+        label.setPrefHeight(200);
+        label.setPrefWidth(400);
+        label.setAlignment(Pos.CENTER);
+        pane.getChildren().addAll(label, okButton);
+        popup.getContent().add(pane);
+        okButton.setOnMouseClicked(event -> popup.hide());
+        popup.show(applicationStage);
     }
 
     public static void setPrimaryStageScene(Scene scene) {

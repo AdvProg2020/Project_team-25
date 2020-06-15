@@ -307,6 +307,7 @@ public class ProductsMenuUI {
         }
 
         ImageView imageView = new ImageView(new Image(file.toURI().toString()));
+        imageView.setStyle("-fx-background-radius: 5em;");
         imageView.setFitWidth(225);
         imageView.setFitHeight(225);
         Label productName = new Label(product.getName());
