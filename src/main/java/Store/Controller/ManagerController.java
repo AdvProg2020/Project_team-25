@@ -36,7 +36,7 @@ public class ManagerController {
             user.setName(value);
             return returnValue;
         } else if (field.equalsIgnoreCase("password")) {
-            if (value.matches("^[a-zA-Z]\\w{3,14}$")) {
+            if (value.matches("^[a-zA-Z1-9]\\w{3,14}$")) {
                 user.setPassword(value);
                 return returnValue;
             }

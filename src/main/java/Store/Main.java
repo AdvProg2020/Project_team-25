@@ -82,7 +82,7 @@ public class Main extends Application {
         otherStage.showAndWait();
     }
 
-    public static void errorPopUp(String Error, String type) {
+    public static void errorPopUp(String Error, String type, Stage stage) {
         Popup popup = new Popup();
         Button okButton = new Button("Ok");
         Label label = new Label(Error);
@@ -100,7 +100,7 @@ public class Main extends Application {
         pane.getChildren().addAll(label, okButton);
         popup.getContent().add(pane);
         okButton.setOnMouseClicked(event -> popup.hide());
-        popup.show(applicationStage);
+        popup.show(stage);
     }
 
     public static void setPrimaryStageScene(Scene scene) {
@@ -145,14 +145,18 @@ public class Main extends Application {
         Category category4 = new Category("category4", category1);
 
         OffCode offCode1 = new OffCode("ce98",30,10,2);
-        offCode1.setEndingTime(new Date(2020, 5, 4));
+        offCode1.setEndingTime(new Date(120, 5, 4));
+        offCode1.setStartingTime(new Date(120, 3, 4));
         OffCode offCode2 = new OffCode("AP2",60,5,1);
-        offCode2.setEndingTime(new Date(2020, 5, 4));
+        offCode2.setEndingTime(new Date(120, 5, 4));
+        offCode2.setStartingTime(new Date(120, 3, 4));
         OffCode offCode3 = new OffCode("AP333",60,5,1);
-        offCode2.setEndingTime(new Date(2020, 5, 4));
+        offCode3.setEndingTime(new Date(120, 5, 4));
+        offCode3.setStartingTime(new Date(120, 3, 4));
         manager1.addOffCode(offCode1);
         manager1.addOffCode(offCode2);
         manager1.addOffCode(offCode3);
+
         offCode1.addUser(customer);
         offCode2.addUser(customer);
         customer.addOffCode(offCode1);
