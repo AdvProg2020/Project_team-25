@@ -108,11 +108,11 @@
                <content>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <VBox alignment="TOP_CENTER" prefHeight="300.0" prefWidth="950.0">
+                        <VBox alignment="TOP_CENTER" prefHeight="300.0" prefWidth="950.0" style="-fx-background-color: #ffddf4;">
                            <children>
                               <ImageView fx:id="imageProfile" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                               <Region prefHeight="20.0" prefWidth="200.0" />
-                              <Button fx:id="changeImageButton" mnemonicParsing="false" text="Change" />
+                              <Button id="changeImageButton" fx:id="changeImageButton" mnemonicParsing="false" text="Change" />
                            </children>
                         </VBox>
                         <HBox alignment="BOTTOM_CENTER" prefHeight="379.0" prefWidth="943.0">
@@ -131,22 +131,40 @@
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <Label text="Username: " />
-                                    <Label layoutX="11.0" layoutY="55.0" text="First Name: " GridPane.rowIndex="1" />
-                                    <Label layoutX="11.0" layoutY="180.0" text="Last Name: " GridPane.rowIndex="2" />
+                                    <Label text="Username: ">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font></Label>
+                                    <Label layoutX="11.0" layoutY="55.0" text="First Name: " GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font></Label>
+                                    <Label layoutX="11.0" layoutY="180.0" text="Last Name: " GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font></Label>
                                     <TextField fx:id="usernameField" GridPane.columnIndex="1" />
                                     <TextField fx:id="firstNameField" layoutX="90.0" layoutY="47.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                     <TextField fx:id="lastNameField" layoutX="90.0" layoutY="172.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                    <Label text="Password: " GridPane.columnIndex="2" />
+                                    <Label text="Password: " textAlignment="CENTER" GridPane.columnIndex="2">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font></Label>
                                     <TextField fx:id="passwordField" layoutX="90.0" layoutY="47.0" prefWidth="600.0" GridPane.columnIndex="3" />
-                                    <Label text="Phone Number: " GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <Label text="Phone Number: " GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font></Label>
                                     <TextField fx:id="phoneNumberField" layoutX="269.0" layoutY="47.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                     <TextField fx:id="emailField" layoutX="269.0" layoutY="172.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                                    <Label text="Email: " GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                    <Label text="Email: " GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font></Label>
                                  </children>
                               </GridPane>
                               <Region prefHeight="324.0" prefWidth="0.0" />
-                              <Button fx:id="editPersonalInfoButton" alignment="BOTTOM_CENTER" mnemonicParsing="false" prefWidth="100.0" text="Edit" />
+                              <Button id="editInfoButton" fx:id="editPersonalInfoButton" alignment="BOTTOM_CENTER" mnemonicParsing="false" prefWidth="100.0" text="Edit" />
                            </children>
                         </HBox>
                      </children>
@@ -265,7 +283,7 @@
                                     </ImageView>
                                  </graphic>
                               </Button>
-                              <Region prefHeight="64.0" prefWidth="613.0" />
+                              <Region prefHeight="68.0" prefWidth="585.0" />
                               <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="43.0" prefWidth="68.0" text="Sort By" wrapText="true">
                                  <font>
                                     <Font size="18.0" />

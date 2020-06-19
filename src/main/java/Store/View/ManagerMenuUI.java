@@ -22,6 +22,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -169,9 +170,9 @@ public class ManagerMenuUI {
                 new Label("Enter Usage Counts: "), usageOffField, new Separator(),
                 new Label("Select Starting Date: "), startingDatePicker, new Separator(),
                 new Label("Select Ending Date: "), endingDatePicker, new Separator(),
-                okButton
+                okButton, deleteButton
         );
-        Main.setupOtherStage(new Scene(addNewOffCodeContainer), "Add OffCode");
+        Main.setupOtherStage(new Scene(addNewOffCodeContainer), "Edit OffCode");
     }
 
     private void addOffCode() {
@@ -197,10 +198,6 @@ public class ManagerMenuUI {
                 Main.errorPopUp("Code is already created!", "error", (Stage) okButton.getScene().getWindow());
                 return;
             }
-            if (endingDatePicker.getValue().isBefore(startingDatePicker.getValue())) {
-                Main.errorPopUp("Invalid Time Selection!", "error", (Stage) okButton.getScene().getWindow());
-                return;
-            }
             if (nameTextField.getText().isEmpty()) {
                 Main.errorPopUp("Invalid Format!", "error", (Stage) okButton.getScene().getWindow());
                 return;
@@ -221,6 +218,10 @@ public class ManagerMenuUI {
                 usageCount = Integer.parseInt(usageOffField.getText());
             } catch (Exception exception) {
                 Main.errorPopUp("Invalid Format!", "error", (Stage) okButton.getScene().getWindow());
+                return;
+            }
+            if (endingDatePicker.getValue().isBefore(startingDatePicker.getValue())) {
+                Main.errorPopUp("Invalid Time Selection!", "error", (Stage) okButton.getScene().getWindow());
                 return;
             }
             try {
@@ -327,7 +328,7 @@ public class ManagerMenuUI {
             Region region = new Region();
             region.setPrefHeight(10);
             HBox hBox = new HBox();
-            for (String filter : new HashSet<>(category.getFilters())) {
+            for (String filter : Product.getAllFilters(category.getName())) {
                 Button button = new Button(filter);
                 button.setId("filter");
                 hBox.getChildren().addAll(button);
@@ -580,6 +581,13 @@ public class ManagerMenuUI {
         phoneNumberField.setPromptText(manager.getPhoneNumber());
         emailField.setPromptText(manager.getEmail());
 
+        firstNameField.setId("infoField");
+        lastNameField.setId("infoField");
+        emailField.setId("infoField");
+        passwordField.setId("infoField");
+        phoneNumberField.setId("infoField");
+        usernameField.setId("infoField");
+
         editPersonalInfoButton.setOnMouseClicked(event -> {
             if (firstNameField.getText().equals(manager.getName()) && lastNameField.getText().equals(manager.getFamilyName()) && passwordField.getText().equals(manager.getPassword()) && phoneNumberField.getText().equals(manager.getPhoneNumber()) && emailField.getText().equals(manager.getEmail())) {
                 Main.errorPopUp("You Should Change Some Fields.", "error", (Stage) usernameField.getScene().getWindow());
@@ -635,5 +643,6 @@ public class ManagerMenuUI {
 
         final Circle clip = new Circle(100, 100, 100);
         imageProfile.setClip(clip);
+        clip.setStroke(Color.ORANGE);
     }
 }

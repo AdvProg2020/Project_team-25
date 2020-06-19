@@ -195,3 +195,15 @@
 #categoryButton:hover {
     -fx-background-color: rgba(0, 0, 0, 0.6);
 }
+
+#availability {
+    -fx-font-size: 20px;
+}
+
+#productActualPrice .text {
+    -fx-strikethrough: true;
+}
+
+#time {
+    -fx-font-size: 18px;
+}

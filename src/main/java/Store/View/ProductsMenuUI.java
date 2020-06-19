@@ -110,6 +110,7 @@ public class ProductsMenuUI {
         loginLogoutButton.setOnAction((e) -> LoginMenuUI.handleEvent());
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
         showCategoryButton.setOnAction(event -> showCategories());
+        offersButton.setOnAction((e) -> OffersMenuUI.showOffersMenu());
 
         mainMenuButton.setOnAction((e) -> {
             try {
@@ -217,7 +218,7 @@ public class ProductsMenuUI {
             pageNumberField.setText(Integer.toString(pageNumber));
             showProducts();
         });
-        vBox.getChildren().addAll(base, new Separator(),new Separator());
+        vBox.getChildren().addAll(base, new Separator(), new Separator());
         for (Category category : Manager.getAllCategories()) {
             Label categoryName = new Label(category.getName());
             categoryName.setId("categoryButton");
@@ -307,21 +308,24 @@ public class ProductsMenuUI {
         }
 
         ImageView imageView = new ImageView(new Image(file.toURI().toString()));
-        imageView.setStyle("-fx-background-radius: 5em;");
         imageView.setFitWidth(225);
         imageView.setFitHeight(225);
         Label productName = new Label(product.getName());
         Label productPrice = new Label(product.getPrice() + "$");
         Label productRating = new Label(product.getAverageRating() + "/5");
+        Label isAvailable = new Label(product.getAvailablity() ? "Available" : "Unavailable");
+        isAvailable.setPrefWidth(vBox.getPrefWidth());
+        isAvailable.setAlignment(Pos.CENTER);
 
+        isAvailable.setStyle(product.getAvailablity() ? "-fx-background-color: #BFFF00;" : "-fx-background-color: #C40233;");
         gridPane.add(productRating, 1, 0);
         gridPane.add(productPrice, 0, 0);
         productName.setId("productName");
         productPrice.setId("productPrice");
         productRating.setId("productRating");
+        isAvailable.setId("availability");
 
-
-        productInfo.getChildren().addAll(imageView, productName, gridPane, separator);
+        productInfo.getChildren().addAll(imageView, productName, gridPane, getProductRating(product), isAvailable, separator);
         vBox.getChildren().add(productInfo);
         productInfo.setOnMouseClicked(event -> {
             try {
@@ -399,6 +403,27 @@ public class ProductsMenuUI {
         priceLowLabel.setText("Price Low:   " + (int) priceHighSlider.getMin() + "$");
     }
 
+    private HBox getProductRating(Product product) {
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.TOP_CENTER);
+        int minRate = (int) (product.getAverageRating() + 0.5);
+        int stars = 1;
+        File file;
+        while (stars <= 5) {
+            if (stars <= minRate) {
+                file = new File("src/main/resources/Icons/StarSelected.png");
+            }
+            else {
+                file = new File("src/main/resources/Icons/StarNotSelected.png");
+            }
+            ImageView imageView = new ImageView(new Image(file.toURI().toString()));
+            hBox.getChildren().add(imageView);
+            imageView.setFitHeight(20);
+            imageView.setFitWidth(20);
+            stars++;
+        }
+        return hBox;
+    }
 
 
 //    private void giveSearchedProducts() {

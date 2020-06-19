@@ -168,6 +168,10 @@ public class Category implements Serializable {
         return name;
     }
 
+    public ArrayList<Category> getChildren() {
+        return children;
+    }
+
     @Override
     public String toString() {
         return "name='" + name + '\'';

@@ -37,13 +37,15 @@ public class Main extends Application {
         product.addFilter("HITOTSU");
 //
         Seller seller2 = new Seller("JOJO", "jack", "ripper", "lab@lab.com", "0950", "1234", 1000, "company1", "describe");
-        Product product1 = new Product(CheckingStatus.CREATION, null, "product1", seller2, "brand1", 10, true, "describe");
+        Product product1 = new Product(CheckingStatus.CREATION, null, "product1", seller2, "brand1", 10, false, "describe");
         product1.setImagePath("Iino_Miko.png");
         product1.addFilter("Pashm");
         product1.addFilter("Pashmak");
         product1.addFilter("FUTATSU");
 
         Offer offer = new Offer(seller2, CheckingStatus.CREATION, 20);
+        offer.setEndingTime(new Date(120, 5, 4));
+        offer.setStartingTime(new Date(120, 3, 4));
         offer.addProduct(product1);
         Offer.addOfferToAllOffers(offer);
 
@@ -90,7 +92,6 @@ public class Main extends Application {
         pane.setPrefSize(400, 300);
         pane.getStylesheets().add("CSS/message_popup.css");
         pane.setStyle("-fx-background-color: white;");
-        label.setStyle("-fx-font-size: 18px;");
         okButton.setId(type);
         okButton.setPrefHeight(100);
         okButton.setPrefWidth(400);
@@ -214,6 +215,12 @@ public class Main extends Application {
         product4.addFilter("AB");
         product3.addFilter("CD");
         product4.addFilter("CD");
+        product1.rate(customer, 3);
+        product2.rate(customer, 5);
+        product3.rate(customer, 4);
+        product4.rate(customer, 1);
+        product5.rate(customer, 0);
+        product6.rate(customer, 2);
     }
 
     public static void setOffers() {

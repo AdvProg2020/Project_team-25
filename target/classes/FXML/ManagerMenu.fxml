@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.shape.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
@@ -104,9 +105,71 @@
       <TabPane prefHeight="600.0" prefWidth="950.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab text="Personal Info">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="950.0" />
-            </content>
+               <content>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <VBox alignment="TOP_CENTER" prefHeight="300.0" prefWidth="950.0" style="-fx-background-color: #ffddf4;">
+                           <children>
+                              <ImageView fx:id="imageProfile" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                              <Region prefHeight="20.0" prefWidth="200.0" />
+                              <Button id="changeImageButton" fx:id="changeImageButton" mnemonicParsing="false" text="Change" />
+                           </children>
+                        </VBox>
+                        <HBox alignment="BOTTOM_CENTER" prefHeight="379.0" prefWidth="943.0">
+                           <children>
+                              <Region prefHeight="377.0" prefWidth="50.0" />
+                              <GridPane hgap="10.0" prefHeight="400.0" prefWidth="600.0" vgap="10.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label text="Username: ">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font></Label>
+                                    <Label layoutX="11.0" layoutY="55.0" text="First Name: " GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font></Label>
+                                    <Label layoutX="11.0" layoutY="180.0" text="Last Name: " GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font></Label>
+                                    <TextField fx:id="usernameField" GridPane.columnIndex="1" />
+                                    <TextField fx:id="firstNameField" layoutX="90.0" layoutY="47.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <TextField fx:id="lastNameField" layoutX="90.0" layoutY="172.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Label text="Password: " textAlignment="CENTER" GridPane.columnIndex="2">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font></Label>
+                                    <TextField fx:id="passwordField" layoutX="90.0" layoutY="47.0" prefWidth="600.0" GridPane.columnIndex="3" />
+                                    <Label text="Phone Number: " GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font></Label>
+                                    <TextField fx:id="phoneNumberField" layoutX="269.0" layoutY="47.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                    <TextField fx:id="emailField" layoutX="269.0" layoutY="172.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                    <Label text="Email: " GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font></Label>
+                                 </children>
+                              </GridPane>
+                              <Region prefHeight="324.0" prefWidth="0.0" />
+                              <Button id="editInfoButton" fx:id="editPersonalInfoButton" alignment="BOTTOM_CENTER" mnemonicParsing="false" prefWidth="100.0" text="Edit" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </content>
           </Tab>
           <Tab text="Requests">
                <content>
@@ -148,7 +211,7 @@
                   </VBox>
                </content>
             </Tab>
-            <Tab text="Mange Products">
+            <Tab text="Manage Products">
                <content>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
@@ -172,7 +235,7 @@
                   </VBox>
                </content>
             </Tab>
-            <Tab text="Mange Users">
+            <Tab text="Manage Users">
                <content>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
@@ -205,7 +268,7 @@
                   </VBox>
                </content>
             </Tab>
-            <Tab text="Mange OffCodes">
+            <Tab text="Manage OffCodes">
                <content>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
@@ -220,7 +283,7 @@
                                     </ImageView>
                                  </graphic>
                               </Button>
-                              <Region prefHeight="64.0" prefWidth="613.0" />
+                              <Region prefHeight="68.0" prefWidth="585.0" />
                               <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="43.0" prefWidth="68.0" text="Sort By" wrapText="true">
                                  <font>
                                     <Font size="18.0" />

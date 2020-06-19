@@ -145,3 +145,30 @@
 #categoryButton:selected {
     -fx-background-color: orange;
 }
+
+#editInfoButton {
+    -fx-background-color: rgba(255, 150, 0, 0.8);
+    -fx-font-size: 16px;
+    -fx-background-radius: 2em;
+}
+
+#editInfoButton:hover {
+    -fx-background-color: rgba(255, 150, 0, 0.4);
+}
+
+#changeImageButton {
+    -fx-background-color: rgba(255, 150, 0, 0.8);
+    -fx-font-size: 16px;
+    -fx-background-radius: 5em;
+}
+
+#changeImageButton:hover {
+    -fx-background-color: rgba(255, 150, 0, 0.4);
+}
+
+#infoField {
+    -fx-background-color: purple;
+    -fx-text-fill: white;
+    -fx-background-radius: 1em;
+    -fx-font-size: 16px;
+}
