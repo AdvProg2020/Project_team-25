@@ -4,13 +4,28 @@ import Store.Controller.MainMenuUIController;
 import Store.Model.*;
 import Store.Model.Enums.CheckingStatus;
 import Store.View.*;
+import Store.View.AdditionalUtils.SpriteAnimation;
+import javafx.animation.Animation;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
+import java.io.File;
 import java.util.Date;
 
 public class Main extends Application {
@@ -18,7 +33,7 @@ public class Main extends Application {
     private static Stage otherStage = new Stage();
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         otherStage.initModality(Modality.APPLICATION_MODAL);
 
         setTest();
@@ -32,13 +47,15 @@ public class Main extends Application {
         product.addFilter("HITOTSU");
 
         Seller seller2 = new Seller("JOJO", "jack", "ripper", "lab@lab.com", "0950", "1234", 1000, "company1", "describe");
-        Product product1 = new Product(CheckingStatus.CREATION, null, "product1", seller2, "brand1", 10, true, "describe");
+        Product product1 = new Product(CheckingStatus.CREATION, null, "product1", seller2, "brand1", 10, false, "describe");
         product1.setImagePath("Iino_Miko.png");
         product1.addFilter("Pashm");
         product1.addFilter("Pashmak");
         product1.addFilter("FUTATSU");
 
         Offer offer = new Offer(seller2, CheckingStatus.CREATION, 20);
+        offer.setEndingTime(new Date(120, 5, 4));
+        offer.setStartingTime(new Date(120, 3, 4));
         offer.addProduct(product1);
         Offer.addOfferToAllOffers(offer);
 
@@ -75,6 +92,26 @@ public class Main extends Application {
         otherStage.setTitle(title);
         otherStage.setResizable(false);
         otherStage.showAndWait();
+    }
+
+    public static void errorPopUp(String Error, String type, Stage stage) {
+        Popup popup = new Popup();
+        Button okButton = new Button("Ok");
+        Label label = new Label(Error);
+        VBox pane = new VBox();
+        pane.setPrefSize(400, 300);
+        pane.getStylesheets().add("CSS/message_popup.css");
+        pane.setStyle("-fx-background-color: white;");
+        okButton.setId(type);
+        okButton.setPrefHeight(100);
+        okButton.setPrefWidth(400);
+        label.setPrefHeight(200);
+        label.setPrefWidth(400);
+        label.setAlignment(Pos.CENTER);
+        pane.getChildren().addAll(label, okButton);
+        popup.getContent().add(pane);
+        okButton.setOnMouseClicked(event -> popup.hide());
+        popup.show(stage);
     }
 
     public static void setPrimaryStageScene(Scene scene) {
@@ -118,15 +155,19 @@ public class Main extends Application {
         Category category3 = new Category("category3", category1);
         Category category4 = new Category("category4", category1);
 
-        OffCode offCode1 = new OffCode("ce98",30,10,2);
-        offCode1.setEndingTime(new Date(2020, 5, 4));
-        OffCode offCode2 = new OffCode("AP2",60,5,1);
-        offCode2.setEndingTime(new Date(2020, 5, 4));
-        OffCode offCode3 = new OffCode("AP333",60,5,1);
-        offCode2.setEndingTime(new Date(2020, 5, 4));
+        OffCode offCode1 = new OffCode("ce98", 30, 10, 2);
+        offCode1.setEndingTime(new Date(120, 5, 4));
+        offCode1.setStartingTime(new Date(120, 3, 4));
+        OffCode offCode2 = new OffCode("AP2", 60, 5, 1);
+        offCode2.setEndingTime(new Date(120, 5, 4));
+        offCode2.setStartingTime(new Date(120, 3, 4));
+        OffCode offCode3 = new OffCode("AP333", 60, 5, 1);
+        offCode3.setEndingTime(new Date(120, 5, 4));
+        offCode3.setStartingTime(new Date(120, 3, 4));
         manager1.addOffCode(offCode1);
         manager1.addOffCode(offCode2);
         manager1.addOffCode(offCode3);
+
         offCode1.addUser(customer);
         offCode2.addUser(customer);
         customer.addOffCode(offCode1);
@@ -184,6 +225,12 @@ public class Main extends Application {
         product4.addFilter("AB");
         product3.addFilter("CD");
         product4.addFilter("CD");
+        product1.rate(customer, 3);
+        product2.rate(customer, 5);
+        product3.rate(customer, 4);
+        product4.rate(customer, 1);
+        product5.rate(customer, 0);
+        product6.rate(customer, 2);
     }
 
     public static void setOffers() {
@@ -200,7 +247,38 @@ public class Main extends Application {
         ((Seller) User.getUserByUsername("seller2")).forceAddOffer(offer2);
         offer1.setStartingTime(new Date());
         offer2.setStartingTime(new Date());
-        offer1.setEndingTime(new Date(2020,6,10));
-        offer2.setEndingTime(new Date(2020,6,9));
-        }
+        offer1.setEndingTime(new Date(2020, 6, 10));
+        offer2.setEndingTime(new Date(2020, 6, 9));
+    }
+
+    public static Popup setProgressPopup() {
+        Popup popup = new Popup();
+
+
+        File file = new File("src/main/resources/Icons/progress.jpg");
+        final ImageView imageView = new ImageView(new Image(file.toURI().toString()));
+        imageView.setViewport(new Rectangle2D(30, 0, 190, 405));
+
+        final Animation animation = new SpriteAnimation(
+                imageView,
+                Duration.millis(1000),
+                6, 6,
+                30, 0,
+                190, 405
+        );
+
+
+
+//        applicationStage.setScene(new Scene(new Group(imageView)));
+        popup.getContent().add(new Group(imageView));
+
+        animation.setCycleCount(Animation.INDEFINITE);
+        animation.play();
+
+        return popup;
+    }
+
+    public static Stage getApplicationStage() {
+        return applicationStage;
+    }
 }

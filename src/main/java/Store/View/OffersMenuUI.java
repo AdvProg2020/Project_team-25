@@ -1,5 +1,27 @@
 package Store.View;
 
+import Store.Controller.*;
+import Store.Main;
+import Store.Model.*;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashSet;
+
 import Store.Controller.MainMenuUIController;
 import Store.Controller.ProductsController;
 import Store.Main;
@@ -29,7 +51,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class ProductsMenuUI {
+public class OffersMenuUI {
     private static ArrayList<String> filters;
     private static ArrayList<String> availableFilters;
     private static ArrayList<Product> productsToBeShown;
@@ -77,11 +99,11 @@ public class ProductsMenuUI {
 
 
     public static Parent getContent() throws IOException {
-        Parent root = FXMLLoader.load(ProductsMenuUI.class.getClassLoader().getResource("FXML/ProductsMenu.fxml"));
+        Parent root = FXMLLoader.load(Store.View.OffersMenuUI.class.getClassLoader().getResource("FXML/OffersMenuUI.fxml"));
         return root;
     }
 
-    public static void showProductsMenu() {
+    public static void showOffersMenu() {
         try {
             Main.setPrimaryStageScene(new Scene(getContent()));
         } catch (IOException exception) {
@@ -97,7 +119,6 @@ public class ProductsMenuUI {
         setCategoryFiltersVBox();
         setRangeOfSliders();
         showProducts();
-
     }
 
 
@@ -113,7 +134,6 @@ public class ProductsMenuUI {
         loginLogoutButton.setOnAction((e) -> LoginMenuUI.handleEvent());
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
         showCategoryButton.setOnAction(event -> showCategories());
-        offersButton.setOnAction((e) -> OffersMenuUI.showOffersMenu());
 
         mainMenuButton.setOnAction((e) -> {
             try {
@@ -122,6 +142,8 @@ public class ProductsMenuUI {
                 exception.printStackTrace();
             }
         });
+
+        productsButton.setOnAction((e) -> ProductsMenuUI.showProductsMenu());
 
 
         searchString.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -316,15 +338,21 @@ public class ProductsMenuUI {
     }
 
     private void setGraphicsOfProducts(VBox vBox, Product product) {
+        Offer offer = Offer.getOfferOfProduct(product);
+        if (offer == null) {
+            return;
+        }
+
         VBox productInfo = new VBox();
         productInfo.setAlignment(Pos.TOP_CENTER);
         productInfo.setId("productInfo");
         Separator separator = new Separator(Orientation.HORIZONTAL);
         GridPane gridPane = new GridPane();
+
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.setHgap(80);
+        gridPane.setHgap(10);
         product.getImagePath();
-        File file = null;
+        File file;
         if (product.getImagePath().equals("")) {
             file = new File("src/main/resources/Images/images.jpg");
         } else {
@@ -332,24 +360,42 @@ public class ProductsMenuUI {
         }
 
         ImageView imageView = new ImageView(new Image(file.toURI().toString()));
+
         imageView.setFitWidth(225);
         imageView.setFitHeight(225);
+
         Label productName = new Label(product.getName());
         Label productPrice = new Label(product.getPrice() + "$");
+        Label productShouldPaidPrice = new Label((product.getPrice() - (product.getPrice() * offer.getOffPercent() / 100.0)) + "$");
         Label productRating = new Label(product.getAverageRating() + "/5");
+        Label startingLabel = new Label();
+        Label endingLabel = new Label();
+        try {
+            startingLabel.setText("Starting Time: " + new Date(offer.getStartingTime().getTime()).toLocalDate());
+            endingLabel.setText("Ending Time: " + new Date(offer.getEndingTime().getTime()).toLocalDate());
+        } catch (Exception exception) {
+            // do nothing
+        }
         Label isAvailable = new Label(product.getAvailablity() ? "Available" : "Unavailable");
         isAvailable.setPrefWidth(vBox.getPrefWidth());
         isAvailable.setAlignment(Pos.CENTER);
+        productShouldPaidPrice.setAlignment(Pos.CENTER_LEFT);
+        productPrice.setAlignment(Pos.CENTER_RIGHT);
 
         isAvailable.setStyle(product.getAvailablity() ? "-fx-background-color: #BFFF00;" : "-fx-background-color: #C40233;");
-        gridPane.add(productRating, 1, 0);
         gridPane.add(productPrice, 0, 0);
+        gridPane.add(productShouldPaidPrice, 1, 0);
+        gridPane.setGridLinesVisible(true);
         productName.setId("productName");
-        productPrice.setId("productPrice");
+
+        productPrice.setId("productActualPrice");
         productRating.setId("productRating");
+        startingLabel.setId("time");
+        endingLabel.setId("time");
+        productShouldPaidPrice.setId("productPrice");
         isAvailable.setId("availability");
 
-        productInfo.getChildren().addAll(imageView, productName, gridPane, getProductRating(product), isAvailable, separator);
+        productInfo.getChildren().addAll(imageView, productName, gridPane, getProductRating(product), productRating, startingLabel, endingLabel, isAvailable, separator);
         vBox.getChildren().add(productInfo);
         productInfo.setOnMouseClicked(event -> {
             try {
@@ -358,11 +404,10 @@ public class ProductsMenuUI {
                 exception.printStackTrace();
             }
         });
-
     }
 
     private void setTobeShownProducts() {
-        productsToBeShown = ProductsController.getFilteredList(filters);
+        productsToBeShown = OffersController.sortProductsInOffers(currentSort, filters);
         productsToBeShown = ProductsController.handleStaticFiltering(productsToBeShown, categoryFilter, priceLowFilter,
                 priceHighFilter, brandFilter, nameFilter, sellerUsernameFilter, availabilityFilter);
         productsToBeShown = ProductsController.filterProductsWithSearchQuery(productsToBeShown, searchQuery);
@@ -450,8 +495,6 @@ public class ProductsMenuUI {
     }
 
 
-
-
 //    private void giveSearchedProducts() {
 //        if (searchString.getText().isEmpty()) {
 //            searchQuery = "(.*)";
@@ -461,3 +504,4 @@ public class ProductsMenuUI {
 //        showProducts();
 //    }
 }
+

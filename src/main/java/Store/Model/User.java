@@ -20,6 +20,7 @@ public class User implements Serializable {
     // Notification Array
 
     public User(String username, String name, String familyName, String email, String phoneNumber, String password) {
+        this.profilePicturePath = "";
         this.username = username;
         this.name = name;
         this.familyName = familyName;
@@ -180,5 +181,9 @@ public class User implements Serializable {
             }
         }
         return false;
+    }
+
+    public void setProfilePicturePath(String profilePicturePath) {
+        this.profilePicturePath = profilePicturePath;
     }
 }

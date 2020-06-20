@@ -7,25 +7,31 @@ import Store.Controller.ProductsController;
 import Store.Main;
 import Store.Model.*;
 import Store.Model.Enums.VerifyStatus;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashSet;
+import java.sql.Date;
+import java.util.*;
 
 public class ManagerMenuUI {
     public Button mainMenuButton;
@@ -46,6 +52,15 @@ public class ManagerMenuUI {
     public VBox offCodesList;
     public ComboBox sortOffCodesChoiceBox;
     public Button addOffCodeButton;
+    public ImageView imageProfile;
+    public TextField usernameField;
+    public TextField firstNameField;
+    public TextField lastNameField;
+    public TextField passwordField;
+    public TextField phoneNumberField;
+    public TextField emailField;
+    public Button editPersonalInfoButton;
+    public Button changeImageButton;
 
     private static ArrayList<String> availableSortsProducts = new ArrayList<String>(Arrays.asList("rating", "price", "visit", "lexicographical"));
     private static ArrayList<String> availableSortsOffCodes = new ArrayList<String>(Arrays.asList("time of starting", "time of ending", "code", "off percentage", "maximum off", "usage count"));
@@ -53,6 +68,8 @@ public class ManagerMenuUI {
     private static String currentProductsSort = "";
     private static String currentUsersSort = "";
     private static String currentOffCodesSort = "";
+
+
 
     public static Parent getContent() throws IOException {
         Parent root = FXMLLoader.load(ManagerMenuUI.class.getClassLoader().getResource("FXML/ManagerMenu.fxml"));
@@ -63,6 +80,8 @@ public class ManagerMenuUI {
     private void initialize() {
         initialSetup();
         setupBindings();
+        reset();
+        handlePersonalInfo();
         showRequests();
         showCategories();
         showProducts();
@@ -73,11 +92,7 @@ public class ManagerMenuUI {
     private void showOffCodes() {
         offCodesList.getChildren().clear();
         for (OffCode offCode : ManagerController.sortOffCodes(currentOffCodesSort, Manager.getOffCodes())) {
-            Calendar startingTime = Calendar.getInstance();
-            startingTime.setTime(offCode.getStartingTime());
-            Calendar endingTime = Calendar.getInstance();
-            endingTime.setTime(offCode.getStartingTime());
-            Label userLabel = new Label(String.format("Code: %s, OffPercent: %s, MaximumOff: %s$, StartingTime: %s/%s/%s, EndingTime: %s/%s/%s", offCode.getCode(), offCode.getOffPercentage(), offCode.getMaximumOff(), startingTime.get(Calendar.MONTH), startingTime.get(Calendar.DAY_OF_MONTH), startingTime.get(Calendar.YEAR), endingTime.get(Calendar.MONTH), endingTime.get(Calendar.DAY_OF_MONTH), endingTime.get(Calendar.YEAR)));
+            Label userLabel = new Label(String.format("Code: %s, OffPercent: %s, MaximumOff: %s$, UsageCounts: %s, StartingTime: %s, EndingTime: %s", offCode.getCode(), offCode.getOffPercentage(), offCode.getMaximumOff(), offCode.getUsageCount(), new Date(offCode.getStartingTime().getTime()).toLocalDate().toString(), new Date(offCode.getEndingTime().getTime()).toLocalDate().toString()));
             userLabel.setOnMouseClicked(event -> {
                 editOffCode(offCode);
             });
@@ -90,7 +105,146 @@ public class ManagerMenuUI {
     }
 
     private void editOffCode(OffCode offCode) {
+        VBox addNewOffCodeContainer = new VBox();
+        TextField nameTextField = new TextField();
+        TextField maximumOffField = new TextField();
+        TextField offValueField = new TextField();
+        TextField usageOffField = new TextField();
+        DatePicker startingDatePicker = new DatePicker();
+        DatePicker endingDatePicker = new DatePicker();
+        Button okButton = new Button("Ok");
+        Button deleteButton = new Button("Delete");
 
+        addNewOffCodeContainer.setAlignment(Pos.TOP_CENTER);
+        addNewOffCodeContainer.setPrefSize(300, 300);
+        nameTextField.setPromptText(offCode.getCode());
+        maximumOffField.setPromptText(offCode.getMaximumOff() + "$");
+        offValueField.setPromptText(offCode.getOffPercentage() + "");
+        usageOffField.setPromptText(offCode.getUsageCount() + "");
+        startingDatePicker.setValue(new Date(offCode.getStartingTime().getTime()).toLocalDate());
+        endingDatePicker.setValue(new Date(offCode.getEndingTime().getTime()).toLocalDate());
+        nameTextField.setDisable(true);
+        startingDatePicker.setDisable(true);
+        endingDatePicker.setDisable(true);
+        usageOffField.setDisable(true);
+
+        deleteButton.setOnMouseClicked(event -> {
+            Main.errorPopUp(ManagerController.removeOffCode((Manager) MainMenuUIController.currentUser, offCode.getCode()), "confirm", (Stage) deleteButton.getScene().getWindow());
+            Stage stage = (Stage) deleteButton.getScene().getWindow();
+            stage.close();
+            showOffCodes();
+        });
+
+        okButton.setOnMouseClicked(event -> {
+            double maximumOffValue;
+            double offPercent;
+
+            try {
+                if (!maximumOffField.getText().isEmpty()) {
+                    maximumOffValue = Double.parseDouble(maximumOffField.getText());
+                    ManagerController.editOffCode((Manager) MainMenuUIController.currentUser, offCode, "maximumOff", maximumOffValue + "");
+                }
+            } catch (Exception exception) {
+                Main.errorPopUp("Invalid Format!", "error", (Stage) okButton.getScene().getWindow());
+                return;
+            }
+            try {
+                if (!offValueField.getText().isEmpty()) {
+                    offPercent = Double.parseDouble(offValueField.getText());
+                    ManagerController.editOffCode((Manager) MainMenuUIController.currentUser, offCode, "offPercentage", offPercent + "");
+                }
+            } catch (Exception exception) {
+                Main.errorPopUp("Invalid Format!", "error", (Stage) okButton.getScene().getWindow());
+                return;
+            }
+
+            Main.errorPopUp("OffCode Edited Successfully.", "confirm", (Stage) okButton.getScene().getWindow());
+            Stage stage = (Stage) okButton.getScene().getWindow();
+            stage.close();
+            showOffCodes();
+        });
+
+        addNewOffCodeContainer.getChildren().addAll(new Label("Enter Code: "), nameTextField, new Separator(),
+                new Label("Enter Max Off: "), maximumOffField, new Separator(),
+                new Label("Enter Off Value: "), offValueField, new Separator(),
+                new Label("Enter Usage Counts: "), usageOffField, new Separator(),
+                new Label("Select Starting Date: "), startingDatePicker, new Separator(),
+                new Label("Select Ending Date: "), endingDatePicker, new Separator(),
+                okButton, deleteButton
+        );
+        Main.setupOtherStage(new Scene(addNewOffCodeContainer), "Edit OffCode");
+    }
+
+    private void addOffCode() {
+        VBox addNewOffCodeContainer = new VBox();
+        TextField nameTextField = new TextField();
+        TextField maximumOffField = new TextField();
+        TextField offValueField = new TextField();
+        TextField usageOffField = new TextField();
+        DatePicker startingDatePicker = new DatePicker();
+        DatePicker endingDatePicker = new DatePicker();
+        Button okButton = new Button("Ok");
+        startingDatePicker.setEditable(false);
+        endingDatePicker.setEditable(false);
+
+        addNewOffCodeContainer.setAlignment(Pos.TOP_CENTER);
+        addNewOffCodeContainer.setPrefSize(300, 300);
+
+        okButton.setOnMouseClicked(event -> {
+            double maximumOffValue;
+            double offPercent;
+            int usageCount;
+            if (Manager.getOffCodeByCode(nameTextField.getText()) != null) {
+                Main.errorPopUp("Code is already created!", "error", (Stage) okButton.getScene().getWindow());
+                return;
+            }
+            if (nameTextField.getText().isEmpty()) {
+                Main.errorPopUp("Invalid Format!", "error", (Stage) okButton.getScene().getWindow());
+                return;
+            }
+            try {
+                maximumOffValue = Double.parseDouble(maximumOffField.getText());
+            } catch (Exception exception) {
+                Main.errorPopUp("Invalid Format!", "error", (Stage) okButton.getScene().getWindow());
+                return;
+            }
+            try {
+                offPercent = Double.parseDouble(offValueField.getText());
+            } catch (Exception exception) {
+                Main.errorPopUp("Invalid Format!", "error", (Stage) okButton.getScene().getWindow());
+                return;
+            }
+            try {
+                usageCount = Integer.parseInt(usageOffField.getText());
+            } catch (Exception exception) {
+                Main.errorPopUp("Invalid Format!", "error", (Stage) okButton.getScene().getWindow());
+                return;
+            }
+            if (endingDatePicker.getValue().isBefore(startingDatePicker.getValue())) {
+                Main.errorPopUp("Invalid Time Selection!", "error", (Stage) okButton.getScene().getWindow());
+                return;
+            }
+            try {
+                ManagerController.createOffCode((Manager) MainMenuUIController.currentUser, nameTextField.getText(), offPercent, maximumOffValue, usageCount, Date.valueOf(startingDatePicker.getValue()), Date.valueOf(endingDatePicker.getValue()));
+            } catch (Exception exception) {
+                Main.errorPopUp("Invalid Format!", "error", (Stage) okButton.getScene().getWindow());
+                return;
+            }
+            Main.errorPopUp("OffCode added.", "confirm", (Stage) okButton.getScene().getWindow());
+            Stage stage = (Stage) okButton.getScene().getWindow();
+            stage.close();
+            showOffCodes();
+        });
+
+        addNewOffCodeContainer.getChildren().addAll(new Label("Enter Code: "), nameTextField, new Separator(),
+                new Label("Enter Max Off: "), maximumOffField, new Separator(),
+                new Label("Enter Off Value: "), offValueField, new Separator(),
+                new Label("Enter Usage Counts: "), usageOffField, new Separator(),
+                new Label("Select Starting Date: "), startingDatePicker, new Separator(),
+                new Label("Select Ending Date: "), endingDatePicker, new Separator(),
+                okButton
+        );
+        Main.setupOtherStage(new Scene(addNewOffCodeContainer), "Add OffCode");
     }
 
     private void showUsers() {
@@ -174,7 +328,7 @@ public class ManagerMenuUI {
             Region region = new Region();
             region.setPrefHeight(10);
             HBox hBox = new HBox();
-            for (String filter : new HashSet<>(category.getFilters())) {
+            for (String filter : Product.getAllFilters(category.getName())) {
                 Button button = new Button(filter);
                 button.setId("filter");
                 hBox.getChildren().addAll(button);
@@ -184,7 +338,118 @@ public class ManagerMenuUI {
     }
 
     private void editCategory(Category category) {
+        VBox addNewCategoryContainer = new VBox();
+        VBox vBox = new VBox();
+        TextField categoryNameTextField = new TextField();
+        Button okButton = new Button("Ok");
+        Button deleteButton = new Button("Delete");
 
+        addNewCategoryContainer.setAlignment(Pos.TOP_CENTER);
+        categoryNameTextField.setPromptText("Name");
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.getStylesheets().add("CSS/manager_menu_stylesheet.css");
+        scrollPane.setPrefSize(400, 300);
+
+        vBox.setPrefSize(400, 300);
+        vBox.setAlignment(Pos.TOP_CENTER);
+
+        deleteButton.setOnMouseClicked(event -> {
+            Main.errorPopUp(ManagerController.removeCategory((Manager) MainMenuUIController.currentUser, category), "confirm", (Stage) deleteButton.getScene().getWindow());
+            Stage stage = (Stage) deleteButton.getScene().getWindow();
+            stage.close();
+            showCategories();
+        });
+
+        okButton.setOnMouseClicked(event -> {
+            if (Manager.categoryByName(categoryNameTextField.getText()) != null) {
+                Main.errorPopUp("Process failed: the category exists.", "error", (Stage) okButton.getScene().getWindow());
+            } else if (!categoryNameTextField.getText().isEmpty()) {
+                ManagerController.editCategory((Manager) MainMenuUIController.currentUser, category, "change name", categoryNameTextField.getText());
+                Main.errorPopUp("Category's name changed.", "confirm", (Stage) okButton.getScene().getWindow());
+            }
+            Stage stage = (Stage) okButton.getScene().getWindow();
+            stage.close();
+            showCategories();
+        });
+
+        for (String filter : Product.getAllFilters("null")) {
+            ToggleButton filterButton = new ToggleButton(filter);
+            filterButton.setId("categoryButton");
+            if (category.isInFilter(filter)) {
+                filterButton.setSelected(true);
+            }
+            filterButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    ManagerController.editCategory((Manager) MainMenuUIController.currentUser, category, "add filter", filter);
+                } else {
+                    ManagerController.editCategory((Manager) MainMenuUIController.currentUser, category, "remove filter", filter);
+                }
+                showCategories();
+            });
+            Region region = new Region();
+            region.setPrefHeight(10);
+            vBox.getChildren().addAll(filterButton, new Separator(), region);
+        }
+
+
+        scrollPane.setContent(vBox);
+        addNewCategoryContainer.getChildren().addAll(new Label("Enter Name: "), categoryNameTextField, new Label("Select Special Filters For This Category(Automatic Addition):"), scrollPane, okButton, deleteButton);
+        Main.setupOtherStage(new Scene(addNewCategoryContainer), "Edit Category");
+    }
+
+    private void addCategory() {
+        VBox addNewCategoryContainer = new VBox();
+        VBox vBox = new VBox();
+        TextField categoryNameTextField = new TextField();
+        ToggleGroup toggleGroup = new ToggleGroup();
+        Button button = new Button("Ok");
+        final String[] parentCategory = new String[1];
+        parentCategory[0] = "";
+
+        addNewCategoryContainer.setAlignment(Pos.TOP_CENTER);
+        categoryNameTextField.setPromptText("Name");
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.getStylesheets().add("CSS/manager_menu_stylesheet.css");
+        scrollPane.setPrefSize(400, 300);
+
+        vBox.setPrefSize(400, 300);
+        vBox.setAlignment(Pos.TOP_CENTER);
+
+        ToggleButton base = new ToggleButton("No Category");
+        base.setToggleGroup(toggleGroup);
+        base.setId("categoryButton");
+        button.setOnMouseClicked(event -> {
+            if (Manager.categoryByName(categoryNameTextField.getText()) != null) {
+                Main.errorPopUp("Process failed: the category exists.", "error", (Stage) button.getScene().getWindow());
+            } else if (!parentCategory[0].isEmpty() && !categoryNameTextField.getText().isEmpty()) {
+                ManagerController.addCategory((Manager) MainMenuUIController.currentUser, categoryNameTextField.getText(), parentCategory[0]);
+                Main.errorPopUp("Category added.", "confirm", (Stage) button.getScene().getWindow());
+            } else {
+                Main.errorPopUp("Process failed: fields should be filled.", "error", (Stage) button.getScene().getWindow());
+            }
+            Stage stage = (Stage) button.getScene().getWindow();
+            stage.close();
+            showCategories();
+        });
+        base.setOnMouseClicked(event -> {
+            parentCategory[0] = "null";
+        });
+        vBox.getChildren().addAll(base, new Separator());
+
+        for (Category category : Manager.getAllCategories()) {
+            ToggleButton categoryName = new ToggleButton(category.getName());
+            categoryName.setToggleGroup(toggleGroup);
+            categoryName.setId("categoryButton");
+            categoryName.setOnMouseClicked(event -> {
+                parentCategory[0] = category.getName();
+            });
+            Region region = new Region();
+            region.setPrefHeight(10);
+            vBox.getChildren().addAll(categoryName, new Separator(), region);
+        }
+        scrollPane.setContent(vBox);
+        addNewCategoryContainer.getChildren().addAll(new Label("Enter Name: "), categoryNameTextField, new Label("Select Parent Category"), scrollPane, button);
+        Main.setupOtherStage(new Scene(addNewCategoryContainer), "Create Category");
     }
 
 
@@ -244,19 +509,24 @@ public class ManagerMenuUI {
 
 
     private void initialSetup() {
-        sortProductsChoiceBox.setItems(FXCollections.observableArrayList(availableSortsProducts));
-        sortUsersChoiceBox.setItems(FXCollections.observableArrayList(availableSortsUsers));
-        sortOffCodesChoiceBox.setItems(FXCollections.observableArrayList(availableSortsOffCodes));
         loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
         signUpButton.disableProperty().bind(MainMenuUIController.isLoggedIn);
         loginLogoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
-
+        imageProfile.setPreserveRatio(false);
+        imageProfile.setFitWidth(200);
+        imageProfile.setFitHeight(200);
 
     }
 
     public void setupBindings() {
         loginLogoutButton.setOnAction((e) -> LoginMenuUI.handleEvent());
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
+        addCategoryButton.setOnMouseClicked(event -> addCategory());
+        addManagerButton.setOnMouseClicked(event -> {
+            SignUpManagerMenuUI.showSignUpMenu();
+            showUsers();
+        });
+        addOffCodeButton.setOnMouseClicked(event -> addOffCode());
         mainMenuButton.setOnAction((e) -> {
             try {
                 Main.setPrimaryStageScene(new Scene(MainMenuUI.getContent()));
@@ -293,5 +563,94 @@ public class ManagerMenuUI {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+    }
+
+    private void reset() {
+        currentProductsSort = "";
+        currentUsersSort = "";
+        currentOffCodesSort = "";
+        sortProductsChoiceBox.setItems(FXCollections.observableArrayList(availableSortsProducts));
+        sortUsersChoiceBox.setItems(FXCollections.observableArrayList(availableSortsUsers));
+        sortOffCodesChoiceBox.setItems(FXCollections.observableArrayList(availableSortsOffCodes));
+    }
+
+    private void handlePersonalInfo() {
+        Manager manager = (Manager) MainMenuUIController.currentUser;
+        usernameField.setText(manager.getUsername());
+        firstNameField.setText(manager.getName());
+        lastNameField.setText(manager.getFamilyName());
+        passwordField.setText(manager.getPassword());
+        phoneNumberField.setText(manager.getPhoneNumber());
+        emailField.setText(manager.getEmail());
+        usernameField.setPromptText(manager.getUsername());
+        firstNameField.setPromptText(manager.getName());
+        lastNameField.setPromptText(manager.getFamilyName());
+        passwordField.setPromptText(manager.getPassword());
+        phoneNumberField.setPromptText(manager.getPhoneNumber());
+        emailField.setPromptText(manager.getEmail());
+
+        firstNameField.setId("infoField");
+        lastNameField.setId("infoField");
+        emailField.setId("infoField");
+        passwordField.setId("infoField");
+        phoneNumberField.setId("infoField");
+        usernameField.setId("infoField");
+
+        editPersonalInfoButton.setOnMouseClicked(event -> {
+            if (firstNameField.getText().equals(manager.getName()) && lastNameField.getText().equals(manager.getFamilyName()) && passwordField.getText().equals(manager.getPassword()) && phoneNumberField.getText().equals(manager.getPhoneNumber()) && emailField.getText().equals(manager.getEmail())) {
+                Main.errorPopUp("You Should Change Some Fields.", "error", (Stage) usernameField.getScene().getWindow());
+                return;
+            }
+            ManagerController.editPersonalInfo(manager, "first name", firstNameField.getText());
+            ManagerController.editPersonalInfo(manager, "family name", lastNameField.getText());
+            String changePasswordMessage = ManagerController.editPersonalInfo(manager, "password", passwordField.getText());
+            String changePhoneMessage = ManagerController.editPersonalInfo(manager, "phone number", phoneNumberField.getText());
+            String changeEmailMessage = ManagerController.editPersonalInfo(manager, "email", emailField.getText());
+
+            if (changeEmailMessage.equals("Invalid email format!")) {
+                Main.errorPopUp(changeEmailMessage, "error", (Stage) usernameField.getScene().getWindow());
+                return;
+            }
+            if (changePhoneMessage.equals("Phone number format is incorrect!")) {
+                Main.errorPopUp(changePhoneMessage, "error", (Stage) usernameField.getScene().getWindow());
+                return;
+            }
+            if (changePasswordMessage.equals("Invalid password format!")) {
+                Main.errorPopUp(changePasswordMessage, "error", (Stage) usernameField.getScene().getWindow());
+                return;
+            }
+            Main.errorPopUp("Info has changed successfully.", "confirm", (Stage) usernameField.getScene().getWindow());
+            handlePersonalInfo();
+        });
+
+
+        changeImageButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                FileChooser fileChooser = new FileChooser();
+                try {
+                    manager.setProfilePicturePath(fileChooser.showOpenDialog(new Stage()).getPath());
+                }
+                catch (Exception exception) {
+                    // do nothing
+                }
+                handlePersonalInfo();
+            }
+        });
+
+        String path;
+        if (manager.getProfilePicturePath().isEmpty()) {
+            path = "src/main/resources/Images/images.jpg";
+        }
+        else {
+            path = manager.getProfilePicturePath();
+        }
+
+        File file = new File(path);
+        imageProfile.setImage(new Image(file.toURI().toString()));
+
+        final Circle clip = new Circle(100, 100, 100);
+        imageProfile.setClip(clip);
+        clip.setStroke(Color.ORANGE);
     }
 }

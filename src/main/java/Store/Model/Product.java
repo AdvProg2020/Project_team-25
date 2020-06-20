@@ -7,6 +7,7 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Hashtable;
 
 public class Product implements Serializable {
 
@@ -104,17 +105,13 @@ public class Product implements Serializable {
     public boolean equals(Product other) {
         if (productStatus != other.getProductStatus()) {
             return false;
-        }
-        else if (category != other.getCategory()) {
+        } else if (category != other.getCategory()) {
             return false;
-        }
-        else if (!name.equals(other.getName())) {
+        } else if (!name.equals(other.getName())) {
             return false;
-        }
-        else if (!brand.equals(other.getBrand())) {
+        } else if (!brand.equals(other.getBrand())) {
             return false;
-        }
-        else if (!filters.equals(other.filters)) {
+        } else if (!filters.equals(other.filters)) {
             return false;
         }
         return true;
@@ -259,10 +256,15 @@ public class Product implements Serializable {
     }
 
     public static HashSet<String> getAllFilters(String categoryName) {
-        if (!categoryName.equals("null")) {
-            return new HashSet<>(Manager.categoryByName(categoryName).getFilters());
+        HashSet<String> returnFilters = new HashSet<>();
+        if (categoryName.equals("null")) {
+            return new HashSet<>(allFilters);
         }
-        return new HashSet<>(allFilters);
+        for (Category child : Manager.categoryByName(categoryName).getChildren()) {
+           returnFilters.addAll(getAllFilters(child.getName()));
+        }
+        returnFilters.addAll(Manager.categoryByName(categoryName).getFilters());
+        return returnFilters;
     }
 
     public void setImagePath(String imagePath) {
@@ -279,8 +281,8 @@ public class Product implements Serializable {
     }
 
     public void addFilter(String filter) {
-       this.filters.add(filter);
-       addFilterToAllFilters(filter);
+        this.filters.add(filter);
+        addFilterToAllFilters(filter);
     }
 
     public void deleteFilter(String filter) {

@@ -1,0 +1,24 @@
+#error {
+    -fx-font-size: 30px;
+    -fx-background-color: rgba(255, 0, 0, 0.1);
+    -fx-background-radius: 1em;
+}
+
+#error:hover {
+    -fx-background-color: rgba(255, 0, 0, 0.7);
+}
+
+#confirm {
+    -fx-font-size: 30px;
+    -fx-background-color: rgba(0, 255, 0, 0.1);
+    -fx-background-radius: 1em;
+}
+
+#confirm:hover {
+    -fx-background-color: rgba(0, 255, 0, 0.7);
+}
+
+.label {
+ -fx-font-size: 18px;
+ -fx-font-family: italic;
+}

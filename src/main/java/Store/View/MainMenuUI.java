@@ -96,6 +96,7 @@ public class MainMenuUI {
         loginLogoutButton.setOnAction((e) -> LoginMenuUI.handleEvent());
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
         productsButton.setOnAction((e) -> ProductsMenuUI.showProductsMenu());
+        offersButton.setOnAction((e) -> OffersMenuUI.showOffersMenu());
         userPageButton.setOnAction(e -> {
             if (MainMenuUIController.currentUser instanceof Customer)
                 CustomerMenuUI.showCustomerMenu();

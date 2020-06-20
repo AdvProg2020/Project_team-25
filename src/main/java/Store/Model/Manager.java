@@ -275,7 +275,7 @@ public class Manager extends User {
 
     public static void addOffCode(OffCode offCode) {
         offCodes.add(offCode);
-        offCode.setStartingTime(new Date());
+//        offCode.setStartingTime(new Date());
     }
 
     public void addCategory(Category category) {
