@@ -23,6 +23,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -342,8 +343,7 @@ public class SellerMenuUI implements Initializable {
             {
                 try {
                     SellerUIController.removeFilterFromProduct(seller, selectedProduct.getProductID() + "", filterTextField.getText());
-                }catch (Exception exception)
-                {
+                }catch (Exception exception) {
                     throwError(exception.getMessage());
                 }
             }
@@ -361,8 +361,7 @@ public class SellerMenuUI implements Initializable {
             {
                 try {
                     SellerUIController.addFilterToProduct(seller, selectedProduct, filterTextField.getText());
-                }catch (Exception exception)
-                {
+                }catch (Exception exception) {
                     throwError(exception.getMessage());
                 }
             }
@@ -656,6 +655,13 @@ public class SellerMenuUI implements Initializable {
     private void showEachProductInHBox(Product product)
     {
         HBox hBox = new HBox();
+        hBox.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+            try {
+                Main.setPrimaryStageScene(new Scene(ProductMenuUI.getContent(product)));
+            } catch (IOException ioException) {
+
+            }
+        });
         Button edit = new Button("Edit");
         Button remove = new Button("Remove");
         edit.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {

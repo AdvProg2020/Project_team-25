@@ -110,6 +110,7 @@ public class CustomerMenuUI implements Initializable {
         {
             factor.setText(factorString);
             anchorPane.getChildren().add(factor);
+            menuState = "CustomerMenu";
         }
         else
         {
@@ -229,6 +230,13 @@ public class CustomerMenuUI implements Initializable {
     private void showEachProductInHBox(Product product, int i)
     {
         HBox hBox = new HBox();
+        hBox.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+            try {
+                Main.setPrimaryStageScene(new Scene(ProductMenuUI.getContent(product)));
+            } catch (IOException ioException) {
+
+            }
+        });
         String starPath = ProductMenuUI.class.getResource("/Icons/StarNotSelected.png").toExternalForm();
         /*Image productImage = new Image(product.getImagePath());
         ImageView productView = new ImageView(productImage);
@@ -381,6 +389,13 @@ public class CustomerMenuUI implements Initializable {
                 ioException.printStackTrace();
             }
         });*/
+        hBox.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+            try {
+                Main.setPrimaryStageScene(new Scene(ProductMenuUI.getContent(product)));
+            } catch (IOException ioException) {
+
+            }
+        });
         hBox.setMaxHeight(70);      hBox.setMinHeight(70);
         Image plus = new Image(ProductMenuUI.class.getResource("/Icons/Plus.png").toExternalForm());
         Image mines = new Image(ProductMenuUI.class.getResource("/Icons/Negative.png").toExternalForm());
