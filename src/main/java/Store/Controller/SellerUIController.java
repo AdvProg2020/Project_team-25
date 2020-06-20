@@ -58,12 +58,13 @@ public class SellerUIController {
         return email.matches(regex);
     }
 
-    public static String editProduct(Seller seller, Product product, Product newProduct) {
+    public static void editProduct(Seller seller, Product product, Product newProduct) throws Exception {
         for (Product product1: seller.getProducts())
             if (!product1.equals(product) && product1.equals(newProduct))
-                return "Your new product is in current seller's products!";
+                throw new Exception("Your new product is in current seller's products!");
         Manager.addRequest(new Request(product, true, newProduct));
-        return "Request has been sent.";
+        System.out.println("salam2");
+        // "Request has been sent.";
     }
 
     public static void addProduct(Seller seller, Product product) {
@@ -74,12 +75,12 @@ public class SellerUIController {
         seller.removeProduct(product);
     }
 
-    public static String editOff(Seller seller, Offer offer, Offer newOffer) {
+    public static void editOff(Seller seller, Offer offer, Offer newOffer) throws Exception {
         for (Offer offer1: seller.getOffers())
             if (!offer1.equals(offer) && offer1.equals(newOffer))
-                return "Your new offer has at least one product which is in off!";
+                throw new Exception("Your new offer has at least one product which is in off!");
         Manager.addRequest(new Request(seller, offer, true, newOffer));
-        return "Request has been sent.";
+       // return "Request has been sent.";
     }
 
     public static void addOff(Seller seller, Offer offer) {
@@ -94,22 +95,6 @@ public class SellerUIController {
             }
         }
         return result;
-    }
-
-    public static boolean isValidField(String field) {
-        if (field.equalsIgnoreCase("first name") || field.equalsIgnoreCase("family name")) {
-            return true;
-        }
-        else if (field.equalsIgnoreCase("email") || field.equalsIgnoreCase("phone number")) {
-            return true;
-        }
-        else if (field.equalsIgnoreCase("password")) {
-            return true;
-        }
-        else if (field.equalsIgnoreCase("company name") || field.equalsIgnoreCase("company description")) {
-            return true;
-        }
-        return false;
     }
 
     public static boolean isValidID(Seller seller, int id) {
@@ -135,102 +120,51 @@ public class SellerUIController {
         return seller == product.getSeller();
     }
 
-    public static String addFilterToProduct(Seller seller, String idString, String filter) {
-        if (!StringUtils.isNumeric(idString) || !Product.hasProductWithID(Integer.parseInt(idString))) {
-            return "Invalid ID!";
-        }
-        Product product = Product.getProductByID(Integer.parseInt(idString));
-        if (product.getSeller() != seller) {
-            return "You do not own this product!";
-        }
+    public static void addFilterToProduct(Seller seller, Product product, String filter) throws Exception {
         if (product.hasFilter(filter)) {
-            return "This product already has this filter!";
+            throw new Exception("This product already has this filter!");
         }
         product.addFilter(filter);
-        return "Filter added.";
+       // return "Filter added.";
     }
 
-    public static String removeFilterFromProduct(Seller seller, String idString, String filter) {
+    public static void removeFilterFromProduct(Seller seller, String idString, String filter) throws Exception {
         if (!StringUtils.isNumeric(idString) || !Product.hasProductWithID(Integer.parseInt(idString))) {
-            return "Invalid ID!";
+            throw new Exception("Invalid ID!");
         }
         Product product = Product.getProductByID(Integer.parseInt(idString));
         if (product.getSeller() != seller) {
-            return "You do not own this product!";
+            throw new Exception("You do not own this product!");
         }
         if (!product.hasFilter(filter)) {
-            return "This product does not have this filter!";
+            throw new Exception("This product does not have this filter!");
         }
         product.deleteFilter(filter);
-        return "Filter removed.";
+        //return "Filter removed.";
     }
 
-    public static String addFilterToOffer(Seller seller, String idString, String filter) {
-        if (!StringUtils.isNumeric(idString) || !Offer.hasOfferByID(Integer.parseInt(idString)) || Offer.getOfferByID(Integer.parseInt(idString)) == null) {
-            return "Invalid ID!";
-        }
-        Offer offer = Offer.getOfferByID(Integer.parseInt(idString));
-        if ((Seller) offer.getUser() != seller) {
-            return "You do not own this offer!";
-        }
+    public static void addFilterToOffer(Seller seller, Offer offer, String filter) throws Exception {
         if (offer.hasFilter(filter)) {
-            return "This offer already has this filter!";
+            throw new Exception("This offer already has this filter!");
         }
         offer.addFilter(filter);
-        return "Filter added.";
+        //return "Filter added.";
     }
 
-    public static String removeFilterFromOffer(Seller seller, String idString, String filter) {
-        if (!StringUtils.isNumeric(idString) || !Offer.hasOfferByID(Integer.parseInt(idString)) || Offer.getOfferByID(Integer.parseInt(idString)) == null) {
-            return "Invalid ID!";
+    public static void removeFilterFromOffer(Seller seller, String idString, String filter) throws Exception {
+        if (!StringUtils.isNumeric(idString) || !Offer.hasOfferByID(Integer.parseInt(idString))) {
+            throw new Exception("Invalid ID!");
         }
         Offer offer = Offer.getOfferByID(Integer.parseInt(idString));
         if ((Seller) offer.getUser() != seller) {
-            return "You do not own this offer!";
+            throw new Exception("You do not own this offer!");
         }
         if (!offer.hasFilter(filter)) {
-            return "This offer does not have this filter!";
+            throw new Exception("This offer does not have this filter!");
         }
         offer.removeFilter(filter);
-        return "Filter removed.";
+        //return "Filter removed.";
     }
 
-    public static void addProductToOffer(Seller seller, Offer offer, String productId) throws Exception {
-        Product product = Product.getProductByID(Integer.parseInt(productId));
-        Offer newOffer = new Offer();
-        newOffer.setStartingTime(offer.getStartingTime());
-        newOffer.setEndingTime(offer.getEndingTime());
-        newOffer.setOfferStatus(offer.getOfferStatus());
-        newOffer.setProducts(offer.getProducts());
-        newOffer.setFilters(offer.getFilters());
-        newOffer.setOffID(offer.getOffID());
-        newOffer.setOffPercent(offer.getOffPercent());
-        newOffer.setUser(offer.getUser());
-        if (offer.containsProduct(product))
-            throw new Exception("This product is in offer now!");
-        else if (Offer.hasOfferByID(Integer.parseInt(productId)))
-            throw new Exception("This product is in other offer!");
-        else {
-            newOffer.addProduct(product);
-            editOff(seller, offer, newOffer);
-        }
-    }
-    public static void removeProductFromOffer(Seller seller, Offer offer, String productId) throws Exception {
-        Product product = Product.getProductByID(Integer.parseInt(productId));
-        Offer newOffer = new Offer();
-        newOffer.setStartingTime(offer.getStartingTime());
-        newOffer.setEndingTime(offer.getEndingTime());
-        newOffer.setOfferStatus(offer.getOfferStatus());
-        newOffer.setProducts(offer.getProducts());
-        newOffer.setFilters(offer.getFilters());
-        newOffer.setOffID(offer.getOffID());
-        newOffer.setOffPercent(offer.getOffPercent());
-        newOffer.setUser(offer.getUser());
-        if (!offer.containsProduct(product))
-            throw new Exception("This product is not in offer now!");
-        else {
-            newOffer.getProducts().remove(product);
-            editOff(seller, offer, newOffer);
-        }
-    }
+
 }

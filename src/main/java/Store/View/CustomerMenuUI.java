@@ -1,6 +1,5 @@
 package Store.View;
 
-import Store.Controller.CustomerController;
 import Store.Controller.CustomerUIController;
 import Store.Controller.MainMenuUIController;
 import Store.InputManager;
@@ -42,7 +41,14 @@ public class CustomerMenuUI implements Initializable {
     private static Customer customer;
     private static String menuState = "CustomerMenu";
 
-    public VBox myProductVBox, cartVBox, discountVBox;
+    public AnchorPane anchorPane;
+    public VBox myProductsVBox, cartVBox, discountVBox;
+
+    public TabPane tabPane;
+    public Tab cart;
+    public Tab personal;
+    public Tab product;
+    public Tab discount;
 
     public Label balance;
     public Button personalInfoButton;
@@ -68,6 +74,7 @@ public class CustomerMenuUI implements Initializable {
     public TextField initialMoneyTextField;
     public Label errorText;
 
+    public Label factor = new Label("");
 
     public Button purchaseButton;
     public Button decreaseCartButton;
@@ -76,7 +83,7 @@ public class CustomerMenuUI implements Initializable {
 
     int[] currentRatings;
     Label[] averageRatingLabels;
-    static String phoneNumber, firstName, lastName, email;
+    static String phoneNumber, firstName, lastName, email, factorString;
 
     public PasswordField passEdit;
     public TextField offCodeTextField;
@@ -99,10 +106,33 @@ public class CustomerMenuUI implements Initializable {
         {
 
         }
+        else if (menuState.equalsIgnoreCase("showFactor"))
+        {
+            factor.setText(factorString);
+            anchorPane.getChildren().add(factor);
+        }
         else
         {
+            if (menuState.equalsIgnoreCase("product") || menuState.equalsIgnoreCase("cart") || menuState.equalsIgnoreCase("personal"))
+                resetAll();
             setupInitial();
+            if (menuState.equalsIgnoreCase("product"))
+                tabPane.getSelectionModel().select(product);
+            else if (menuState.equalsIgnoreCase("cart"))
+                tabPane.getSelectionModel().select(cart);
+            else if (menuState.equalsIgnoreCase("personal"))
+                tabPane.getSelectionModel().select(personal);
         }
+    }
+
+    private void resetAll()
+    {
+        for (int i = 1; i < myProductsVBox.getChildren().size();)
+            myProductsVBox.getChildren().remove(i);
+        for (int i = 1; i < cartVBox.getChildren().size();)
+            cartVBox.getChildren().remove(i);
+        for (int i = 0; i < discountVBox.getChildren().size();)
+            discountVBox.getChildren().remove(i);
     }
 
     @FXML
@@ -125,12 +155,22 @@ public class CustomerMenuUI implements Initializable {
                 showProducts.add(product);
         }
         int i = 0;
+        showProducts = makeUnique(showProducts);
         for (Product product: showProducts)
             showEachProductInHBox(product, i++);
         averageRatingLabels = new Label[showProducts.size()];
         currentRatings = new int[showProducts.size()];
         for (int currentRating: currentRatings)
             currentRating = 0;
+    }
+
+    private ArrayList<Product> makeUnique(ArrayList<Product> showProducts) {
+        ArrayList<Product> returnedArray = new ArrayList<>();
+        for (Product product : showProducts){
+            if (!returnedArray.contains(product))
+                returnedArray.add(product);
+        }
+        return returnedArray;
     }
 
     private void setupInitialMyDiscount()
@@ -143,13 +183,18 @@ public class CustomerMenuUI implements Initializable {
     {
         for (Product product: customer.getCart())
             showEachProductInHBoxCart(product);
+        totalPriceCart.setText(customer.getTotalCartPrice() + "");
         totalPriceCart.textProperty().bind(new SimpleStringProperty(String.valueOf(customer.getTotalCartPrice())));
     }
 
     @FXML
     private void setupInitialPersonalMenu()
     {
-        //profile = new ImageView(new Image(customer.getProfilePicturePath()));
+        try{
+            profile.setImage(new Image(customer.getProfilePicturePath()));
+        }catch (Exception exception) {
+
+        }
         emailTextField.setText(customer.getEmail());
         firstNameTextField.setText(customer.getName());
         lastNameTextField.setText(customer.getFamilyName());
@@ -170,21 +215,22 @@ public class CustomerMenuUI implements Initializable {
     public void finalChangePassButtonClicked()
     {
         try {
-            if (customer.validatePassword(oldPass.getText()) && newPass.getText().equals(confirmationNewPass.getText()))
+            if (customer.validatePassword(oldPass.getText()) && newPass.getText().equals(confirmationNewPass.getText())) {
                 CustomerUIController.editPersonalInfo(customer, "password", newPass.getText());
-        } catch (Exception exception) {
+                ((Stage) oldPass.getScene().getWindow()).close();
+                menuState = "personal";
+                CustomerMenuUI.showCustomerMenu();
+            }
+            } catch (Exception exception) {
             throwError(exception.getMessage());
-        }
-        finally {
-            ((Stage)oldPass.getScene().getWindow()).close();
         }
     }
 
     private void showEachProductInHBox(Product product, int i)
     {
         HBox hBox = new HBox();
-        String starPath = "resources\\Icons\\StarSelected.png";
-        Image productImage = new Image(product.getImagePath());
+        String starPath = ProductMenuUI.class.getResource("/Icons/StarNotSelected.png").toExternalForm();
+        /*Image productImage = new Image(product.getImagePath());
         ImageView productView = new ImageView(productImage);
         productView.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             try {
@@ -192,86 +238,83 @@ public class CustomerMenuUI implements Initializable {
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
-        });
-        Button ratingStar1 = new Button("");
-        ratingStar1.getStyleClass().add("rateButton");
+        });*/
         ImageView activeStar = new ImageView(new Image(starPath));
-        ratingStar1.getChildrenUnmodifiable().add(activeStar);
-        Button ratingStar2 = new Button("");
-        ratingStar2.getStyleClass().add("rateButton");
+        activeStar.setFitWidth(10);     activeStar.setFitHeight(10);
+        Button ratingStar1 = new Button("", activeStar);
+        ratingStar1.getStyleClass().add("rateButton");
         ImageView activeStar1 = new ImageView(new Image(starPath));
-        ratingStar2.getChildrenUnmodifiable().add(activeStar1);
-        Button ratingStar3 = new Button("");
-        ratingStar3.getStyleClass().add("rateButton");
+        activeStar1.setFitWidth(5);     activeStar1.setFitHeight(5);
+        Button ratingStar2 = new Button("", activeStar1);
+        ratingStar2.getStyleClass().add("rateButton");
         ImageView activeStar2 = new ImageView(new Image(starPath));
-        ratingStar3.getChildrenUnmodifiable().add(activeStar2);
-        Button ratingStar4 = new Button("");
-        ratingStar4.getStyleClass().add("rateButton");
+        activeStar2.setFitWidth(5);     activeStar2.setFitHeight(5);
+        Button ratingStar3 = new Button("", activeStar2);
+        ratingStar3.getStyleClass().add("rateButton");
         ImageView activeStar3 = new ImageView(new Image(starPath));
-        ratingStar4.getChildrenUnmodifiable().add(activeStar3);
-        Button ratingStar5 = new Button("");
-        ratingStar5.getStyleClass().add("rateButton");
+        activeStar3.setFitWidth(5);     activeStar3.setFitHeight(5);
+        Button ratingStar4 = new Button("", activeStar3);
+        ratingStar4.getStyleClass().add("rateButton");
         ImageView activeStar4 = new ImageView(new Image(starPath));
-        ratingStar5.getChildrenUnmodifiable().add(activeStar4);
+        activeStar4.setFitWidth(5);     activeStar4.setFitHeight(5);
+        Button ratingStar5 = new Button("", activeStar4);
+        ratingStar5.getStyleClass().add("rateButton");
         Button rateProductButton = new Button("Rate");
         Button[] starButtons = new Button[] {ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5};
         for (int buttonIndex = 0; buttonIndex < 5; buttonIndex++) {
             int finalButtonIndex = buttonIndex + 1;
             starButtons[buttonIndex].setOnAction((e) -> handleRatingChange(finalButtonIndex, activeStar, activeStar1, activeStar2, activeStar3, activeStar4, i));
+            starButtons[buttonIndex].setMaxSize(5, 5);
         }
         rateProductButton.setOnAction((e) -> handleRating(product, currentRatings[i], ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5, rateProductButton, activeStar, activeStar1, activeStar2, activeStar3, activeStar4, i));
 
         handleCanRate(product, ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5, rateProductButton, activeStar, activeStar1, activeStar2, activeStar3, activeStar4);
 
-        hBox.setMinHeight(165);
-        VBox vBox = new VBox(), vBox1 = new VBox(), vBox2 = new VBox();
-        vBox.setMinHeight(165);         vBox.setMaxHeight(165);
-        vBox.setMinWidth(752);          vBox.setMaxWidth(752);
-        hBox.getChildren().addAll(vBox, productView);
-        vBox1.setMinHeight(89);         vBox1.setMaxHeight(89);
-        vBox1.setMinWidth(752);         vBox1.setMaxWidth(752);
-        vBox2.setMinHeight(89);         vBox2.setMaxHeight(89);
-        vBox2.setMinWidth(752);         vBox2.setMaxWidth(752);
-        vBox.getChildren().addAll(vBox1, vBox2);
-        HBox hBox1 = new HBox(), hBox2 = new HBox(), hBox3 = new HBox(), hBox4 = new HBox();
-        Label label = new Label(), label1 = new Label("Name"), label2 = new Label("Seller"), label3 = new Label("Average Rating"), label4 = new Label("Category"), label5 = new Label("Brand"), label6 = new Label("Price"), label7 = new Label("Filters"), label8 = new Label("Description");
-        hBox1.getChildren().addAll(label1, label2, label3, label4, label5);
-        hBox1.setSpacing(70);
-        Separator separator = new Separator(), separator1 = new Separator(), separator2 = new Separator(), separator3 = new Separator(), separator4 = new Separator(), separator5 = new Separator(), separator6 = new Separator();
-        separator.setMinWidth(134);     separator.setMaxWidth(134);     separator.setMaxHeight(7);         separator.setVisible(false);
-        hBox3.getChildren().addAll(label6, label7, separator, label8);
-        Label label9 = new Label(), label10 = new Label(), label11 = new Label(), label12 = new Label(), label13 = new Label(), label14 = new Label(), label15 = new Label(), label16 = new Label();
-        label9.setMaxWidth(84);        label9.setMinWidth(84);        label9.setMaxHeight(40);      label9.setMinHeight(40);
-        label10.setMaxWidth(96);        label10.setMinWidth(96);        label10.setMaxHeight(40);      label10.setMinHeight(40);
-        label11.setMaxWidth(87);        label11.setMinWidth(87);        label11.setMaxHeight(40);      label11.setMinHeight(40);
-        label12.setMaxWidth(101);        label12.setMinWidth(101);        label12.setMaxHeight(40);      label12.setMinHeight(40);
-        label13.setMaxWidth(101);        label13.setMinWidth(101);        label13.setMaxHeight(40);      label13.setMinHeight(40);
-        label14.setMaxWidth(85);        label14.setMinWidth(85);        label14.setMaxHeight(40);      label14.setMinHeight(40);
-        label15.setMaxWidth(309);        label15.setMinWidth(309);        label15.setMaxHeight(40);      label15.setMinHeight(40);
-        label16.setMaxWidth(286);        label16.setMinWidth(286);        label16.setMaxHeight(40);      label16.setMinHeight(40);
-        label9.setText(product.getName());      label10.setText(product.getSeller().getUsername());     label11.setText(product.getAverageRating() + "");
-        label12.setText(product.getCategory() + "");        label13.setText(product.getBrand());        label14.setText(product.getPrice() + "");
-        label16.setText(product.getDescription());
+        hBox.setMaxHeight(70);      hBox.setMinHeight(70);
+        ArrayList<VBox> vBoxes = new ArrayList<>();
+        for (int j = 0; j < 11; j++) {
+            vBoxes.add(new VBox());
+            vBoxes.get(j).setAlignment(Pos.CENTER);
+            vBoxes.get(j).setPrefWidth(100);
+        }
+        vBoxes.get(0).setPrefWidth(60);
+        vBoxes.get(10).setPrefWidth(140);
+        Label id = new Label(), name = new Label(), sellerName = new Label(), category = new Label(), brand = new Label(), average = new Label(), price = new Label(), productStatus = new Label();
+        id.setText(product.getProductID() + "");
+        name.setText(product.getName());
+        sellerName.setText(product.getSeller().getUsername());
+        category.setText(product.getCategory() + "");
+        brand.setText(product.getBrand());
+        average.setText(product.getAverageRating() + "");
+        productStatus.setText(product.getProductStatus() + "");
+        price.setText(product.getPrice() + "");
+        TextArea filters = new TextArea(), discription = new TextArea();
+        filters.setEditable(false);         discription.setEditable(false);
+        discription.setText(product.getDescription());
         for (String filter: product.getFilters())
-            label15.setText(filter + "- ");
-        separator1.setMinWidth(50);     separator1.setMaxWidth(50);     separator1.setMaxHeight(7);         separator1.setVisible(false);
-        separator2.setMinWidth(56);     separator2.setMaxWidth(56);     separator2.setMaxHeight(7);         separator2.setVisible(false);
-        separator3.setMinWidth(121);     separator3.setMaxWidth(121);     separator3.setMaxHeight(7);         separator3.setVisible(false);
-        separator4.setMinWidth(57);     separator4.setMaxWidth(57);     separator4.setMaxHeight(7);         separator4.setVisible(false);
-        separator5.setMinWidth(42);     separator5.setMaxWidth(42);     separator5.setMaxHeight(7);         separator5.setVisible(false);
-        separator6.setMinWidth(31);     separator6.setMaxWidth(31);     separator6.setMaxHeight(7);         separator6.setVisible(false);
-        hBox2.getChildren().addAll(label9, separator1, label10, separator2, label11, separator3, label12, separator4, label13);
-        hBox4.getChildren().addAll(label14, separator5, label15, separator6, label16);
-        vBox1.getChildren().addAll(hBox1, hBox2);
-        vBox2.getChildren().addAll(hBox3, hBox4);
-
-        productView.setFitHeight(138);      productView.setFitWidth(182);
-        HBox hBox5 = new HBox();
-        hBox5.getChildren().addAll(ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5);
-        VBox vBox3 = new VBox();
-        vBox3.getChildren().addAll(productView, hBox5, rateProductButton);
-        hBox.getChildren().addAll(vBox3);
-        myProductVBox.getChildren().addAll(hBox);
+            filters.setText(filters.getText() + "-" + filter + "\n");
+        vBoxes.get(0).getChildren().add(id);
+        vBoxes.get(1).getChildren().add(name);
+        vBoxes.get(2).getChildren().add(sellerName);
+        vBoxes.get(3).getChildren().add(category);
+        vBoxes.get(4).getChildren().add(brand);
+        vBoxes.get(5).getChildren().add(average);
+        vBoxes.get(6).getChildren().add(price);
+        vBoxes.get(7).getChildren().add(discription);
+        vBoxes.get(8).getChildren().add(productStatus);
+        vBoxes.get(9).getChildren().add(filters);
+        HBox hBox1 = new HBox();
+        HBox hBox2 = new HBox();
+        vBoxes.get(10).getChildren().addAll(hBox1, hBox2);
+        hBox1.setAlignment(Pos.CENTER);
+        hBox2.setAlignment(Pos.CENTER);
+        hBox1.getChildren().addAll(ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5);
+        hBox2.getChildren().add(rateProductButton);
+        filters.setMaxWidth(100);
+        discription.setMaxWidth(100);
+        for (int j = 0; j < 11; j++)
+            hBox.getChildren().add(vBoxes.get(j));
+        myProductsVBox.getChildren().addAll(hBox);
     }
 
     private void handleCanRate(Product product, Button ratingStar1, Button ratingStar2, Button ratingStar3, Button ratingStar4, Button ratingStar5, Button rateProductButton, ImageView activeStar, ImageView activeStar1, ImageView activeStar2, ImageView activeStar3, ImageView activeStar4) {
@@ -299,7 +342,11 @@ public class CustomerMenuUI implements Initializable {
     }
 
     private void handleRating(Product product, int currentRating, Button ratingStar1, Button ratingStar2, Button ratingStar3, Button ratingStar4, Button ratingStar5, Button rateProductButton, ImageView activeStar, ImageView activeStar1, ImageView activeStar2, ImageView activeStar3, ImageView activeStar4, int i) {
-        CustomerController.rateProduct((Customer) MainMenuUIController.currentUser, product, currentRating);
+        try {
+            CustomerUIController.rateProduct((Customer) MainMenuUIController.currentUser, product, currentRating);
+        } catch (Exception exception) {
+            throwError(exception.getMessage());
+        }
         resetStars(activeStar, activeStar1, activeStar2, activeStar3, activeStar4);
         handleCanRate(product, ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5, rateProductButton, activeStar, activeStar1, activeStar2, activeStar3, activeStar4);
         averageRatingLabels[i].setText("" + product.getAverageRating());
@@ -325,7 +372,7 @@ public class CustomerMenuUI implements Initializable {
     private void showEachProductInHBoxCart(Product product)
     {
         HBox hBox = new HBox();
-        Image productImage = new Image(product.getImagePath());
+        /*Image productImage = new Image(product.getImagePath());
         ImageView productView = new ImageView(productImage);
         productView.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             try {
@@ -333,14 +380,18 @@ public class CustomerMenuUI implements Initializable {
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
-        });
-        Image plus = new Image("resources\\Icons\\Plus.png");
-        Image mines = new Image("resources\\Icons\\Negative.png");
+        });*/
+        hBox.setMaxHeight(70);      hBox.setMinHeight(70);
+        Image plus = new Image(ProductMenuUI.class.getResource("/Icons/Plus.png").toExternalForm());
+        Image mines = new Image(ProductMenuUI.class.getResource("/Icons/Negative.png").toExternalForm());
         ImageView plusView = new ImageView(plus);
         ImageView minesView = new ImageView(mines);
+        plusView.setFitWidth(20);       plusView.setFitHeight(20);
+        minesView.setFitHeight(20);     minesView.setFitWidth(20);
         plusView.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
             try {
                 CustomerUIController.increaseProduct(customer, product);
+                menuState = "cart";
                 CustomerMenuUI.showCustomerMenu();
             }
             catch (Exception exception)
@@ -351,6 +402,7 @@ public class CustomerMenuUI implements Initializable {
         minesView.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
             try {
                 CustomerUIController.decreaseProduct(customer, product);
+                menuState = "cart";
                 CustomerMenuUI.showCustomerMenu();
             }
             catch (Exception exception)
@@ -358,55 +410,40 @@ public class CustomerMenuUI implements Initializable {
                 throwError(exception.getMessage());
             }
         });
-        hBox.setMinHeight(165);
-        VBox vBox = new VBox(), vBox1 = new VBox(), vBox2 = new VBox();
-        vBox.setMinHeight(165);         vBox.setMaxHeight(165);
-        vBox.setMinWidth(752);          vBox.setMaxWidth(752);
-        hBox.getChildren().addAll(vBox, productView);
-        vBox1.setMinHeight(89);         vBox1.setMaxHeight(89);
-        vBox1.setMinWidth(752);         vBox1.setMaxWidth(752);
-        vBox2.setMinHeight(89);         vBox2.setMaxHeight(89);
-        vBox2.setMinWidth(752);         vBox2.setMaxWidth(752);
-        vBox.getChildren().addAll(vBox1, vBox2);
-        HBox hBox1 = new HBox(), hBox2 = new HBox(), hBox3 = new HBox(), hBox4 = new HBox();
-        Label label = new Label(), label1 = new Label("Name"), label2 = new Label("Seller"), label3 = new Label("Average Rating"), label4 = new Label("Category"), label5 = new Label("Brand"), label6 = new Label("Price"), label7 = new Label("Filters"), label8 = new Label("Description");
-        hBox1.getChildren().addAll(label1, label2, label3, label4, label5);
-        hBox1.setSpacing(70);
-        Separator separator = new Separator(), separator1 = new Separator(), separator2 = new Separator(), separator3 = new Separator(), separator4 = new Separator(), separator5 = new Separator(), separator6 = new Separator();
-        separator.setMinWidth(134);     separator.setMaxWidth(134);     separator.setMaxHeight(7);         separator.setVisible(false);
-        hBox3.getChildren().addAll(label6, label7, separator, label8);
-        Label label9 = new Label(), label10 = new Label(), label11 = new Label(), label12 = new Label(), label13 = new Label(), label14 = new Label(), label15 = new Label(), label16 = new Label();
-        label9.setMaxWidth(84);        label9.setMinWidth(84);        label9.setMaxHeight(40);      label9.setMinHeight(40);
-        label10.setMaxWidth(96);        label10.setMinWidth(96);        label10.setMaxHeight(40);      label10.setMinHeight(40);
-        label11.setMaxWidth(87);        label11.setMinWidth(87);        label11.setMaxHeight(40);      label11.setMinHeight(40);
-        label12.setMaxWidth(101);        label12.setMinWidth(101);        label12.setMaxHeight(40);      label12.setMinHeight(40);
-        label13.setMaxWidth(101);        label13.setMinWidth(101);        label13.setMaxHeight(40);      label13.setMinHeight(40);
-        label14.setMaxWidth(85);        label14.setMinWidth(85);        label14.setMaxHeight(40);      label14.setMinHeight(40);
-        label15.setMaxWidth(309);        label15.setMinWidth(309);        label15.setMaxHeight(40);      label15.setMinHeight(40);
-        label16.setMaxWidth(286);        label16.setMinWidth(286);        label16.setMaxHeight(40);      label16.setMinHeight(40);
-        label9.setText(product.getName());      label10.setText(product.getSeller().getUsername());     label11.setText(product.getAverageRating() + "");
-        label12.setText(product.getCategory() + "");        label13.setText(product.getBrand());        label14.setText(product.getPrice() + "");
-        label16.setText(product.getDescription());
+        ArrayList<VBox> vBoxes = new ArrayList<>();
+        for (int j = 0; j < 10; j++) {
+            vBoxes.add(new VBox());
+            vBoxes.get(j).setAlignment(Pos.CENTER);
+            vBoxes.get(j).setPrefWidth(100);
+        }
+        vBoxes.get(0).setPrefWidth(74);
+        Label id = new Label(), name = new Label(), sellerName = new Label(), category = new Label(), brand = new Label(), average = new Label(), price = new Label(), productStatus = new Label();
+        id.setText(product.getProductID() + "");
+        name.setText(product.getName());
+        sellerName.setText(product.getSeller().getUsername());
+        category.setText(product.getCategory() + "");
+        brand.setText(product.getBrand());
+        average.setText(product.getAverageRating() + "");
+        productStatus.setText(product.getProductStatus() + "");
+        price.setText(product.getPrice() + "");
+        TextArea filters = new TextArea(), discription = new TextArea();
+        filters.setEditable(false);         discription.setEditable(false);
+        discription.setText(product.getDescription());
         for (String filter: product.getFilters())
-            label15.setText(filter + "- ");
-        separator1.setMinWidth(50);     separator1.setMaxWidth(50);     separator1.setMaxHeight(7);         separator1.setVisible(false);
-        separator2.setMinWidth(56);     separator2.setMaxWidth(56);     separator2.setMaxHeight(7);         separator2.setVisible(false);
-        separator3.setMinWidth(121);     separator3.setMaxWidth(121);     separator3.setMaxHeight(7);         separator3.setVisible(false);
-        separator4.setMinWidth(57);     separator4.setMaxWidth(57);     separator4.setMaxHeight(7);         separator4.setVisible(false);
-        separator5.setMinWidth(42);     separator5.setMaxWidth(42);     separator5.setMaxHeight(7);         separator5.setVisible(false);
-        separator6.setMinWidth(31);     separator6.setMaxWidth(31);     separator6.setMaxHeight(7);         separator6.setVisible(false);
-        hBox2.getChildren().addAll(label9, separator1, label10, separator2, label11, separator3, label12, separator4, label13);
-        hBox4.getChildren().addAll(label14, separator5, label15, separator6, label16);
-        vBox1.getChildren().addAll(hBox1, hBox2);
-        vBox2.getChildren().addAll(hBox3, hBox4);
-
-        HBox hBox5 = new HBox();
-        hBox5.getChildren().addAll(minesView, plusView);
-        hBox5.setSpacing(20);
-        hBox5.setAlignment(Pos.TOP_CENTER);
-        VBox vBox3 = new VBox();
-        vBox3.getChildren().addAll(hBox5, productView);
-        hBox.getChildren().addAll(vBox3);
+            filters.setText(filters.getText() + "-" + filter + "\n");
+        filters.setMaxWidth(100);   discription.setMaxWidth(100);
+        vBoxes.get(0).getChildren().addAll(plusView, id, minesView);
+        vBoxes.get(1).getChildren().add(name);
+        vBoxes.get(2).getChildren().add(sellerName);
+        vBoxes.get(3).getChildren().add(category);
+        vBoxes.get(4).getChildren().add(brand);
+        vBoxes.get(5).getChildren().add(average);
+        vBoxes.get(6).getChildren().add(price);
+        vBoxes.get(7).getChildren().add(discription);
+        vBoxes.get(8).getChildren().add(productStatus);
+        vBoxes.get(9).getChildren().add(filters);
+        for (int j = 0; j < 10; j++)
+            hBox.getChildren().add(vBoxes.get(j));
         cartVBox.getChildren().addAll(hBox);
     }
 
@@ -427,7 +464,7 @@ public class CustomerMenuUI implements Initializable {
         Label startingTime2 = new Label();
         offCodeText2.setText(offCode.getCode());
         maximumOff2.setText(String.valueOf(offCode.getMaximumOff()));
-        numberCanBeUsed2.setText(String.valueOf(quantity));
+        numberCanBeUsed2.setText(String.valueOf(offCode.getUsageCount() - quantity));
         offPercent2.setText(String.valueOf(offCode.getOffPercentage()));
         endingTime2.setText(String.valueOf(offCode.getEndingTime()));
         startingTime2.setText(String.valueOf(offCode.getStartingTime()));
@@ -477,18 +514,6 @@ public class CustomerMenuUI implements Initializable {
         Main.setPrimaryStageScene(new Scene(MainMenuUI.getContent()));
     }
 
-    public void cartButtonClicked() throws IOException {
-        changeScene("CustomerMenuCart");
-    }
-
-    public void personalButtonClicked() throws IOException {
-        changeScene("CustomerMenuPersonal");
-    }
-
-    public void myProductsButtonClicked() throws IOException {
-        changeScene("CustomerMenuMyProducts");
-    }
-
     public void purchaseButtonClicked() throws IOException {
         if (customer == MainMenuUIController.guest) {
             throwError("You must login");
@@ -499,30 +524,27 @@ public class CustomerMenuUI implements Initializable {
         openStage("extraInfoPurchase");
     }
 
-    public void finalBuyButton() throws IOException {
+    public void finalBuyButton() throws Exception {
         try {
             if (addressTextArea.getText() != null) {
-                String factor = CustomerController.purchase(customer, offCodeTextField.getText());
-                showFactor(factor);
+                factorString = CustomerUIController.purchase(customer, offCodeTextField.getText());
                 menuState = "CustomerMenu";
+                ((Stage)addressTextArea.getScene().getWindow()).close();
+                menuState = "cart";
                 showCustomerMenu();
+                showFactor();
             }
             else
-                throw (new Exception("Address field is empty!"));
+                throwError("Address field is empty!");
         }
         catch (Exception exception)
         {
             throwError(exception.getMessage());
         }
-        finally {
-            ((Stage)addressTextArea.getScene().getWindow()).close();
-            changeScene("CustomerMenuPersonal");
-        }
     }
 
-    private void showFactor(String factor)
-    {
-
+    private void showFactor() throws IOException {
+        openStage("showFactor");
     }
 
     public void submitEditButtonClicked() throws IOException {
@@ -542,12 +564,12 @@ public class CustomerMenuUI implements Initializable {
                 CustomerUIController.editPersonalInfo(customer, "email", email);
                 CustomerUIController.editPersonalInfo(customer, "family name", lastName);
                 CustomerUIController.editPersonalInfo(customer, "first name", firstName);
+                ((Stage)passEdit.getScene().getWindow()).close();
+                menuState = "personal";
+                showCustomerMenu();
             }catch (Exception exception)
             {
                 throwError(exception.getMessage());
-            }
-            finally {
-                ((Stage)passEdit.getScene().getWindow()).close();
             }
         }
         else
@@ -571,11 +593,17 @@ public class CustomerMenuUI implements Initializable {
             Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/ChangePassword.fxml"));
             Main.setupOtherStage(new Scene(root), "Change password");
         }
+        else if (lock.equalsIgnoreCase("showFactor"))
+        {
+            Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/ShowFactor.fxml"));
+            Main.setupOtherStage(new Scene(root), "Show Factor");
+        }
     }
 
     private void throwError(String error)
     {
         errorText.setText(error);
+        errorText.setVisible(true);
     }
 
     public static void showCustomerMenu() {
@@ -584,11 +612,5 @@ public class CustomerMenuUI implements Initializable {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
-    }
-
-    public void changeScene(String newState) throws IOException {
-        menuState = newState;
-        Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/" + newState + ".fxml"));
-        Main.setPrimaryStageScene(new Scene(root));
     }
 }

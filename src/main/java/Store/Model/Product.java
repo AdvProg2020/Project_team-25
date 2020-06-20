@@ -36,7 +36,7 @@ public class Product implements Serializable {
 
     public Product()
     {
-
+        this.productID = idCounter++;
     }
 
     public Product(CheckingStatus productStatus, Category category, String name, Seller seller, String brand, double price, boolean availablity, String description) {

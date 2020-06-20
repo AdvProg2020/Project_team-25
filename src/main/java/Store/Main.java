@@ -21,14 +21,16 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         otherStage.initModality(Modality.APPLICATION_MODAL);
 
-//        Parent root = MainMenuUI.getContent();
-        Seller seller1 = new Seller("jackRipper", "jack", "ripper", "lab@lab.com", "0950", "1234", 1000, "company1", "describe");
+        setTest();
+        setOffers();
+        Parent root = MainMenuUI.getContent();
+        /*Seller seller1 = new Seller("jackRipper", "jack", "ripper", "lab@lab.com", "0950", "1234", 1000, "company1", "describe");
         Product product = new Product(CheckingStatus.CREATION, null, "product1", seller1, "brand1", 10, false, "describe");
         product.setImagePath("Iino_Miko.png");
         product.addFilter("Pashm");
         product.addFilter("Pashmak");
         product.addFilter("HITOTSU");
-//
+
         Seller seller2 = new Seller("JOJO", "jack", "ripper", "lab@lab.com", "0950", "1234", 1000, "company1", "describe");
         Product product1 = new Product(CheckingStatus.CREATION, null, "product1", seller2, "brand1", 10, true, "describe");
         product1.setImagePath("Iino_Miko.png");
@@ -46,9 +48,9 @@ public class Main extends Application {
         product.addComment(MainMenuUIController.currentUser, "Very Cool", "Loved It!");
         Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
 
-        MainMenuUIController.currentUser = manager1;
-        Parent root = ManagerMenuUI.getContent();
-        applicationStage = primaryStage;
+        //MainMenuUIController.currentUser = manager1;
+        //Parent root = ManagerMenuUI.getContent();
+        */applicationStage = primaryStage;
         primaryStage.setResizable(false);
         primaryStage.setTitle("Shop");
         primaryStage.setScene(new Scene(root));

@@ -58,7 +58,8 @@ public class CustomerUIController {
         if (customer.isInCart(product)) {
             customer.removeFromCart(product);
         }
-        throw (new Exception("You haven't selected this product!"));
+        else
+            throw (new Exception("You haven't selected this product!"));
     }
 
     public static void rateProduct(Customer customer, Product product, double rating) throws Exception {

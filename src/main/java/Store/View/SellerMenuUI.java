@@ -44,16 +44,21 @@ public class SellerMenuUI implements Initializable {
 
     public VBox manageProductsVBox, viewSalesVBox, myOffersVBox, viewBuyersVBox;
 
+    public TabPane tabPane;
+    public Tab product;
+    public Tab offer;
+    public Tab personal;
+    public Tab viewSales;
+    public Tab viewBuyers;
+
     public Label balance;
-    public Button personalInfoButton;
-    public Button myOffersButton;
-    public Button manageProductsButton;
     public Button offersButton;
     public Button productsButton;
     public Button mainMenuButton;
     public Button logoutButton;
-    public Button viewSalesButton;
     public Label loggedInStatusText;
+    public ComboBox myOffersSortBy;
+    public ComboBox manageProductsSortBy;
 
     public ImageView profile;
     public Button submitEditButton;
@@ -66,7 +71,6 @@ public class SellerMenuUI implements Initializable {
     public TextField phoneNumberTextField;
     public TextField companyNameTextField;
     public TextArea companyInformationTextField;
-    public TextField initialMoneyTextField;
     public Label errorText;
 
     static String phoneNumber, firstName, lastName, email, companyName, companyInformation;
@@ -77,14 +81,16 @@ public class SellerMenuUI implements Initializable {
     String filter = new String("");
 
     public PasswordField passEdit;
-    public TextField offCodeTextField;
-    public TextArea addressTextArea;
     public TextField oldPass;
     public PasswordField newPass;
     public PasswordField confirmationNewPass;
 
-    public TextField startDateOffer;
-    public TextField endDateOffer;
+    public TextField startDayOffer;
+    public TextField startMonthOffer;
+    public TextField startYearOffer;
+    public TextField endDayOffer;
+    public TextField endMonthOffer;
+    public TextField endYearOffer;
     public TextField offPercentOffer;
     public TextField productIDInOffer;
     public ImageView plusFilterOffer;
@@ -103,15 +109,12 @@ public class SellerMenuUI implements Initializable {
     public ComboBox availablity;
     public TextField attributes;
     public TextField description;
-    public TextField productFilters;
     public ImageView plusFilterProduct;
     public ImageView minesFilterProduct;
     String availablityString;
 
-    public Button doneAddOffer;
-    public Button doneEditOffer;
-    public Button doneAddProduct;
-    public Button doneEditProduct;
+    String currentSortOffer = new String("time of starting");
+    String currentSortProduct = new String("visited");
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
         seller = (Seller) MainMenuUIController.currentUser;
@@ -139,18 +142,39 @@ public class SellerMenuUI implements Initializable {
         {
             setupInitialEditProduct();
         }
-        else
+        else {
+            if (menuState.equalsIgnoreCase("product") || menuState.equalsIgnoreCase("offer") || menuState.equalsIgnoreCase("personal"))
+                resetAll();
             setupInitial();
+            if (menuState.equalsIgnoreCase("product"))
+                tabPane.getSelectionModel().select(product);
+            else if (menuState.equalsIgnoreCase("offer"))
+                tabPane.getSelectionModel().select(offer);
+            else if (menuState.equalsIgnoreCase("personal"))
+                tabPane.getSelectionModel().select(personal);
+        }
     }
 
-
+    private void resetAll()
+    {
+        for (int i = 1; i < manageProductsVBox.getChildren().size();)
+            manageProductsVBox.getChildren().remove(i);
+        for (int i = 1; i < myOffersVBox.getChildren().size();)
+            myOffersVBox.getChildren().remove(i);
+        for (int i = 1; i < viewSalesVBox.getChildren().size();)
+            viewSalesVBox.getChildren().remove(i);
+    }
 
     @FXML
     private void setupInitialEditOffer()
     {
         offerProducts = selectedOffer.getProducts();
-        startDateOffer.setText(String.valueOf(selectedOffer.getStartingTime()));
-        endDateOffer.setText(String.valueOf(selectedOffer.getEndingTime()));
+        startDayOffer.setText(selectedOffer.getStartingTime().getDay() + "");
+        startMonthOffer.setText(selectedOffer.getStartingTime().getMonth() + "");
+        startYearOffer.setText(selectedOffer.getStartingTime().getYear() + "");
+        endDayOffer.setText(selectedOffer.getEndingTime().getDay() + "");
+        endMonthOffer.setText(selectedOffer.getEndingTime().getMonth() + "");
+        endYearOffer.setText(selectedOffer.getEndingTime().getYear() + "");
         offPercentOffer.setText(String.valueOf(selectedOffer.getOffPercent()));
         plusFilterOffer.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             if (!filterTextField.getText().isEmpty())
@@ -169,7 +193,7 @@ public class SellerMenuUI implements Initializable {
             if (!filterTextField.getText().isEmpty())
             {
                 try {
-                    SellerUIController.removeFilterFromOffer(seller, selectedOffer, filterTextField.getText());
+                    SellerUIController.removeFilterFromOffer(seller, selectedOffer.getOffID() + "", filterTextField.getText());
                 }catch (Exception exception)
                 {
                     throwError(exception.getMessage());
@@ -181,7 +205,20 @@ public class SellerMenuUI implements Initializable {
         plusProductOffer.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             if (!productIDInOffer.getText().isEmpty())
             {
-
+                if (!StringUtils.isNumeric(productIDInOffer.getText()) || !SellerUIController.isProductFromThisSeller(seller, Product.getProductByID(Integer.parseInt(productIDInOffer.getText())))) {
+                    throwError("Please enter a valid ID");
+                }
+                Product product = Product.getProductByID(Integer.parseInt(productIDInOffer.getText()));
+                if (selectedOffer.containsProduct(product)) {
+                    throwError("Already added this product");
+                }
+                else if ((selectedOffer == null || !selectedOffer.getProducts().contains(product)) && Offer.getOfferOfProduct(product) != null) {
+                    throwError("This product is already in another offer!");
+                }
+                else {
+                    selectedOffer.addProduct(product);
+                    throwError("Product added to list");
+                }
             }
             else
                 throwError("Incomplete Fields");
@@ -189,7 +226,17 @@ public class SellerMenuUI implements Initializable {
         minesProductOffer.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             if (!productIDInOffer.getText().isEmpty())
             {
-
+                if (!StringUtils.isNumeric(productIDInOffer.getText()) || !SellerUIController.isProductFromThisSeller(seller, Product.getProductByID(Integer.parseInt(productIDInOffer.getText())))) {
+                    throwError("Please enter a valid ID");
+                }
+                Product product = Product.getProductByID(Integer.parseInt(productIDInOffer.getText()));
+                if (!selectedOffer.containsProduct(product)) {
+                    throwError("Doesn't exist in offer");
+                }
+                else {
+                    selectedOffer.removeProduct(product);
+                    throwError("Product removed from list");
+                }
             }
             else
                 throwError("Incomplete Fields");
@@ -215,44 +262,61 @@ public class SellerMenuUI implements Initializable {
         plusProductOffer.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             if (!productIDInOffer.getText().isEmpty())
             {
-                if
+                if (!StringUtils.isNumeric(productIDInOffer.getText()) || !SellerController.isProductFromThisSeller(seller, Product.getProductByID(Integer.parseInt(productIDInOffer.getText())))) {
+                    throwError("Please enter a valid ID");
+                }
+                Product product = Product.getProductByID(Integer.parseInt(productIDInOffer.getText()));
+                if (selectedOffer.containsProduct(product)) {
+                    throwError("Already added this product");
+                }
+                else if ((selectedOffer == null || !selectedOffer.getProducts().contains(product)) && Offer.getOfferOfProduct(product) != null) {
+                    throwError("This product is already in another offer!");
+                }
+                else {
+                    selectedOffer.addProduct(product);
+                    throwError("Product added to list");
+                }
             }
             else
                 throwError("Incomplete Fields");
         });
     }
 
- /*   private ArrayList<Integer> productsAddedToOffer()
-    {
-        ArrayList<Integer> returnArray = new ArrayList<>();
-        for (Product product: selectedOffer.getProducts()){
-            if (!returnArray.contains(product.getProductID()))
-                returnArray.add(product.getProductID());
-        }
-        return returnArray;
-    }
+    /*   private ArrayList<Integer> productsAddedToOffer()
+       {
+           ArrayList<Integer> returnArray = new ArrayList<>();
+           for (Product product: selectedOffer.getProducts()){
+               if (!returnArray.contains(product.getProductID()))
+                   returnArray.add(product.getProductID());
+           }
+           return returnArray;
+       }
 
-    private ArrayList<Integer> productsNotAddedToOffer()
-    {
-        ArrayList<Integer> returnArray = new ArrayList<>();
-        for (Product product: seller.getProducts()){
-            if (!Offer.hasOfferByID(product.getProductID()) && !returnArray.contains(product.getProductID()))
-                returnArray.add(product.getProductID());
-        }
-        return returnArray;
-    }
-*/
+       private ArrayList<Integer> productsNotAddedToOffer()
+       {
+           ArrayList<Integer> returnArray = new ArrayList<>();
+           for (Product product: seller.getProducts()){
+               if (!Offer.hasOfferByID(product.getProductID()) && !returnArray.contains(product.getProductID()))
+                   returnArray.add(product.getProductID());
+           }
+           return returnArray;
+       }
+   */
     @FXML
     private void setupInitialEditProduct()
     {
-        imagePath.setText(selectedProduct.getImagePath());
+        /*imagePath.setText(selectedProduct.getImagePath());
         videoPath.setText(selectedProduct.getVideoPath());
-        category.setText(selectedProduct.getCategory().getFullName());
+        */category.setText(selectedProduct.getCategory().getId() + "");
         productName.setText(selectedProduct.getName());
         brand.setText(selectedProduct.getBrand());
         price.setText(selectedProduct.getPrice() + "");
         attributes.setText(selectedProduct.getAttributes());
         description.setText(selectedProduct.getDescription());
+        if (selectedProduct.getAvailablity())
+            availablityString = "available";
+        else
+            availablityString = "inavailable";
         availablity.setItems(FXCollections.observableArrayList("Available", "Inavailable"));
         availablity.valueProperty().addListener(new ChangeListener() {
             @Override
@@ -277,7 +341,7 @@ public class SellerMenuUI implements Initializable {
             if (!filterTextField.getText().isEmpty())
             {
                 try {
-                    SellerUIController.removeFilterFromProduct(seller, selectedProduct, filterTextField.getText());
+                    SellerUIController.removeFilterFromProduct(seller, selectedProduct.getProductID() + "", filterTextField.getText());
                 }catch (Exception exception)
                 {
                     throwError(exception.getMessage());
@@ -291,6 +355,7 @@ public class SellerMenuUI implements Initializable {
     @FXML
     private void setupInitialAddProduct()
     {
+        availablityString = "available";
         plusFilterProduct.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             if (!filterTextField.getText().isEmpty())
             {
@@ -306,7 +371,7 @@ public class SellerMenuUI implements Initializable {
         });
     }
 
-   /* public void doneAddOffer()
+    public void doneAddOffer()
     {
         try {
             Offer offer = createOffer(seller);
@@ -315,7 +380,10 @@ public class SellerMenuUI implements Initializable {
             ArrayList<String> filters = selectedOffer.getFilters();
             for (String filter: filters)
                 offer.addFilter(filter);
-            SellerUIController.editOff(seller, selectedOffer, offer);
+            SellerUIController.addOff(seller, offer);
+            ((Stage) filterTextField.getScene().getWindow()).close();
+            menuState = "offer";
+            showSellerMenu();
         }catch (Exception exception)
         {
             throwError(exception.getMessage());
@@ -332,16 +400,21 @@ public class SellerMenuUI implements Initializable {
             for (String filter: filters)
                 offer.addFilter(filter);
             SellerUIController.editOff(seller, selectedOffer, offer);
+            ((Stage) filterTextField.getScene().getWindow()).close();
+            menuState = "offer";
+            showSellerMenu();
         }catch (Exception exception)
         {
             throwError(exception.getMessage());
         }
     }
-    */
     public void doneAddProduct()
     {
         try {
             SellerUIController.addProduct(seller, createProduct(seller));
+            ((Stage) filterTextField.getScene().getWindow()).close();
+            menuState = "product";
+            showSellerMenu();
         }catch (Exception exception)
         {
             throwError(exception.getMessage());
@@ -352,6 +425,9 @@ public class SellerMenuUI implements Initializable {
     {
         try {
             SellerUIController.editProduct(seller, selectedProduct, createProduct(seller));
+            ((Stage) filterTextField.getScene().getWindow()).close();
+            menuState = "product";
+            showSellerMenu();
         }catch (Exception exception)
         {
             throwError(exception.getMessage());
@@ -364,11 +440,8 @@ public class SellerMenuUI implements Initializable {
             throw new Exception("Invalid category ID!");
         }
         Category parent = Category.getCategoryById(Integer.parseInt(attribute));
-
         String name = productName.getText();
-
         String brandString = brand.getText();
-
         attribute = price.getText();
         if (!attribute.matches("^\\d+(\\.\\d+)?$")) {
             throw new Exception("invalid price input");
@@ -378,9 +451,7 @@ public class SellerMenuUI implements Initializable {
         if (availablityString.equalsIgnoreCase("available"))
             availabilityBool = true;
         ArrayList<String> filters = selectedProduct.getFilters();
-
         String descriptionString = description.getText();
-
         Product product = new Product(CheckingStatus.CREATION, parent, name, seller, brandString, price, availabilityBool, descriptionString);
         for (String filterToAdd : filters) {
             product.addFilter(filterToAdd);
@@ -388,15 +459,10 @@ public class SellerMenuUI implements Initializable {
         return product;
     }
 
-    private void getOfferProducts(Seller seller, Offer offer, Offer changeOffer) {
-        String input;
-
-    }
-
     private Offer createOffer(Seller seller) throws Exception {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy");
 
-        String input = startDateOffer.getText();
+        String input = startDayOffer.getText() + "-" + startMonthOffer.getText() + "-" + (Integer.parseInt(startYearOffer.getText()) + 1900);
         Date startingTime, endingTime;
         try {
             startingTime = dateFormat.parse(input);
@@ -405,7 +471,7 @@ public class SellerMenuUI implements Initializable {
             throw new Exception("Invalid date format!");
         }
 
-        input = endDateOffer.getText();
+        input = endDayOffer.getText() + "-" + endMonthOffer.getText() + "-" + (Integer.parseInt(endYearOffer.getText()) + 1900);
         try {
             endingTime = dateFormat.parse(input);
         }
@@ -429,16 +495,29 @@ public class SellerMenuUI implements Initializable {
     @FXML
     private void setupInitialMyOffers()
     {
-        for (Offer offer: seller.getOffers())
-        showEachOfferInHBox(offer);
+        for (Offer offer: SellerUIController.getOffersOfThisSeller(seller))
+            showEachOfferInHBox(offer);
+        myOffersSortBy.setItems(FXCollections.observableArrayList("time of starting", "time of ending"));
+        myOffersSortBy.valueProperty().addListener((observable, oldValue, newValue) -> {
+            currentSortOffer = newValue.toString();
+            myOffersVBox.getChildren().clear();
+            for (Offer offer : OffersController.sort(currentSortOffer, seller.getOffers())) {
+                showEachOfferInHBox(offer);
+            }
+        });
     }
 
 
     @FXML
     private void setupInitialBuyers()
     {
-         for (String string: seller.getBuyers())
-             showEachBuyerInHBox(string);
+        ArrayList<String> buyers = new ArrayList<>();
+
+        for (String string: seller.getBuyers())
+            buyers.add(string);
+        SellerUIController.makeBuyersUnique(buyers);
+        for (String string: buyers)
+            showEachBuyerInHBox(string);
     }
 
     @FXML
@@ -454,6 +533,7 @@ public class SellerMenuUI implements Initializable {
             }
         });
         balance.textProperty().bind(new SimpleStringProperty(String.valueOf(seller.getMoney())));
+
         setupInitialPersonalMenu();
         setupInitialBuyers();
         setupInitialManageProducts();
@@ -464,14 +544,28 @@ public class SellerMenuUI implements Initializable {
     @FXML
     private void setupInitialManageProducts()
     {
-        for (Product product: seller.getProducts())
+        for (Product product: seller.getProducts()) {
+            System.out.println(product);
             showEachProductInHBox(product);
+        }
+        manageProductsSortBy.setItems(FXCollections.observableArrayList("rating", "price", "visit", "lexicographical"));
+        manageProductsSortBy.valueProperty().addListener((observable, oldValue, newValue) -> {
+            currentSortProduct = newValue.toString();
+            manageProductsVBox.getChildren().clear();
+            for (Product product : ProductsController.sort(currentSortProduct, seller.getProducts())) {
+                showEachProductInHBox(product);
+            }
+        });
     }
 
     @FXML
     private void setupInitialPersonalMenu()
     {
-        //profile = new ImageView(new Image(seller.getProfilePicturePath()));
+        try{
+            profile.setImage(new Image(seller.getProfilePicturePath()));
+        }catch (Exception exception) {
+
+        }
         emailTextField.setText(seller.getEmail());
         firstNameTextField.setText(seller.getName());
         lastNameTextField.setText(seller.getFamilyName());
@@ -500,13 +594,14 @@ public class SellerMenuUI implements Initializable {
     public void finalChangePassButtonClicked()
     {
         try {
-            if (seller.validatePassword(oldPass.getText()) && newPass.getText().equals(confirmationNewPass.getText()))
+            if (seller.validatePassword(oldPass.getText()) && newPass.getText().equals(confirmationNewPass.getText())) {
                 SellerUIController.editPersonalInfo(seller, "password", newPass.getText());
+                ((Stage) oldPass.getScene().getWindow()).close();
+                menuState = "personal";
+                showSellerMenu();
+            }
         } catch (Exception exception) {
             throwError(exception.getMessage());
-        }
-        finally {
-            ((Stage)oldPass.getScene().getWindow()).close();
         }
     }
 
@@ -514,65 +609,47 @@ public class SellerMenuUI implements Initializable {
     {
         HBox hBox = new HBox();
         Button edit = new Button("Edit");
-        edit.setPrefWidth(78);
         edit.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             try {
+                offerProducts.clear();
                 selectedOffer = offer;
+                for (Product product: offer.getProducts())
+                    offerProducts.add(product);
                 openStage("editOffer");
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
         });
-        VBox vBox1 = new VBox(), vBox2 = new VBox(), vBox3 = new VBox(), vBox4 = new VBox(), vBox5 = new VBox(), vBox6 = new VBox();
-
-        hBox.getChildren().addAll(vBox1, vBox2, vBox3, vBox4, vBox5, vBox6, edit);
-        hBox.setMinHeight(100);     hBox.setMaxHeight(100);
-
-        Label startingDate = new Label("Starting Date");
-        Label endingDate = new Label("Ending Date");
-        Label offPercent = new Label("Off Percent");
-        Label offerStatus = new Label("Offer Status");
-        Label filters = new Label("Filters");
-        Label products = new Label("Products");
-
-        Label startingDate2 = new Label();
-        Label endingDate2 = new Label();
-        Label offPercent2 = new Label();
-        Label offerStatus2 = new Label();
-        TextArea filters2 = new TextArea();
-        TextArea products2 = new TextArea();
-
-        startingDate2.setText(offer.getStartingTime() + "");
-        endingDate2.setText(offer.getEndingTime() + "");
-        offPercent2.setText(offer.getOffPercent() + "");
-        offerStatus2.setText(offer.getOfferStatus() + "");
+        ArrayList<VBox> vBoxes = new ArrayList<>();
+        for (int j = 0; j < 7; j++) {
+            vBoxes.add(new VBox());
+            vBoxes.get(j).setAlignment(Pos.CENTER);
+            vBoxes.get(j).setPrefWidth(100);
+        }
+        hBox.setSpacing(40);
+        hBox.setMaxHeight(70);      hBox.setMinHeight(70);
+        vBoxes.get(0).setPrefWidth(62);
+        Label id = new Label(), offPercent = new Label(), startDate = new Label(), endDate = new Label();
+        id.setText(offer.getOffID() + "");
+        offPercent.setText(offer.getOffPercent() + "");
+        startDate.setText(offer.getStartingTime().getYear() + "/" + offer.getStartingTime().getMonth() + "/" + offer.getStartingTime().getDay());
+        endDate.setText(offer.getEndingTime().getYear() + "/" + offer.getEndingTime().getMonth() + "/" + offer.getEndingTime().getDay());
+        TextArea filters = new TextArea(), products = new TextArea();
+        filters.setEditable(false);         products.setEditable(false);
         for (String filter: offer.getFilters())
-            filters2.setText(filters2.getText() + "\n-" + filter);
+            filters.setText(filters.getText() + "-" + filter + "\n");
         for (Product product: offer.getProducts())
-            products2.setText(products2.getText() + "\n-" + product.getName() + "-----" + product.getBrand());
-        vBox1.getChildren().addAll(startingDate, startingDate2);
-        vBox2.getChildren().addAll(endingDate, endingDate2);
-        vBox3.getChildren().addAll(offPercent, offPercent2);
-        vBox4.getChildren().addAll(offerStatus, offerStatus2);
-        vBox5.getChildren().addAll(filters, filters2);
-        vBox6.getChildren().addAll(products, products2);
-
-        vBox1.setAlignment(Pos.TOP_CENTER);
-        vBox1.setSpacing(20);
-        vBox2.setAlignment(Pos.TOP_CENTER);
-        vBox2.setSpacing(20);
-        vBox3.setAlignment(Pos.TOP_CENTER);
-        vBox3.setSpacing(20);
-        vBox4.setAlignment(Pos.TOP_CENTER);
-        vBox4.setSpacing(20);
-        vBox5.setAlignment(Pos.TOP_CENTER);
-        vBox6.setAlignment(Pos.TOP_CENTER);
-
-        vBox5.setMinWidth(157);     vBox5.setMaxWidth(157);
-        vBox6.setMaxWidth(172);     vBox6.setMinWidth(172);
-        filters2.setEditable(false);
-        products2.setEditable(false);
-        HBox.setMargin(edit, new Insets(40, 0, 0, 0));
+            products.setText(products.getText() + "-" + product.getName() + "------" + product.getBrand() + "\n");
+        filters.setMaxWidth(100);       products.setMaxWidth(100);
+        vBoxes.get(0).getChildren().addAll(id);
+        vBoxes.get(1).getChildren().add(offPercent);
+        vBoxes.get(2).getChildren().add(startDate);
+        vBoxes.get(3).getChildren().add(endDate);
+        vBoxes.get(4).getChildren().add(filters);
+        vBoxes.get(5).getChildren().add(products);
+        vBoxes.get(6).getChildren().add(edit);
+        for (int j = 0; j < 7; j++)
+            hBox.getChildren().add(vBoxes.get(j));
         myOffersVBox.getChildren().add(hBox);
     }
 
@@ -580,15 +657,7 @@ public class SellerMenuUI implements Initializable {
     {
         HBox hBox = new HBox();
         Button edit = new Button("Edit");
-        Image productImage = new Image(product.getImagePath());
-        ImageView productView = new ImageView(productImage);
-        productView.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
-            try {
-                Main.setPrimaryStageScene(new Scene(ProductMenuUI.getContent(product)));
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-        });
+        Button remove = new Button("Remove");
         edit.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             try {
                 selectedProduct = product;
@@ -597,62 +666,56 @@ public class SellerMenuUI implements Initializable {
                 ioException.printStackTrace();
             }
         });
-        productView.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+        remove.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            SellerUIController.removeProduct(seller, product);
+            menuState = "product";
+        });
+        /*productView.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             try {
                 Main.setPrimaryStageScene(new Scene(ProductMenuUI.getContent(product)));
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
-        });
-        hBox.setMinHeight(165);
-        VBox vBox = new VBox(), vBox1 = new VBox(), vBox2 = new VBox();
-        vBox.setMinHeight(165);         vBox.setMaxHeight(165);
-        vBox.setMinWidth(752);          vBox.setMaxWidth(752);
-        hBox.getChildren().addAll(vBox, productView);
-        vBox1.setMinHeight(89);         vBox1.setMaxHeight(89);
-        vBox1.setMinWidth(752);         vBox1.setMaxWidth(752);
-        vBox2.setMinHeight(89);         vBox2.setMaxHeight(89);
-        vBox2.setMinWidth(752);         vBox2.setMaxWidth(752);
-        vBox.getChildren().addAll(vBox1, vBox2);
-        HBox hBox1 = new HBox(), hBox2 = new HBox(), hBox3 = new HBox(), hBox4 = new HBox();
-        Label label = new Label(), label1 = new Label("Name"), label2 = new Label("Seller"), label3 = new Label("Average Rating"), label4 = new Label("Category"), label5 = new Label("Brand"), label6 = new Label("Price"), label7 = new Label("Filters"), label8 = new Label("Description");
-        hBox1.getChildren().addAll(label1, label2, label3, label4, label5);
-        hBox1.setSpacing(70);
-        Separator separator = new Separator(), separator1 = new Separator(), separator2 = new Separator(), separator3 = new Separator(), separator4 = new Separator(), separator5 = new Separator(), separator6 = new Separator();
-        separator.setMinWidth(134);     separator.setMaxWidth(134);     separator.setMaxHeight(7);         separator.setVisible(false);
-        hBox3.getChildren().addAll(label6, label7, separator, label8);
-        Label label9 = new Label(), label10 = new Label(), label11 = new Label(), label12 = new Label(), label13 = new Label(), label14 = new Label(), label15 = new Label(), label16 = new Label();
-        label9.setMaxWidth(84);        label9.setMinWidth(84);        label9.setMaxHeight(40);      label9.setMinHeight(40);
-        label10.setMaxWidth(96);        label10.setMinWidth(96);        label10.setMaxHeight(40);      label10.setMinHeight(40);
-        label11.setMaxWidth(87);        label11.setMinWidth(87);        label11.setMaxHeight(40);      label11.setMinHeight(40);
-        label12.setMaxWidth(101);        label12.setMinWidth(101);        label12.setMaxHeight(40);      label12.setMinHeight(40);
-        label13.setMaxWidth(101);        label13.setMinWidth(101);        label13.setMaxHeight(40);      label13.setMinHeight(40);
-        label14.setMaxWidth(85);        label14.setMinWidth(85);        label14.setMaxHeight(40);      label14.setMinHeight(40);
-        label15.setMaxWidth(309);        label15.setMinWidth(309);        label15.setMaxHeight(40);      label15.setMinHeight(40);
-        label16.setMaxWidth(286);        label16.setMinWidth(286);        label16.setMaxHeight(40);      label16.setMinHeight(40);
-        label9.setText(product.getName());      label10.setText(product.getSeller().getUsername());     label11.setText(product.getAverageRating() + "");
-        label12.setText(product.getCategory() + "");        label13.setText(product.getBrand());        label14.setText(product.getPrice() + "");
-        label16.setText(product.getDescription());
+        });*/
+        hBox.setMaxHeight(70);      hBox.setMinHeight(70);
+        ArrayList<VBox> vBoxes = new ArrayList<>();
+        for (int j = 0; j < 11; j++) {
+            vBoxes.add(new VBox());
+            vBoxes.get(j).setAlignment(Pos.CENTER);
+            vBoxes.get(j).setPrefWidth(100);
+        }
+        vBoxes.get(0).setPrefWidth(60);
+        vBoxes.get(10).setPrefWidth(140);
+        Label id = new Label(), name = new Label(), sellerName = new Label(), category = new Label(), brand = new Label(), average = new Label(), price = new Label(), productStatus = new Label();
+        id.setText(product.getProductID() + "");
+        name.setText(product.getName());
+        sellerName.setText(product.getSeller().getUsername());
+        category.setText(product.getCategory() + "");
+        brand.setText(product.getBrand());
+        average.setText(product.getAverageRating() + "");
+        productStatus.setText(product.getProductStatus() + "");
+        price.setText(product.getPrice() + "");
+        TextArea filters = new TextArea(), discription = new TextArea();
+        filters.setEditable(false);     discription.setEditable(false);
+        discription.setText(product.getDescription());
         for (String filter: product.getFilters())
-            label15.setText(filter + "- ");
-        separator1.setMinWidth(50);     separator1.setMaxWidth(50);     separator1.setMaxHeight(7);         separator1.setVisible(false);
-        separator2.setMinWidth(56);     separator2.setMaxWidth(56);     separator2.setMaxHeight(7);         separator2.setVisible(false);
-        separator3.setMinWidth(121);     separator3.setMaxWidth(121);     separator3.setMaxHeight(7);         separator3.setVisible(false);
-        separator4.setMinWidth(57);     separator4.setMaxWidth(57);     separator4.setMaxHeight(7);         separator4.setVisible(false);
-        separator5.setMinWidth(42);     separator5.setMaxWidth(42);     separator5.setMaxHeight(7);         separator5.setVisible(false);
-        separator6.setMinWidth(31);     separator6.setMaxWidth(31);     separator6.setMaxHeight(7);         separator6.setVisible(false);
-        hBox2.getChildren().addAll(label9, separator1, label10, separator2, label11, separator3, label12, separator4, label13);
-        hBox4.getChildren().addAll(label14, separator5, label15, separator6, label16);
-        vBox1.getChildren().addAll(hBox1, hBox2);
-        vBox2.getChildren().addAll(hBox3, hBox4);
-
-        productView.setFitHeight(138);      productView.setFitWidth(182);
-        HBox hBox5 = new HBox();
-        hBox5.getChildren().addAll(edit);
-        VBox vBox3 = new VBox();
-        vBox3.setAlignment(Pos.TOP_CENTER);
-        vBox3.getChildren().addAll(productView, hBox5);
-        hBox.getChildren().addAll(vBox3);
+            filters.setText(filters.getText() + "-" + filter + "\n");
+        vBoxes.get(0).getChildren().add(id);
+        vBoxes.get(1).getChildren().add(name);
+        vBoxes.get(2).getChildren().add(sellerName);
+        vBoxes.get(3).getChildren().add(category);
+        vBoxes.get(4).getChildren().add(brand);
+        vBoxes.get(5).getChildren().add(average);
+        vBoxes.get(6).getChildren().add(price);
+        vBoxes.get(7).getChildren().add(discription);
+        vBoxes.get(8).getChildren().add(productStatus);
+        vBoxes.get(9).getChildren().add(filters);
+        vBoxes.get(10).getChildren().addAll(edit, remove);
+        vBoxes.get(10).setPrefWidth(95);
+        filters.setMaxWidth(99);
+        discription.setMaxWidth(99);
+        for (int j = 0; j < 11; j++)
+            hBox.getChildren().add(vBoxes.get(j));
         manageProductsVBox.getChildren().addAll(hBox);
     }
 
@@ -660,13 +723,14 @@ public class SellerMenuUI implements Initializable {
     {
         HBox hBox = new HBox();
         hBox.setMaxHeight(100);     hBox.setMinHeight(100);
+        hBox.setSpacing(20);
         Label dateText = new Label();
         Label customerText = new Label();
         TextArea productsText = new TextArea();
         Label incomeText = new Label();
         Label offValueText = new Label();
         Label sendStatusText = new Label();
-        dateText.setText(String.valueOf(sellLog.getDate()));
+        dateText.setText((sellLog.getDate().getYear() + 1900) + "/" + sellLog.getDate().getMonth() + "/" + sellLog.getDate().getDay());
         incomeText.setText(String.valueOf(sellLog.getIncomeValue()));
         offValueText.setText(String.valueOf(sellLog.getOffValue()));
         if (sellLog.isSendStatus())
@@ -676,6 +740,7 @@ public class SellerMenuUI implements Initializable {
         customerText.setText(sellLog.getCustomerName());
         for(Product product: sellLog.getProducts())
             productsText.setText(productsText.getText() + "\n-" + product.getName() + "-----" + product.getBrand());
+        productsText.setEditable(false);
         VBox vBox1 = new VBox(), vBox2 = new VBox(), vBox3 = new VBox(), vBox4 = new VBox(), vBox5 = new VBox(), vBox6 = new VBox();
         vBox1.getChildren().add(dateText);
         vBox2.getChildren().add(customerText);
@@ -683,9 +748,15 @@ public class SellerMenuUI implements Initializable {
         vBox4.getChildren().add(offValueText);
         vBox5.getChildren().add(sendStatusText);
         vBox6.getChildren().add(productsText);
-        vBox6.setMaxWidth(172);     vBox6.setMinWidth(172);
+        vBox1.setPrefWidth(100);    vBox1.setAlignment(Pos.CENTER);
+        vBox2.setPrefWidth(100);    vBox2.setAlignment(Pos.CENTER);
+        vBox3.setPrefWidth(100);    vBox3.setAlignment(Pos.CENTER);
+        vBox4.setPrefWidth(100);    vBox4.setAlignment(Pos.CENTER);
+        vBox5.setPrefWidth(100);    vBox5.setAlignment(Pos.CENTER);
+        vBox6.setPrefWidth(240);    vBox6.setAlignment(Pos.CENTER);
         productsText.setEditable(false);
-        hBox.getChildren().addAll(vBox1, vBox2, vBox3, vBox4, vBox5, vBox6);
+        hBox.getChildren().addAll(vBox3, vBox4, vBox2, vBox5, vBox1, vBox6);
+        viewSalesVBox.getChildren().add(hBox);
     }
 
     private void showEachBuyerInHBox(String string)
@@ -740,12 +811,12 @@ public class SellerMenuUI implements Initializable {
                 SellerUIController.editPersonalInfo(seller, "first name", firstName);
                 SellerUIController.editPersonalInfo(seller, "company name", companyName);
                 SellerUIController.editPersonalInfo(seller, "company description", companyInformation);
+                ((Stage)passEdit.getScene().getWindow()).close();
+                menuState = "personal";
+                showSellerMenu();
             }catch (Exception exception)
             {
                 throwError(exception.getMessage());
-            }
-            finally {
-                ((Stage)passEdit.getScene().getWindow()).close();
             }
         }
         else
@@ -766,7 +837,7 @@ public class SellerMenuUI implements Initializable {
         menuState = lock;
         if (lock.equalsIgnoreCase("enterPass"))
         {
-            Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/EditEnterPass.fxml"));
+            Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/EditEnterPassSeller.fxml"));
             Main.setupOtherStage(new Scene(root), "Check for apply edit");
         }
         else if (lock.equalsIgnoreCase("editOffer"))
@@ -791,7 +862,7 @@ public class SellerMenuUI implements Initializable {
         }
         else if (lock.equalsIgnoreCase("changePass"))
         {
-            Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/ChangePassword.fxml"));
+            Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/ChangePasswordSeller.fxml"));
             Main.setupOtherStage(new Scene(root), "Change password");
         }
     }
@@ -799,6 +870,7 @@ public class SellerMenuUI implements Initializable {
     private void throwError(String error)
     {
         errorText.setText(error);
+        errorText.setVisible(true);
     }
 
     public static void showSellerMenu() {
@@ -809,9 +881,4 @@ public class SellerMenuUI implements Initializable {
         }
     }
 
-    public void changeScene(String newState) throws IOException {
-        menuState = newState;
-        Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/" + newState + ".fxml"));
-        Main.setPrimaryStageScene(new Scene(root));
-    }
 }

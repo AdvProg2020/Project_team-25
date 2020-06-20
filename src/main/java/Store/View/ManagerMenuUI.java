@@ -284,6 +284,14 @@ public class ManagerMenuUI {
             showOffCodes();
         });
 
+    }
 
+    public static void showManagerMenu()
+    {
+        try {
+            Main.setPrimaryStageScene(new Scene(getContent()));
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 }

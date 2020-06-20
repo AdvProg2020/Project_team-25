@@ -97,21 +97,12 @@ public class MainMenuUI {
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
         productsButton.setOnAction((e) -> ProductsMenuUI.showProductsMenu());
         userPageButton.setOnAction(e -> {
-            if (MainMenuUIController.currentUser instanceof Customer) {
+            if (MainMenuUIController.currentUser instanceof Customer)
                 CustomerMenuUI.showCustomerMenu();
-            }
             else if (MainMenuUIController.currentUser instanceof Seller)
-                try {
-                    Main.setPrimaryStageScene(new Scene(CustomerMenuUI.getContent(), 1200, 600));
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
+                SellerMenuUI.showSellerMenu();
             else if (MainMenuUIController.currentUser instanceof Manager)
-                try {
-                    Main.setPrimaryStageScene(new Scene(CustomerMenuUI.getContent(), 1200, 600));
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
+                ManagerMenuUI.showManagerMenu();
         });
     }
 
