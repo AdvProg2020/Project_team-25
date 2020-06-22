@@ -6,6 +6,7 @@ import Store.Model.Customer;
 import Store.Model.Manager;
 import Store.Model.Seller;
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -53,6 +54,12 @@ public class MainMenuUI {
         signUpButton.disableProperty().bind(MainMenuUIController.isLoggedIn);
         loginLogoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
         setupAds();
+
+        Platform.runLater(() -> {
+            while (!Manager.hasManager) {
+                SignUpManagerMenuUI.showSignUpMenu();
+            }
+        });
     }
 
     private void setupAds() {

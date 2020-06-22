@@ -180,6 +180,7 @@ public class ProductMenuUI {
         handleImageAndVideoGrayscale();
 
         if (!productToShow.getVideoPath().isEmpty()) {
+            System.out.println(ProductMenuUI.class.getResource("/Videos/" + productToShow.getVideoPath()).toExternalForm());
             videoPlayer = new VideoPlayer(ProductMenuUI.class.getResource("/Videos/" + productToShow.getVideoPath()).toExternalForm());
             imageAndVideoVBox.getChildren().add(videoPlayer);
         }
