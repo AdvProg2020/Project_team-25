@@ -186,9 +186,19 @@ public class OffersMenuUI {
             showProducts();
         });
 
+        priceHighSlider.setOnMouseReleased(event -> {
+            priceHighFilter = priceHighSlider.getValue();
+            pageNumber = 1;
+            pageNumberField.setText(Integer.toString(pageNumber));
+            showProducts();
+        });
+
         priceHighSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             priceHighLabel.setText("Price High: " + (int) newValue.doubleValue() + "$");
-            priceHighFilter = newValue.doubleValue();
+        });
+
+        priceLowSlider.setOnMouseReleased(event -> {
+            priceLowFilter = priceLowSlider.getValue();
             pageNumber = 1;
             pageNumberField.setText(Integer.toString(pageNumber));
             showProducts();
@@ -196,10 +206,6 @@ public class OffersMenuUI {
 
         priceLowSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             priceLowLabel.setText("Price Low:   " + (int) newValue.doubleValue() + "$");
-            priceLowFilter = newValue.doubleValue();
-            pageNumber = 1;
-            pageNumberField.setText(Integer.toString(pageNumber));
-            showProducts();
         });
 
         searchBrandName.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -296,6 +302,11 @@ public class OffersMenuUI {
         mainNode.disableProperty().bind(popup.showingProperty());
 
         Runnable expensiveTask = () -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             setTobeShownProducts();
             VBox firstColumnProducts = new VBox();
             VBox secondColumnProducts = new VBox();

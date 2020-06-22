@@ -8,6 +8,7 @@ import Store.Model.Manager;
 import Store.Model.Product;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
@@ -17,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -164,9 +166,19 @@ public class ProductsMenuUI {
             showProducts();
         });
 
+        priceHighSlider.setOnMouseReleased(event -> {
+            priceHighFilter = priceHighSlider.getValue();
+            pageNumber = 1;
+            pageNumberField.setText(Integer.toString(pageNumber));
+            showProducts();
+        });
+
         priceHighSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             priceHighLabel.setText("Price High: " + (int) newValue.doubleValue() + "$");
-            priceHighFilter = newValue.doubleValue();
+        });
+
+        priceLowSlider.setOnMouseReleased(event -> {
+            priceLowFilter = priceLowSlider.getValue();
             pageNumber = 1;
             pageNumberField.setText(Integer.toString(pageNumber));
             showProducts();
@@ -174,10 +186,6 @@ public class ProductsMenuUI {
 
         priceLowSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             priceLowLabel.setText("Price Low:   " + (int) newValue.doubleValue() + "$");
-            priceLowFilter = newValue.doubleValue();
-            pageNumber = 1;
-            pageNumberField.setText(Integer.toString(pageNumber));
-            showProducts();
         });
 
         searchBrandName.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -274,6 +282,11 @@ public class ProductsMenuUI {
         mainNode.disableProperty().bind(popup.showingProperty());
 
         Runnable expensiveTask = () -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             setTobeShownProducts();
             VBox firstColumnProducts = new VBox();
             VBox secondColumnProducts = new VBox();
@@ -300,13 +313,13 @@ public class ProductsMenuUI {
             }
 
             Platform.runLater(() -> {
+                popup.hide();
                 firstColumn.getChildren().clear();
                 secondColumn.getChildren().clear();
                 thirdColumn.getChildren().clear();
                 firstColumn.getChildren().addAll(firstColumnProducts.getChildren());
                 secondColumn.getChildren().addAll(secondColumnProducts.getChildren());
                 thirdColumn.getChildren().addAll(thirdColumnProducts.getChildren());
-                popup.hide();
             });
         };
         new Thread(expensiveTask).start();
