@@ -21,7 +21,7 @@ public class VideoPlayer extends BorderPane {
 
     public VideoPlayer(String filePath) {
 
-        media = new Media(new File(filePath).toURI().toString());
+        media = new Media(filePath);
         mediaPlayer = new MediaPlayer(media);
         mediaView = new MediaView(mediaPlayer);
         pane = new Pane();
