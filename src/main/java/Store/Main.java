@@ -36,7 +36,6 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         otherStage.initModality(Modality.APPLICATION_MODAL);
 
-        setTest();
         setOffers();
         Parent root = MainMenuUI.getContent();
         /*Seller seller1 = new Seller("jackRipper", "jack", "ripper", "lab@lab.com", "0950", "1234", 1000, "company1", "describe");
@@ -156,7 +155,7 @@ public class Main extends Application {
         Category category4 = new Category("category4", category1);
 
         OffCode offCode1 = new OffCode("ce98", 30, 10, 2);
-        offCode1.setEndingTime(new Date(120, 5, 4));
+        offCode1.setEndingTime(new Date(2025, 5, 4));
         offCode1.setStartingTime(new Date(120, 3, 4));
         OffCode offCode2 = new OffCode("AP2", 60, 5, 1);
         offCode2.setEndingTime(new Date(120, 5, 4));

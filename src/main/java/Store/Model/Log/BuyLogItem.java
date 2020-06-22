@@ -32,7 +32,7 @@ public class BuyLogItem extends LogItem {
         showed = true;
         return "BuyLogItem{" +
                 "offValue=" + offValue +
-                ", sellerName='" + sellerName + '\'' +
+                ", sellerName=" + sellerName +
                 ", received=" + received +
                 ", id=" + id +
                 ", date=" + date +

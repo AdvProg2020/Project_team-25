@@ -31,15 +31,16 @@ import org.controlsfx.control.spreadsheet.Grid;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.EventListener;
-import java.util.HashMap;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CustomerMenuUI implements Initializable {
 
     private static Customer customer;
     private static String menuState = "CustomerMenu";
+
+    public GridPane gridPane;
 
     public AnchorPane anchorPane;
     public VBox myProductsVBox, cartVBox, discountVBox;
@@ -108,8 +109,7 @@ public class CustomerMenuUI implements Initializable {
         }
         else if (menuState.equalsIgnoreCase("showFactor"))
         {
-            factor.setText(factorString);
-            anchorPane.getChildren().add(factor);
+            setupInitialFactor();
             menuState = "CustomerMenu";
         }
         else
@@ -123,6 +123,32 @@ public class CustomerMenuUI implements Initializable {
                 tabPane.getSelectionModel().select(cart);
             else if (menuState.equalsIgnoreCase("personal"))
                 tabPane.getSelectionModel().select(personal);
+        }
+    }
+
+    private void setupInitialFactor() {
+        int i = 1;
+        Label id, date, seller, offValue;
+        TextArea products;
+        Scanner scanner = new Scanner(factorString);
+        String eachFactor;
+        Pattern pattern = Pattern.compile("offValue=(.+), sellerName=(.+), received=(.+), id=(.+), date=(.+), productList=(.+)}");
+        Matcher matcher;
+        while (scanner.hasNextLine())
+        {
+            id = new Label(); date = new Label(); seller = new Label(); offValue = new Label();
+            products = new TextArea();
+            eachFactor = scanner.nextLine();
+            matcher = pattern.matcher(eachFactor);
+            matcher.find();
+            id.setText(matcher.group(4));       date.setText(matcher.group(5));         seller.setText(matcher.group(2));        offValue.setText(matcher.group(1));
+            products.setText(matcher.group(6));         products.setEditable(false);        products.setPrefWidth(0);       products.setPrefHeight(0);
+            GridPane.setValignment(id, VPos.CENTER);          GridPane.setHalignment(id, HPos.CENTER);
+            GridPane.setValignment(seller, VPos.CENTER);          GridPane.setHalignment(seller, HPos.CENTER);
+            GridPane.setValignment(date, VPos.CENTER);          GridPane.setHalignment(date, HPos.CENTER);
+            GridPane.setValignment(offValue, VPos.CENTER);          GridPane.setHalignment(offValue, HPos.CENTER);
+            GridPane.setValignment(products, VPos.CENTER);          GridPane.setHalignment(products, HPos.CENTER);
+            gridPane.addRow(i++, id, date, seller, offValue, products);
         }
     }
 

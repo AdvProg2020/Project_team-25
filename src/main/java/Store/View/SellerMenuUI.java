@@ -114,6 +114,8 @@ public class SellerMenuUI implements Initializable {
     public ImageView minesFilterProduct;
     String availablityString;
 
+    static int buyerscount = 0;
+
     String currentSortOffer = new String("time of starting");
     String currentSortProduct = new String("visited");
     @FXML
@@ -308,7 +310,11 @@ public class SellerMenuUI implements Initializable {
     {
         /*imagePath.setText(selectedProduct.getImagePath());
         videoPath.setText(selectedProduct.getVideoPath());
-        */category.setText(selectedProduct.getCategory().getId() + "");
+        */
+        if (selectedProduct.getCategory() != null)
+            category.setText(selectedProduct.getCategory().getId() + "");
+        else
+            category.setText("");
         productName.setText(selectedProduct.getName());
         brand.setText(selectedProduct.getBrand());
         price.setText(selectedProduct.getPrice() + "");
@@ -511,12 +517,14 @@ public class SellerMenuUI implements Initializable {
     private void setupInitialBuyers()
     {
         ArrayList<String> buyers = new ArrayList<>();
-
+        String string2;
         for (String string: seller.getBuyers())
             buyers.add(string);
         SellerUIController.makeBuyersUnique(buyers);
-        for (String string: buyers)
-            showEachBuyerInHBox(string);
+        for (int i = 1; i < seller.getBuyers().size(); i+=2)
+            showEachBuyerInHBox((Customer)Customer.getUserByUsername(seller.getBuyers().get(i-1)), (Customer)Customer.getUserByUsername(seller.getBuyers().get(i)));
+        if (seller.getBuyers().size() % 2 == 1)
+            showEachBuyerInHBox((Customer)Customer.getUserByUsername(seller.getBuyers().get(seller.getBuyers().size() - 1)), null);
     }
 
     @FXML
@@ -696,7 +704,10 @@ public class SellerMenuUI implements Initializable {
         id.setText(product.getProductID() + "");
         name.setText(product.getName());
         sellerName.setText(product.getSeller().getUsername());
-        category.setText(product.getCategory() + "");
+        if (product.getCategory() != null)
+            category.setText(product.getCategory() + "");
+        else
+            category.setText("");
         brand.setText(product.getBrand());
         average.setText(product.getAverageRating() + "");
         productStatus.setText(product.getProductStatus() + "");
@@ -765,10 +776,34 @@ public class SellerMenuUI implements Initializable {
         viewSalesVBox.getChildren().add(hBox);
     }
 
-    private void showEachBuyerInHBox(String string)
+    private void showEachBuyerInHBox(Customer customer1, Customer customer2)
     {
-        Label label = new Label(string);
-        viewBuyersVBox.getChildren().add(label);
+        HBox hBox = new HBox();
+        hBox.setMinHeight(131);     hBox.setMaxHeight(131);
+        HBox hBox1 = new HBox();
+        HBox hBox2 = new HBox();
+        hBox1.setPrefWidth(475);        hBox2.setPrefWidth(475);
+        hBox1.setSpacing(20);           hBox2.setSpacing(20);
+        Label username = new Label(), email = new Label(), phoneNumber = new Label();
+        ImageView imageView = new ImageView();
+        hBox1.setAlignment(Pos.CENTER_LEFT);        hBox2.setAlignment(Pos.CENTER_LEFT);
+        imageView.setFitWidth(133);     imageView.setFitHeight(131);
+        username.setText(customer1.getUsername());
+        email.setText(customer1.getEmail());
+        phoneNumber.setText(customer1.getPhoneNumber());
+        //imageView.setImage();
+        HBox.setMargin(username, new Insets(0, 0, 0, 10));
+        hBox1.getChildren().addAll(username, email, phoneNumber, imageView);
+        if (customer2 != null)
+        {
+            username.setText(customer2.getUsername());
+            email.setText(customer2.getEmail());
+            phoneNumber.setText(customer2.getPhoneNumber());
+            //imageView.setImage();
+            hBox2.getChildren().addAll(username, email, phoneNumber, imageView);
+        }
+        hBox.getChildren().addAll(hBox1, hBox2);
+        viewBuyersVBox.getChildren().add(hBox);
     }
 
     public static Parent getContent() throws IOException {
