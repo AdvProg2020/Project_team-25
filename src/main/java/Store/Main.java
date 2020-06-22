@@ -126,8 +126,11 @@ public class Main extends Application {
 
         Customer customer = new Customer("customer1", "customer1", "customer1", "lab@lab.com", "0912", "1234", 1000);
         customer.setMoney(1000);
+        Customer customer2 = new Customer("customer2", "customer2", "customer1", "p@p.com", "0912", "1234", 1000);
+        customer.setMoney(1000);
 
         Customer.addCustomer(customer);
+        Customer.addCustomer(customer2);
         Seller.addSeller(seller1);
         Seller.addSeller(seller2);
         manager1.addNewManager(manager2);

@@ -517,14 +517,13 @@ public class SellerMenuUI implements Initializable {
     private void setupInitialBuyers()
     {
         ArrayList<String> buyers = new ArrayList<>();
-        String string2;
         for (String string: seller.getBuyers())
             buyers.add(string);
         SellerUIController.makeBuyersUnique(buyers);
-        for (int i = 1; i < seller.getBuyers().size(); i+=2)
-            showEachBuyerInHBox((Customer)Customer.getUserByUsername(seller.getBuyers().get(i-1)), (Customer)Customer.getUserByUsername(seller.getBuyers().get(i)));
-        if (seller.getBuyers().size() % 2 == 1)
-            showEachBuyerInHBox((Customer)Customer.getUserByUsername(seller.getBuyers().get(seller.getBuyers().size() - 1)), null);
+        for (int i = 1; i < buyers.size(); i+=2)
+            showEachBuyerInHBox((Customer)Customer.getUserByUsername(buyers.get(i-1)), (Customer)Customer.getUserByUsername(buyers.get(i)));
+        if (buyers.size() % 2 == 1)
+            showEachBuyerInHBox((Customer)Customer.getUserByUsername(seller.getBuyers().get(buyers.size() - 1)), null);
     }
 
     @FXML
@@ -808,6 +807,7 @@ public class SellerMenuUI implements Initializable {
         {
             username = new Label(); email = new Label(); phoneNumber = new Label();
             imageView = new ImageView();
+            imageView.setFitWidth(133);     imageView.setFitHeight(131);
             username.setText(customer2.getUsername());
             email.setText(customer2.getEmail());
             phoneNumber.setText(customer2.getPhoneNumber());
