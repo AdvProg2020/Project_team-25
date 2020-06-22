@@ -797,15 +797,25 @@ public class SellerMenuUI implements Initializable {
         username.setText(customer1.getUsername());
         email.setText(customer1.getEmail());
         phoneNumber.setText(customer1.getPhoneNumber());
-        //imageView.setImage();
+        try{
+            imageView.setImage(new Image(customer1.getProfilePicturePath()));
+        }catch(Exception exception){
+            imageView.setImage(new Image(ProductMenuUI.class.getResource("/Icons/unknown.png").toExternalForm()));
+        }
         HBox.setMargin(username, new Insets(0, 0, 0, 10));
         hBox1.getChildren().addAll(username, email, phoneNumber, imageView);
         if (customer2 != null)
         {
+            username = new Label(); email = new Label(); phoneNumber = new Label();
+            imageView = new ImageView();
             username.setText(customer2.getUsername());
             email.setText(customer2.getEmail());
             phoneNumber.setText(customer2.getPhoneNumber());
-            //imageView.setImage();
+            try{
+                imageView.setImage(new Image(customer1.getProfilePicturePath()));
+            }catch(Exception exception){
+                imageView.setImage(new Image(ProductMenuUI.class.getResource("/Icons/unknown.png").toExternalForm()));
+            }
             hBox2.getChildren().addAll(username, email, phoneNumber, imageView);
         }
         hBox.getChildren().addAll(hBox1, hBox2);
