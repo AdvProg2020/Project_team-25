@@ -530,10 +530,16 @@ public class SellerMenuUI implements Initializable {
     @FXML
     private void setupInitial()
     {
+        product.setOnSelectionChanged(e ->  setupInitialPersonalMenu());
+        offer.setOnSelectionChanged(e -> setupInitialPersonalMenu());
+        viewBuyers.setOnSelectionChanged(e -> setupInitialPersonalMenu());
+        viewSales.setOnSelectionChanged(e -> setupInitialPersonalMenu());
+        personal.setOnSelectionChanged(e -> setupInitialPersonalMenu());
         loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
         logoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
         logoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             try {
+                MainMenuUIController.setCurrentUser(MainMenuUIController.guest);
                 mainMenuButtonClicked();
             } catch (IOException ioException) {
                 ioException.printStackTrace();
@@ -663,13 +669,13 @@ public class SellerMenuUI implements Initializable {
     private void showEachProductInHBox(Product product)
     {
         HBox hBox = new HBox();
-        hBox.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+        /*hBox.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             try {
                 Main.setPrimaryStageScene(new Scene(ProductMenuUI.getContent(product)));
             } catch (IOException ioException) {
 
             }
-        });
+        });*/
         Button edit = new Button("Edit");
         Button remove = new Button("Remove");
         edit.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
@@ -811,9 +817,9 @@ public class SellerMenuUI implements Initializable {
         return root;
     }
 
-    public void offersButtonClicked()
-    {
+    public void offersButtonClicked() throws IOException {
         menuState = "SellerMenu";
+        Main.setPrimaryStageScene(new Scene(OffersMenuUI.getContent()));
     }
 
     public void productsButtonClicked() throws IOException {

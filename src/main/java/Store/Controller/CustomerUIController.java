@@ -73,7 +73,7 @@ public class CustomerUIController {
     }
 
     public static String purchase(Customer customer, String input) throws Exception {
-        if (input.equalsIgnoreCase("null")) {
+        if (input.isEmpty()) {
             if (customer.canBuy()) {
                 customer.buy();
                 return customer.getNewFactor();

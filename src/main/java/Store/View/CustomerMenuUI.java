@@ -4,10 +4,8 @@ import Store.Controller.CustomerUIController;
 import Store.Controller.MainMenuUIController;
 import Store.InputManager;
 import Store.Main;
-import Store.Model.Customer;
+import Store.Model.*;
 import Store.Model.Log.BuyLogItem;
-import Store.Model.OffCode;
-import Store.Model.Product;
 import com.jfoenix.animation.alert.CenterTransition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.EventHandler;
@@ -56,6 +54,7 @@ public class CustomerMenuUI implements Initializable {
     public Button myDiscountButton;
     public Button myProductsButton;
     public Button cartButton;
+    public Button signUpButton;
     public Button offersButton;
     public Button productsButton;
     public Button mainMenuButton;
@@ -165,8 +164,26 @@ public class CustomerMenuUI implements Initializable {
     @FXML
     private void setupInitial()
     {
+        product.setOnSelectionChanged(e ->  setupInitialPersonalMenu());
+        cart.setOnSelectionChanged(e -> setupInitialPersonalMenu());
+        personal.setOnSelectionChanged(e -> setupInitialPersonalMenu());
+        discount.setOnSelectionChanged(e -> setupInitialPersonalMenu());
         loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
         logoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
+        signUpButton.disableProperty().bind(MainMenuUIController.isLoggedIn);
+        logoutButton.setOnAction((e) -> {
+            LoginMenuUI.handleEvent();
+            if (MainMenuUIController.currentUser instanceof Seller || MainMenuUIController.currentUser instanceof Manager) {
+                try {
+                    mainMenuButtonClicked();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+            else
+                showCustomerMenu();
+        });
+        signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
         balance.textProperty().bind(new SimpleStringProperty(String.valueOf(customer.getMoney())));
         setupInitialMyDiscount();
         setupInitialCart();
@@ -248,7 +265,7 @@ public class CustomerMenuUI implements Initializable {
                 menuState = "personal";
                 CustomerMenuUI.showCustomerMenu();
             }
-            } catch (Exception exception) {
+        } catch (Exception exception) {
             throwError(exception.getMessage());
         }
     }
@@ -256,13 +273,15 @@ public class CustomerMenuUI implements Initializable {
     private void showEachProductInHBox(Product product, int i)
     {
         HBox hBox = new HBox();
-        hBox.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+        hBox.setSpacing(5);
+        /*hBox.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             try {
                 Main.setPrimaryStageScene(new Scene(ProductMenuUI.getContent(product)));
             } catch (IOException ioException) {
 
             }
         });
+        */
         String starPath = ProductMenuUI.class.getResource("/Icons/StarNotSelected.png").toExternalForm();
         /*Image productImage = new Image(product.getImagePath());
         ImageView productView = new ImageView(productImage);
@@ -273,7 +292,7 @@ public class CustomerMenuUI implements Initializable {
                 ioException.printStackTrace();
             }
         });*/
-        ImageView activeStar = new ImageView(new Image(starPath));
+        /*ImageView activeStar = new ImageView(new Image(starPath));
         activeStar.setFitWidth(10);     activeStar.setFitHeight(10);
         Button ratingStar1 = new Button("", activeStar);
         ratingStar1.getStyleClass().add("rateButton");
@@ -301,9 +320,8 @@ public class CustomerMenuUI implements Initializable {
             starButtons[buttonIndex].setMaxSize(5, 5);
         }
         rateProductButton.setOnAction((e) -> handleRating(product, currentRatings[i], ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5, rateProductButton, activeStar, activeStar1, activeStar2, activeStar3, activeStar4, i));
-
         handleCanRate(product, ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5, rateProductButton, activeStar, activeStar1, activeStar2, activeStar3, activeStar4);
-
+*/
         hBox.setMaxHeight(70);      hBox.setMinHeight(70);
         ArrayList<VBox> vBoxes = new ArrayList<>();
         for (int j = 0; j < 11; j++) {
@@ -312,8 +330,19 @@ public class CustomerMenuUI implements Initializable {
             vBoxes.get(j).setPrefWidth(100);
         }
         vBoxes.get(0).setPrefWidth(60);
-        vBoxes.get(10).setPrefWidth(140);
+        vBoxes.get(10).setPrefWidth(100);
+        vBoxes.get(10).getStylesheets().add(getClass().getResource("/CSS/product_menu_stylesheet.css").toExternalForm());
         Label id = new Label(), name = new Label(), sellerName = new Label(), category = new Label(), brand = new Label(), average = new Label(), price = new Label(), productStatus = new Label();
+        Button viewProduct = new Button("View Product");
+        viewProduct.setPrefWidth(100);
+        viewProduct.setOnAction(e -> {
+            try {
+                Main.setPrimaryStageScene(new Scene(ProductMenuUI.getContent(product)));
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+        vBoxes.get(10).getChildren().add(viewProduct);
         id.setText(product.getProductID() + "");
         name.setText(product.getName());
         sellerName.setText(product.getSeller().getUsername());
@@ -337,14 +366,14 @@ public class CustomerMenuUI implements Initializable {
         vBoxes.get(7).getChildren().add(discription);
         vBoxes.get(8).getChildren().add(productStatus);
         vBoxes.get(9).getChildren().add(filters);
-        HBox hBox1 = new HBox();
+        /*HBox hBox1 = new HBox();
         HBox hBox2 = new HBox();
-        vBoxes.get(10).getChildren().addAll(hBox1, hBox2);
-        hBox1.setAlignment(Pos.CENTER);
+        */vBoxes.get(10).getChildren().addAll(/*hBox1, hBox2*/);
+        /*hBox1.setAlignment(Pos.CENTER);
         hBox2.setAlignment(Pos.CENTER);
-        hBox1.getChildren().addAll(ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5);
+        *//*hBox1.getChildren().addAll(ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5);
         hBox2.getChildren().add(rateProductButton);
-        filters.setMaxWidth(100);
+        */filters.setMaxWidth(100);
         discription.setMaxWidth(100);
         for (int j = 0; j < 11; j++)
             hBox.getChildren().add(vBoxes.get(j));
@@ -415,13 +444,13 @@ public class CustomerMenuUI implements Initializable {
                 ioException.printStackTrace();
             }
         });*/
-        hBox.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+        /*hBox.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             try {
                 Main.setPrimaryStageScene(new Scene(ProductMenuUI.getContent(product)));
             } catch (IOException ioException) {
 
             }
-        });
+        });*/
         hBox.setMaxHeight(70);      hBox.setMinHeight(70);
         Image plus = new Image(ProductMenuUI.class.getResource("/Icons/Plus.png").toExternalForm());
         Image mines = new Image(ProductMenuUI.class.getResource("/Icons/Negative.png").toExternalForm());
@@ -540,9 +569,9 @@ public class CustomerMenuUI implements Initializable {
         return root;
     }
 
-    public void offersButtonClicked()
-    {
+    public void offersButtonClicked() throws IOException {
         menuState = "CustomerMenu";
+        Main.setPrimaryStageScene(new Scene(OffersMenuUI.getContent()));
     }
 
     public void productsButtonClicked() throws IOException {
@@ -559,10 +588,11 @@ public class CustomerMenuUI implements Initializable {
         if (customer == MainMenuUIController.guest) {
             throwError("You must login");
         }
-        if (customer.getCart().isEmpty()) {
+        else if (customer.getCart().isEmpty()) {
             throwError("Your cart is empty!");
         }
-        openStage("extraInfoPurchase");
+        else
+            openStage("extraInfoPurchase");
     }
 
     public void finalBuyButton() throws Exception {
