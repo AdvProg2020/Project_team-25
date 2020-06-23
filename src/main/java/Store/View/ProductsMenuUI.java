@@ -325,7 +325,6 @@ public class ProductsMenuUI {
         new Thread(expensiveTask).start();
 
 
-
     }
 
     private void setGraphicsOfProducts(VBox vBox, Product product) {
@@ -351,16 +350,22 @@ public class ProductsMenuUI {
         Label productPrice = new Label(product.getPrice() + "$");
         Label productRating = new Label(product.getAverageRating() + "/5");
         Label isAvailable = new Label(product.getAvailablity() ? "Available" : "Unavailable");
+
         isAvailable.setPrefWidth(vBox.getPrefWidth());
         isAvailable.setAlignment(Pos.CENTER);
 
-        isAvailable.setStyle(product.getAvailablity() ? "-fx-background-color: #BFFF00;" : "-fx-background-color: #C40233;");
+        if (!product.getAvailablity()) {
+            productInfo.setId("unavailableProduct");
+        } else {
+            isAvailable.setStyle(product.getAvailablity() ? "-fx-background-color: #BFFF00;" : "-fx-background-color: #C40233;");
+        }
         gridPane.add(productRating, 1, 0);
         gridPane.add(productPrice, 0, 0);
         productName.setId("productName");
         productPrice.setId("productPrice");
         productRating.setId("productRating");
         isAvailable.setId("availability");
+
 
         productInfo.getChildren().addAll(imageView, productName, gridPane, getProductRating(product), isAvailable, separator);
         vBox.getChildren().add(productInfo);
@@ -461,8 +466,6 @@ public class ProductsMenuUI {
         }
         return hBox;
     }
-
-
 
 
 //    private void giveSearchedProducts() {

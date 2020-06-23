@@ -207,3 +207,12 @@
 #time {
     -fx-font-size: 18px;
 }
+
+#unavailableProduct {
+    -fx-background-color: rgba(0, 0, 0, 0.3);
+}
+
+#currentScreenTitle {
+    -fx-font-size: 24px;
+}
+
