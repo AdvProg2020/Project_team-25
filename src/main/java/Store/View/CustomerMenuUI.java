@@ -28,6 +28,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.spreadsheet.Grid;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -357,10 +358,15 @@ public class CustomerMenuUI implements Initializable {
     @FXML
     private void setupInitialPersonalMenu()
     {
-        try{
-            profile.setImage(new Image(customer.getProfilePicturePath()));
-        }catch (Exception exception) {
-
+        String path;
+        if (customer.getProfilePicturePath() != null){
+            path = customer.getProfilePicturePath();
+            File file = new File(path);
+            profile.setImage(new Image(file.toURI().toString()));
+        }else {
+            path = "src/main/resources/Icons/unknown.png";
+            File file = new File(path);
+            profile.setImage(new Image(file.toURI().toString()));
         }
         emailTextField.setText(customer.getEmail());
         firstNameTextField.setText(customer.getName());
@@ -648,11 +654,21 @@ public class CustomerMenuUI implements Initializable {
         HBox imageHBox = new HBox();
         imageHBox.setMaxHeight(40);      imageHBox.setMinHeight(40);
         imageHBox.setAlignment(Pos.CENTER);
-        //ImageView imageView = new ImageView(new Image(product.getImagePath()));
-        /*imageView.setFitHeight(40);
+        ImageView imageView = new ImageView();
+        imageView.setFitHeight(40);
         imageView.setFitWidth(40);
+        String path;
+        if (product.getImagePath() != null){
+            path = product.getImagePath();
+            File file = new File(path);
+            imageView.setImage(new Image(file.toURI().toString()));
+        }else {
+            path = "src/main/resources/Images/images.jpg";
+            File file = new File(path);
+            imageView.setImage(new Image(file.toURI().toString()));
+        }
         imageHBox.getChildren().add(imageView);
-        */cartVBox.getChildren().addAll(hBox, imageHBox);
+        cartVBox.getChildren().addAll(hBox, imageHBox);
     }
 
     private void showEachDiscountInHBox(OffCode offCode, int quantity)

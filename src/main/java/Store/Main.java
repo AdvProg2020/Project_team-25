@@ -77,7 +77,7 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
 
-        setupBGM();
+       // setupBGM();
     }
 
 

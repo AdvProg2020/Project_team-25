@@ -31,6 +31,7 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import org.codehaus.plexus.util.StringUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
@@ -557,10 +558,15 @@ public class SellerMenuUI implements Initializable {
     @FXML
     private void setupInitialPersonalMenu()
     {
-        try{
-            profile.setImage(new Image(seller.getProfilePicturePath()));
-        }catch (Exception exception) {
-
+        String path;
+        if (seller.getProfilePicturePath() != null){
+            path = seller.getProfilePicturePath();
+            File file = new File(path);
+            profile.setImage(new Image(file.toURI().toString()));
+        }else {
+            path = "src/main/resources/Icons/unknown.png";
+            File file = new File(path);
+            profile.setImage(new Image(file.toURI().toString()));
         }
         emailTextField.setText(seller.getEmail());
         firstNameTextField.setText(seller.getName());
