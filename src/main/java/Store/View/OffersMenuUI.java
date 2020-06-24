@@ -396,7 +396,6 @@ public class OffersMenuUI {
         isAvailable.setStyle(product.getAvailablity() ? "-fx-background-color: #BFFF00;" : "-fx-background-color: #C40233;");
         gridPane.add(productPrice, 0, 0);
         gridPane.add(productShouldPaidPrice, 1, 0);
-        gridPane.setGridLinesVisible(true);
         productName.setId("productName");
 
         productPrice.setId("productActualPrice");

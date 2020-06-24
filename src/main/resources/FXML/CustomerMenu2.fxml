@@ -154,6 +154,7 @@
                               <Font name="Book Antiqua" size="18.0" />
                            </font>
                         </Label>
+                        <Button layoutX="801.0" layoutY="269.0" mnemonicParsing="false" onAction="#changePic" prefHeight="25.0" prefWidth="77.0" styleClass="sellerButton" stylesheets="@../CSS/product_menu_stylesheet.css" text="Change" />
                      </children>
                   </AnchorPane>
             </content>
@@ -283,7 +284,7 @@
                                        <children>
                                           <VBox alignment="TOP_CENTER" prefHeight="25.0" prefWidth="71.0" spacing="15.0">
                                              <children>
-                                                <Label text="ProductID" />
+                                                <Label text="ID" />
                                              </children>
                                           </VBox>
                                           <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0">
@@ -329,6 +330,16 @@
                                           <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0">
                                              <children>
                                                 <Label text="Filters" />
+                                             </children>
+                                          </VBox>
+                                          <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0">
+                                             <children>
+                                                <Label text="Number" />
+                                             </children>
+                                          </VBox>
+                                          <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0">
+                                             <children>
+                                                <Label text="Total Price" />
                                              </children>
                                           </VBox>
                                        </children>
@@ -378,6 +389,50 @@
                               </Button>
                            </children>
                         </HBox>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab fx:id="buyHistory" text="Buy History">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <VBox layoutX="14.0" layoutY="14.0" prefHeight="84.0" prefWidth="285.0">
+                           <children>
+                              <Label prefHeight="45.0" prefWidth="307.0" text="Buy History">
+                                 <font>
+                                    <Font name="Book Antiqua Italic" size="31.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <ScrollPane layoutY="64.0" prefHeight="509.0" prefWidth="951.0">
+                           <content>
+                              <VBox fx:id="viewBuysVBox" prefHeight="509.0" prefWidth="951.0">
+                                 <children>
+                                    <HBox prefHeight="25.0" prefWidth="969.0" spacing="20.0">
+                                       <children>
+                                          <VBox alignment="TOP_CENTER" prefHeight="25.0" prefWidth="200.0" spacing="15.0">
+                                             <children>
+                                                <Label text="Date" />
+                                             </children>
+                                          </VBox>
+                                          <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0">
+                                             <children>
+                                                <Label text="Seller" />
+                                             </children>
+                                          </VBox>
+                                          <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                                             <children>
+                                                <Label text="Details" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
                      </children>
                   </AnchorPane>
                </content>

@@ -166,5 +166,14 @@ public class SellerUIController {
         //return "Filter removed.";
     }
 
+    public static void addAds(Seller seller, int id) throws Exception {
+        if (Product.getProductByID(id) == null)
+            throw new Exception("This product doesn't exist!");
+        else if (!seller.getProducts().contains(Product.getProductByID(id)))
+            throw new Exception("This seller doesn't have this product!");
+        else{
+            Manager.addRequest(new Request(seller, Product.getProductByID(id)));
+        }
+    }
 
 }

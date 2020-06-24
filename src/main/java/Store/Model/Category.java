@@ -131,9 +131,21 @@ public class Category implements Serializable {
             for (Product immediateProduct : immediateProducts) {
                 parent.removeProductFrom(immediateProduct);
             }
+            parent.getChildren().remove(this);
         }
         this.immediateProducts = new ArrayList<Product>();
-        this.children = new ArrayList<Category>();
+    }
+
+    public boolean isChildOf(Category category)
+    {
+        if (parent != null) {
+            if (parent.equals(category))
+                return true;
+            else
+                return parent.isChildOf(category);
+        }
+        else
+            return false;
     }
 
     public void addToFilter(String string) {

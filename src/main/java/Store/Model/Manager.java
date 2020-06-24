@@ -127,8 +127,14 @@ public class Manager extends User {
     }
 
     public static void removeCategory(Category category) {
+        ArrayList<Category> removeCategories = new ArrayList<>();
+        removeCategories.add(category);
+        for (Category category1: allCategories)
+            if (category1.isChildOf(category))
+                removeCategories.add(category1);
         category.removeInside();
-        allCategories.remove(category);
+        for (Category category1: removeCategories)
+            allCategories.remove(category1);
     }
 
     public static Request getRequestById(int id) {

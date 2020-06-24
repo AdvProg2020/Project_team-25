@@ -15,6 +15,7 @@ public class Request implements Serializable {
     private Offer offer;
     private Object newObject;
     private boolean change;
+    private static int adCounter;
 
     public Request(Seller seller) {
         this.requestType = RequestType.REGISTER_SELLER;
@@ -50,6 +51,16 @@ public class Request implements Serializable {
         allRequests.add(this);
     }
 
+    public Request(Seller seller, Product product)
+    {
+        this.product = product;
+        this.seller = seller;
+        this.requestType = RequestType.ADD_NEW_ADVERTISEMENT;
+        this.status = VerifyStatus.WAITING;
+        adCounter++;
+        allRequests.add(this);
+    }
+
     public static ArrayList<Request> getAllRequests() {
         return allRequests;
     }
@@ -80,6 +91,10 @@ public class Request implements Serializable {
 
     public Product getNewProduct() {
         return (Product) newObject;
+    }
+
+    public static int getAdCounter() {
+        return adCounter;
     }
 
     public void setStatus(VerifyStatus status) {

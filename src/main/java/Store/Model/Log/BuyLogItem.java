@@ -27,6 +27,18 @@ public class BuyLogItem extends LogItem {
         this.received = received;
     }
 
+    public double getOffValue() {
+        return offValue;
+    }
+
+    public String getSellerName() {
+        return sellerName;
+    }
+
+    public boolean isReceived() {
+        return received;
+    }
+
     @Override
     public String toString() {
         showed = true;

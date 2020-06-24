@@ -1,5 +1,6 @@
 package Store.Model;
 
+import Store.Controller.MainMenuUIController;
 import Store.Model.Enums.RequestType;
 import Store.Model.Log.SellLogItem;
 
@@ -67,7 +68,7 @@ public class Seller extends User {
     }
 
     public void handleLogs(double offValue, ArrayList<Product> sellProducts, Date date, Customer customer, double income) {
-        sellLog.add(new SellLogItem(sellLog.size() + 1, date, sellProducts, income, offValue, customer.getName(), false));
+        sellLog.add(new SellLogItem(sellLog.size() + 1, date, sellProducts, income, offValue, customer.getUsername(), false));
     }
 
     public void removeProduct(Product productToRemove)
@@ -115,6 +116,11 @@ public class Seller extends User {
             request.getProduct().changeProduct(request.getNewProduct());
         } else if (request.getRequestType() == RequestType.REGISTER_SELLER) {
             allUsers.add(request.getSeller());
+        } else if (request.getRequestType() == RequestType.ADD_NEW_ADVERTISEMENT){
+            if (Request.getAdCounter() % 2 == 0)
+                MainMenuUIController.setStaticAdUpper(request.getProduct());
+            else
+                MainMenuUIController.setStaticAdLower(request.getProduct());
         }
     }
 

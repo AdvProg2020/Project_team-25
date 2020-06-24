@@ -26,6 +26,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -33,10 +35,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 
 public class SellerMenuUI implements Initializable {
 
@@ -44,6 +48,8 @@ public class SellerMenuUI implements Initializable {
     private static String menuState = "SellerMenu";
 
     public VBox manageProductsVBox, viewSalesVBox, myOffersVBox, viewBuyersVBox;
+
+    public GridPane gridPane;
 
     public TabPane tabPane;
     public Tab product;
@@ -86,16 +92,10 @@ public class SellerMenuUI implements Initializable {
     public PasswordField newPass;
     public PasswordField confirmationNewPass;
 
-    public TextField startDayOffer;
-    public TextField startMonthOffer;
-    public TextField startYearOffer;
-    public TextField endDayOffer;
-    public TextField endMonthOffer;
-    public TextField endYearOffer;
+    public DatePicker startDateOffer;
+    public DatePicker endDateOffer;
     public TextField offPercentOffer;
     public TextField productIDInOffer;
-    public ImageView plusFilterOffer;
-    public ImageView minesFilterOffer;
     public ImageView plusProductOffer;
     public ImageView minesProductOffer;
 
@@ -114,8 +114,9 @@ public class SellerMenuUI implements Initializable {
     public ImageView minesFilterProduct;
     String availablityString;
 
-    static int buyerscount = 0;
+    public TextField requestedProductId;
 
+    static SellLogItem showedSellLog;
     String currentSortOffer = new String("time of starting");
     String currentSortProduct = new String("visited");
     @FXML
@@ -123,6 +124,16 @@ public class SellerMenuUI implements Initializable {
         seller = (Seller) MainMenuUIController.currentUser;
         if (menuState.equalsIgnoreCase("changePass"))
         {
+
+        }
+        else if (menuState.equalsIgnoreCase("sellLog"))
+        {
+            showSellLog();
+        }
+        else if (menuState.equalsIgnoreCase("imagePath")){
+
+        }
+        else if (menuState.equalsIgnoreCase("adsRequest")){
 
         }
         else if (menuState.equalsIgnoreCase("addProduct"))
@@ -158,6 +169,26 @@ public class SellerMenuUI implements Initializable {
         }
     }
 
+    private void showSellLog() {
+        Label[] labels = new Label[7];
+        for (int i = 0; i < 7; i++)
+            labels[i] = new Label();
+        labels[0].setText(showedSellLog.getId() + "");
+        labels[1].setText(showedSellLog.getDate() + "");
+        labels[2].setText(showedSellLog.getCustomerName());
+        labels[3].setText(showedSellLog.getIncomeValue() + "");
+        labels[4].setText(showedSellLog.isSendStatus() + "");
+        labels[5].setText(showedSellLog.getOffValue() + "");
+        labels[6].setText(showedSellLog.getProducts() + "");
+        labels[6].setWrapText(true);
+        gridPane.addRow(1, labels[0], labels[1], labels[2], labels[3], labels[4], labels[5], labels[6]);
+        for (int i = 0; i < 7; i++) {
+            GridPane.setHalignment(labels[i], HPos.CENTER);
+            GridPane.setValignment(labels[i], VPos.CENTER);
+            labels[i].setTextFill(Color.valueOf("ebe9e9"));
+        }
+    }
+
     private void resetAll()
     {
         for (int i = 1; i < manageProductsVBox.getChildren().size();)
@@ -171,40 +202,10 @@ public class SellerMenuUI implements Initializable {
     @FXML
     private void setupInitialEditOffer()
     {
+        startDateOffer.setValue(LocalDate.now());
+        endDateOffer.setValue(LocalDate.now());
         offerProducts = selectedOffer.getProducts();
-        startDayOffer.setText(selectedOffer.getStartingTime().getDay() + "");
-        startMonthOffer.setText(selectedOffer.getStartingTime().getMonth() + "");
-        startYearOffer.setText(selectedOffer.getStartingTime().getYear() + "");
-        endDayOffer.setText(selectedOffer.getEndingTime().getDay() + "");
-        endMonthOffer.setText(selectedOffer.getEndingTime().getMonth() + "");
-        endYearOffer.setText(selectedOffer.getEndingTime().getYear() + "");
         offPercentOffer.setText(String.valueOf(selectedOffer.getOffPercent()));
-        plusFilterOffer.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
-            if (!filterTextField.getText().isEmpty())
-            {
-                try {
-                    SellerUIController.addFilterToOffer(seller, selectedOffer, filterTextField.getText());
-                }catch (Exception exception)
-                {
-                    throwError(exception.getMessage());
-                }
-            }
-            else
-                throwError("Filter Field is Empty");
-        });
-        minesFilterOffer.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
-            if (!filterTextField.getText().isEmpty())
-            {
-                try {
-                    SellerUIController.removeFilterFromOffer(seller, selectedOffer.getOffID() + "", filterTextField.getText());
-                }catch (Exception exception)
-                {
-                    throwError(exception.getMessage());
-                }
-            }
-            else
-                throwError("Filter Field is Empty");
-        });
         plusProductOffer.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             if (!productIDInOffer.getText().isEmpty())
             {
@@ -249,19 +250,8 @@ public class SellerMenuUI implements Initializable {
     @FXML
     private void setupInitialAddOffer()
     {
-        plusFilterOffer.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
-            if (!filterTextField.getText().isEmpty())
-            {
-                try {
-                    SellerUIController.addFilterToOffer(seller, selectedOffer, filterTextField.getText());
-                }catch (Exception exception)
-                {
-                    throwError(exception.getMessage());
-                }
-            }
-            else
-                throwError("Filter Field is Empty");
-        });
+        startDateOffer.setValue(LocalDate.now());
+        endDateOffer.setValue(LocalDate.now());
         plusProductOffer.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             if (!productIDInOffer.getText().isEmpty())
             {
@@ -382,11 +372,8 @@ public class SellerMenuUI implements Initializable {
             Offer offer = createOffer(seller);
             for (Product product: selectedOffer.getProducts())
                 offer.addProduct(product);
-            ArrayList<String> filters = selectedOffer.getFilters();
-            for (String filter: filters)
-                offer.addFilter(filter);
             SellerUIController.addOff(seller, offer);
-            ((Stage) filterTextField.getScene().getWindow()).close();
+            ((Stage) offPercentOffer.getScene().getWindow()).close();
             menuState = "offer";
             showSellerMenu();
         }catch (Exception exception)
@@ -401,11 +388,8 @@ public class SellerMenuUI implements Initializable {
             Offer offer = createOffer(seller);
             for (Product product: selectedOffer.getProducts())
                 offer.addProduct(product);
-            ArrayList<String> filters = selectedOffer.getFilters();
-            for (String filter: filters)
-                offer.addFilter(filter);
             SellerUIController.editOff(seller, selectedOffer, offer);
-            ((Stage) filterTextField.getScene().getWindow()).close();
+            ((Stage) offPercentOffer.getScene().getWindow()).close();
             menuState = "offer";
             showSellerMenu();
         }catch (Exception exception)
@@ -467,7 +451,7 @@ public class SellerMenuUI implements Initializable {
     private Offer createOffer(Seller seller) throws Exception {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy");
 
-        String input = startDayOffer.getText() + "-" + startMonthOffer.getText() + "-" + (Integer.parseInt(startYearOffer.getText()) + 1900);
+        String input = startDateOffer.getValue().getDayOfMonth() + "-" + startDateOffer.getValue().getMonth().getValue() + "-" + startDateOffer.getValue().getYear();
         Date startingTime, endingTime;
         try {
             startingTime = dateFormat.parse(input);
@@ -475,8 +459,8 @@ public class SellerMenuUI implements Initializable {
         catch (ParseException exception) {
             throw new Exception("Invalid date format!");
         }
-
-        input = endDayOffer.getText() + "-" + endMonthOffer.getText() + "-" + (Integer.parseInt(endYearOffer.getText()) + 1900);
+        System.out.println(startingTime);
+        input = endDateOffer.getValue().getDayOfMonth() + "-" + endDateOffer.getValue().getMonth().getValue() + "-" + endDateOffer.getValue().getYear();
         try {
             endingTime = dateFormat.parse(input);
         }
@@ -633,7 +617,7 @@ public class SellerMenuUI implements Initializable {
             }
         });
         ArrayList<VBox> vBoxes = new ArrayList<>();
-        for (int j = 0; j < 7; j++) {
+        for (int j = 0; j < 6; j++) {
             vBoxes.add(new VBox());
             vBoxes.get(j).setAlignment(Pos.CENTER);
             vBoxes.get(j).setPrefWidth(100);
@@ -644,23 +628,20 @@ public class SellerMenuUI implements Initializable {
         Label id = new Label(), offPercent = new Label(), startDate = new Label(), endDate = new Label();
         id.setText(offer.getOffID() + "");
         offPercent.setText(offer.getOffPercent() + "");
-        startDate.setText(offer.getStartingTime().getYear() + "/" + offer.getStartingTime().getMonth() + "/" + offer.getStartingTime().getDay());
-        endDate.setText(offer.getEndingTime().getYear() + "/" + offer.getEndingTime().getMonth() + "/" + offer.getEndingTime().getDay());
-        TextArea filters = new TextArea(), products = new TextArea();
-        filters.setEditable(false);         products.setEditable(false);
-        for (String filter: offer.getFilters())
-            filters.setText(filters.getText() + "-" + filter + "\n");
+        startDate.setText(offer.getStartingTime() + "");
+        endDate.setText(offer.getEndingTime() + "");
+        TextArea products = new TextArea();
+        products.setEditable(false);
         for (Product product: offer.getProducts())
             products.setText(products.getText() + "-" + product.getName() + "------" + product.getBrand() + "\n");
-        filters.setMaxWidth(100);       products.setMaxWidth(100);
+        products.setMaxWidth(100);
         vBoxes.get(0).getChildren().addAll(id);
         vBoxes.get(1).getChildren().add(offPercent);
         vBoxes.get(2).getChildren().add(startDate);
         vBoxes.get(3).getChildren().add(endDate);
-        vBoxes.get(4).getChildren().add(filters);
-        vBoxes.get(5).getChildren().add(products);
-        vBoxes.get(6).getChildren().add(edit);
-        for (int j = 0; j < 7; j++)
+        vBoxes.get(4).getChildren().add(products);
+        vBoxes.get(5).getChildren().add(edit);
+        for (int j = 0; j < 6; j++)
             hBox.getChildren().add(vBoxes.get(j));
         myOffersVBox.getChildren().add(hBox);
     }
@@ -688,6 +669,7 @@ public class SellerMenuUI implements Initializable {
         remove.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             SellerUIController.removeProduct(seller, product);
             menuState = "product";
+            showSellerMenu();
         });
         /*productView.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             try {
@@ -748,36 +730,48 @@ public class SellerMenuUI implements Initializable {
         hBox.setSpacing(20);
         Label dateText = new Label();
         Label customerText = new Label();
-        TextArea productsText = new TextArea();
+        /*TextArea productsText = new TextArea();
         Label incomeText = new Label();
         Label offValueText = new Label();
         Label sendStatusText = new Label();
-        dateText.setText((sellLog.getDate().getYear() + 1900) + "/" + sellLog.getDate().getMonth() + "/" + sellLog.getDate().getDay());
-        incomeText.setText(String.valueOf(sellLog.getIncomeValue()));
+        */dateText.setText((sellLog.getDate().getYear()) + "/" + sellLog.getDate().getMonth() + "/" + sellLog.getDate().getDay());
+        /*incomeText.setText(String.valueOf(sellLog.getIncomeValue()));
         offValueText.setText(String.valueOf(sellLog.getOffValue()));
         if (sellLog.isSendStatus())
             sendStatusText.setText("Arrived");
         else
             sendStatusText.setText("Not Arrived");
-        customerText.setText(sellLog.getCustomerName());
-        for(Product product: sellLog.getProducts())
+        */customerText.setText(sellLog.getCustomerName());
+        /*for(Product product: sellLog.getProducts())
             productsText.setText(productsText.getText() + "\n-" + product.getName() + "-----" + product.getBrand());
         productsText.setEditable(false);
-        VBox vBox1 = new VBox(), vBox2 = new VBox(), vBox3 = new VBox(), vBox4 = new VBox(), vBox5 = new VBox(), vBox6 = new VBox();
+        */VBox vBox1 = new VBox(), vBox2 = new VBox(), vBox3 = new VBox(), vBox4 = new VBox(), vBox5 = new VBox(), vBox6 = new VBox();
         vBox1.getChildren().add(dateText);
         vBox2.getChildren().add(customerText);
-        vBox3.getChildren().add(incomeText);
+        Button details = new Button("View Details");
+        details.setOnAction(e -> {
+            showedSellLog = sellLog;
+            try {
+                openStage("sellLog");
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+        vBox3.getChildren().add(details);
+        /*vBox3.getChildren().add(incomeText);
         vBox4.getChildren().add(offValueText);
         vBox5.getChildren().add(sendStatusText);
         vBox6.getChildren().add(productsText);
-        vBox1.setPrefWidth(100);    vBox1.setAlignment(Pos.CENTER);
+        */vBox1.setPrefWidth(200);    vBox1.setAlignment(Pos.CENTER);
         vBox2.setPrefWidth(100);    vBox2.setAlignment(Pos.CENTER);
         vBox3.setPrefWidth(100);    vBox3.setAlignment(Pos.CENTER);
-        vBox4.setPrefWidth(100);    vBox4.setAlignment(Pos.CENTER);
+        /*vBox4.setPrefWidth(100);    vBox4.setAlignment(Pos.CENTER);
         vBox5.setPrefWidth(100);    vBox5.setAlignment(Pos.CENTER);
         vBox6.setPrefWidth(240);    vBox6.setAlignment(Pos.CENTER);
         productsText.setEditable(false);
         hBox.getChildren().addAll(vBox3, vBox4, vBox2, vBox5, vBox1, vBox6);
+        */
+        hBox.getChildren().addAll(vBox1, vBox2, vBox3);
         viewSalesVBox.getChildren().add(hBox);
     }
 
@@ -793,6 +787,8 @@ public class SellerMenuUI implements Initializable {
         ImageView imageView = new ImageView();
         hBox1.setAlignment(Pos.CENTER_LEFT);        hBox2.setAlignment(Pos.CENTER_LEFT);
         imageView.setFitWidth(133);     imageView.setFitHeight(131);
+        System.out.println(customer1);
+        System.out.println(customer2);
         username.setText(customer1.getUsername());
         email.setText(customer1.getEmail());
         phoneNumber.setText(customer1.getPhoneNumber());
@@ -855,6 +851,40 @@ public class SellerMenuUI implements Initializable {
         companyInformation = companyInformationTextField.getText();
         companyName = companyNameTextField.getText();
         openStage("enterPass");
+    }
+
+    public void changePic() throws IOException {
+        openStage("imagePath");
+    }
+
+    public void doneImageButton()
+    {
+        if (imagePath.getText().isEmpty())
+            throwError("Path field is empty!");
+        else{
+            seller.setProfilePicturePath(imagePath.getText());
+            ((Stage)imagePath.getScene().getWindow()).close();
+        }
+    }
+
+    public void doneAdsButton()
+    {
+        try {
+            if (requestedProductId.getText().isEmpty())
+                throwError("ID is empty!");
+            else if (!Pattern.matches("\\d+", requestedProductId.getText()))
+                throwError("Invalid Format");
+            else {
+                SellerUIController.addAds(seller, Integer.parseInt(requestedProductId.getText()));
+                ((Stage)requestedProductId.getScene().getWindow()).close();
+            }
+        }catch (Exception e) {
+            throwError(e.getMessage());
+        }
+    }
+
+    public void adsButtonClicked() throws IOException {
+        openStage("adsRequest");
     }
 
     public void editPasswordSubmit()
@@ -921,6 +951,21 @@ public class SellerMenuUI implements Initializable {
         {
             Parent root = FXMLLoader.load(SignUpManagerMenuUI.class.getClassLoader().getResource("FXML/ChangePasswordSeller.fxml"));
             Main.setupOtherStage(new Scene(root), "Change password");
+        }
+        else if (lock.equalsIgnoreCase("imagePath"))
+        {
+            Parent root = FXMLLoader.load(SignUpAndLoginMenu.class.getClassLoader().getResource("FXML/ImagePathSeller.fxml"));
+            Main.setupOtherStage(new Scene(root), "Image Path");
+        }
+        else if (lock.equalsIgnoreCase("adsRequest"))
+        {
+            Parent root = FXMLLoader.load(SignUpAndLoginMenu.class.getClassLoader().getResource("FXML/RequestAds.fxml"));
+            Main.setupOtherStage(new Scene(root), "Request Advertisement");
+        }
+        else if (lock.equalsIgnoreCase("sellLog"))
+        {
+            Parent root = FXMLLoader.load(SignUpAndLoginMenu.class.getClassLoader().getResource("FXML/SellLog.fxml"));
+            Main.setupOtherStage(new Scene(root), "Sell Log");
         }
     }
 

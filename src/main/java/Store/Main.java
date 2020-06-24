@@ -82,6 +82,7 @@ public class Main extends Application {
 //        Manager.checkPeriodOffCode();
         setTest();
         MainMenuUIController.currentUser = MainMenuUIController.guest;
+      //  Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
 
         launch(args);
     }
@@ -136,6 +137,7 @@ public class Main extends Application {
         manager1.addNewManager(manager2);
 
         Product product1 = new Product(CheckingStatus.CREATION, null, "product1", seller1, "brand1", 10, true, "describe");
+        product1.setVideoPath("grb_2.mp4");
         Product product2 = new Product(CheckingStatus.CREATION, null, "product2", seller2, "brand1", 5, true, "describe");
         Product product3 = new Product(CheckingStatus.CREATION, null, "product3", seller1, "brand1", 10, true, "describe");
         Product product4 = new Product(CheckingStatus.CREATION, null, "product3", seller2, "brand1", 15.5, true, "describe");
@@ -159,13 +161,13 @@ public class Main extends Application {
 
         OffCode offCode1 = new OffCode("ce98", 30, 10, 2);
         offCode1.setEndingTime(new Date(2025, 5, 4));
-        offCode1.setStartingTime(new Date(120, 3, 4));
+        offCode1.setStartingTime(new Date(2020, 3, 4));
         OffCode offCode2 = new OffCode("AP2", 60, 5, 1);
-        offCode2.setEndingTime(new Date(120, 5, 4));
-        offCode2.setStartingTime(new Date(120, 3, 4));
+        offCode2.setEndingTime(new Date(2026, 5, 4));
+        offCode2.setStartingTime(new Date(2019, 3, 4));
         OffCode offCode3 = new OffCode("AP333", 60, 5, 1);
-        offCode3.setEndingTime(new Date(120, 5, 4));
-        offCode3.setStartingTime(new Date(120, 3, 4));
+        offCode3.setEndingTime(new Date(2500, 5, 4));
+        offCode3.setStartingTime(new Date(1400, 3, 4));
         manager1.addOffCode(offCode1);
         manager1.addOffCode(offCode2);
         manager1.addOffCode(offCode3);

@@ -25,6 +25,9 @@ public abstract class LogItem implements Serializable {
         return productList;
     }
 
+    public int getId() {
+        return id;
+    }
 
     @Override
     public abstract String toString();

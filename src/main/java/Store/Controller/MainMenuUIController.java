@@ -24,6 +24,14 @@ public class MainMenuUIController {
         return staticAdLower;
     }
 
+    public static void setStaticAdUpper(Product staticAdUpper) {
+        MainMenuUIController.staticAdUpper = staticAdUpper;
+    }
+
+    public static void setStaticAdLower(Product staticAdLower) {
+        MainMenuUIController.staticAdLower = staticAdLower;
+    }
+
     public static Product getStaticAdUpper() {
         return staticAdUpper;
     }
