@@ -20,6 +20,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
@@ -31,6 +33,9 @@ import java.util.Date;
 public class Main extends Application {
     private static Stage applicationStage;
     private static Stage otherStage = new Stage();
+
+    private static Media backgroundMusic;
+    private static MediaPlayer backgroundPlayer;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -71,6 +76,8 @@ public class Main extends Application {
         primaryStage.setTitle("Shop");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
+
+        setupBGM();
     }
 
 
@@ -85,6 +92,14 @@ public class Main extends Application {
       //  Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
 
         launch(args);
+    }
+
+    public static void setupBGM() {
+        backgroundMusic = new Media(Main.class.getResource("/Audio/Tarantulas_by_Christian_Nanzell_Trimmed.wav").toExternalForm());
+        backgroundPlayer = new MediaPlayer(backgroundMusic);
+        backgroundPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        backgroundPlayer.setVolume(0.5);
+        backgroundPlayer.play();
     }
 
     public static void setupOtherStage(Scene scene, String title) {

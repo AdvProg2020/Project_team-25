@@ -27,7 +27,7 @@
             <children>
                 <HBox alignment="CENTER_LEFT" prefHeight="77.0" prefWidth="247.0" style="-fx-background-color: #FA2C56; -fx-background-radius: 5;">
                     <children>
-                        <Label fx:id="currentScreenTitle" text="Main Menu" textFill="WHITE">
+                        <Label id="currentScreenTitle" text="Offers Menu" textFill="WHITE">
                             <font>
                                 <Font name="Dyuthi" size="24.0" />
                             </font>

@@ -393,7 +393,11 @@ public class OffersMenuUI {
         productShouldPaidPrice.setAlignment(Pos.CENTER_LEFT);
         productPrice.setAlignment(Pos.CENTER_RIGHT);
 
-        isAvailable.setStyle(product.getAvailablity() ? "-fx-background-color: #BFFF00;" : "-fx-background-color: #C40233;");
+        if (!product.getAvailablity()) {
+            productInfo.setId("unavailableProduct");
+        } else {
+            isAvailable.setStyle(product.getAvailablity() ? "-fx-background-color: #BFFF00;" : "-fx-background-color: #C40233;");
+        }
         gridPane.add(productPrice, 0, 0);
         gridPane.add(productShouldPaidPrice, 1, 0);
         productName.setId("productName");

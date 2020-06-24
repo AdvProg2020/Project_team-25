@@ -21,116 +21,93 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="mainNode" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
-      prefWidth="1200.0" stylesheets="@../CSS/products_stylesheet.css" xmlns="http://javafx.com/javafx/8"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="Store.View.ProductsMenuUI">
+<HBox fx:id="mainNode" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" stylesheets="@../CSS/products_stylesheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Store.View.ProductsMenuUI">
     <children>
-        <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="250.0"
-              style="-fx-background-color: #3F2563; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);"
-              styleClass="quickAccess" stylesheets="@../CSS/general_stylesheet.css">
+        <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="250.0" style="-fx-background-color: #3F2563; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" styleClass="quickAccess" stylesheets="@../CSS/general_stylesheet.css">
             <children>
-                <HBox alignment="CENTER_LEFT" prefHeight="77.0" prefWidth="247.0"
-                      style="-fx-background-color: #FA2C56; -fx-background-radius: 5;">
+                <HBox alignment="CENTER_LEFT" prefHeight="77.0" prefWidth="247.0" style="-fx-background-color: #FA2C56; -fx-background-radius: 5;">
                     <children>
-                        <Label fx:id="currentScreenTitle" text="Main Menu" textFill="WHITE">
-                            <font>
-                                <Font name="Dyuthi" size="24.0"/>
-                            </font>
+                        <Label id="currentScreenTitle" text="Products Menu" textFill="WHITE">
                         </Label>
                     </children>
                     <padding>
-                        <Insets left="25.0"/>
+                        <Insets left="25.0" />
                     </padding>
                 </HBox>
-                <Separator orientation="VERTICAL" prefHeight="48.0" prefWidth="6.0" visible="false"/>
-                <Button id="mainMenuButton" fx:id="mainMenuButton" graphicTextGap="6.0" mnemonicParsing="false"
-                        prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton"
-                        stylesheets="@../CSS/general_stylesheet.css" text="Main Menu">
+                <Separator orientation="VERTICAL" prefHeight="48.0" prefWidth="6.0" visible="false" />
+                <Button id="mainMenuButton" fx:id="mainMenuButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Main Menu">
                     <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../Icons/MainMenu.png"/>
+                                <Image url="@../Icons/MainMenu.png" />
                             </image>
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button id="productsButton" fx:id="productsButton" disable="true" graphicTextGap="6.0"
-                        mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton"
-                        stylesheets="@../CSS/general_stylesheet.css" text="Products">
+                <Button id="productsButton" fx:id="productsButton" disable="true" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Products">
                     <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../Icons/Products.png"/>
+                                <Image url="@../Icons/Products.png" />
                             </image>
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button id="offersButton" fx:id="offersButton" graphicTextGap="6.0" mnemonicParsing="false"
-                        prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton"
-                        stylesheets="@../CSS/general_stylesheet.css" text="Offers">
+                <Button id="offersButton" fx:id="offersButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Offers">
                     <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../Icons/Offers.png"/>
+                                <Image url="@../Icons/Offers.png" />
                             </image>
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button fx:id="userPageButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0"
-                        prefWidth="234.0" styleClass="quickAccessMenuButton"
-                        stylesheets="@../CSS/general_stylesheet.css" text="User Page">
+                <Button fx:id="userPageButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="User Page">
                     <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../Icons/User_Page.png"/>
+                                <Image url="@../Icons/User_Page.png" />
                             </image>
                         </ImageView>
                     </graphic>
                 </Button>
-                <Separator orientation="VERTICAL" prefHeight="98.0" prefWidth="6.0" visible="false"/>
+                <Separator orientation="VERTICAL" prefHeight="98.0" prefWidth="6.0" visible="false" />
                 <GridPane vgap="5.0">
                     <children>
-                        <Button fx:id="signUpButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="30.0"
-                                prefWidth="110.0" styleClass="quickAccessLoginSignUpButton"
-                                stylesheets="@../CSS/general_stylesheet.css" text="Sign Up" GridPane.columnIndex="1">
+                        <Button fx:id="signUpButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="110.0" styleClass="quickAccessLoginSignUpButton" stylesheets="@../CSS/general_stylesheet.css" text="Sign Up" GridPane.columnIndex="1">
                             <graphic>
                                 <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../Icons/SignUp.png"/>
+                                        <Image url="@../Icons/SignUp.png" />
                                     </image>
                                 </ImageView>
                             </graphic>
                         </Button>
-                        <Button fx:id="loginLogoutButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="30.0"
-                                prefWidth="110.0" styleClass="quickAccessLoginSignUpButton"
-                                stylesheets="@../CSS/general_stylesheet.css" text="Login" GridPane.columnIndex="1"
-                                GridPane.rowIndex="1">
+                        <Button fx:id="loginLogoutButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="110.0" styleClass="quickAccessLoginSignUpButton" stylesheets="@../CSS/general_stylesheet.css" text="Login" GridPane.columnIndex="1" GridPane.rowIndex="1">
                             <graphic>
-                                <ImageView id="loginLogoutButtonIcon" fx:id="loginLogoutButtonIcon" fitHeight="20.0"
-                                           fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                <ImageView id="loginLogoutButtonIcon" fx:id="loginLogoutButtonIcon" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../Icons/Login.png"/>
+                                        <Image url="@../Icons/Login.png" />
                                     </image>
                                 </ImageView>
                             </graphic>
                         </Button>
-                        <Label text="Login Status:" textFill="#7f7f7f"/>
-                        <Label id="loggedInStatusText" fx:id="loggedInStatusText" text="Not Logged In"
-                               textFill="#7f7f7f" GridPane.rowIndex="1"/>
+                        <Label text="Login Status:" textFill="#7f7f7f" />
+                        <Label id="loggedInStatusText" fx:id="loggedInStatusText" text="Not Logged In" textFill="#7f7f7f" GridPane.rowIndex="1" />
                     </children>
                     <columnConstraints>
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                 </GridPane>
-                <Separator orientation="VERTICAL" prefHeight="27.0" prefWidth="7.0" visible="false"/>
+                <Separator orientation="VERTICAL" prefHeight="27.0" prefWidth="7.0" visible="false" />
             </children>
             <opaqueInsets>
-                <Insets/>
+                <Insets />
             </opaqueInsets>
         </VBox>
         <TabPane prefHeight="200.0" prefWidth="950.0" tabClosingPolicy="UNAVAILABLE">
@@ -141,76 +118,59 @@
                             <children>
                                 <HBox prefHeight="50.0" prefWidth="200.0">
                                     <children>
-                                        <Button fx:id="showCategoryButton" id="showCategoryButton"
-                                                mnemonicParsing="false" prefHeight="75.0" prefWidth="200.0"
-                                                text="Categories">
+                                        <Button id="showCategoryButton" fx:id="showCategoryButton" mnemonicParsing="false" prefHeight="75.0" prefWidth="200.0" text="Categories">
                                             <graphic>
-                                                <ImageView fitHeight="48.0" fitWidth="44.0" pickOnBounds="true"
-                                                           preserveRatio="true">
+                                                <ImageView fitHeight="48.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
                                                     <image>
-                                                        <Image url="@../Icons/MainMenu.png"/>
+                                                        <Image url="@../Icons/MainMenu.png" />
                                                     </image>
                                                 </ImageView>
                                             </graphic>
                                         </Button>
-                                        <Region prefHeight="200.0" prefWidth="500.0"/>
-                                        <Button id="searchButton" fx:id="searchButton" disable="true"
-                                                mnemonicParsing="false" prefHeight="51.0" prefWidth="49.0">
+                                        <Region prefHeight="200.0" prefWidth="500.0" />
+                                        <Button id="searchButton" fx:id="searchButton" disable="true" mnemonicParsing="false" prefHeight="51.0" prefWidth="49.0">
                                             <graphic>
-                                                <ImageView fitHeight="33.0" fitWidth="45.0" pickOnBounds="true"
-                                                           preserveRatio="true">
+                                                <ImageView fitHeight="33.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                                                     <image>
-                                                        <Image url="@../Icons/Search.png"/>
+                                                        <Image url="@../Icons/Search.png" />
                                                     </image>
                                                 </ImageView>
                                             </graphic>
                                         </Button>
-                                        <TextField fx:id="searchString" prefHeight="50.0" prefWidth="240.0"/>
+                                        <TextField fx:id="searchString" prefHeight="50.0" prefWidth="240.0" />
                                     </children>
                                 </HBox>
                                 <HBox prefHeight="50.0" prefWidth="200.0">
                                     <children>
-                                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="41.0"
-                                               prefWidth="100.0" text="Sort By" wrapText="true">
+                                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="41.0" prefWidth="100.0" text="Sort By" wrapText="true">
                                             <font>
-                                                <Font size="18.0"/>
+                                                <Font size="18.0" />
                                             </font>
                                         </Label>
-                                        <ComboBox id="sortChoiceBox" fx:id="sortChoiceBox" prefWidth="150.0"
-                                                  promptText="---"/>
-                                        <Region prefHeight="50.0" prefWidth="150.0"/>
-                                        <Button id="previousPageButton" fx:id="previousPageButton"
-                                                alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false"
-                                                prefHeight="46.0" prefWidth="55.0" text="&lt;&lt;"
-                                                textAlignment="CENTER">
+                                        <ComboBox id="sortChoiceBox" fx:id="sortChoiceBox" prefWidth="150.0" promptText="---" />
+                                        <Region prefHeight="50.0" prefWidth="150.0" />
+                                        <Button id="previousPageButton" fx:id="previousPageButton" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="46.0" prefWidth="55.0" text="&lt;&lt;" textAlignment="CENTER">
                                             <font>
-                                                <Font size="36.0"/>
+                                                <Font size="36.0" />
                                             </font>
                                         </Button>
-                                        <TextField fx:id="pageNumberField" alignment="CENTER" prefHeight="46.0"
-                                                   prefWidth="54.0" text="1"/>
-                                        <Button id="nextPageButton" fx:id="nextPageButton" alignment="BOTTOM_LEFT"
-                                                contentDisplay="CENTER" mnemonicParsing="false" prefHeight="46.0"
-                                                prefWidth="55.0" text="&gt;&gt;" textAlignment="CENTER"/>
-                                        <Region prefHeight="200.0" prefWidth="200.0"/>
-                                        <CheckBox fx:id="showAvailableCheckBox" mnemonicParsing="false"
-                                                  text="Show Availables"/>
+                                        <TextField fx:id="pageNumberField" alignment="CENTER" prefHeight="46.0" prefWidth="54.0" text="1" />
+                                        <Button id="nextPageButton" fx:id="nextPageButton" alignment="BOTTOM_LEFT" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="46.0" prefWidth="55.0" text="&gt;&gt;" textAlignment="CENTER" />
+                                        <Region prefHeight="200.0" prefWidth="200.0" />
+                                        <CheckBox fx:id="showAvailableCheckBox" mnemonicParsing="false" text="Show Availables" />
                                     </children>
                                 </HBox>
-                                <Separator prefWidth="200.0" style="-fx-border-color: black;"/>
+                                <Separator prefWidth="200.0" style="-fx-border-color: black;" />
                                 <ScrollPane fx:id="productsList" prefHeight="450.0" prefWidth="950.0">
                                     <content>
                                         <HBox prefHeight="450.0" prefWidth="950.0">
                                             <children>
-                                                <Region prefHeight="200.0" prefWidth="25.0"/>
-                                                <VBox fx:id="firstColumn" alignment="TOP_CENTER" prefHeight="0.0"
-                                                      prefWidth="300.0"/>
-                                                <VBox fx:id="secondColumn" alignment="TOP_CENTER" layoutX="10.0"
-                                                      layoutY="10.0" prefHeight="0.0" prefWidth="300.0"/>
-                                                <VBox fx:id="thirdColumn" alignment="TOP_CENTER" layoutX="310.0"
-                                                      layoutY="10.0" prefHeight="0.0" prefWidth="300.0">
+                                                <Region prefHeight="200.0" prefWidth="25.0" />
+                                                <VBox fx:id="firstColumn" alignment="TOP_CENTER" prefHeight="0.0" prefWidth="300.0" />
+                                                <VBox fx:id="secondColumn" alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" prefHeight="0.0" prefWidth="300.0" />
+                                                <VBox fx:id="thirdColumn" alignment="TOP_CENTER" layoutX="310.0" layoutY="10.0" prefHeight="0.0" prefWidth="300.0">
                                                     <opaqueInsets>
-                                                        <Insets/>
+                                                        <Insets />
                                                     </opaqueInsets>
                                                 </VBox>
                                             </children>
@@ -227,33 +187,27 @@
                             <children>
                                 <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="475.0">
                                     <children>
-                                        <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" text="Static Filters"
-                                               textAlignment="CENTER"/>
+                                        <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" text="Static Filters" textAlignment="CENTER" />
                                         <HBox prefHeight="149.0" prefWidth="467.0">
                                             <children>
                                                 <VBox alignment="TOP_CENTER" prefHeight="98.0" prefWidth="328.0">
                                                     <children>
-                                                        <Label text="Price Low"/>
-                                                        <Slider fx:id="priceLowSlider" showTickLabels="true"
-                                                                showTickMarks="true" snapToTicks="true"/>
-                                                        <Label text="Price High"/>
-                                                        <Slider fx:id="priceHighSlider" showTickLabels="true"
-                                                                showTickMarks="true" snapToTicks="true"/>
+                                                        <Label text="Price Low" />
+                                                        <Slider fx:id="priceLowSlider" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+                                                        <Label text="Price High" />
+                                                        <Slider fx:id="priceHighSlider" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
                                                     </children>
                                                 </VBox>
                                                 <VBox prefHeight="147.0" prefWidth="138.0">
                                                     <children>
-                                                        <Label fx:id="priceLowLabel" prefHeight="63.0" prefWidth="136.0"
-                                                               textAlignment="CENTER">
+                                                        <Label fx:id="priceLowLabel" prefHeight="63.0" prefWidth="136.0" textAlignment="CENTER">
                                                             <font>
-                                                                <Font size="18.0"/>
+                                                                <Font size="18.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label fx:id="priceHighLabel" layoutX="50.0" layoutY="65.0"
-                                                               prefHeight="74.0" prefWidth="136.0"
-                                                               textAlignment="CENTER">
+                                                        <Label fx:id="priceHighLabel" layoutX="50.0" layoutY="65.0" prefHeight="74.0" prefWidth="136.0" textAlignment="CENTER">
                                                             <font>
-                                                                <Font size="18.0"/>
+                                                                <Font size="18.0" />
                                                             </font>
                                                         </Label>
                                                     </children>
@@ -262,62 +216,53 @@
                                         </HBox>
                                         <HBox prefHeight="100.0" prefWidth="200.0">
                                             <children>
-                                                <Label alignment="CENTER_RIGHT" prefHeight="53.0" prefWidth="155.0"
-                                                       text="Brand Name">
+                                                <Label alignment="CENTER_RIGHT" prefHeight="53.0" prefWidth="155.0" text="Brand Name">
                                                     <font>
-                                                        <Font size="18.0"/>
+                                                        <Font size="18.0" />
                                                     </font>
                                                 </Label>
-                                                <Button id="searchButton" fx:id="searchButton1" disable="true"
-                                                        mnemonicParsing="false" prefHeight="51.0" prefWidth="49.0">
+                                                <Button id="searchButton" fx:id="searchButton1" disable="true" mnemonicParsing="false" prefHeight="51.0" prefWidth="49.0">
                                                     <graphic>
-                                                        <ImageView fitHeight="33.0" fitWidth="45.0" pickOnBounds="true"
-                                                                   preserveRatio="true">
+                                                        <ImageView fitHeight="33.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                                                             <image>
-                                                                <Image url="@../Icons/Search.png"/>
+                                                                <Image url="@../Icons/Search.png" />
                                                             </image>
                                                         </ImageView>
                                                     </graphic>
                                                 </Button>
-                                                <TextField fx:id="searchBrandName" prefHeight="50.0" prefWidth="240.0"/>
+                                                <TextField fx:id="searchBrandName" prefHeight="50.0" prefWidth="240.0" />
                                             </children>
                                         </HBox>
                                         <HBox layoutX="11.0" layoutY="215.0" prefHeight="100.0" prefWidth="200.0">
                                             <children>
-                                                <Label alignment="CENTER_RIGHT" prefHeight="53.0" prefWidth="155.0"
-                                                       text="Seller Name">
+                                                <Label alignment="CENTER_RIGHT" prefHeight="53.0" prefWidth="155.0" text="Seller Name">
                                                     <font>
-                                                        <Font size="18.0"/>
+                                                        <Font size="18.0" />
                                                     </font>
                                                 </Label>
-                                                <Button id="searchButton" disable="true" mnemonicParsing="false"
-                                                        prefHeight="51.0" prefWidth="49.0">
+                                                <Button id="searchButton" disable="true" mnemonicParsing="false" prefHeight="51.0" prefWidth="49.0">
                                                     <graphic>
-                                                        <ImageView fitHeight="33.0" fitWidth="45.0" pickOnBounds="true"
-                                                                   preserveRatio="true">
+                                                        <ImageView fitHeight="33.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                                                             <image>
-                                                                <Image url="@../Icons/Search.png"/>
+                                                                <Image url="@../Icons/Search.png" />
                                                             </image>
                                                         </ImageView>
                                                     </graphic>
                                                 </Button>
-                                                <TextField fx:id="searchSellerName" prefHeight="50.0"
-                                                           prefWidth="240.0"/>
+                                                <TextField fx:id="searchSellerName" prefHeight="50.0" prefWidth="240.0" />
                                             </children>
                                         </HBox>
                                     </children>
                                 </VBox>
-                                <Separator orientation="VERTICAL" prefHeight="200.0"/>
+                                <Separator orientation="VERTICAL" prefHeight="200.0" />
                                 <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="475.0">
                                     <children>
-                                        <Label alignment="BOTTOM_CENTER" contentDisplay="TOP" text="Filters"
-                                               textAlignment="CENTER"/>
+                                        <Label alignment="BOTTOM_CENTER" contentDisplay="TOP" text="Filters" textAlignment="CENTER" />
                                         <HBox alignment="CENTER" prefHeight="472.0" prefWidth="467.0">
                                             <children>
                                                 <ScrollPane prefHeight="470.0" prefWidth="183.0">
                                                     <content>
-                                                        <VBox fx:id="categoryFiltersVBox" prefHeight="469.0"
-                                                              prefWidth="193.0"/>
+                                                        <VBox fx:id="categoryFiltersVBox" prefHeight="469.0" prefWidth="193.0" />
                                                     </content>
                                                 </ScrollPane>
                                             </children>

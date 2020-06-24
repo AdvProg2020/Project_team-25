@@ -8,6 +8,8 @@ import Store.Main;
 import Store.Model.*;
 import Store.Model.Enums.VerifyStatus;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -176,6 +178,8 @@ public class ManagerMenuUI {
     }
 
     private void addOffCode() {
+        ArrayList<Customer> assignedCustomers = new ArrayList<>();
+
         VBox addNewOffCodeContainer = new VBox();
         TextField nameTextField = new TextField();
         TextField maximumOffField = new TextField();
@@ -188,7 +192,8 @@ public class ManagerMenuUI {
         endingDatePicker.setEditable(false);
 
         addNewOffCodeContainer.setAlignment(Pos.TOP_CENTER);
-        addNewOffCodeContainer.setPrefSize(300, 300);
+        addNewOffCodeContainer.getStylesheets().add("CSS/manager_menu_stylesheet.css");
+        addNewOffCodeContainer.setPrefSize(300, 500);
 
         okButton.setOnMouseClicked(event -> {
             double maximumOffValue;
@@ -231,10 +236,41 @@ public class ManagerMenuUI {
                 return;
             }
             Main.errorPopUp("OffCode added.", "confirm", (Stage) okButton.getScene().getWindow());
+            for (Customer assignedCustomer : assignedCustomers) {
+                Manager.assignOffCodeToUser(Manager.getOffCodeByCode(nameTextField.getText()), assignedCustomer);
+            }
             Stage stage = (Stage) okButton.getScene().getWindow();
             stage.close();
             showOffCodes();
         });
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setPrefSize(300, 300);
+        VBox allCustomers = new VBox();
+        allCustomers.setPrefWidth(scrollPane.getPrefWidth());
+
+        scrollPane.setContent(allCustomers);
+        allCustomers.setAlignment(Pos.TOP_CENTER);
+
+        for (User user : User.getAllUsers()) {
+            if (user instanceof Customer) {
+                ToggleButton toggleButton = new ToggleButton(user.getName());
+                toggleButton.setId("customerButton");
+                toggleButton.setAlignment(Pos.TOP_CENTER);
+
+                toggleButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue) {
+                        assignedCustomers.add((Customer) user);
+                    }
+                    else {
+                        assignedCustomers.remove(user);
+                    }
+                });
+                Region region = new Region();
+                region.setPrefHeight(5);
+                allCustomers.getChildren().addAll(toggleButton, region);
+            }
+        }
 
         addNewOffCodeContainer.getChildren().addAll(new Label("Enter Code: "), nameTextField, new Separator(),
                 new Label("Enter Max Off: "), maximumOffField, new Separator(),
@@ -242,6 +278,7 @@ public class ManagerMenuUI {
                 new Label("Enter Usage Counts: "), usageOffField, new Separator(),
                 new Label("Select Starting Date: "), startingDatePicker, new Separator(),
                 new Label("Select Ending Date: "), endingDatePicker, new Separator(),
+                new Label("Select Customers: "), scrollPane, new Separator(),
                 okButton
         );
         Main.setupOtherStage(new Scene(addNewOffCodeContainer), "Add OffCode");
@@ -489,6 +526,7 @@ public class ManagerMenuUI {
                 ManagerController.handleRequest((Manager) MainMenuUIController.currentUser, true, request);
                 acceptButton.setDisable(true);
                 showRequests();
+                showProducts();
             });
             acceptButton.setId("acceptButton");
             acceptButton.setPrefSize(100, 50);

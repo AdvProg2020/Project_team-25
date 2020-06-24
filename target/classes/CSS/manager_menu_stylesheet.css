@@ -172,3 +172,22 @@
     -fx-background-radius: 1em;
     -fx-font-size: 16px;
 }
+
+#currentScreenTitle {
+    -fx-font-size: 24px;
+}
+
+#customerButton {
+    -fx-background-radius: 2em;
+    -fx-font-size: 18px;
+    -fx-background-color: rgba(0, 0, 0, 1);
+    -fx-text-fill: white;
+}
+
+#customerButton:hover {
+    -fx-background-color: rgba(100, 0, 100, 0.6);
+}
+
+#customerButton:selected {
+    -fx-background-color: orange;
+}

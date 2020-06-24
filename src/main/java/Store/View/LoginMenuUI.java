@@ -34,6 +34,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.fxml.FXML;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -48,6 +50,9 @@ public class LoginMenuUI {
     public Button loginButton;
     public Label errorMessage;
 
+    private static Media logoutSoundEffect;
+    private static MediaPlayer soundEffectPlayer;
+
 
     public LoginMenuUI() {
 
@@ -59,6 +64,11 @@ public class LoginMenuUI {
         }
         else {
             MainMenuUIController.setCurrentUser(MainMenuUIController.guest);
+
+            logoutSoundEffect = new Media(LoginMenuUI.class.getResource("/Audio/Bubble-Pop-Sound-Effect.wav").toExternalForm());
+            soundEffectPlayer = new MediaPlayer(logoutSoundEffect);
+            soundEffectPlayer.setVolume(0.5);
+            soundEffectPlayer.play();
         }
     }
 
