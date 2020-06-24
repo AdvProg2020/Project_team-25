@@ -1,5 +1,6 @@
 package Store;
 
+import Store.Controller.MainMenuUIController;
 import Store.Model.*;
 
 import java.io.*;
@@ -28,6 +29,12 @@ public class ResourceHandler {
             Manager.setAllCategories((ArrayList<Category>) objectInputStream.readObject());
             Manager.setOffCodes((ArrayList<OffCode>) objectInputStream.readObject());
             Manager.setPendingRequests((ArrayList<Request>) objectInputStream.readObject());
+
+            MainMenuUIController.staticAdUpper = (Product) objectInputStream.readObject();
+            MainMenuUIController.staticAdLower = (Product) objectInputStream.readObject();
+            for (int adCounter = 0; adCounter < 5; adCounter++) {
+                MainMenuUIController.slideshowAd[adCounter] = (Product) objectInputStream.readObject();
+            }
 
             Product.calculateAllFilters();
 
@@ -65,6 +72,12 @@ public class ResourceHandler {
             objectOutputStream.writeObject(Manager.getAllCategories());
             objectOutputStream.writeObject(Manager.getOffCodes());
             objectOutputStream.writeObject(Manager.getPendingRequests());
+
+            objectOutputStream.writeObject(MainMenuUIController.staticAdUpper);
+            objectOutputStream.writeObject(MainMenuUIController.staticAdLower);
+            for (int adCounter = 0; adCounter < 5; adCounter++) {
+                objectOutputStream.writeObject(MainMenuUIController.slideshowAd[adCounter]);
+            }
 
             objectOutputStream.close();
             outputStream.close();

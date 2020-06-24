@@ -16,9 +16,9 @@ public class MainMenuUIController {
     public static SimpleBooleanProperty isLoggedIn = new SimpleBooleanProperty(false);
     public static SimpleStringProperty loginLogoutButtonText = new SimpleStringProperty("Login");
 
-    private static Product staticAdUpper;
-    private static Product staticAdLower;
-    private static Product[] slideshowAd = new Product[5];
+    public static Product staticAdUpper;
+    public static Product staticAdLower;
+    public static Product[] slideshowAd = new Product[5];
 
     public static Product getStaticAdLower() {
         return staticAdLower;
