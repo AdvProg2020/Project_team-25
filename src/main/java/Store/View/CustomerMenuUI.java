@@ -7,6 +7,7 @@ import Store.Main;
 import Store.Model.*;
 import Store.Model.Log.BuyLogItem;
 import com.jfoenix.animation.alert.CenterTransition;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -24,6 +25,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.spreadsheet.Grid;
@@ -113,6 +115,7 @@ public class CustomerMenuUI implements Initializable {
         else if (menuState.equalsIgnoreCase("buyLog"))
         {
             showBuyLog();
+            menuState = "CustomerMenu";
         }
         else if (menuState.equalsIgnoreCase("enterPass"))
         {
@@ -358,16 +361,13 @@ public class CustomerMenuUI implements Initializable {
     @FXML
     private void setupInitialPersonalMenu()
     {
-        String path;
-        if (customer.getProfilePicturePath() != null){
-            path = customer.getProfilePicturePath();
-            File file = new File(path);
-            profile.setImage(new Image(file.toURI().toString()));
-        }else {
-            path = "src/main/resources/Icons/unknown.png";
-            File file = new File(path);
-            profile.setImage(new Image(file.toURI().toString()));
+        File file = null;
+        if (customer.getProfilePicturePath().equals("")) {
+            file = new File("src/main/resources/Icons/unknown.png");
+        } else {
+            file = new File("src/main/resources/Images/" + customer.getProfilePicturePath());
         }
+        profile = new ImageView(new Image(file.toURI().toString()));
         emailTextField.setText(customer.getEmail());
         firstNameTextField.setText(customer.getName());
         lastNameTextField.setText(customer.getFamilyName());
@@ -585,30 +585,11 @@ public class CustomerMenuUI implements Initializable {
         Image mines = new Image(ProductMenuUI.class.getResource("/Icons/Negative.png").toExternalForm());
         ImageView plusView = new ImageView(plus);
         ImageView minesView = new ImageView(mines);
+        Label plusViewLabel = new Label();      Label minesViewLabel = new Label();
         plusView.setFitWidth(20);       plusView.setFitHeight(20);
         minesView.setFitHeight(20);     minesView.setFitWidth(20);
-        plusView.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-            try {
-                CustomerUIController.increaseProduct(customer, product);
-                menuState = "cart";
-                CustomerMenuUI.showCustomerMenu();
-            }
-            catch (Exception exception)
-            {
-                throwError(exception.getMessage());
-            }
-        });
-        minesView.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-            try {
-                CustomerUIController.decreaseProduct(customer, product);
-                menuState = "cart";
-                CustomerMenuUI.showCustomerMenu();
-            }
-            catch (Exception exception)
-            {
-                throwError(exception.getMessage());
-            }
-        });
+        plusViewLabel.setGraphic(plusView);
+        minesViewLabel.setGraphic(minesView);
         ArrayList<VBox> vBoxes = new ArrayList<>();
         for (int j = 0; j < 12; j++) {
             vBoxes.add(new VBox());
@@ -637,7 +618,7 @@ public class CustomerMenuUI implements Initializable {
         for (String filter: product.getFilters())
             filters.setText(filters.getText() + "-" + filter + "\n");
         filters.setMaxWidth(100);   discription.setMaxWidth(100);
-        vBoxes.get(0).getChildren().addAll(plusView, id, minesView);
+        vBoxes.get(0).getChildren().addAll(plusViewLabel, id, minesViewLabel);
         vBoxes.get(1).getChildren().add(name);
         vBoxes.get(2).getChildren().add(sellerName);
         vBoxes.get(3).getChildren().add(category);
@@ -652,23 +633,45 @@ public class CustomerMenuUI implements Initializable {
         for (int j = 0; j < 12; j++)
             hBox.getChildren().add(vBoxes.get(j));
         HBox imageHBox = new HBox();
-        imageHBox.setMaxHeight(40);      imageHBox.setMinHeight(40);
         imageHBox.setAlignment(Pos.CENTER);
         ImageView imageView = new ImageView();
+        imageView.setFitHeight(10);
+        imageView.setFitWidth(10);
+        File file = null;
+        if (product.getImagePath().equals("")) {
+            file = new File("src/main/resources/Images/images.jpg");
+        } else {
+            file = new File("src/main/resources/Images/" + product.getImagePath());
+        }
+        Image image = new Image(file.toURI().toString());
+        imageView = new ImageView(image);
+        imageHBox.setMaxHeight(40);
         imageView.setFitHeight(40);
         imageView.setFitWidth(40);
-        String path;
-        if (product.getImagePath() != null){
-            path = product.getImagePath();
-            File file = new File(path);
-            imageView.setImage(new Image(file.toURI().toString()));
-        }else {
-            path = "src/main/resources/Images/images.jpg";
-            File file = new File(path);
-            imageView.setImage(new Image(file.toURI().toString()));
-        }
         imageHBox.getChildren().add(imageView);
         cartVBox.getChildren().addAll(hBox, imageHBox);
+        plusViewLabel.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+            try {
+                CustomerUIController.increaseProduct(customer, product);
+                menuState = "cart";
+                setupInitialCart();
+            }
+            catch (Exception exception)
+            {
+                throwError(exception.getMessage());
+            }
+        });
+        minesViewLabel.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+            try {
+                CustomerUIController.decreaseProduct(customer, product);
+                menuState = "cart";
+                setupInitialCart();
+            }
+            catch (Exception exception)
+            {
+                throwError(exception.getMessage());
+            }
+        });
     }
 
     private void showEachDiscountInHBox(OffCode offCode, int quantity)
@@ -764,8 +767,17 @@ public class CustomerMenuUI implements Initializable {
                 menuState = "CustomerMenu";
                 ((Stage)addressTextArea.getScene().getWindow()).close();
                 menuState = "cart";
-                showCustomerMenu();
-                showFactor();
+                setupInitialCart();
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            showFactor();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
             else
                 throwError("Address field is empty!");
@@ -781,7 +793,15 @@ public class CustomerMenuUI implements Initializable {
     }
 
     public void changePic() throws IOException {
-        openStage("imagePath");
+        FileChooser fileChooser = new FileChooser();
+        try {
+            customer.setProfilePicturePath(fileChooser.showOpenDialog(new Stage()).getPath());
+        }
+        catch (Exception exception) {
+            // do nothing
+        }
+        menuState = "personal";
+        showCustomerMenu();
     }
 
     public void submitEditButtonClicked() throws IOException {

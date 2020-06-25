@@ -527,6 +527,9 @@ public class ManagerMenuUI {
                 acceptButton.setDisable(true);
                 showRequests();
                 showProducts();
+                showCategories();
+                showUsers();
+                showOffCodes();
             });
             acceptButton.setId("acceptButton");
             acceptButton.setPrefSize(100, 50);
@@ -557,7 +560,15 @@ public class ManagerMenuUI {
     }
 
     public void setupBindings() {
-        loginLogoutButton.setOnAction((e) -> LoginMenuUI.handleEvent());
+        loginLogoutButton.setOnAction((e) -> {
+            LoginMenuUI.handleEvent();
+            try {
+                Parent root = MainMenuUI.getContent();
+                Main.setPrimaryStageScene(new Scene(root));
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
         addCategoryButton.setOnMouseClicked(event -> addCategory());
         addManagerButton.setOnMouseClicked(event -> {
@@ -615,6 +626,7 @@ public class ManagerMenuUI {
     private void handlePersonalInfo() {
         Manager manager = (Manager) MainMenuUIController.currentUser;
         usernameField.setText(manager.getUsername());
+        usernameField.setDisable(true);
         firstNameField.setText(manager.getName());
         lastNameField.setText(manager.getFamilyName());
         passwordField.setText(manager.getPassword());

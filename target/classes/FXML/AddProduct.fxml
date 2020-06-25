@@ -40,7 +40,7 @@
                   <VBox alignment="TOP_CENTER" prefHeight="439.0" prefWidth="198.0" spacing="12.0">
                      <children>
                         <TextField id="companyNameTextField" fx:id="productName" promptText="Name" stylesheets="@../CSS/signup_stylesheet.css" />
-                        <TextField id="companyNameTextField" fx:id="category" promptText="Category ID" stylesheets="@../CSS/signup_stylesheet.css" />
+                        <ComboBox fx:id="category" prefHeight="25.0" prefWidth="180.0" promptText="---" />
                         <TextField id="companyNameTextField" fx:id="brand" promptText="Brand" stylesheets="@../CSS/signup_stylesheet.css" />
                         <TextField id="companyNameTextField" fx:id="price" promptText="Price" stylesheets="@../CSS/signup_stylesheet.css" />
                         <TextField id="companyNameTextField" fx:id="attributes" promptText="Attributes" stylesheets="@../CSS/signup_stylesheet.css" />

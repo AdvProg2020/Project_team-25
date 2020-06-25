@@ -38,7 +38,7 @@ public class SellerUIController {
             seller.setPhoneNumber(value);
         }
         else if (field.equalsIgnoreCase("password")) {
-            if (value.matches("^[a-zA-Z]\\w{3,14}$")) {
+            if (value.matches("^[a-zA-Z0-9]\\w{3,14}$")) {
                 seller.setPassword(value);
             }
             else {

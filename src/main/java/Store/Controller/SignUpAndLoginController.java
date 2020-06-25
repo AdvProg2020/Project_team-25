@@ -9,7 +9,10 @@ import java.util.ArrayList;
 public class SignUpAndLoginController {
 
     public static void createManager(ArrayList<String> attributes) {
-        new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5));
+        if (Manager.hasManager)
+            ((Manager)MainMenuUIController.currentUser).addNewManager(new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5)));
+        else
+            new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5));
     }
 
     public static void createSeller(ArrayList<String> attributes, double money, String companyName, String companyDescription) {

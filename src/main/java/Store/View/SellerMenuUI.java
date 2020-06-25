@@ -28,6 +28,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -104,7 +105,7 @@ public class SellerMenuUI implements Initializable {
 
     public TextField imagePath;
     public TextField videoPath;
-    public TextField category;
+    public ComboBox category;
     public TextField productName;
     public TextField brand;
     public TextField price;
@@ -114,6 +115,7 @@ public class SellerMenuUI implements Initializable {
     public ImageView plusFilterProduct;
     public ImageView minesFilterProduct;
     String availablityString;
+    String categoryString;
 
     public TextField requestedProductId;
 
@@ -130,6 +132,7 @@ public class SellerMenuUI implements Initializable {
         else if (menuState.equalsIgnoreCase("sellLog"))
         {
             showSellLog();
+            menuState = "SellerMenu";
         }
         else if (menuState.equalsIgnoreCase("imagePath")){
 
@@ -303,9 +306,22 @@ public class SellerMenuUI implements Initializable {
         videoPath.setText(selectedProduct.getVideoPath());
         */
         if (selectedProduct.getCategory() != null)
-            category.setText(selectedProduct.getCategory().getId() + "");
+            categoryString = selectedProduct.getCategory().getName();
         else
-            category.setText("");
+            categoryString = "";
+        ArrayList<String> categories = new ArrayList<>();
+        categories.add("");
+        for (Category category: Manager.getAllCategories())
+            categories.add(category.getName());
+
+        category.setItems(FXCollections.observableArrayList(categories));
+        category.valueProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                categoryString = newValue.toString();
+            }
+        });
+        category.getSelectionModel().select(categoryString);
         productName.setText(selectedProduct.getName());
         brand.setText(selectedProduct.getBrand());
         price.setText(selectedProduct.getPrice() + "");
@@ -314,7 +330,7 @@ public class SellerMenuUI implements Initializable {
         if (selectedProduct.getAvailablity())
             availablityString = "available";
         else
-            availablityString = "inavailable";
+            availablityString = "unavailable";
         availablity.setItems(FXCollections.observableArrayList("Available", "Inavailable"));
         availablity.valueProperty().addListener(new ChangeListener() {
             @Override
@@ -352,6 +368,22 @@ public class SellerMenuUI implements Initializable {
     @FXML
     private void setupInitialAddProduct()
     {
+        if (selectedProduct.getCategory() != null)
+            categoryString = selectedProduct.getCategory().getName();
+        else
+            categoryString = "";
+        ArrayList<String> categories = new ArrayList<>();
+        categories.add("");
+        for (Category category: Manager.getAllCategories())
+            categories.add(category.getName());
+
+        category.setItems(FXCollections.observableArrayList(categories));
+        category.valueProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                categoryString = newValue.toString();
+            }
+        });
         availablityString = "available";
         plusFilterProduct.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             if (!filterTextField.getText().isEmpty())
@@ -425,11 +457,8 @@ public class SellerMenuUI implements Initializable {
     }
 
     private Product createProduct(Seller seller) throws Exception {
-        String attribute = category.getText();
-        if (!StringUtils.isNumeric(attribute) || !Category.hasCategoryWithId(Integer.parseInt(attribute))) {
-            throw new Exception("Invalid category ID!");
-        }
-        Category parent = Category.getCategoryById(Integer.parseInt(attribute));
+        String attribute = categoryString;
+        Category parent = Category.getCategoryByName(categoryString);
         String name = productName.getText();
         String brandString = brand.getText();
         attribute = price.getText();
@@ -559,15 +588,13 @@ public class SellerMenuUI implements Initializable {
     private void setupInitialPersonalMenu()
     {
         String path;
-        if (seller.getProfilePicturePath() != null){
-            path = seller.getProfilePicturePath();
-            File file = new File(path);
-            profile.setImage(new Image(file.toURI().toString()));
-        }else {
-            path = "src/main/resources/Icons/unknown.png";
-            File file = new File(path);
-            profile.setImage(new Image(file.toURI().toString()));
+        File file = null;
+        if (seller.getProfilePicturePath().equals("")) {
+            file = new File("src/main/resources/Icons/unknown.png");
+        } else {
+            file = new File("src/main/resources/Images/" + seller.getProfilePicturePath());
         }
+        profile = new ImageView(new Image(file.toURI().toString()));
         emailTextField.setText(seller.getEmail());
         firstNameTextField.setText(seller.getName());
         lastNameTextField.setText(seller.getFamilyName());
@@ -798,11 +825,13 @@ public class SellerMenuUI implements Initializable {
         username.setText(customer1.getUsername());
         email.setText(customer1.getEmail());
         phoneNumber.setText(customer1.getPhoneNumber());
-        try{
-            imageView.setImage(new Image(customer1.getProfilePicturePath()));
-        }catch(Exception exception){
-            imageView.setImage(new Image(ProductMenuUI.class.getResource("/Icons/unknown.png").toExternalForm()));
+        File file = null;
+        if (customer1.getProfilePicturePath().equals("")) {
+            file = new File("src/main/resources/Icons/unknown.png");
+        } else {
+            file = new File("src/main/resources/Images/" + customer1.getProfilePicturePath());
         }
+        imageView.setImage(new Image(file.toURI().toString()));
         HBox.setMargin(username, new Insets(0, 0, 0, 10));
         hBox1.getChildren().addAll(username, email, phoneNumber, imageView);
         if (customer2 != null)
@@ -813,11 +842,12 @@ public class SellerMenuUI implements Initializable {
             username.setText(customer2.getUsername());
             email.setText(customer2.getEmail());
             phoneNumber.setText(customer2.getPhoneNumber());
-            try{
-                imageView.setImage(new Image(customer1.getProfilePicturePath()));
-            }catch(Exception exception){
-                imageView.setImage(new Image(ProductMenuUI.class.getResource("/Icons/unknown.png").toExternalForm()));
+            if (customer2.getProfilePicturePath().equals("")) {
+                file = new File("src/main/resources/Icons/unknown.png");
+            } else {
+                file = new File("src/main/resources/Images/" + customer2.getProfilePicturePath());
             }
+            imageView.setImage(new Image(file.toURI().toString()));
             hBox2.getChildren().addAll(username, email, phoneNumber, imageView);
         }
         hBox.getChildren().addAll(hBox1, hBox2);
@@ -860,16 +890,46 @@ public class SellerMenuUI implements Initializable {
     }
 
     public void changePic() throws IOException {
-        openStage("imagePath");
+        FileChooser fileChooser = new FileChooser();
+        try {
+            seller.setProfilePicturePath(fileChooser.showOpenDialog(new Stage()).getPath());
+        }
+        catch (Exception exception) {
+            // do nothing
+        }
+        menuState = "personal";
+        showSellerMenu();
     }
 
-    public void doneImageButton()
+//    public void doneImageButton()
+//    {
+//        if (imagePath.getText().isEmpty())
+//            throwError("Path field is empty!");
+//        else{
+//            seller.setProfilePicturePath(imagePath.getText());
+//            ((Stage)imagePath.getScene().getWindow()).close();
+//        }
+//    }
+
+    public void imagePathClicked()
     {
-        if (imagePath.getText().isEmpty())
-            throwError("Path field is empty!");
-        else{
-            seller.setProfilePicturePath(imagePath.getText());
-            ((Stage)imagePath.getScene().getWindow()).close();
+        FileChooser fileChooser = new FileChooser();
+        try {
+            selectedProduct.setImagePath(fileChooser.showOpenDialog(new Stage()).getPath());
+        }
+        catch (Exception exception) {
+            // do nothing
+        }
+    }
+
+    public void videoPathClicked()
+    {
+        FileChooser fileChooser = new FileChooser();
+        try {
+            selectedProduct.setVideoPath(fileChooser.showOpenDialog(new Stage()).getPath());
+        }
+        catch (Exception exception) {
+            // do nothing
         }
     }
 
