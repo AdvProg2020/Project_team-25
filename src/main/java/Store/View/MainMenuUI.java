@@ -17,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
 
 public class MainMenuUI {
@@ -64,12 +65,28 @@ public class MainMenuUI {
 
     private void setupAds() {
         if (MainMenuUIController.getStaticAdUpper() != null) {
-            upperStaticAd.setImage(new Image(this.getClass().getResource("/Images/"
-                    + MainMenuUIController.getStaticAdUpper().getImagePath()).toExternalForm()));
+            String path;
+            if (MainMenuUIController.getStaticAdUpper().getImagePath().isEmpty()) {
+                path = "src/main/resources/Images/Your_Ad_Here.png";
+            }
+            else {
+                path = MainMenuUIController.getStaticAdUpper().getImagePath();
+            }
+
+            File file = new File(path);
+            upperStaticAd.setImage(new Image(file.toURI().toString()));
         }
         if (MainMenuUIController.getStaticAdLower() != null) {
-            lowerStaticAd.setImage(new Image(this.getClass().getResource("/Images/"
-                    + MainMenuUIController.getStaticAdLower().getImagePath()).toExternalForm()));
+            String path;
+            if (MainMenuUIController.getStaticAdLower().getImagePath().isEmpty()) {
+                path = "src/main/resources/Images/Your_Ad_Here.png";
+            }
+            else {
+                path = MainMenuUIController.getStaticAdLower().getImagePath();
+            }
+
+            File file = new File(path);
+            lowerStaticAd.setImage(new Image(file.toURI().toString()));
         }
 
         SequentialTransition slideshow = new SequentialTransition();

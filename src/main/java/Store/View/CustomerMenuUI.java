@@ -361,13 +361,17 @@ public class CustomerMenuUI implements Initializable {
     @FXML
     private void setupInitialPersonalMenu()
     {
-        File file = null;
-        if (customer.getProfilePicturePath().equals("")) {
-            file = new File("src/main/resources/Icons/unknown.png");
-        } else {
-            file = new File("src/main/resources/Images/" + customer.getProfilePicturePath());
+        String path;
+        if (customer.getProfilePicturePath().isEmpty()) {
+            path = "src/main/resources/Images/images.jpg";
         }
-        profile = new ImageView(new Image(file.toURI().toString()));
+        else {
+            path = customer.getProfilePicturePath();
+        }
+
+        File file = new File(path);
+        profile.setImage(new Image(file.toURI().toString()));
+
         emailTextField.setText(customer.getEmail());
         firstNameTextField.setText(customer.getName());
         lastNameTextField.setText(customer.getFamilyName());
@@ -641,7 +645,7 @@ public class CustomerMenuUI implements Initializable {
         if (product.getImagePath().equals("")) {
             file = new File("src/main/resources/Images/images.jpg");
         } else {
-            file = new File("src/main/resources/Images/" + product.getImagePath());
+            file = new File(product.getImagePath());
         }
         Image image = new Image(file.toURI().toString());
         imageView = new ImageView(image);
@@ -654,7 +658,7 @@ public class CustomerMenuUI implements Initializable {
             try {
                 CustomerUIController.increaseProduct(customer, product);
                 menuState = "cart";
-                setupInitialCart();
+                showCustomerMenu();
             }
             catch (Exception exception)
             {
@@ -665,7 +669,7 @@ public class CustomerMenuUI implements Initializable {
             try {
                 CustomerUIController.decreaseProduct(customer, product);
                 menuState = "cart";
-                setupInitialCart();
+                showCustomerMenu();
             }
             catch (Exception exception)
             {
@@ -767,15 +771,11 @@ public class CustomerMenuUI implements Initializable {
                 menuState = "CustomerMenu";
                 ((Stage)addressTextArea.getScene().getWindow()).close();
                 menuState = "cart";
-                setupInitialCart();
+                showFactor();
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        try {
-                            showFactor();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        showCustomerMenu();
                     }
                 });
             }

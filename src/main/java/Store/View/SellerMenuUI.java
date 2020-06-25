@@ -446,7 +446,10 @@ public class SellerMenuUI implements Initializable {
     public void doneEditProduct()
     {
         try {
-            SellerUIController.editProduct(seller, selectedProduct, createProduct(seller));
+            Product product1 = createProduct(seller);
+            product1.setImagePath(selectedProduct.getImagePath());
+            product1.setVideoPath(selectedProduct.getVideoPath());
+            SellerUIController.editProduct(seller, selectedProduct, product1);
             ((Stage) filterTextField.getScene().getWindow()).close();
             menuState = "product";
             showSellerMenu();
@@ -588,13 +591,16 @@ public class SellerMenuUI implements Initializable {
     private void setupInitialPersonalMenu()
     {
         String path;
-        File file = null;
-        if (seller.getProfilePicturePath().equals("")) {
-            file = new File("src/main/resources/Icons/unknown.png");
-        } else {
-            file = new File("src/main/resources/Images/" + seller.getProfilePicturePath());
+        if (seller.getProfilePicturePath().isEmpty()) {
+            path = "src/main/resources/Images/images.jpg";
         }
-        profile = new ImageView(new Image(file.toURI().toString()));
+        else {
+            path = seller.getProfilePicturePath();
+        }
+
+        File file = new File(path);
+        profile.setImage(new Image(file.toURI().toString()));
+
         emailTextField.setText(seller.getEmail());
         firstNameTextField.setText(seller.getName());
         lastNameTextField.setText(seller.getFamilyName());
@@ -829,7 +835,7 @@ public class SellerMenuUI implements Initializable {
         if (customer1.getProfilePicturePath().equals("")) {
             file = new File("src/main/resources/Icons/unknown.png");
         } else {
-            file = new File("src/main/resources/Images/" + customer1.getProfilePicturePath());
+            file = new File(customer1.getProfilePicturePath());
         }
         imageView.setImage(new Image(file.toURI().toString()));
         HBox.setMargin(username, new Insets(0, 0, 0, 10));
@@ -845,7 +851,7 @@ public class SellerMenuUI implements Initializable {
             if (customer2.getProfilePicturePath().equals("")) {
                 file = new File("src/main/resources/Icons/unknown.png");
             } else {
-                file = new File("src/main/resources/Images/" + customer2.getProfilePicturePath());
+                file = new File(customer2.getProfilePicturePath());
             }
             imageView.setImage(new Image(file.toURI().toString()));
             hBox2.getChildren().addAll(username, email, phoneNumber, imageView);
@@ -897,6 +903,7 @@ public class SellerMenuUI implements Initializable {
         catch (Exception exception) {
             // do nothing
         }
+        System.out.println(seller.getProfilePicturePath());
         menuState = "personal";
         showSellerMenu();
     }

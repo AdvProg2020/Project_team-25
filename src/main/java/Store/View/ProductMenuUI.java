@@ -43,6 +43,7 @@ import javafx.stage.Stage;
 import org.codehaus.plexus.util.StringUtils;
 import org.controlsfx.control.Rating;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -157,7 +158,18 @@ public class ProductMenuUI {
 
     private void setupImageAndVideo() {
         if (!productToShow.getImagePath().isEmpty()) {
-            productImageView.setImage(new Image(ProductMenuUI.class.getResource("/Images/" + productToShow.getImagePath()).toExternalForm()));
+            String path;
+            if (productToShow.getImagePath().isEmpty()) {
+                path = "src/main/resources/Images/images.jpg";
+            }
+            else {
+                path = productToShow.getImagePath();
+            }
+
+            File file = new File(path);
+            productImageView.setImage(new Image(file.toURI().toString()));
+
+//            productImageView.setImage(new Image(ProductMenuUI.class.getResource("/Images/" + productToShow.getImagePath()).toExternalForm()));
         }
         PannableCanvas canvas = new PannableCanvas();
 
@@ -180,8 +192,11 @@ public class ProductMenuUI {
         handleImageAndVideoGrayscale();
 
         if (!productToShow.getVideoPath().isEmpty()) {
-            System.out.println(ProductMenuUI.class.getResource("/Videos/" + productToShow.getVideoPath()).toExternalForm());
-            videoPlayer = new VideoPlayer(ProductMenuUI.class.getResource("/Videos/" + productToShow.getVideoPath()).toExternalForm());
+            //System.out.println(ProductMenuUI.class.getResource("/Videos/" + productToShow.getVideoPath()).toExternalForm());
+            String path;
+            path = productToShow.getVideoPath();
+            File file = new File(path);
+            videoPlayer = new VideoPlayer(file.toURI().toString());
             imageAndVideoVBox.getChildren().add(videoPlayer);
         }
     }

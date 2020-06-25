@@ -367,7 +367,7 @@ public class OffersMenuUI {
         if (product.getImagePath().equals("")) {
             file = new File("src/main/resources/Images/images.jpg");
         } else {
-            file = new File("src/main/resources/Images/" + product.getImagePath());
+            file = new File(product.getImagePath());
         }
 
         ImageView imageView = new ImageView(new Image(file.toURI().toString()));
