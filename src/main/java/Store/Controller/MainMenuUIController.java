@@ -48,6 +48,14 @@ public class MainMenuUIController {
         currentUserUsername.setValue((isLoggedIn.getValue() ? currentUser.getUsername() : "Not Logged In"));
     }
 
+    public static void resetAdds() {
+        staticAdLower = null;
+        staticAdUpper = null;
+        for (int adIndex = 0; adIndex < 5; adIndex++) {
+            slideshowAd[adIndex] = null;
+        }
+    }
+
     public static void setupNewAd(Product product) {
         if (staticAdUpper == null) {
             staticAdUpper = product;

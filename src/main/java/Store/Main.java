@@ -87,7 +87,7 @@ public class Main extends Application {
 //        ResourceHandler.resetFile();
 //        ResourceHandler.writeAll();
 
-//        ResourceHandler.readAll();
+        ResourceHandler.readAll();
 //        Manager.checkPeriodOffCode();
 //        setTest();
         MainMenuUIController.currentUser = MainMenuUIController.guest;
