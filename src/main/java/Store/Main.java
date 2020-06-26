@@ -16,6 +16,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -88,8 +89,18 @@ public class Main extends Application {
 //        ResourceHandler.writeAll();
 
         ResourceHandler.readAll();
-//        Manager.checkPeriodOffCode();
-//        setTest();
+        Thread thread = new Thread (new Runnable(){
+            @Override
+            public void run() {
+                while(true)
+                {
+                    Manager.checkPeriodOffCode();
+                }
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
+        //        setTest();
         MainMenuUIController.currentUser = MainMenuUIController.guest;
       //  Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
 
