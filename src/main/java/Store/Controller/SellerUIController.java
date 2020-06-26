@@ -117,6 +117,7 @@ public class SellerUIController {
     }
 
     public static boolean isProductFromThisSeller(Seller seller, Product product) {
+        System.out.println(seller.getUsername() + " " + product.getSeller().getUsername());
         return seller == product.getSeller();
     }
 

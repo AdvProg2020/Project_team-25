@@ -135,6 +135,15 @@ public class OffersMenuUI {
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
         showCategoryButton.setOnAction(event -> showCategories());
 
+        userPageButton.setOnAction(e -> {
+            if (MainMenuUIController.currentUser instanceof Customer)
+                CustomerMenuUI.showCustomerMenu();
+            else if (MainMenuUIController.currentUser instanceof Seller)
+                SellerMenuUI.showSellerMenu();
+            else if (MainMenuUIController.currentUser instanceof Manager)
+                ManagerMenuUI.showManagerMenu();
+        });
+
         mainMenuButton.setOnAction((e) -> {
             try {
                 Main.setPrimaryStageScene(new Scene(MainMenuUI.getContent()));
@@ -300,6 +309,7 @@ public class OffersMenuUI {
         Stage stage = Main.getApplicationStage();
         popup.show(stage);
         mainNode.disableProperty().bind(popup.showingProperty());
+        setTobeShownProducts();
 
         Runnable expensiveTask = () -> {
             try {

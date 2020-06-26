@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MainMenuUIController {
     public static User currentUser;
@@ -45,5 +46,45 @@ public class MainMenuUIController {
         isLoggedIn.setValue(currentUser != guest);
         loginLogoutButtonText.setValue((isLoggedIn.getValue() ? "Logout" : "Login"));
         currentUserUsername.setValue((isLoggedIn.getValue() ? currentUser.getUsername() : "Not Logged In"));
+    }
+
+    public static void resetAdds() {
+        staticAdLower = null;
+        staticAdUpper = null;
+        for (int adIndex = 0; adIndex < 5; adIndex++) {
+            slideshowAd[adIndex] = null;
+        }
+    }
+
+    public static void setupNewAd(Product product) {
+        if (staticAdUpper == null) {
+            staticAdUpper = product;
+            return;
+        }
+        else if (staticAdLower == null) {
+            staticAdLower = product;
+            return;
+        }
+        else {
+            for (int slideIndex = 0; slideIndex < 5; slideIndex++) {
+                if (slideshowAd[slideIndex] == null) {
+                    slideshowAd[slideIndex] = product;
+                    return;
+                }
+            }
+        }
+
+        Random random = new Random();
+        int pool = random.nextInt();
+        if (pool % 3 == 0) {
+            staticAdUpper = product;
+        }
+        else if (pool % 3 == 1) {
+            staticAdLower = product;
+        }
+        else {
+            pool = random.nextInt();
+            slideshowAd[pool % 5] = product;
+        }
     }
 }
