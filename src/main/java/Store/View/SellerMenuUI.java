@@ -213,15 +213,18 @@ public class SellerMenuUI implements Initializable {
         plusProductOffer.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             if (!productIDInOffer.getText().isEmpty())
             {
-                if (!StringUtils.isNumeric(productIDInOffer.getText()) || !SellerUIController.isProductFromThisSeller(seller, Product.getProductByID(Integer.parseInt(productIDInOffer.getText())))) {
+                if ((!StringUtils.isNumeric(productIDInOffer.getText()) || Product.getProductByID(Integer.parseInt(productIDInOffer.getText())) == null) || !SellerUIController.isProductFromThisSeller(seller, Product.getProductByID(Integer.parseInt(productIDInOffer.getText())))) {
                     throwError("Please enter a valid ID");
+                    return;
                 }
                 Product product = Product.getProductByID(Integer.parseInt(productIDInOffer.getText()));
                 if (selectedOffer.containsProduct(product)) {
                     throwError("Already added this product");
+                    return;
                 }
                 else if ((selectedOffer == null || !selectedOffer.getProducts().contains(product)) && Offer.getOfferOfProduct(product) != null) {
                     throwError("This product is already in another offer!");
+                    return;
                 }
                 else {
                     selectedOffer.addProduct(product);
@@ -236,10 +239,12 @@ public class SellerMenuUI implements Initializable {
             {
                 if (!StringUtils.isNumeric(productIDInOffer.getText()) || !SellerUIController.isProductFromThisSeller(seller, Product.getProductByID(Integer.parseInt(productIDInOffer.getText())))) {
                     throwError("Please enter a valid ID");
+                    return;
                 }
                 Product product = Product.getProductByID(Integer.parseInt(productIDInOffer.getText()));
                 if (!selectedOffer.containsProduct(product)) {
                     throwError("Doesn't exist in offer");
+                    return;
                 }
                 else {
                     selectedOffer.removeProduct(product);
@@ -259,19 +264,23 @@ public class SellerMenuUI implements Initializable {
         plusProductOffer.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             if (!productIDInOffer.getText().isEmpty())
             {
-                if (!StringUtils.isNumeric(productIDInOffer.getText()) || !SellerController.isProductFromThisSeller(seller, Product.getProductByID(Integer.parseInt(productIDInOffer.getText())))) {
+                if ((!StringUtils.isNumeric(productIDInOffer.getText()) || Product.getProductByID(Integer.parseInt(productIDInOffer.getText())) == null) || !SellerUIController.isProductFromThisSeller(seller, Product.getProductByID(Integer.parseInt(productIDInOffer.getText())))) {
                     throwError("Please enter a valid ID");
+                    return;
                 }
                 Product product = Product.getProductByID(Integer.parseInt(productIDInOffer.getText()));
                 if (selectedOffer.containsProduct(product)) {
                     throwError("Already added this product");
+                    return;
                 }
                 else if ((selectedOffer == null || !selectedOffer.getProducts().contains(product)) && Offer.getOfferOfProduct(product) != null) {
                     throwError("This product is already in another offer!");
+                    return;
                 }
                 else {
                     selectedOffer.addProduct(product);
                     throwError("Product added to list");
+                    return;
                 }
             }
             else

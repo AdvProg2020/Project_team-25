@@ -79,7 +79,7 @@ public class Main extends Application {
         primaryStage.setOnCloseRequest(e -> {
             ResourceHandler.writeAll();
         });
-       // setupBGM();
+        setupBGM();
     }
 
 
@@ -87,7 +87,7 @@ public class Main extends Application {
 //        ResourceHandler.resetFile();
 //        ResourceHandler.writeAll();
 
-        ResourceHandler.readAll();
+//        ResourceHandler.readAll();
 //        Manager.checkPeriodOffCode();
 //        setTest();
         MainMenuUIController.currentUser = MainMenuUIController.guest;

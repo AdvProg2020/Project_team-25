@@ -3,6 +3,7 @@ package Store.Model;
 import Store.Controller.MainMenuUIController;
 import Store.Model.Enums.RequestType;
 import Store.Model.Log.SellLogItem;
+import Store.View.MainMenuUI;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -117,10 +118,11 @@ public class Seller extends User {
         } else if (request.getRequestType() == RequestType.REGISTER_SELLER) {
             allUsers.add(request.getSeller());
         } else if (request.getRequestType() == RequestType.ADD_NEW_ADVERTISEMENT){
-            if (Request.getAdCounter() % 2 == 0)
-                MainMenuUIController.setStaticAdUpper(request.getProduct());
-            else
-                MainMenuUIController.setStaticAdLower(request.getProduct());
+            MainMenuUIController.setupNewAd(request.getProduct());
+//            if (Request.getAdCounter() % 2 == 0)
+//                MainMenuUIController.setStaticAdUpper(request.getProduct());
+//            else
+//                MainMenuUIController.setStaticAdLower(request.getProduct());
         }
     }
 

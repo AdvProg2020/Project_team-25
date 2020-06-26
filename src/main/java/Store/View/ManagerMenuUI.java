@@ -560,6 +560,7 @@ public class ManagerMenuUI {
     }
 
     public void setupBindings() {
+        offersButton.setOnAction((e) -> OffersMenuUI.showOffersMenu());
         loginLogoutButton.setOnAction((e) -> {
             LoginMenuUI.handleEvent();
             try {

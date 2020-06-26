@@ -3,9 +3,7 @@ package Store.View;
 import Store.Controller.MainMenuUIController;
 import Store.Controller.ProductsController;
 import Store.Main;
-import Store.Model.Category;
-import Store.Model.Manager;
-import Store.Model.Product;
+import Store.Model.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
@@ -116,6 +114,15 @@ public class ProductsMenuUI {
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
         showCategoryButton.setOnAction(event -> showCategories());
         offersButton.setOnAction((e) -> OffersMenuUI.showOffersMenu());
+
+        userPageButton.setOnAction(e -> {
+            if (MainMenuUIController.currentUser instanceof Customer)
+                CustomerMenuUI.showCustomerMenu();
+            else if (MainMenuUIController.currentUser instanceof Seller)
+                SellerMenuUI.showSellerMenu();
+            else if (MainMenuUIController.currentUser instanceof Manager)
+                ManagerMenuUI.showManagerMenu();
+        });
 
         mainMenuButton.setOnAction((e) -> {
             try {
