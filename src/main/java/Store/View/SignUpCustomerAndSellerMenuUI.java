@@ -3,9 +3,7 @@ package Store.View;
 import Store.Controller.SignUpAndLoginController;
 import Store.InputManager;
 import Store.Main;
-import Store.Model.Customer;
-import Store.Model.Product;
-import Store.Model.User;
+import Store.Model.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -143,6 +141,11 @@ public class SignUpCustomerAndSellerMenuUI {
         String username = usernameTextField.getText();
         if (User.getUserByUsername(username) != null) {
             throwError("A user with this username already exists!");
+            setError(usernameTextField, true);
+            isValid = false;
+        }
+        if (Manager.isUsernameExistInRequests(username)) {
+            throwError("A user is waiting for manager on this username!");
             setError(usernameTextField, true);
             isValid = false;
         }

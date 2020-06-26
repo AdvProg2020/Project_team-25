@@ -119,6 +119,7 @@ public class SellerMenuUI implements Initializable {
 
     public TextField requestedProductId;
 
+    Offer copyOffer;
     static SellLogItem showedSellLog;
     String currentSortOffer = new String("time of starting");
     String currentSortProduct = new String("visited");
@@ -206,6 +207,9 @@ public class SellerMenuUI implements Initializable {
     @FXML
     private void setupInitialEditOffer()
     {
+        copyOffer = new Offer();
+        for (Product product: selectedOffer.getProducts())
+            copyOffer.addProduct(product);
         startDateOffer.setValue(LocalDate.now());
         endDateOffer.setValue(LocalDate.now());
         offerProducts = selectedOffer.getProducts();
@@ -218,16 +222,16 @@ public class SellerMenuUI implements Initializable {
                     return;
                 }
                 Product product = Product.getProductByID(Integer.parseInt(productIDInOffer.getText()));
-                if (selectedOffer.containsProduct(product)) {
+                if (copyOffer.containsProduct(product)) {
                     throwError("Already added this product");
                     return;
                 }
-                else if ((selectedOffer == null || !selectedOffer.getProducts().contains(product)) && Offer.getOfferOfProduct(product) != null) {
+                else if ((copyOffer == null || !copyOffer.getProducts().contains(product)) && Offer.getOfferOfProduct(product) != null) {
                     throwError("This product is already in another offer!");
                     return;
                 }
                 else {
-                    selectedOffer.addProduct(product);
+                    copyOffer.addProduct(product);
                     throwError("Product added to list");
                 }
             }
@@ -242,12 +246,12 @@ public class SellerMenuUI implements Initializable {
                     return;
                 }
                 Product product = Product.getProductByID(Integer.parseInt(productIDInOffer.getText()));
-                if (!selectedOffer.containsProduct(product)) {
+                if (!copyOffer.containsProduct(product)) {
                     throwError("Doesn't exist in offer");
                     return;
                 }
                 else {
-                    selectedOffer.removeProduct(product);
+                    copyOffer.removeProduct(product);
                     throwError("Product removed from list");
                 }
             }
@@ -428,7 +432,7 @@ public class SellerMenuUI implements Initializable {
     {
         try {
             Offer offer = createOffer(seller);
-            for (Product product: selectedOffer.getProducts())
+            for (Product product: copyOffer.getProducts())
                 offer.addProduct(product);
             SellerUIController.editOff(seller, selectedOffer, offer);
             ((Stage) offPercentOffer.getScene().getWindow()).close();
@@ -545,7 +549,7 @@ public class SellerMenuUI implements Initializable {
         ArrayList<String> buyers = new ArrayList<>();
         for (String string: seller.getBuyers())
             buyers.add(string);
-        SellerUIController.makeBuyersUnique(buyers);
+        buyers = SellerUIController.makeBuyersUnique(buyers);
         for (int i = 1; i < buyers.size(); i+=2)
             showEachBuyerInHBox((Customer)Customer.getUserByUsername(buyers.get(i-1)), (Customer)Customer.getUserByUsername(buyers.get(i)));
         if (buyers.size() % 2 == 1)
@@ -601,7 +605,7 @@ public class SellerMenuUI implements Initializable {
     {
         String path;
         if (seller.getProfilePicturePath().isEmpty()) {
-            path = "src/main/resources/Images/images.jpg";
+            path = "src/main/resources/Icons/unknown.png";
         }
         else {
             path = seller.getProfilePicturePath();

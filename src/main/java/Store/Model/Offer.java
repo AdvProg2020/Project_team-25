@@ -132,9 +132,7 @@ public class Offer implements Serializable {
         allOffers.add(offer);
     }
 
-    public static void deleteOfferFromAllOffers(Offer offer) {
-        allOffers.remove(offer);
-    }
+    public static void deleteOfferFromAllOffers(Offer offer) { allOffers.remove(offer); }
 
     public double getOffPercent() {
         return offPercent;
@@ -143,7 +141,9 @@ public class Offer implements Serializable {
     public static void calculateAllOffProducts() {
         allOffProducts.clear();
         for (Offer offer : allOffers) {
-            allOffProducts.addAll(offer.getProducts());
+            for (Product product: offer.getProducts())
+                if (!allOffProducts.contains(product))
+                    allOffProducts.add(product);
         }
     }
 

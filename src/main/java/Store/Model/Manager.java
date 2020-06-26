@@ -44,6 +44,15 @@ public class Manager extends User {
         Manager.pendingRequests = pendingRequests;
     }
 
+    public static boolean isUsernameExistInRequests(String username) {
+        for (Request request : pendingRequests)
+        {
+            if (request.getRequestType() == RequestType.REGISTER_SELLER && username.equals(request.getSeller().getUsername()))
+                return true;
+        }
+        return false;
+    }
+
     public static void setOffCodes(ArrayList<OffCode> offCodes) {
         Manager.offCodes = offCodes;
     }

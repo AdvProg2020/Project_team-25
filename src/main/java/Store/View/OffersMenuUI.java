@@ -431,6 +431,7 @@ public class OffersMenuUI {
     }
 
     private void setTobeShownProducts() {
+        Offer.calculateAllOffProducts();
         productsToBeShown = OffersController.sortProductsInOffers(currentSort, filters);
         productsToBeShown = ProductsController.handleStaticFiltering(productsToBeShown, categoryFilter, priceLowFilter,
                 priceHighFilter, brandFilter, nameFilter, sellerUsernameFilter, availabilityFilter);
