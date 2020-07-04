@@ -613,8 +613,11 @@ public class CustomerMenuUI implements Initializable {
         number.setText(count + "");
         if (Offer.getOfferOfProduct(product) == null)
             priceInNumber.setText((count * product.getPrice()) + "");
-        else{
+        else if(Offer.getOfferOfProduct(product).canBeUsedInDate(new Date())){
             priceInNumber.setText((count * product.getPrice() * (100 - Offer.getOfferOfProduct(product).getOffPercent()) / 100.0) + "");
+        }
+        else{
+            priceInNumber.setText((count * product.getPrice()) + "");
         }
         TextArea filters = new TextArea(), discription = new TextArea();
         filters.setEditable(false);         discription.setEditable(false);

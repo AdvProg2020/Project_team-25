@@ -169,6 +169,7 @@ public class Customer extends User {
     public double getTotalCartPrice() {
         double totalPrice = 0;
         for (Product product : cart) {
+            System.out.println(Offer.getOfferOfProduct(product));
             if (Offer.getOfferOfProduct(product) == null)
                 totalPrice += product.getPrice();
             else if(Offer.getOfferOfProduct(product).canBeUsedInDate(new Date()))
