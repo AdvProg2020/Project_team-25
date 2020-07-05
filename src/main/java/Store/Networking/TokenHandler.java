@@ -1,4 +1,4 @@
-package com.company;
+package Store.Networking;
 
 import java.util.HashMap;
 import java.util.Random;

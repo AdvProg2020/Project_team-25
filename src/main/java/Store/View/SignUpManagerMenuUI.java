@@ -1,10 +1,9 @@
 package Store.View;
 
-import Store.Controller.SignUpAndLoginController;
+
 import Store.Main;
-import Store.Model.User;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+
+import Store.Networking.Client.Controller.ClientSignUpAndLoginController;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -107,7 +106,7 @@ public class SignUpManagerMenuUI {
             return;
         }
         String username = usernameTextField.getText();
-        if (User.getUserByUsername(username) != null) {
+        if (ClientSignUpAndLoginController.isUsernameWithThisName(username)) {
             throwError("A user with this username already exists!");
             setError(usernameTextField, true);
             isValid = false;
@@ -140,7 +139,7 @@ public class SignUpManagerMenuUI {
 
         ArrayList<String> attributes = new ArrayList<String>(Arrays.asList(username, firstName, lastName, email, phoneNumber, password));
         if (isValid) {
-            SignUpAndLoginController.createManager(attributes);
+            ClientSignUpAndLoginController.createManager(attributes);
             resetAllFields();
             System.out.println(password);
             throwError("Register Successful!");

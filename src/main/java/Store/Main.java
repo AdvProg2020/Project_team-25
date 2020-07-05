@@ -3,6 +3,8 @@ package Store;
 import Store.Controller.MainMenuUIController;
 import Store.Model.*;
 import Store.Model.Enums.CheckingStatus;
+import Store.Networking.Client.ClientHandler;
+import Store.Networking.MainServer;
 import Store.View.*;
 import Store.View.AdditionalUtils.SpriteAnimation;
 import javafx.animation.Animation;
@@ -29,6 +31,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.Socket;
 import java.util.Date;
 
 public class Main extends Application {
@@ -88,22 +92,29 @@ public class Main extends Application {
 //        ResourceHandler.resetFile();
 //        ResourceHandler.writeAll();
 
-        ResourceHandler.readAll();
-        Thread thread = new Thread (new Runnable(){
-            @Override
-            public void run() {
-                while(true)
-                {
-                    Manager.checkPeriodOffCode();
-                }
-            }
-        });
-        thread.setDaemon(true);
-        thread.start();
+//        ResourceHandler.readAll();
+//        Thread thread = new Thread (new Runnable(){
+//            @Override
+//            public void run() {
+//                while(true)
+//                {
+//                    Manager.checkPeriodOffCode();
+//                }
+//            }
+//        });
+//        thread.setDaemon(true);
+//        thread.start();
         //        setTest();
         MainMenuUIController.currentUser = MainMenuUIController.guest;
-      //  Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
+//        Manager manager1 = new Manager("ali", "cloud", "strife", "lab@lab.com", "0912", "1234");
 
+        try {
+            MainServer server = new MainServer();
+            ClientHandler.setPort(server.getPort());
+            ClientHandler.setSocket(new Socket("localhost", ClientHandler.getPort()));
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
         launch(args);
     }
 
