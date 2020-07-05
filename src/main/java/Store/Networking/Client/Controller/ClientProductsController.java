@@ -21,7 +21,7 @@ public class ClientProductsController {
         hashMap.put("priceHighFilter", priceHighFilter);
         hashMap.put("brandFilter", brandFilter);
         hashMap.put("nameFilter", nameFilter);
-        hashMap.put("sellerUserNameFilter", sellerUsernameFilter);
+        hashMap.put("sellerUsernameFilter", sellerUsernameFilter);
         hashMap.put("searchQuery",searchQuery);
         hashMap.put("currentSort", currentSort);
         hashMap.put("availabilityFilter", availabilityFilter);

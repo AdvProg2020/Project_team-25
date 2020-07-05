@@ -4,6 +4,7 @@ import Store.Model.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class HashMapGenerator {
     public static HashMap<String, Object> getUserHashMap(User user) {
@@ -26,7 +27,7 @@ public class HashMapGenerator {
     }
 
     public static ArrayList getListOfCategories(ArrayList<Category> allCategories) {
-        ArrayList<HashMap<String, Object>> arrayList = new ArrayList<>();
+        ArrayList<Map<String, Object>> arrayList = new ArrayList<>();
         for (Category category : allCategories) {
             arrayList.add(getCategoryHashMap(category));
         }
@@ -55,7 +56,7 @@ public class HashMapGenerator {
     }
 
     public static ArrayList getListOfProducts(ArrayList<Product> allProducts) {
-        ArrayList<HashMap<String, Object>> arrayList = new ArrayList<>();
+        ArrayList<Map<String, Object>> arrayList = new ArrayList<>();
         for (Product product : allProducts) {
             arrayList.add(getProductHashMap(product));
         }

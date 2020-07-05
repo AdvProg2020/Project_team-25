@@ -6,6 +6,7 @@ import Store.Model.Manager;
 import Store.Model.Product;
 import Store.Model.User;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -131,7 +132,7 @@ public class MainServer {
 
         private void getPriceLowServer() {
             HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("content", ProductsController.getPriceHigh());
+            hashMap.put("content", ProductsController.getPriceLow());
             sendMessage(hashMap);
         }
 
@@ -149,6 +150,7 @@ public class MainServer {
             productsToBeShown = ProductsController.sort((String) input.get("currentSort"), productsToBeShown);
 
             HashMap<String, Object> hashMap = new HashMap<>();
+
             hashMap.put("content", HashMapGenerator.getListOfProducts(productsToBeShown));
             sendMessage(hashMap);
         }
@@ -156,7 +158,7 @@ public class MainServer {
         private void getAllCategoriesServer() {
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", HashMapGenerator.getListOfCategories(Manager.getAllCategories()));
-            sendMessage(hashMap);
+            secondSendMessage(hashMap);
         }
 
         private void getUserByUsernameServer(String username) {
@@ -195,14 +197,28 @@ public class MainServer {
             try {
                 DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
                 Gson gson = new Gson();
-//                System.out.println(gson.toJson(hashMap));
-                dataOutputStream.writeUTF(String.valueOf(hashMap));
+
+                dataOutputStream.writeUTF(hashMap.toString());
                 dataOutputStream.flush();
             }
             catch (Exception exception) {
 //
             }
         }
+
+        private void secondSendMessage(HashMap<String, Object> hashMap) {
+            try {
+                DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
+                Gson gson = new Gson();
+
+                dataOutputStream.writeUTF(gson.toJson(hashMap));
+                dataOutputStream.flush();
+            }
+            catch (Exception exception) {
+//
+            }
+        }
+
 
     }
 }
