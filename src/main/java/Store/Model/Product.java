@@ -13,6 +13,7 @@ public class Product implements Serializable {
 
     private String imagePath = "";
     private String videoPath = "";
+    private String filePath = "";
 
     private int productID;
     private CheckingStatus productStatus;
@@ -273,6 +274,14 @@ public class Product implements Serializable {
 
     public void setVideoPath(String videoPath) {
         this.videoPath = videoPath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getFilePath() {
+        return filePath;
     }
 
     public static void addFilterToAllFilters(String filter) {
