@@ -1,12 +1,12 @@
 package Store.View;
 
 import Store.Controller.MainMenuUIController;
-import Store.Controller.SignUpAndLoginController;
+
 import Store.InputManager;
 import Store.Main;
-import Store.Model.Customer;
-import Store.Model.Product;
+
 import Store.Model.User;
+import Store.Networking.Client.Controller.ClientSignUpAndLoginController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -17,15 +17,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import Store.Controller.SignUpAndLoginController;
+import java.util.*;
+
 import Store.InputManager;
 import Store.Main;
-import Store.Model.Customer;
-import Store.Model.Product;
-import Store.Model.User;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -117,19 +112,20 @@ public class LoginMenuUI {
         }
         resetAllErrors();
         String username = usernameField.getText();
-        if (User.getUserByUsername(username) == null) {
+        if (!ClientSignUpAndLoginController.isUsernameWithThisName(username)) {
             throwError("There is no user with this username!");
             setError(usernameField, true);
             return;
         }
-        User user = User.getUserByUsername(username);
-        if (!user.validatePassword(passwordField.getText())) {
+        Map<String, Object> userInfo = ClientSignUpAndLoginController.getUserInfo(username);
+        if (!userInfo.get("password").equals(passwordField.getText())) {
             throwError("Invalid password!");
             setError(passwordField, true);
             return;
         }
-        MainMenuUIController.setCurrentUser(user);
-        moveShoppingCart();
+//        Tokenize
+        MainMenuUIController.setCurrentUser(User.getUserByUsername(username)); //ATTENTION
+//        moveShoppingCart();
         ((Stage) loginButton.getScene().getWindow()).close();
     }
 
@@ -162,22 +158,22 @@ public class LoginMenuUI {
         }
     }
 
-    private static boolean handleLogin(String username) {
-        User user;
-        if ((user = User.getUserByUsername(username)) == null) {
-            System.out.println("No user with this username exists!");
-            return false;
-        }
-        System.out.println("Please enter your password: ");
-        String password = InputManager.getNextLine();
-        String message = SignUpAndLoginController.handleLogin(username, password);
-        System.out.println(message);
-        if (message.equals("Login successful.")) {
-            MainMenu.currentUser = user;
-            return true;
-        }
-        return false;
-    }
+//    private static boolean handleLogin(String username) {
+//        User user;
+//        if ((user = User.getUserByUsername(username)) == null) {
+//            System.out.println("No user with this username exists!");
+//            return false;
+//        }
+//        System.out.println("Please enter your password: ");
+//        String password = InputManager.getNextLine();
+//        String message = SignUpAndLoginController.handleLogin(username, password);
+//        System.out.println(message);
+//        if (message.equals("Login successful.")) {
+//            MainMenu.currentUser = user;
+//            return true;
+//        }
+//        return false;
+//    }
 
     public static void logoutWrapper() {
         if (MainMenu.currentUser == MainMenu.guest) {
@@ -199,12 +195,12 @@ public class LoginMenuUI {
 //        }
 //    }
 //
-    private static void moveShoppingCart() {
-        if (MainMenuUIController.currentUser instanceof Customer) {
-            for (Product product : MainMenuUIController.guest.getCart()) {
-                ((Customer) MainMenuUIController.currentUser).addToCart(product);
-            }
-        }
-        MainMenuUIController.guest.getCart().clear();
-    }
+//    private static void moveShoppingCart() {
+//        if (MainMenuUIController.currentUser instanceof Customer) {
+//            for (Product product : MainMenuUIController.guest.getCart()) {
+//                ((Customer) MainMenuUIController.currentUser).addToCart(product);
+//            }
+//        }
+//        MainMenuUIController.guest.getCart().clear();
+//    }
 }

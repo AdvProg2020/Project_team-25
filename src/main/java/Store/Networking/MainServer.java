@@ -1,9 +1,10 @@
 package Store.Networking;
 
+import Store.Controller.ProductsController;
 import Store.Controller.SignUpAndLoginController;
 import Store.Model.Manager;
+import Store.Model.Product;
 import Store.Model.User;
-import Store.Networking.Client.ClientHandler;
 import com.google.gson.Gson;
 
 import java.io.*;
@@ -98,10 +99,70 @@ public class MainServer {
                     if (input.get("message").equals("createManagerAccount")) {
                         handleCreateManagerAccountServer((ArrayList<String>)input.get("attributes"));
                     }
+                    if (input.get("message").equals("getUserInfo")) {
+                        getUserByUsernameServer((String)input.get("username"));
+                    }
+                    if (input.get("message").equals("getAllCategories")) {
+                        getAllCategoriesServer();
+                    }
+                    if (input.get("message").equals("getProducts")) {
+                        getProductsServer(input);
+                    }
+                    if (input.get("message").equals("getPriceHigh")) {
+                        getPriceHighServer();
+                    }
+                    if (input.get("message").equals("getPriceLow")) {
+                        getPriceLowServer();
+                    }
+                    if (input.get("message").equals("getAllFilters")) {
+                        getAllFiltersServer((String)input.get("categoryFilter"));
+                    }
                 } catch (IOException exception) {
                     //exception.printStackTrace();
                 }
             }
+        }
+
+        private void getAllFiltersServer(String categoryFilter) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", Product.getAllFilters(categoryFilter));
+            sendMessage(hashMap);
+        }
+
+        private void getPriceLowServer() {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", ProductsController.getPriceHigh());
+            sendMessage(hashMap);
+        }
+
+        private void getPriceHighServer() {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", ProductsController.getPriceHigh());
+            sendMessage(hashMap);
+        }
+
+        private void getProductsServer(HashMap input) { ;
+            ArrayList<Product> productsToBeShown = ProductsController.getFilteredList((ArrayList<String>) input.get("filters"));
+            productsToBeShown = ProductsController.handleStaticFiltering(productsToBeShown, (String)input.get("categoryFilter"), (Double)input.get("priceLowFilter"),
+                    (Double)input.get("priceHighFilter"), (String)input.get("brandFilter"), (String)input.get("nameFilter"), (String)input.get("sellerUsernameFilter"), (String) input.get("availabilityFilter"));
+            productsToBeShown = ProductsController.filterProductsWithSearchQuery(productsToBeShown, (String) input.get("searchQuery"));
+            productsToBeShown = ProductsController.sort((String) input.get("currentSort"), productsToBeShown);
+
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", HashMapGenerator.getListOfProducts(productsToBeShown));
+            sendMessage(hashMap);
+        }
+
+        private void getAllCategoriesServer() {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", HashMapGenerator.getListOfCategories(Manager.getAllCategories()));
+            sendMessage(hashMap);
+        }
+
+        private void getUserByUsernameServer(String username) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", HashMapGenerator.getUserHashMap(User.getUserByUsername(username)));
+            sendMessage(hashMap);
         }
 
         private void handleCreateManagerAccountServer(ArrayList<String> attributes) {
@@ -134,7 +195,8 @@ public class MainServer {
             try {
                 DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
                 Gson gson = new Gson();
-                dataOutputStream.writeUTF(gson.toJson(hashMap));
+//                System.out.println(gson.toJson(hashMap));
+                dataOutputStream.writeUTF(String.valueOf(hashMap));
                 dataOutputStream.flush();
             }
             catch (Exception exception) {

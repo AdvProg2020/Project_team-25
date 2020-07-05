@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ClientSignUpAndLoginController {
 
@@ -37,5 +38,13 @@ public class ClientSignUpAndLoginController {
         hashMap.put("message", "createManagerAccount");
         hashMap.put("attributes", attributes);
         ClientHandler.sendAndReceiveMessage(hashMap);
+    }
+
+    public static Map getUserInfo(String username) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "getUserInfo");
+        hashMap.put("username", username);
+        return (Map) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
+
     }
 }

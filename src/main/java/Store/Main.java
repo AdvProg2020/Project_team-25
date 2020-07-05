@@ -106,8 +106,8 @@ public class Main extends Application {
 //        thread.start();
         //        setTest();
         MainMenuUIController.currentUser = MainMenuUIController.guest;
-//        Manager manager1 = new Manager("ali", "cloud", "strife", "lab@lab.com", "0912", "1234");
-
+        Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
+        setTest();
         try {
             MainServer server = new MainServer();
             ClientHandler.setPort(server.getPort());
