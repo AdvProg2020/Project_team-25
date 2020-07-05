@@ -263,6 +263,8 @@ public class OffersMenuUI {
             Label categoryName = new Label(category.getName());
             categoryName.setId("categoryButton");
             categoryName.setOnMouseClicked(event -> {
+                Stage stage = (Stage) categoryName.getScene().getWindow();
+                stage.close();
                 categoryFilter = category.getName();
                 pageNumber = 1;
                 pageNumberField.setText(Integer.toString(pageNumber));

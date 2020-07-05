@@ -5,7 +5,6 @@ import Store.Controller.MainMenuUIController;
 import Store.Main;
 
 import Store.Networking.Client.Controller.ClientProductsController;
-import com.sun.org.apache.xerces.internal.xs.StringList;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
@@ -242,10 +241,13 @@ public class ProductsMenuUI {
         });
         vBox.getChildren().addAll(base, new Separator(), new Separator());
         ArrayList<Map<String, Object>> allCategories = ClientProductsController.getAllCategories();
+        
         for (Map<String, Object> category : allCategories) {
             Label categoryName = new Label((String) category.get("name"));
             categoryName.setId("categoryButton");
             categoryName.setOnMouseClicked(event -> {
+                Stage stage = (Stage) categoryName.getScene().getWindow();
+                stage.close();
                 categoryFilter = (String) category.get("name");
                 pageNumber = 1;
                 pageNumberField.setText(Integer.toString(pageNumber));

@@ -48,9 +48,9 @@ public class ProductsController {
             if (!name.equalsIgnoreCase("null") && !product.getName().contains(name)) {
                 continue;
             }
-//            if (!sellerUsername.equalsIgnoreCase("null") && !product.getSeller().getUsername().equalsIgnoreCase(sellerUsername)) {
-//                continue;
-//            }
+            if (!sellerUsername.equalsIgnoreCase("null") && !product.getSeller().getUsername().equalsIgnoreCase(sellerUsername)) {
+                continue;
+            }
             if (!availability.equalsIgnoreCase("null")) {
                 if (availability.equalsIgnoreCase("1") && !product.getAvailablity()) {
                     continue;
