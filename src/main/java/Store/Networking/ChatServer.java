@@ -1,5 +1,8 @@
 package Store.Networking;
 
+import Store.Model.Operator;
+import Store.Model.User;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -138,7 +141,9 @@ public class ChatServer {
                 synchronized (reentrantLock) {
                     username = matcher.group(1);
                     clientOutputStreams.put(username, dataOutputStream);
-                    operators.add(username);
+                    if (User.getUserByUsername(username) instanceof Operator) {
+                        operators.add(username);
+                    }
                 }
                 System.out.println("CLIENT CONNECTED WITH USERNAME: " + username);
                 return true;

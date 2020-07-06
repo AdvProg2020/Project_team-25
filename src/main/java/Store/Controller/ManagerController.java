@@ -56,6 +56,10 @@ public class ManagerController {
         manager.addNewManager(new Manager(username, firstName, lastName, email, phoneNumber, password));
     }
 
+    public static void createOperatorProfile(Manager manager, String username, String firstName, String lastName, String email, String phoneNumber, String password) {
+        manager.addNewOperator(new Operator(username, firstName, lastName, email, phoneNumber, password));
+    }
+
     public static String removeProducts(Manager manager, Product product) {
         if (product == null) {
             return "There isn't any product with this ID!";
