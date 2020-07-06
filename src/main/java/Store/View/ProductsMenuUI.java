@@ -234,6 +234,8 @@ public class ProductsMenuUI {
         Label base = new Label("All Categories");
         base.setId("categoryButton");
         base.setOnMouseClicked(event -> {
+            Stage stage = (Stage) base.getScene().getWindow();
+            stage.close();
             categoryFilter = "null";
             pageNumber = 1;
             pageNumberField.setText(Integer.toString(pageNumber));
@@ -241,7 +243,6 @@ public class ProductsMenuUI {
         });
         vBox.getChildren().addAll(base, new Separator(), new Separator());
         ArrayList<Map<String, Object>> allCategories = ClientProductsController.getAllCategories();
-        
         for (Map<String, Object> category : allCategories) {
             Label categoryName = new Label((String) category.get("name"));
             categoryName.setId("categoryButton");

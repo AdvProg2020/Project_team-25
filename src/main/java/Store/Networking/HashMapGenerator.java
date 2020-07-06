@@ -52,6 +52,9 @@ public class HashMapGenerator {
         hashMap.put("brand", product.getBrand());
         hashMap.put("description", product.getDescription());
         hashMap.put("id", product.getProductID());
+        hashMap.put("sellerName", product.getSeller().getName());
+        hashMap.put("comments", product.getComments());
+        hashMap.put("filters", product.getFilters());
         return hashMap;
     }
 

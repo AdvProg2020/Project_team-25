@@ -152,13 +152,14 @@ public class MainServer {
             HashMap<String, Object> hashMap = new HashMap<>();
 
             hashMap.put("content", HashMapGenerator.getListOfProducts(productsToBeShown));
-            sendMessage(hashMap);
+
+            secondSendMessage(hashMap);
         }
 
         private void getAllCategoriesServer() {
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", HashMapGenerator.getListOfCategories(Manager.getAllCategories()));
-            secondSendMessage(hashMap);
+            sendMessage(hashMap);
         }
 
         private void getUserByUsernameServer(String username) {
@@ -193,7 +194,7 @@ public class MainServer {
             sendMessage(hashMap);
         }
 
-        private void sendMessage(HashMap<String, Object> hashMap) {
+        private void secondSendMessage(HashMap<String, Object> hashMap) {
             try {
                 DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
                 Gson gson = new Gson();
@@ -206,7 +207,7 @@ public class MainServer {
             }
         }
 
-        private void secondSendMessage(HashMap<String, Object> hashMap) {
+        private void sendMessage(HashMap<String, Object> hashMap) {
             try {
                 DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
                 Gson gson = new Gson();
