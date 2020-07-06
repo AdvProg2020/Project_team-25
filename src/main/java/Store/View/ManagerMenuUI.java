@@ -578,6 +578,7 @@ public class ManagerMenuUI {
             showUsers();
         });
         addOperatorButton.setOnAction((e) -> {
+            System.out.println("ADDING AN OPERATOR");
             SignUpOperatorMenuUI.showSignUpMenu();
             showUsers();
         });

@@ -121,14 +121,7 @@ public class MainMenuUI {
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
         productsButton.setOnAction((e) -> ProductsMenuUI.showProductsMenu());
         offersButton.setOnAction((e) -> OffersMenuUI.showOffersMenu());
-        userPageButton.setOnAction(e -> {
-            if (MainMenuUIController.currentUser instanceof Customer)
-                CustomerMenuUI.showCustomerMenu();
-            else if (MainMenuUIController.currentUser instanceof Seller)
-                SellerMenuUI.showSellerMenu();
-            else if (MainMenuUIController.currentUser instanceof Manager)
-                ManagerMenuUI.showManagerMenu();
-        });
+        userPageButton.setOnAction(e -> UserPageHandlerUI.handleEvent());
     }
 
 }

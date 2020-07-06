@@ -31,7 +31,7 @@
                   <Insets left="25.0" />
                </padding>
             </HBox>
-            <Separator orientation="VERTICAL" prefHeight="48.0" prefWidth="6.0" visible="false" />
+            <Separator orientation="VERTICAL" prefHeight="34.0" prefWidth="6.0" visible="false" />
             <Button id="productsButton" fx:id="mainMenuButton" disable="true" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Main Menu">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
@@ -68,7 +68,16 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Separator orientation="VERTICAL" prefHeight="98.0" prefWidth="6.0" visible="false" />
+            <Button fx:id="supportPageButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Support">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Icons/Support.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Separator orientation="VERTICAL" prefHeight="84.0" prefWidth="6.0" visible="false" />
             <GridPane vgap="5.0">
               <columnConstraints>
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -101,7 +110,7 @@
                   <Label id="loggedInStatusText" fx:id="loggedInStatusText" text="Not Logged In" textFill="#7f7f7f" GridPane.rowIndex="1" />
                </children>
             </GridPane>
-            <Separator orientation="VERTICAL" prefHeight="27.0" prefWidth="7.0" visible="false" />
+            <Separator orientation="VERTICAL" prefHeight="15.0" prefWidth="5.0" visible="false" />
          </children>
          <opaqueInsets>
             <Insets />

@@ -48,7 +48,7 @@ public class SignUpOperatorMenuUI {
     }
 
     public static Parent getContent() throws IOException {
-        Parent root = FXMLLoader.load(SignUpOperatorMenuUI.class.getClassLoader().getResource("FXML/SignUp_Manager.fxml"));
+        Parent root = FXMLLoader.load(SignUpOperatorMenuUI.class.getClassLoader().getResource("FXML/SignUp_Operator.fxml"));
         return root;
     }
 
