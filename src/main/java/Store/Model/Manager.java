@@ -276,6 +276,10 @@ public class Manager extends User {
         allUsers.add(manager);
     }
 
+    public void addNewOperator(Operator operator) {
+        allUsers.add(operator);
+    }
+
     public static ArrayList<OffCode> getOffCodes() {
         return offCodes;
     }
