@@ -49,6 +49,7 @@ public class ManagerMenuUI {
     public ComboBox sortProductsChoiceBox;
     public VBox productsList;
     public Button addManagerButton;
+    public Button addOperatorButton;
     public VBox usersList;
     public ComboBox sortUsersChoiceBox;
     public VBox offCodesList;
@@ -574,6 +575,11 @@ public class ManagerMenuUI {
         addCategoryButton.setOnMouseClicked(event -> addCategory());
         addManagerButton.setOnMouseClicked(event -> {
             SignUpManagerMenuUI.showSignUpMenu();
+            showUsers();
+        });
+        addOperatorButton.setOnAction((e) -> {
+            System.out.println("ADDING AN OPERATOR");
+            SignUpOperatorMenuUI.showSignUpMenu();
             showUsers();
         });
         addOffCodeButton.setOnMouseClicked(event -> addOffCode());

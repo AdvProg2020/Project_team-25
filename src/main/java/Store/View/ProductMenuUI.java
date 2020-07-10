@@ -309,6 +309,9 @@ public class ProductMenuUI {
         loginLogoutButton.setOnAction((e) -> LoginMenuUI.handleEvent());
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
         productsButton.setOnAction((e) -> ProductsMenuUI.showProductsMenu());
+        offersButton.setOnAction((e) -> OffersMenuUI.showOffersMenu());
+
+        userPageButton.setOnAction(e -> UserPageHandlerUI.handleEvent());
 
         Button[] starButtons = new Button[] {ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5};
         for (int buttonIndex = 0; buttonIndex < 5; buttonIndex++) {

@@ -164,6 +164,9 @@ public class Main extends Application {
         Seller seller1 = new Seller("jackRipper", "jack", "ripper", "lab@lab.com", "0950", "1234", 1000, "company1", "describe");
         Seller seller2 = new Seller("seller2", "seller2", "seller2", "lab@lab.com", "0930", "1234", 100, "company2", "describe");
 
+        Operator operator = new Operator("jalal", "jalal", "hemmati", "jalal@gmail.com", "09330342211", "1234");
+        manager1.addNewOperator(operator);
+
         Customer customer = new Customer("customer1", "customer1", "customer1", "lab@lab.com", "0912", "1234", 1000);
         customer.setMoney(1000);
         Customer customer2 = new Customer("customer2", "customer2", "customer1", "p@p.com", "0912", "1234", 1000);

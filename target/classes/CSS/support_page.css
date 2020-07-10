@@ -1,0 +1,51 @@
+.availableOperators {
+	-fx-background-color: #cdcfd1;
+}
+
+.availableOperatorsVBox {
+	-fx-background-color: #fcfcfc;
+}
+
+.currentChat {
+	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 2, 0, 0, 0);
+	-fx-background-radius: 5px;
+	-fx-perf-width: 150;
+}
+
+.messageArea {
+	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+	-fx-background-color: #fcfcfc;
+	-fx-background-radius: 5px;
+}
+
+.sendButton {
+	-fx-background-color: #9bf52c;
+    -fx-background-radius: 0;
+    -fx-font-family:"Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 1em; /* 12 */
+    -fx-text-fill: #828282;
+    -fx-border-radius: 30, 30;
+	-fx-background-radius: 40px;
+	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+
+.sendButton:hover {
+	-fx-background-color: #b0f759;
+    -fx-border-width: 1, 1;
+    -fx-border-radius: 30, 30;
+	-fx-background-radius: 40px;
+	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+
+.sendButton:pressed {
+	-fx-background-color: #518017;
+    -fx-text-fill: white;
+	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+
+.text-field {
+	-fx-background-color: #a9a9a9 , white , white;
+    -fx-background-insets: 0 -1 -1 -1, 0 0 0 0, 0 -1 3 -1;
+    -fx-background-radius: 10 10 10 10;
+	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0.0, 0.0);
+}

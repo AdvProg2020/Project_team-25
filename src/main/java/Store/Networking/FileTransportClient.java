@@ -1,4 +1,4 @@
-package com.company;
+package Store.Networking;
 
 import java.io.*;
 import java.net.Socket;
