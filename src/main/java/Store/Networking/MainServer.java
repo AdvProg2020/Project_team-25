@@ -2,6 +2,7 @@ package Store.Networking;
 
 import Store.Controller.ProductsController;
 import Store.Controller.SignUpAndLoginController;
+import Store.Model.Customer;
 import Store.Model.Manager;
 import Store.Model.Product;
 import Store.Model.User;
@@ -71,8 +72,13 @@ public class MainServer {
         private Socket clientSocket;
         private DataOutputStream dataOutputStream;
         private DataInputStream dataInputStream;
+        private Customer guest;
+        private String token;
 
         private ClientThread(Socket socket) throws IOException {
+            this.token = "";
+            this.guest = new Customer("guest", "guest", "guest",
+                    "guest@approject.com", "00000000000", "guest", 0.0);
             this.clientSocket = socket;
             dataInputStream = new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()));
         }
@@ -84,9 +90,10 @@ public class MainServer {
                     String string = dataInputStream.readUTF();
                     Gson gson = new Gson();
                     HashMap input = gson.fromJson(string, HashMap.class);
-
+                    token = (String) input.get("token");
+//                    System.out.println("Token: " + token + "Command: " + input.get("message"));
                     if (input.get("message").equals("login")) {
-                        System.out.println("login");
+                        moveShoppingCartAndLoginServer((String)input.get("username"));
                     }
                     if (input.get("message").equals("isUsernameWithThisName")) {
                         isUsernameWithThisNameServer((String)input.get("username"));
@@ -118,10 +125,44 @@ public class MainServer {
                     if (input.get("message").equals("getAllFilters")) {
                         getAllFiltersServer((String)input.get("categoryFilter"));
                     }
+                    if (input.get("message").equals("logout")) {
+                        logoutServer();
+                    }
+                    if (input.get("message").equals("hasManager?")) {
+                        hasManagerServer();
+                    }
                 } catch (IOException exception) {
                     //exception.printStackTrace();
                 }
             }
+        }
+
+        private void hasManagerServer() {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", Manager.hasManager);
+            sendMessage(hashMap);
+        }
+
+        private void logoutServer() {
+            TokenHandler.removeEntryByToken(token);
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", "Ok");
+            sendMessage(hashMap);
+        }
+
+        private void moveShoppingCartAndLoginServer(String username) {
+            User user = User.getUserByUsername(username);
+            if (user instanceof Customer) {
+                for (Product product : guest.getCart()) {
+                   ((Customer) user).addToCart(product);
+                }
+                guest.getCart().clear();
+            }
+
+            HashMap<String, Object> hashMap = new HashMap<>();
+            TokenHandler.createToken(username);
+            hashMap.put("content", TokenHandler.getTokenOfUsername(username));
+            sendMessage(hashMap);
         }
 
         private void getAllFiltersServer(String categoryFilter) {
@@ -195,6 +236,18 @@ public class MainServer {
         }
 
         private void secondSendMessage(HashMap<String, Object> hashMap) {
+            if (!token.isEmpty()) {
+                if (!TokenHandler.validateToken(token)) {
+                    hashMap.put("tokenStatus", "expired");
+                }
+                else {
+                    hashMap.put("tokenStatus", "ok");
+                }
+            }
+            else {
+                hashMap.put("tokenStatus", "ok");
+            }
+
             try {
                 DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
                 Gson gson = new Gson();
@@ -208,6 +261,17 @@ public class MainServer {
         }
 
         private void sendMessage(HashMap<String, Object> hashMap) {
+            if (!token.isEmpty()) {
+                if (!TokenHandler.validateToken(token)) {
+                    hashMap.put("tokenStatus", "expired");
+                }
+                else {
+                    hashMap.put("tokenStatus", "ok");
+                }
+            }
+            else {
+                hashMap.put("tokenStatus", "ok");
+            }
             try {
                 DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
                 Gson gson = new Gson();

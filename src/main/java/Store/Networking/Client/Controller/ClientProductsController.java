@@ -46,4 +46,5 @@ public class ClientProductsController {
         hashMap.put("categoryFilter", categoryFilter);
         return new HashSet<>((ArrayList<String>) ClientHandler.sendAndReceiveMessage(hashMap).get("content"));
     }
+
 }

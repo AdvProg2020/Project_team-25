@@ -1,11 +1,9 @@
 package Store.View;
 
-import Store.Controller.MainMenuUIController;
-
 import Store.InputManager;
 import Store.Main;
-
-import Store.Model.User;
+import Store.Networking.Client.ClientHandler;
+import Store.Networking.Client.Controller.ClientMainMenuController;
 import Store.Networking.Client.Controller.ClientSignUpAndLoginController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -54,12 +52,10 @@ public class LoginMenuUI {
     }
 
     public static void handleEvent() {
-        if (MainMenuUIController.currentUser == MainMenuUIController.guest) {
+        if (!ClientHandler.hasLoggedIn) {
             showLoginMenu();
-        }
-        else {
-            MainMenuUIController.setCurrentUser(MainMenuUIController.guest);
-
+        } else {
+            ClientMainMenuController.setCurrentUser("");
             logoutSoundEffect = new Media(LoginMenuUI.class.getResource("/Audio/Bubble-Pop-Sound-Effect.wav").toExternalForm());
             soundEffectPlayer = new MediaPlayer(logoutSoundEffect);
             soundEffectPlayer.setVolume(0.5);
@@ -70,8 +66,7 @@ public class LoginMenuUI {
     public static void showLoginMenu() {
         try {
             Main.setupOtherStage(new Scene(getContent()), "Login");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -123,8 +118,8 @@ public class LoginMenuUI {
             setError(passwordField, true);
             return;
         }
-//        Tokenize
-        MainMenuUIController.setCurrentUser(User.getUserByUsername(username)); //ATTENTION
+        ClientMainMenuController.setCurrentUser(username);
+//        MainMenuUIController.setCurrentUser(User.getUserByUsername(username)); //ATTENTION
 //        moveShoppingCart();
         ((Stage) loginButton.getScene().getWindow()).close();
     }
@@ -152,8 +147,7 @@ public class LoginMenuUI {
             if (!styleClass.contains("error")) {
                 styleClass.add("error");
             }
-        }
-        else {
+        } else {
             styleClass.removeAll(Collections.singleton("error"));
         }
     }
@@ -184,7 +178,7 @@ public class LoginMenuUI {
         }
     }
 
-//    public static void loginWrapper() {
+    //    public static void loginWrapper() {
 //        if (MainMenu.currentUser == MainMenu.guest) {
 //            SignUpCustomerAndSellerMenuUI.init();
 //            if (MainMenu.currentUser != MainMenu.guest) {
@@ -195,12 +189,7 @@ public class LoginMenuUI {
 //        }
 //    }
 //
-//    private static void moveShoppingCart() {
-//        if (MainMenuUIController.currentUser instanceof Customer) {
-//            for (Product product : MainMenuUIController.guest.getCart()) {
-//                ((Customer) MainMenuUIController.currentUser).addToCart(product);
-//            }
-//        }
-//        MainMenuUIController.guest.getCart().clear();
-//    }
+    private static void moveShoppingCart() {
+        ClientSignUpAndLoginController.moveShoppingCart(ClientHandler.username);
+    }
 }

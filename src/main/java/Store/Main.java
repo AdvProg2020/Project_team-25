@@ -84,7 +84,7 @@ public class Main extends Application {
         primaryStage.setOnCloseRequest(e -> {
             ResourceHandler.writeAll();
         });
-        setupBGM();
+//        setupBGM();
     }
 
 

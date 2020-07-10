@@ -9,6 +9,10 @@ import java.util.Map;
 public class HashMapGenerator {
     public static HashMap<String, Object> getUserHashMap(User user) {
         HashMap<String, Object> hashMap = new HashMap<>();
+        if (user == null) {
+            hashMap.put("type", "Customer");
+            return hashMap;
+        }
         hashMap.put("username", user.getUsername());
         hashMap.put("name", user.getName());
         hashMap.put("familyName", user.getFamilyName());
@@ -23,6 +27,7 @@ public class HashMapGenerator {
             hashMap.put("companyName", ((Seller) user).getCompanyName());
             hashMap.put("companyDescription", ((Seller) user).getCompanyDescription());
         }
+        hashMap.put("type", user.getType());
         return hashMap;
     }
 

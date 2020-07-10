@@ -1,10 +1,9 @@
 package Store.View;
 
 import Store.Controller.MainMenuUIController;
-import Store.Main;
-import Store.Model.Customer;
-import Store.Model.Manager;
-import Store.Model.Seller;
+import Store.Networking.Client.ClientHandler;
+import Store.Networking.Client.Controller.ClientMainMenuController;
+import Store.Networking.Client.Controller.ClientSignUpAndLoginController;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -19,6 +18,7 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 public class MainMenuUI {
 
@@ -51,13 +51,13 @@ public class MainMenuUI {
 
 
     private void initialSetup() {
-        loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
-        signUpButton.disableProperty().bind(MainMenuUIController.isLoggedIn);
-        loginLogoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
+        loggedInStatusText.textProperty().bind(ClientMainMenuController.currentUserUsername);
+        signUpButton.disableProperty().bind(ClientMainMenuController.isLoggedIn);
+        loginLogoutButton.textProperty().bind(ClientMainMenuController.loginLogoutButtonText);
         setupAds();
 
         Platform.runLater(() -> {
-            while (!Manager.hasManager) {
+            while (!ClientMainMenuController.hasManager()) {
                 SignUpManagerMenuUI.showSignUpMenu();
             }
         });
@@ -122,11 +122,13 @@ public class MainMenuUI {
         productsButton.setOnAction((e) -> ProductsMenuUI.showProductsMenu());
         offersButton.setOnAction((e) -> OffersMenuUI.showOffersMenu());
         userPageButton.setOnAction(e -> {
-            if (MainMenuUIController.currentUser instanceof Customer)
+            Map<String, Object> userInfo = ClientSignUpAndLoginController.getUserInfo(ClientHandler.username);
+            System.out.println(userInfo.get("type"));
+            if (userInfo.get("type").equals("Customer"))
                 CustomerMenuUI.showCustomerMenu();
-            else if (MainMenuUIController.currentUser instanceof Seller)
+            else if (userInfo.get("type").equals("Seller"))
                 SellerMenuUI.showSellerMenu();
-            else if (MainMenuUIController.currentUser instanceof Manager)
+            else if (userInfo.get("type").equals("Manager"))
                 ManagerMenuUI.showManagerMenu();
         });
     }
