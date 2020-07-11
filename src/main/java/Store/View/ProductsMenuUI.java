@@ -387,13 +387,13 @@ public class ProductsMenuUI {
 
         productInfo.getChildren().addAll(imageView, productName, gridPane, getProductRating(product), isAvailable, separator);
         vBox.getChildren().add(productInfo);
-//        productInfo.setOnMouseClicked(event -> {
-//            try {
-//                Main.setPrimaryStageScene(new Scene(ProductMenuUI.getContent(product)));
-//            } catch (IOException exception) {
-//                exception.printStackTrace();
-//            }
-//        });
+        productInfo.setOnMouseClicked(event -> {
+            try {
+                Main.setPrimaryStageScene(new Scene(ProductMenuUI.getContent(product)));
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        });
 
     }
 
@@ -472,7 +472,7 @@ public class ProductsMenuUI {
         hBox.setAlignment(Pos.TOP_CENTER);
         int minRate = 0;
         if (!product.get("averageRating").equals("NaN")) {
-            minRate = (int) Math.round((Double) product.get("averageRating"));
+            minRate = (int) Math.round(Double.parseDouble((String) product.get("averageRating")));
         }
         int stars = 1;
         File file;

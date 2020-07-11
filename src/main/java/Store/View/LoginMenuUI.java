@@ -189,7 +189,7 @@ public class LoginMenuUI {
 //        }
 //    }
 //
-    private static void moveShoppingCart() {
-        ClientSignUpAndLoginController.moveShoppingCart(ClientHandler.username);
-    }
+//    private static void moveShoppingCart() {
+//        ClientSignUpAndLoginController.moveShoppingCart(ClientHandler.username);
+//    }
 }

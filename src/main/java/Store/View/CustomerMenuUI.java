@@ -468,13 +468,13 @@ public class CustomerMenuUI implements Initializable {
         Label id = new Label(), name = new Label(), sellerName = new Label(), category = new Label(), brand = new Label(), average = new Label(), price = new Label(), productStatus = new Label();
         Button viewProduct = new Button("View Product");
         viewProduct.setPrefWidth(100);
-        viewProduct.setOnAction(e -> {
-            try {
-                Main.setPrimaryStageScene(new Scene(ProductMenuUI.getContent(product)));
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-        });
+//        viewProduct.setOnAction(e -> {
+//            try {
+//                Main.setPrimaryStageScene(new Scene(ProductMenuUI.getContent(product)));
+//            } catch (IOException ioException) {
+//                ioException.printStackTrace();
+//            }
+//        });
         vBoxes.get(10).getChildren().add(viewProduct);
         id.setText(product.getProductID() + "");
         name.setText(product.getName());

@@ -1,8 +1,9 @@
 package Store.View;
 
-import Store.Controller.*;
 import Store.Main;
-import Store.Model.*;
+
+import Store.Networking.Client.Controller.ClientMainMenuController;
+import Store.Networking.Client.Controller.ClientProductsController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -19,15 +20,9 @@ import javafx.scene.layout.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 
-import Store.Controller.MainMenuUIController;
-import Store.Controller.ProductsController;
-import Store.Main;
-import Store.Model.Category;
-import Store.Model.Manager;
-import Store.Model.Product;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -54,7 +49,7 @@ import java.util.HashSet;
 public class OffersMenuUI {
     private static ArrayList<String> filters;
     private static ArrayList<String> availableFilters;
-    private static ArrayList<Product> productsToBeShown;
+    private static List<Map<String, Object>> productsToBeShown;
     private static String[] availableSorts = new String[]{"visit", "rating", "price", "lexicographical"};
     private static String currentSort;
 
@@ -123,9 +118,9 @@ public class OffersMenuUI {
 
 
     private void initialSetup() {
-        loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
-        signUpButton.disableProperty().bind(MainMenuUIController.isLoggedIn);
-        loginLogoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
+        loggedInStatusText.textProperty().bind(ClientMainMenuController.currentUserUsername);
+        signUpButton.disableProperty().bind(ClientMainMenuController.isLoggedIn);
+        loginLogoutButton.textProperty().bind(ClientMainMenuController.loginLogoutButtonText);
     }
 
     public void setupBindings() {
@@ -254,19 +249,20 @@ public class OffersMenuUI {
             showProducts();
         });
         vBox.getChildren().addAll(base, new Separator(), new Separator());
-        for (Category category : Manager.getAllCategories()) {
-            Label categoryName = new Label(category.getName());
+        ArrayList<Map<String, Object>> allCategories = ClientProductsController.getAllCategories();
+        for (Map<String, Object> category : allCategories) {
+            Label categoryName = new Label((String) category.get("name"));
             categoryName.setId("categoryButton");
             categoryName.setOnMouseClicked(event -> {
                 Stage stage = (Stage) categoryName.getScene().getWindow();
                 stage.close();
-                categoryFilter = category.getName();
+                categoryFilter = (String) category.get("name");
                 pageNumber = 1;
                 pageNumberField.setText(Integer.toString(pageNumber));
                 showProducts();
             });
             HBox hBox = new HBox();
-            for (String filter : new HashSet<>(category.getFilters())) {
+            for (String filter : new HashSet<String>((ArrayList) category.get("filters"))) {
                 Button button = new Button(filter);
                 button.setId("filter");
                 Region region = new Region();
@@ -320,9 +316,9 @@ public class OffersMenuUI {
             VBox thirdColumnProducts = new VBox();
 
             int productsNumber = 0;
-            for (Product product : productsToBeShown) {
+            for (Map<String, Object> product : productsToBeShown) {
                 try {
-                    Thread.sleep(200);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -355,8 +351,8 @@ public class OffersMenuUI {
 
     }
 
-    private void setGraphicsOfProducts(VBox vBox, Product product) {
-        Offer offer = Offer.getOfferOfProduct(product);
+    private void setGraphicsOfProducts(VBox vBox, Map<String, Object> product) {
+        Map<String, Object> offer = (Map<String, Object>)product.get("offer");
         if (offer == null) {
             return;
         }
@@ -369,41 +365,41 @@ public class OffersMenuUI {
 
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(10);
-        product.getImagePath();
-        File file;
-        if (product.getImagePath().equals("")) {
-            file = new File("src/main/resources/Images/images.jpg");
-        } else {
-            file = new File(product.getImagePath());
-        }
-
+//        product.getImagePath();
+//        File file;
+//        if (product.getImagePath().equals("")) {
+//            file = new File("src/main/resources/Images/images.jpg");
+//        } else {
+//            file = new File(product.getImagePath());
+//        }
+        File file = new File("src/main/resources/Images/images.jpg");
         ImageView imageView = new ImageView(new Image(file.toURI().toString()));
 
         imageView.setFitWidth(225);
         imageView.setFitHeight(225);
 
-        Label productName = new Label(product.getName());
-        Label productPrice = new Label(product.getPrice() + "$");
-        Label productShouldPaidPrice = new Label((product.getPrice() - (product.getPrice() * offer.getOffPercent() / 100.0)) + "$");
-        Label productRating = new Label(product.getAverageRating() + "/5");
+        Label productName = new Label((String) product.get("name"));
+        Label productPrice = new Label(product.get("price") + "$");
+        Label productShouldPaidPrice = new Label((Double.parseDouble((String) product.get("price")) - (Double.parseDouble((String) product.get("price")) * Double.parseDouble((String) offer.get("offPercent")) / 100.0)) + "$");
+        Label productRating = new Label(product.get("averageRating") + "/5");
         Label startingLabel = new Label();
         Label endingLabel = new Label();
         try {
-            startingLabel.setText("Starting Time: " + new Date(offer.getStartingTime().getTime()).toLocalDate());
-            endingLabel.setText("Ending Time: " + new Date(offer.getEndingTime().getTime()).toLocalDate());
+            startingLabel.setText("Starting Time: " + offer.get("startingTime"));
+            endingLabel.setText("Ending Time: " + offer.get("endingTime"));
         } catch (Exception exception) {
             // do nothing
         }
-        Label isAvailable = new Label(product.getAvailablity() ? "Available" : "Unavailable");
+        Label isAvailable = new Label((Boolean)product.get("availability") ? "Available" : "Unavailable");
         isAvailable.setPrefWidth(vBox.getPrefWidth());
         isAvailable.setAlignment(Pos.CENTER);
         productShouldPaidPrice.setAlignment(Pos.CENTER_LEFT);
         productPrice.setAlignment(Pos.CENTER_RIGHT);
 
-        if (!product.getAvailablity()) {
+        if (!(Boolean)product.get("availability")) {
             productInfo.setId("unavailableProduct");
         } else {
-            isAvailable.setStyle(product.getAvailablity() ? "-fx-background-color: #BFFF00;" : "-fx-background-color: #C40233;");
+            isAvailable.setStyle((Boolean)product.get("availability") ? "-fx-background-color: #BFFF00;" : "-fx-background-color: #C40233;");
         }
         gridPane.add(productPrice, 0, 0);
         gridPane.add(productShouldPaidPrice, 1, 0);
@@ -428,17 +424,12 @@ public class OffersMenuUI {
     }
 
     private void setTobeShownProducts() {
-        Offer.calculateAllOffProducts();
-        productsToBeShown = OffersController.sortProductsInOffers(currentSort, filters);
-        productsToBeShown = ProductsController.handleStaticFiltering(productsToBeShown, categoryFilter, priceLowFilter,
-                priceHighFilter, brandFilter, nameFilter, sellerUsernameFilter, availabilityFilter);
-        productsToBeShown = ProductsController.filterProductsWithSearchQuery(productsToBeShown, searchQuery);
-        productsToBeShown = ProductsController.sort(currentSort, productsToBeShown);
+        productsToBeShown = ClientProductsController.getToBeShownOfferedProducts(filters, categoryFilter, priceLowFilter, priceHighFilter, brandFilter, nameFilter, sellerUsernameFilter, availabilityFilter, searchQuery, currentSort);
         totalPages = (productsToBeShown.size() + 17) / 18;
         if (productsToBeShown.isEmpty()) {
             totalPages = 1;
         }
-        ArrayList<Product> productsInThisPage = new ArrayList<>();
+        ArrayList<Map<String, Object>> productsInThisPage = new ArrayList<>();
         try {
             for (int i = 0; i < 18; i++) {
                 productsInThisPage.add(productsToBeShown.get(18 * (pageNumber - 1) + i));
@@ -451,7 +442,7 @@ public class OffersMenuUI {
 
     private void setCategoryFiltersVBox() {
         categoryFiltersVBox.getChildren().clear();
-        availableFilters = new ArrayList(Product.getAllFilters(categoryFilter));
+        availableFilters = new ArrayList(ClientProductsController.getAllFilters(categoryFilter));
         for (String filter : availableFilters) {
             CheckBox checkBox = new CheckBox(filter);
             categoryFiltersVBox.getChildren().add(checkBox);
@@ -486,19 +477,24 @@ public class OffersMenuUI {
     }
 
     private void setRangeOfSliders() {
-        priceHighSlider.setMax((int) ProductsController.getPriceHigh() + 1);
+        int priceHigh = (int) Math.round((Double) ClientProductsController.getPriceHigh());
+        int priceLow = (int) Math.round((Double) ClientProductsController.getPriceLow());
+        priceHighSlider.setMax(priceHigh);
         priceHighSlider.setValue(priceHighSlider.getMax());
-        priceHighSlider.setMin((int) ProductsController.getPriceLow());
-        priceLowSlider.setMax((int) ProductsController.getPriceHigh() + 1);
-        priceLowSlider.setMin((int) ProductsController.getPriceLow());
+        priceHighSlider.setMin(priceLow);
+        priceLowSlider.setMax(priceHigh);
+        priceLowSlider.setMin(priceLow);
         priceHighLabel.setText("Price High: " + ((int) priceHighSlider.getMax() + 1) + "$");
         priceLowLabel.setText("Price Low:   " + (int) priceHighSlider.getMin() + "$");
     }
 
-    private HBox getProductRating(Product product) {
+    private HBox getProductRating(Map<String, Object> product) {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.TOP_CENTER);
-        int minRate = (int) (product.getAverageRating() + 0.5);
+        int minRate = 0;
+        if (!product.get("averageRating").equals("NaN")) {
+            minRate = (int) Math.round((Double.parseDouble((String) product.get("averageRating"))));
+        }
         int stars = 1;
         File file;
         while (stars <= 5) {
