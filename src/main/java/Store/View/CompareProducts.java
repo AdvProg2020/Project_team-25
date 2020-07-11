@@ -1,10 +1,8 @@
 package Store.View;
 
-import Store.Controller.MainMenuUIController;
-import Store.Controller.ProductController;
 import Store.Main;
-import Store.Model.Product;
-import Store.Model.Seller;
+
+import Store.Networking.Client.Controller.ClientProductController;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,9 +12,11 @@ import javafx.scene.control.Label;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class CompareProducts {
-    private static Product firstProduct, secondProduct;
+    private static Map<String, Object> firstProduct, secondProduct;
 
     public Label nameFirst;
     public Label brandFirst;
@@ -49,7 +49,7 @@ public class CompareProducts {
 
     }
 
-    public static void showLoginMenu(Product product1, Product product2) {
+    public static void showLoginMenu(Map<String, Object> product1, Map<String, Object> product2) {
         try {
             Main.setupOtherStage(new Scene(getContent(product1, product2)), "Login");
         }
@@ -58,7 +58,7 @@ public class CompareProducts {
         }
     }
 
-    private static Parent getContent(Product product1, Product product2) throws IOException {
+    private static Parent getContent(Map<String, Object> product1, Map<String, Object> product2) throws IOException {
         firstProduct = product1;
         secondProduct = product2;
         Parent root = FXMLLoader.load(SignUpCustomerAndSellerMenuUI.class.getClassLoader().getResource("FXML/CompareProducts.fxml"));
@@ -72,11 +72,11 @@ public class CompareProducts {
     }
 
     private void setupFilterLabels() {
-        filtersFirstTitle.setText(filtersFirstTitle.getText() + " " + firstProduct.getName());
-        filtersSecondTitle.setText(filtersSecondTitle.getText() + " " + secondProduct.getName());
+        filtersFirstTitle.setText(filtersFirstTitle.getText() + " " + firstProduct.get("name"));
+        filtersSecondTitle.setText(filtersSecondTitle.getText() + " " + secondProduct.get("name"));
 
-        ArrayList<String> filtersFirst = firstProduct.getFilters();
-        ArrayList<String> filtersSecond = secondProduct.getFilters();
+        ArrayList<String> filtersFirst = (ArrayList<String>) firstProduct.get("filters");
+        ArrayList<String> filtersSecond = (ArrayList<String>) secondProduct.get("filters");
 
         ArrayList<String> allFilters = new ArrayList<>();
         allFilters.addAll(filtersFirst);
@@ -101,12 +101,12 @@ public class CompareProducts {
     }
 
     private void setupLabels() {
-        nameFirst.setText(firstProduct.getName() + "   (ID: " + firstProduct.getProductID() + ")");
-        brandFirst.setText(firstProduct.getBrand());
-        descriptionFirst.setText(firstProduct.getDescription());
-        priceFirst.setText("" + firstProduct.getPrice());
-        if (firstProduct.getCategory() != null) {
-            categoryFirst.setText(firstProduct.getCategory().getFullName());
+        nameFirst.setText(firstProduct.get("name") + "   (ID: " + firstProduct.get("id") + ")");
+        brandFirst.setText((String) firstProduct.get("brand"));
+        descriptionFirst.setText((String) firstProduct.get("description"));
+        priceFirst.setText("" + firstProduct.get("price"));
+        if (firstProduct.get("category") != null) {
+            categoryFirst.setText((String) ((Map<String, Object>)firstProduct.get("category")).get("fullName"));
         }
         else {
             categoryFirst.setText("None");
@@ -114,32 +114,32 @@ public class CompareProducts {
 
         sellersFirst.setText(getSellerNameTextList(firstProduct));
 
-        ratingFirst.setText("" + firstProduct.getAverageRating());
+        ratingFirst.setText("" + firstProduct.get("averageRating"));
 
-        if (firstProduct.getStartingDate() != null) {
-            dateOfOfferFirst.setText(firstProduct.getStartingDate().toString());
+        if (firstProduct.get("startingDate") != null) {
+            dateOfOfferFirst.setText(firstProduct.get("startingDate").toString());
         }
         else {
             dateOfOfferFirst.setText("None");
         }
         handleAvailabilityLabel(firstProduct, statusFirst);
 
-        nameSecond.setText(secondProduct.getName() + "   (ID: " + secondProduct.getProductID() + ")");
-        brandSecond.setText(secondProduct.getBrand());
-        descriptionSecond.setText(secondProduct.getDescription());
-        priceSecond.setText("" + secondProduct.getPrice());
-        if (secondProduct.getCategory() != null) {
-            categorySecond.setText(secondProduct.getCategory().getFullName());
+        nameSecond.setText(secondProduct.get("name") + "   (ID: " + secondProduct.get("id") + ")");
+        brandSecond.setText((String) secondProduct.get("brand"));
+        descriptionSecond.setText((String) secondProduct.get("description"));
+        priceSecond.setText("" + secondProduct.get("price"));
+        if (secondProduct.get("category") != null) {
+            categorySecond.setText((String) ((Map<String, Object>)secondProduct.get("category")).get("fullName"));
         }
         else {
             categorySecond.setText("None");
         }
         sellersSecond.setText(getSellerNameTextList(secondProduct));
 
-        ratingSecond.setText("" + secondProduct.getAverageRating());
+        ratingSecond.setText("" + secondProduct.get("averageRating"));
 
-        if (secondProduct.getStartingDate() != null) {
-            dateOfOfferSecond.setText(secondProduct.getStartingDate().toString());
+        if (secondProduct.get("startingDate") != null) {
+            dateOfOfferSecond.setText(secondProduct.get("startingDate").toString());
         }
         else {
             dateOfOfferSecond.setText("None");
@@ -147,18 +147,18 @@ public class CompareProducts {
         handleAvailabilityLabel(secondProduct, statusSecond);
     }
 
-    private String getSellerNameTextList(Product product) {
-        ArrayList<Seller> allSellersOfProduct = new ArrayList<>();
-        allSellersOfProduct = ProductController.getAllSellersOfProduct(product);
+    private String getSellerNameTextList(Map<String, Object> product) {
+        List<Map<String, Object>> allSellersOfProduct;
+        allSellersOfProduct = ClientProductController.getAllSellersOfProduct((String)product.get("id"));
         String result = "";
-        for (Seller seller : allSellersOfProduct) {
-            result = result.concat(seller.getUsername() + "   ");
+        for (Map<String, Object> seller : allSellersOfProduct) {
+            result = result.concat(seller.get("username") + "   ");
         }
         return result;
     }
 
-    private void handleAvailabilityLabel(Product productToShow, Label productStatusLabel) {
-        if (productToShow.getAvailablity()) {
+    private void handleAvailabilityLabel(Map<String, Object> productToShow, Label productStatusLabel) {
+        if ((Boolean)productToShow.get("availability")) {
             productStatusLabel.setText("Available");
             ObservableList<String> styleClass = productStatusLabel.getStyleClass();
             if (styleClass.contains("unavailable")) {

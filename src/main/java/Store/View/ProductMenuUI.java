@@ -1,12 +1,14 @@
 package Store.View;
 
-import Store.Controller.CustomerController;
-import Store.Controller.MainMenuUIController;
-import Store.Controller.ProductController;
+
 import Store.Controller.SignUpAndLoginController;
 import Store.InputManager;
 import Store.Main;
-import Store.Model.*;
+
+import Store.Networking.Client.ClientHandler;
+import Store.Networking.Client.Controller.ClientMainMenuController;
+import Store.Networking.Client.Controller.ClientProductController;
+import Store.Networking.Client.Controller.ClientSignUpAndLoginController;
 import Store.View.AdditionalUtils.NodeGestures;
 import Store.View.AdditionalUtils.PannableCanvas;
 import Store.View.AdditionalUtils.SceneGestures;
@@ -45,14 +47,12 @@ import org.controlsfx.control.Rating;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 import java.util.regex.Matcher;
 
 public class ProductMenuUI {
 
-    private static Product productToShow = null;
+    private static Map<String, Object> productToShow = null;
     private static final double SCALE_DELTA = 1.1;
 
     private static String sellerName = "";
@@ -115,7 +115,7 @@ public class ProductMenuUI {
 
     }
 
-    public static Parent getContent(Product product) throws IOException {
+    public static Parent getContent(Map product) throws IOException {
         productToShow = product;
         Parent root = FXMLLoader.load(SignUpCustomerAndSellerMenuUI.class.getClassLoader().getResource("FXML/ProductMenu.fxml"));
         return root;
@@ -129,10 +129,10 @@ public class ProductMenuUI {
 
 
     private void initialSetup() {
-        loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
-        signUpButton.disableProperty().bind(MainMenuUIController.isLoggedIn);
-        loginLogoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
-        addToCartButton.setDisable(!productToShow.getAvailablity());
+        loggedInStatusText.textProperty().bind(ClientMainMenuController.currentUserUsername);
+        signUpButton.disableProperty().bind(ClientMainMenuController.isLoggedIn);
+        loginLogoutButton.textProperty().bind(ClientMainMenuController.loginLogoutButtonText);
+        addToCartButton.setDisable((Boolean) productToShow.get("availability"));
 
 //        Media media = new Media(ProductMenuUI.class.getResource("/Undertale_Enemy_Approaching_Yellow_Trimmed.wav").toExternalForm());
 //        MediaPlayer mediaPlayer = new MediaPlayer(media);
@@ -146,8 +146,9 @@ public class ProductMenuUI {
     }
 
     private void setupOffPercentageLabel() {
-        if (Offer.getOfferOfProduct(productToShow) != null) {
-            offPercentageLabel.setText(Offer.getOfferOfProduct(productToShow).getOffPercent() + "% OFF");
+        Map<String, Object> offer = (Map<String, Object>)productToShow.get("offer");
+        if (offer != null) {
+            offPercentageLabel.setText(offer.get("offPercent") + "% OFF");
             offPercentageLabel.setVisible(true);
         }
         else {
@@ -157,20 +158,20 @@ public class ProductMenuUI {
     }
 
     private void setupImageAndVideo() {
-        if (!productToShow.getImagePath().isEmpty()) {
-            String path;
-            if (productToShow.getImagePath().isEmpty()) {
-                path = "src/main/resources/Images/images.jpg";
-            }
-            else {
-                path = productToShow.getImagePath();
-            }
-
-            File file = new File(path);
-            productImageView.setImage(new Image(file.toURI().toString()));
-
-//            productImageView.setImage(new Image(ProductMenuUI.class.getResource("/Images/" + productToShow.getImagePath()).toExternalForm()));
-        }
+//        if (!productToShow.getImagePath().isEmpty()) {
+//            String path;
+//            if (productToShow.getImagePath().isEmpty()) {
+//                path = "src/main/resources/Images/images.jpg";
+//            }
+//            else {
+//                path = productToShow.getImagePath();
+//            }
+//
+//            File file = new File(path);
+//            productImageView.setImage(new Image(file.toURI().toString()));
+//
+////            productImageView.setImage(new Image(ProductMenuUI.class.getResource("/Images/" + productToShow.getImagePath()).toExternalForm()));
+//        }
         PannableCanvas canvas = new PannableCanvas();
 
         setupOffPercentageLabel();
@@ -191,18 +192,18 @@ public class ProductMenuUI {
         imageAndVideoVBox.getChildren().add(new AnchorPane(group));
         handleImageAndVideoGrayscale();
 
-        if (!productToShow.getVideoPath().isEmpty()) {
-            //System.out.println(ProductMenuUI.class.getResource("/Videos/" + productToShow.getVideoPath()).toExternalForm());
-            String path;
-            path = productToShow.getVideoPath();
-            File file = new File(path);
-            videoPlayer = new VideoPlayer(file.toURI().toString());
-            imageAndVideoVBox.getChildren().add(videoPlayer);
-        }
+//        if (!productToShow.getVideoPath().isEmpty()) {
+//            //System.out.println(ProductMenuUI.class.getResource("/Videos/" + productToShow.getVideoPath()).toExternalForm());
+//            String path;
+//            path = productToShow.getVideoPath();
+//            File file = new File(path);
+//            videoPlayer = new VideoPlayer(file.toURI().toString());
+//            imageAndVideoVBox.getChildren().add(videoPlayer);
+//        }
     }
 
     private void handleImageAndVideoGrayscale() {
-        if (!productToShow.getAvailablity()) {
+        if (!(Boolean)productToShow.get("availability")) {
             ColorAdjust monochrome = new ColorAdjust();
             monochrome.setSaturation(-1);
             imageAndVideoVBox.setEffect(monochrome);
@@ -215,21 +216,21 @@ public class ProductMenuUI {
     }
 
     private void setupLabels() {
-        nameLabel.setText(productToShow.getName() + "   (ID: " + productToShow.getProductID() + ")");
-        brandLabel.setText(productToShow.getBrand());
-        descriptionLabel.setText(productToShow.getDescription());
-        priceLabel.setText("" + productToShow.getPrice());
-        if (productToShow.getCategory() != null) {
-            categoryLabel.setText(productToShow.getCategory().getFullName());
+        nameLabel.setText(productToShow.get("name") + "   (ID: " + productToShow.get("id") + ")");
+        brandLabel.setText((String) productToShow.get("brand"));
+        descriptionLabel.setText((String) productToShow.get("description"));
+        priceLabel.setText("" + productToShow.get("price"));
+        if (productToShow.get("category") != null) {
+            categoryLabel.setText((String) ((Map<String, Object>)productToShow.get("category")).get("fullName"));
         }
         else {
             categoryLabel.setText("None");
         }
 
-        averageRatingLabel.setText("" + productToShow.getAverageRating());
+        averageRatingLabel.setText("" + productToShow.get("averageRating"));
 
-        if (productToShow.getStartingDate() != null) {
-            dateOfOfferLabel.setText(productToShow.getStartingDate().toString());
+        if (productToShow.get("startingDate") != null) {
+            dateOfOfferLabel.setText(productToShow.get("startingDate").toString());
         }
         else {
             dateOfOfferLabel.setText("None");
@@ -237,7 +238,7 @@ public class ProductMenuUI {
 
         handleAvailabilityLabel();
 
-        ArrayList<String> filters = productToShow.getFilters();
+        ArrayList<String> filters = (ArrayList<String>) productToShow.get("filters");
         String filtersString = "";
         for (String filter : filters) {
             filtersString = filtersString.concat(filter + "   ");
@@ -246,7 +247,7 @@ public class ProductMenuUI {
     }
 
     private void handleAvailabilityLabel() {
-        if (productToShow.getAvailablity()) {
+        if (!(Boolean)productToShow.get("availability")) {
             productStatusLabel.setText("Available");
             ObservableList<String> styleClass = productStatusLabel.getStyleClass();
             if (styleClass.contains("unavailable")) {
@@ -265,15 +266,15 @@ public class ProductMenuUI {
     }
 
     private void setupSellerOptions() {
-        ArrayList<Seller> allSellersOfProduct = ProductController.getAllSellersOfProduct(productToShow);
-        System.out.println(productToShow.getName());
-        for (Seller seller : allSellersOfProduct) {
-            System.out.println("SELLER: " + seller.getUsername());
-            Button currentButton = new Button(seller.getUsername());
-            if (seller == productToShow.getSeller()) {
+        List<Map<String, Object>> allSellersOfProduct = ClientProductController.getAllSellersOfProduct((String) productToShow.get("id"));
+        System.out.println(productToShow.get("name"));
+        for (Map<String, Object> seller : allSellersOfProduct) {
+            System.out.println("SELLER: " + seller.get("username"));
+            Button currentButton = new Button((String) seller.get("username"));
+            if (seller.get("username").equals(((Map<String, Object>)productToShow.get("seller")).get("username"))) {
                 currentButton.setDisable(true);
             }
-            currentButton.setOnAction((e) -> changeProductSeller(seller.getUsername()));
+            currentButton.setOnAction((e) -> changeProductSeller((String) seller.get("username")));
             currentButton.getStylesheets().add(ProductMenuUI.class.getResource("/CSS/product_menu_stylesheet.css").toExternalForm());
             currentButton.getStyleClass().add("sellerButton");
             sellerButtons.add(currentButton);
@@ -283,10 +284,10 @@ public class ProductMenuUI {
     }
 
     private void changeProductSeller(String username) {
-        Product newProduct = ProductController.getProductWithDifferentSeller(productToShow, username);
+        Map<String, Object> newProduct = ClientProductController.getProductWithDifferentSeller((String)productToShow.get("id"), username);
         for (Button button : sellerButtons) {
             button.setDisable(false);
-            if (button.getText().equalsIgnoreCase(newProduct.getSeller().getUsername())) {
+            if (button.getText().equalsIgnoreCase((String) ((Map<String, Object>)newProduct.get("seller")).get("username"))) {
                 button.setDisable(true);
             }
         }
@@ -294,7 +295,7 @@ public class ProductMenuUI {
         setupImageAndVideo();
         handleAvailabilityLabel();
         setupCommentsSection();
-        addToCartButton.setDisable(!productToShow.getAvailablity());
+        addToCartButton.setDisable(!(Boolean)productToShow.get("availability"));
     }
 
     public void setupBindings() {
@@ -335,13 +336,18 @@ public class ProductMenuUI {
     }
 
     private void handleCanRate() {
-        if (!(MainMenuUIController.currentUser instanceof Customer)) {
+        Map<String, Object> customer = ClientSignUpAndLoginController.getUserInfo(ClientHandler.username);
+        if (!ClientHandler.hasLoggedIn) {
             setRatingDisable(true);
         }
-        else if (productToShow.hasBeenRatedBefore((Customer) MainMenuUIController.currentUser)) {
+        else if (!(customer.get("type").equals("Customer"))) {
             setRatingDisable(true);
         }
-        else if (!((Customer) MainMenuUIController.currentUser).hasBoughtProduct(productToShow)) {
+
+        else if (ClientProductController.hasBeenRated((String) productToShow.get("id"), ClientHandler.username)) {
+            setRatingDisable(true);
+        }
+        else if (!ClientProductController.hasBoughtProduct((String) productToShow.get("id"), ClientHandler.username)) {
             setRatingDisable(true);
         }
         else {
@@ -367,10 +373,10 @@ public class ProductMenuUI {
     }
 
     private void handleRating() {
-        CustomerController.rateProduct((Customer) MainMenuUIController.currentUser, productToShow, currentRating);
+        ClientProductController.rateProduct(ClientHandler.username, productToShow, currentRating);
         resetStars();
         handleCanRate();
-        averageRatingLabel.setText("" + productToShow.getAverageRating());
+        averageRatingLabel.setText("" + productToShow.get("averageRating"));
     }
 
     private void handleSubmitComment() {
@@ -382,12 +388,16 @@ public class ProductMenuUI {
             throwError("Please fill out both fields");
             return;
         }
+        if (!ClientHandler.hasLoggedIn) {
+            throwError("You Should Log In");
+            return;
+        }
         String title = commentTitleTextField.getText();
         String content = commentContentTextArea.getText();
         System.out.println(title);
         System.out.println(content);
         resetAllFields();
-        ProductController.addComment(productToShow, MainMenuUIController.currentUser, title, content);
+        ClientProductController.addComment(productToShow, ClientHandler.username, title, content);
         throwError("Comment submitted");
         setupCommentsSection();
     }
@@ -423,9 +433,10 @@ public class ProductMenuUI {
         }
     }
 
-    private void addToCart(Product product) {
-        if (MainMenuUIController.currentUser instanceof Customer) {
-            ((Customer) MainMenuUIController.currentUser).addToCart(product);
+    private void addToCart(Map<String, Object> product) {
+        Map<String, Object> customer = ClientSignUpAndLoginController.getUserInfo(ClientHandler.username);
+        if (customer.get("type").equals("Customer")) {
+            ClientProductController.addToCart(ClientHandler.username, (String)product.get("id"));
         }
         else {
             throwError("Only customer type accounts can\nadd products to their cart");
@@ -434,26 +445,26 @@ public class ProductMenuUI {
 
     private void setupCommentsSection() {
         commentSectionVBox.getChildren().clear();
-        for (Comment comment : productToShow.getComments()) {
+        for (Map<String, Object> comment : (ArrayList<Map<String, Object>>)productToShow.get("comments")) {
             commentSectionVBox.getChildren().add(createCommentBox(comment));
         }
     }
 
-    private VBox createCommentBox(Comment comment) {
+    private VBox createCommentBox(Map<String, Object> comment) {
         Label title = new Label();
-        title.setText(comment.getCommentTitle());
+        title.setText((String) comment.get("title"));
         title.setStyle("-fx-text-fill: black;" +
                 "-fx-font-size: 16;" +
                 "-fx-font-weight: bold;" +
                 "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0.0, 0.0);");
 
         Label userCredentials = new Label();
-        userCredentials.setText(comment.getCommentingUser().getUsername() + " a.k.a " + comment.getCommentingUser().getName());
+        userCredentials.setText(comment.get("username") + " a.k.a ");
         userCredentials.setStyle("-fx-text-fill: #00579e;" +
                 "-fx-font-size: 16;");
 
         Label buyStatus = new Label();
-        if (comment.getHasBought()) {
+        if ((Boolean)comment.get("hasBought")) {
             buyStatus.setText("--Has bought this product");
             buyStatus.setStyle("-fx-text-fill: green;" +
                     "-fx-font-size: 16;" +
@@ -467,7 +478,7 @@ public class ProductMenuUI {
         }
 
         Label content = new Label();
-        content.setText(comment.getCommentText());
+        content.setText((String) comment.get("text"));
         content.setStyle("-fx-text-fill: black;" +
                 "-fx-font-size: 16;");
 
@@ -487,13 +498,14 @@ public class ProductMenuUI {
             setError(compareProductIDTextField, true);
             return;
         }
-        if (Product.getProductByID(Integer.parseInt(otherID)) == null) {
+        Map<String, Object> secondProduct = ClientProductController.getComparedProduct(otherID);
+        if (secondProduct == null) {
             setError(compareProductIDTextField, true);
             return;
         }
 
         setError(compareProductIDTextField, false);
         compareProductIDTextField.setText("");
-        CompareProducts.showLoginMenu(productToShow, Product.getProductByID(Integer.parseInt(otherID)));
+        CompareProducts.showLoginMenu(productToShow, secondProduct);
     }
 }
