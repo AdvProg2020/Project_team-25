@@ -1,9 +1,13 @@
-package Store.Networking;
+package Store.Networking.Chat;
+
+import Store.View.SupportPageUI;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,12 +31,18 @@ public class ChatClient {
         chatDataInputStream = new DataInputStream(new BufferedInputStream(chatClientSocket.getInputStream()));
         chatDataOutputStream = new DataOutputStream(new BufferedOutputStream(chatClientSocket.getOutputStream()));
 
+        chatDataOutputStream.writeUTF("CONNECT " + username + " " + token);
+        chatDataOutputStream.flush();
+        String result = chatDataInputStream.readUTF();
+        if (!result.equals("ACK")) {
+            System.err.println("Server did not acknowledge");
+            return;
+        }
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    chatDataOutputStream.writeUTF("CONNECT " + username + " " + token);
-                    chatDataOutputStream.flush();
                     handleInput();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -51,6 +61,7 @@ public class ChatClient {
     }
 
     public void sendMessageTo(String username, String token, String destination, String message) throws IOException {
+        handleMessage(destination, message, true);
         chatDataOutputStream.writeUTF("MESSAGE " + username + " " + token + " " + destination + "-" + message);
         chatDataOutputStream.flush();
     }
@@ -74,10 +85,11 @@ public class ChatClient {
             System.out.println("COMMAND: " + command);
             if ((matcher = getMatcher(command, MESSAGE_REGEX)).find()) {
                 System.out.println("GOT MESSAGE: " + matcher.group(1) + " " + matcher.group(2));
-                handleMessage(matcher.group(1), matcher.group(2));
+                handleMessage(matcher.group(1), matcher.group(2), false);
             }
             else if (command.matches(GET_OPERATORS_REGEX)) {
                 currentOperators = command.substring(10);
+                makeChatsForOperators();
             }
             else if (command.equals("END ACK")) {
                 break;
@@ -85,17 +97,45 @@ public class ChatClient {
         }
     }
 
-    public void handleMessage(String username, String message) {
+    private void makeChatsForOperators() {
+        String[] operators = currentOperators.split(" ");
+        for (String operator : operators) {
+            if (getChatWithUser(operator) == null) {
+                chats.add(new PrivateChat(operator));
+            }
+        }
+    }
+
+    public void handleMessage(String username, String message, boolean ownerStatus) {
         for (PrivateChat privateChat : chats) {
             if (privateChat.getUsername().equals(username)) {
-                privateChat.addMessage(message);
+                privateChat.addMessage(message, ownerStatus);
+                System.out.println("ADDING A MESSAGE WITH OWNERSHIP: " + ownerStatus);
+                SupportPageUI.supportPageUI.updateInterface();
                 return;
             }
         }
 
         PrivateChat newChat = new PrivateChat(username);
-        newChat.addMessage(message);
+        newChat.addMessage(message, ownerStatus);
         chats.add(newChat);
+
+        SupportPageUI.supportPageUI.updateInterface();
+    }
+
+    public ArrayList<PrivateChat> getSortedChats() {
+        ArrayList<PrivateChat> result = new ArrayList<>(chats);
+
+        result.sort(new Comparator<PrivateChat>() {
+            @Override
+            public int compare(PrivateChat privateChat, PrivateChat t1) {
+                return privateChat.getLastActivity().compareTo(t1.getLastActivity());
+            }
+        });
+
+        Collections.reverse(result);
+
+        return result;
     }
 
     private static Matcher getMatcher(String string, String regex) {

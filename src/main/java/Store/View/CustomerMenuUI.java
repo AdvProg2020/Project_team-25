@@ -100,6 +100,8 @@ public class CustomerMenuUI implements Initializable {
     public PasswordField newPass;
     public PasswordField confirmationNewPass;
 
+    public Button supportPageButton;
+
     static BuyLogItem showedBuyLog;
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -189,6 +191,7 @@ public class CustomerMenuUI implements Initializable {
         loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
         logoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
         signUpButton.disableProperty().bind(MainMenuUIController.isLoggedIn);
+        supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
         logoutButton.setOnAction((e) -> {
             LoginMenuUI.handleEvent();
             if (MainMenuUIController.currentUser instanceof Seller || MainMenuUIController.currentUser instanceof Manager) {

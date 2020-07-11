@@ -6,16 +6,74 @@
 	-fx-background-color: #fcfcfc;
 }
 
+.selectedChatOption {
+	-fx-background-color: #0088d1;
+	-fx-background-radius: 2px;
+	-fx-border-radius: 2px;
+	-fx-min-width: 185;
+	-fx-perf-width: 185;
+}
+
+.checkedChatOption {
+	-fx-background-color: #ababab;
+	-fx-background-radius: 2px;
+	-fx-border-radius: 2px;
+	-fx-min-width: 185;
+	-fx-perf-width: 185;
+}
+.checkedChatOption:hover {
+	-fx-background-color: #c7c7c7;
+}
+.checkedChatOption:pressed {
+	-fx-background-color: #8a8a8a;
+}
+
+.uncheckedChatOption {
+	-fx-background-color: #92e080;
+	-fx-background-radius: 2px;
+	-fx-border-radius: 2px;
+	-fx-min-width: 185;
+	-fx-perf-width: 185;
+}
+.uncheckedChatOption:hover {
+	-fx-background-color: #a4e396;
+}
+.uncheckedChatOption:pressed {
+	-fx-background-color: #649c57;
+}
+
 .currentChat {
 	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 2, 0, 0, 0);
 	-fx-background-radius: 5px;
 	-fx-perf-width: 150;
+	
 }
 
 .messageArea {
 	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
 	-fx-background-color: #fcfcfc;
 	-fx-background-radius: 5px;
+}
+
+.messageText {
+	-fx-text-fill: white;
+	-fx-max-width: 500;
+}
+
+.ownedMessage {
+	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+	-fx-background-color: #51c736;
+	-fx-border-radius: 10 10 3 10;
+	-fx-background-radius: 10 10 3 10;
+	-fx-padding: 5px;
+}
+
+.notOwnedMessage {
+	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+	-fx-background-color: #9c9c9c;
+	-fx-border-radius: 10 10 10 3;
+	-fx-background-radius: 10 10 10 3;
+	-fx-padding: 5px;
 }
 
 .sendButton {
@@ -28,7 +86,6 @@
 	-fx-background-radius: 40px;
 	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
 }
-
 .sendButton:hover {
 	-fx-background-color: #b0f759;
     -fx-border-width: 1, 1;
@@ -36,7 +93,6 @@
 	-fx-background-radius: 40px;
 	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
 }
-
 .sendButton:pressed {
 	-fx-background-color: #518017;
     -fx-text-fill: white;

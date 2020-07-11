@@ -36,6 +36,7 @@ public class OperatorMenuUI {
     public Button productsButton;
     public Button offersButton;
     public Button userPageButton;
+    public Button supportPageButton;
     public Button signUpButton;
     public Button loginLogoutButton;
     public Label loggedInStatusText;
@@ -74,6 +75,7 @@ public class OperatorMenuUI {
 
     public void setupBindings() {
         offersButton.setOnAction((e) -> OffersMenuUI.showOffersMenu());
+        supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
         loginLogoutButton.setOnAction((e) -> {
             LoginMenuUI.handleEvent();
             try {

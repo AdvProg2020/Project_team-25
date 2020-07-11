@@ -40,6 +40,7 @@ public class ManagerMenuUI {
     public Button productsButton;
     public Button offersButton;
     public Button userPageButton;
+    public Button supportPageButton;
     public Button signUpButton;
     public Button loginLogoutButton;
     public Label loggedInStatusText;
@@ -562,6 +563,7 @@ public class ManagerMenuUI {
 
     public void setupBindings() {
         offersButton.setOnAction((e) -> OffersMenuUI.showOffersMenu());
+        supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
         loginLogoutButton.setOnAction((e) -> {
             LoginMenuUI.handleEvent();
             try {

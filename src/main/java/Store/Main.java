@@ -3,6 +3,7 @@ package Store;
 import Store.Controller.MainMenuUIController;
 import Store.Model.*;
 import Store.Model.Enums.CheckingStatus;
+import Store.Networking.Chat.ChatServer;
 import Store.Networking.Client.ClientHandler;
 import Store.Networking.MainServer;
 import Store.View.*;
@@ -34,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Date;
+import java.util.Scanner;
 
 public class Main extends Application {
     private static Stage applicationStage;
@@ -105,18 +107,24 @@ public class Main extends Application {
 //        thread.setDaemon(true);
 //        thread.start();
         //        setTest();
-        MainMenuUIController.currentUser = MainMenuUIController.guest;
-        Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
-        setTest();
-        setOffers();
-        try {
-            MainServer server = new MainServer();
-            ClientHandler.setPort(server.getPort());
-            ClientHandler.setSocket(new Socket("localhost", ClientHandler.getPort()));
-        } catch (IOException exception) {
-            exception.printStackTrace();
+        Scanner scanner = new Scanner(System.in);
+        if (scanner.nextLine().equals("S")) {
+            handleServer();
         }
-        launch(args);
+        else {
+            MainMenuUIController.currentUser = MainMenuUIController.guest;
+//        Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
+//        setTest();
+//        setOffers();
+            try {
+//            MainServer server = new MainServer();
+                ClientHandler.setPort(Integer.parseInt(scanner.nextLine()));
+                ClientHandler.setSocket(new Socket("localhost", ClientHandler.getPort()));
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+            launch(args);
+        }
     }
 
     public static void setupBGM() {
@@ -167,6 +175,8 @@ public class Main extends Application {
 
         Operator operator = new Operator("jalal", "jalal", "hemmati", "jalal@gmail.com", "09330342211", "1234");
         manager1.addNewOperator(operator);
+        Operator operator1 = new Operator("aghasi", "aghasi", "aghasi", "jalal@gmail.com", "09330342211", "1234");
+        manager1.addNewOperator(operator1);
 
         Customer customer = new Customer("customer1", "customer1", "customer1", "lab@lab.com", "0912", "1234", 1000);
         customer.setMoney(1000);
@@ -323,6 +333,19 @@ public class Main extends Application {
         animation.play();
 
         return popup;
+    }
+
+    public static void handleServer() {
+        Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
+        Main.setTest();
+        Main.setOffers();
+        try {
+            MainServer server = new MainServer();
+            ChatServer chatServer = new ChatServer();
+            System.out.println(server.getPort());
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     public static Stage getApplicationStage() {
