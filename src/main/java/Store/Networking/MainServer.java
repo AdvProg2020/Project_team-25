@@ -1,11 +1,7 @@
 package Store.Networking;
 
-import Store.Controller.ProductsController;
-import Store.Controller.SignUpAndLoginController;
-import Store.Model.Customer;
-import Store.Model.Manager;
-import Store.Model.Product;
-import Store.Model.User;
+import Store.Controller.*;
+import Store.Model.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -93,28 +89,31 @@ public class MainServer {
                     token = (String) input.get("token");
 //                    System.out.println("Token: " + token + "Command: " + input.get("message"));
                     if (input.get("message").equals("login")) {
-                        moveShoppingCartAndLoginServer((String)input.get("username"));
+                        moveShoppingCartAndLoginServer((String) input.get("username"));
                     }
                     if (input.get("message").equals("isUsernameWithThisName")) {
-                        isUsernameWithThisNameServer((String)input.get("username"));
+                        isUsernameWithThisNameServer((String) input.get("username"));
                     }
                     if (input.get("message").equals("isUsernameExistInRequests")) {
-                        isUsernameExistInRequestsServer((String)input.get("username"));
+                        isUsernameExistInRequestsServer((String) input.get("username"));
                     }
                     if (input.get("message").equals("createOrdinaryAccount")) {
-                        handleCreateOrdinaryAccountServer((String)input.get("type"), (ArrayList<String>)input.get("attributes"));
+                        handleCreateOrdinaryAccountServer((String) input.get("type"), (ArrayList<String>) input.get("attributes"));
                     }
                     if (input.get("message").equals("createManagerAccount")) {
-                        handleCreateManagerAccountServer((ArrayList<String>)input.get("attributes"));
+                        handleCreateManagerAccountServer((ArrayList<String>) input.get("attributes"));
                     }
                     if (input.get("message").equals("getUserInfo")) {
-                        getUserByUsernameServer((String)input.get("username"));
+                        getUserByUsernameServer((String) input.get("username"));
                     }
                     if (input.get("message").equals("getAllCategories")) {
                         getAllCategoriesServer();
                     }
                     if (input.get("message").equals("getProducts")) {
                         getProductsServer(input);
+                    }
+                    if (input.get("message").equals("getOfferedProducts")) {
+                        getOfferedProductsServer(input);
                     }
                     if (input.get("message").equals("getPriceHigh")) {
                         getPriceHighServer();
@@ -123,7 +122,7 @@ public class MainServer {
                         getPriceLowServer();
                     }
                     if (input.get("message").equals("getAllFilters")) {
-                        getAllFiltersServer((String)input.get("categoryFilter"));
+                        getAllFiltersServer((String) input.get("categoryFilter"));
                     }
                     if (input.get("message").equals("logout")) {
                         logoutServer();
@@ -131,11 +130,115 @@ public class MainServer {
                     if (input.get("message").equals("hasManager?")) {
                         hasManagerServer();
                     }
+                    if (input.get("message").equals("getAllSellersOfProduct")) {
+                        getAllSellerOfProductServer((String) input.get("id"));
+                    }
+                    if (input.get("message").equals("getProductWithDifferentSeller")) {
+                        getProductWithDifferentSellerServer((String) input.get("id"), (String) input.get("username"));
+                    }
+                    if (input.get("message").equals("getComparedProduct")) {
+                        getComparedProductServer((String) input.get("id"));
+                    }
+                    if (input.get("message").equals("rateProduct")) {
+                        rateProductServer(input);
+                    }
+                    if (input.get("message").equals("commentProduct")) {
+                        commentProductServer(input);
+                    }
+                    if (input.get("message").equals("hasBeenRated?")) {
+                        hasBeenRatedServer(input);
+                    }
+                    if (input.get("message").equals("hasBoughtProduct?")) {
+                        hasBoughtProductServer(input);
+                    }
+                    if (input.get("message").equals("addToCart")) {
+                        addToCartServer(input);
+                    }
+
                 } catch (IOException exception) {
                     //exception.printStackTrace();
                 }
             }
         }
+
+        private void addToCartServer(HashMap input) {
+            Product product = Product.getProductByID(Integer.parseInt((String) input.get("id")));
+            Customer customer = (Customer) User.getUserByUsername((String) input.get("username"));
+            HashMap<String, Object> hashMap = new HashMap<>();
+            if (customer == null) {
+                guest.addToCart(product);
+            } else {
+                customer.addToCart(product);
+            }
+            hashMap.put("content", "Ok");
+            sendMessage(hashMap);
+        }
+
+        private void hasBoughtProductServer(HashMap input) {
+            Product product = Product.getProductByID(Integer.parseInt((String) input.get("id")));
+            Customer customer = (Customer) User.getUserByUsername((String) input.get("username"));
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", customer.hasBoughtProduct(product));
+            sendMessage(hashMap);
+        }
+
+        private void getOfferedProductsServer(HashMap input) {
+            ArrayList<Product> productsToBeShown = OffersController.getFilteredList((ArrayList<String>) input.get("filters"));
+            productsToBeShown = ProductsController.handleStaticFiltering(productsToBeShown, (String) input.get("categoryFilter"), (Double) input.get("priceLowFilter"),
+                    (Double) input.get("priceHighFilter"), (String) input.get("brandFilter"), (String) input.get("nameFilter"), (String) input.get("sellerUsernameFilter"), (String) input.get("availabilityFilter"));
+            productsToBeShown = ProductsController.filterProductsWithSearchQuery(productsToBeShown, (String) input.get("searchQuery"));
+            productsToBeShown = ProductsController.sort((String) input.get("currentSort"), productsToBeShown);
+
+            HashMap<String, Object> hashMap = new HashMap<>();
+
+            hashMap.put("content", HashMapGenerator.getListOfProducts(productsToBeShown));
+
+            sendMessage(hashMap);
+        }
+
+        private void hasBeenRatedServer(HashMap input) {
+            Product product = Product.getProductByID(Integer.parseInt((String) input.get("id")));
+            Customer customer = (Customer) User.getUserByUsername((String) input.get("username"));
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", product.hasBeenRatedBefore(customer));
+            sendMessage(hashMap);
+        }
+
+        private void commentProductServer(HashMap input) {
+            ProductController.addComment(Product.getProductByID(Integer.parseInt((String) input.get("id"))), (Customer) User.getUserByUsername((String) input.get("username")), (String) input.get("title"), (String) input.get("content"));
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", "Ok");
+            sendMessage(hashMap);
+        }
+
+        private void rateProductServer(HashMap input) {
+            CustomerController.rateProduct((Customer) User.getUserByUsername((String) input.get("username")), Product.getProductByID(Integer.parseInt((String) input.get("id"))), (Double) input.get("currentRating"));
+//            check
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", "Ok");
+            sendMessage(hashMap);
+        }
+
+        private void getComparedProductServer(String productID) {
+            Product product = Product.getProductByID(Integer.parseInt(productID));
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", HashMapGenerator.getProductHashMap(product));
+            sendMessage(hashMap);
+        }
+
+        private void getProductWithDifferentSellerServer(String productID, String username) {
+            Product product = ProductController.getProductWithDifferentSeller(Product.getProductByID(Integer.parseInt(productID)), username);
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", HashMapGenerator.getProductHashMap(product));
+            sendMessage(hashMap);
+        }
+
+        private void getAllSellerOfProductServer(String productID) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", HashMapGenerator.getListOfUsers(ProductController.getAllSellersOfProduct(Product.getProductByID(Integer.parseInt(productID)))));
+            sendMessage(hashMap);
+        }
+
 
         private void hasManagerServer() {
             HashMap<String, Object> hashMap = new HashMap<>();
@@ -154,7 +257,7 @@ public class MainServer {
             User user = User.getUserByUsername(username);
             if (user instanceof Customer) {
                 for (Product product : guest.getCart()) {
-                   ((Customer) user).addToCart(product);
+                    ((Customer) user).addToCart(product);
                 }
                 guest.getCart().clear();
             }
@@ -183,18 +286,18 @@ public class MainServer {
             sendMessage(hashMap);
         }
 
-        private void getProductsServer(HashMap input) { ;
+        private void getProductsServer(HashMap input) {
+            ;
             ArrayList<Product> productsToBeShown = ProductsController.getFilteredList((ArrayList<String>) input.get("filters"));
-            productsToBeShown = ProductsController.handleStaticFiltering(productsToBeShown, (String)input.get("categoryFilter"), (Double)input.get("priceLowFilter"),
-                    (Double)input.get("priceHighFilter"), (String)input.get("brandFilter"), (String)input.get("nameFilter"), (String)input.get("sellerUsernameFilter"), (String) input.get("availabilityFilter"));
+            productsToBeShown = ProductsController.handleStaticFiltering(productsToBeShown, (String) input.get("categoryFilter"), (Double) input.get("priceLowFilter"),
+                    (Double) input.get("priceHighFilter"), (String) input.get("brandFilter"), (String) input.get("nameFilter"), (String) input.get("sellerUsernameFilter"), (String) input.get("availabilityFilter"));
             productsToBeShown = ProductsController.filterProductsWithSearchQuery(productsToBeShown, (String) input.get("searchQuery"));
             productsToBeShown = ProductsController.sort((String) input.get("currentSort"), productsToBeShown);
 
             HashMap<String, Object> hashMap = new HashMap<>();
 
             hashMap.put("content", HashMapGenerator.getListOfProducts(productsToBeShown));
-
-            secondSendMessage(hashMap);
+            sendMessage(hashMap);
         }
 
         private void getAllCategoriesServer() {
@@ -235,41 +338,14 @@ public class MainServer {
             sendMessage(hashMap);
         }
 
-        private void secondSendMessage(HashMap<String, Object> hashMap) {
-            if (!token.isEmpty()) {
-                if (!TokenHandler.validateToken(token)) {
-                    hashMap.put("tokenStatus", "expired");
-                }
-                else {
-                    hashMap.put("tokenStatus", "ok");
-                }
-            }
-            else {
-                hashMap.put("tokenStatus", "ok");
-            }
-
-            try {
-                DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
-                Gson gson = new Gson();
-
-                dataOutputStream.writeUTF(hashMap.toString());
-                dataOutputStream.flush();
-            }
-            catch (Exception exception) {
-//
-            }
-        }
-
         private void sendMessage(HashMap<String, Object> hashMap) {
             if (!token.isEmpty()) {
                 if (!TokenHandler.validateToken(token)) {
                     hashMap.put("tokenStatus", "expired");
-                }
-                else {
+                } else {
                     hashMap.put("tokenStatus", "ok");
                 }
-            }
-            else {
+            } else {
                 hashMap.put("tokenStatus", "ok");
             }
             try {
@@ -278,8 +354,7 @@ public class MainServer {
 
                 dataOutputStream.writeUTF(gson.toJson(hashMap));
                 dataOutputStream.flush();
-            }
-            catch (Exception exception) {
+            } catch (Exception exception) {
 //
             }
         }

@@ -47,4 +47,19 @@ public class ClientProductsController {
         return new HashSet<>((ArrayList<String>) ClientHandler.sendAndReceiveMessage(hashMap).get("content"));
     }
 
+    public static List<Map<String, Object>> getToBeShownOfferedProducts(ArrayList<String> filters, String categoryFilter, double priceLowFilter, double priceHighFilter, String brandFilter, String nameFilter, String sellerUsernameFilter, String availabilityFilter, String searchQuery, String currentSort) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "getOfferedProducts");
+        hashMap.put("filters", filters);
+        hashMap.put("categoryFilter", categoryFilter);
+        hashMap.put("priceLowFilter", priceLowFilter);
+        hashMap.put("priceHighFilter", priceHighFilter);
+        hashMap.put("brandFilter", brandFilter);
+        hashMap.put("nameFilter", nameFilter);
+        hashMap.put("sellerUsernameFilter", sellerUsernameFilter);
+        hashMap.put("searchQuery",searchQuery);
+        hashMap.put("currentSort", currentSort);
+        hashMap.put("availabilityFilter", availabilityFilter);
+        return (List<Map<String, Object>>) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
+    }
 }

@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class OffersController {
 
-    private static ArrayList<Product> getFilteredList(ArrayList<String> filters) {
+    public static ArrayList<Product> getFilteredList(ArrayList<String> filters) {
         ArrayList<Product> products = Offer.getAllOffProducts();
         System.out.println(products.size());
         try {
