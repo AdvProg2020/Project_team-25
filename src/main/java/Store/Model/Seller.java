@@ -16,6 +16,7 @@ public class Seller extends User {
     private ArrayList<SellLogItem> sellLog = new ArrayList<SellLogItem>();
     private ArrayList<Product> products = new ArrayList<Product>();
     private ArrayList<Offer> offers = new ArrayList<Offer>();
+    private boolean hasBankAccount = false;
 
     public Seller(String username, String name, String familyName, String email, String phoneNumber, String password, double money, String companyName, String companyDescription) {
         super(username, name, familyName, email, phoneNumber, password);
@@ -41,6 +42,14 @@ public class Seller extends User {
     public static void addSeller(Seller seller)
     {
         allUsers.add(seller);
+    }
+
+    public boolean isHasBankAccount() {
+        return hasBankAccount;
+    }
+
+    public void setHasBankAccount(boolean hasBankAccount) {
+        this.hasBankAccount = hasBankAccount;
     }
 
     public void addProduct(Product product)

@@ -6,6 +6,9 @@ import Store.InputManager;
 import Store.Main;
 import Store.Model.*;
 import Store.Model.Log.BuyLogItem;
+import Store.Networking.BankAPI;
+import Store.Networking.Client.ClientHandler;
+import Store.Networking.HashMapGenerator;
 import com.jfoenix.animation.alert.CenterTransition;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -54,6 +57,7 @@ public class CustomerMenuUI implements Initializable {
     public Tab product;
     public Tab discount;
     public Tab buyHistory;
+    public Tab bank;
 
     public Label balance;
     public Button personalInfoButton;
@@ -78,6 +82,8 @@ public class CustomerMenuUI implements Initializable {
     public TextField emailTextField;
     public TextField phoneNumberTextField;
     public TextField initialMoneyTextField;
+    public Button createBankAccount;
+    public Button loginBankAccount;
     public Label errorText;
 
     public Label factor = new Label("");
@@ -100,7 +106,12 @@ public class CustomerMenuUI implements Initializable {
     public PasswordField newPass;
     public PasswordField confirmationNewPass;
 
+    public PasswordField bankPass;
+    public PasswordField bankPassRepeat;
+
     public Button supportPageButton;
+
+    static String token = "";
 
     static BuyLogItem showedBuyLog;
     @FXML
@@ -120,6 +131,10 @@ public class CustomerMenuUI implements Initializable {
             menuState = "CustomerMenu";
         }
         else if (menuState.equalsIgnoreCase("enterPass"))
+        {
+
+        }
+        else if (menuState.equalsIgnoreCase("createBankAccount"))
         {
 
         }
@@ -188,6 +203,8 @@ public class CustomerMenuUI implements Initializable {
         personal.setOnSelectionChanged(e -> setupInitialPersonalMenu());
         discount.setOnSelectionChanged(e -> setupInitialPersonalMenu());
         buyHistory.setOnSelectionChanged(e -> setupInitialPersonalMenu());
+        bank.setOnSelectionChanged(e -> setupInitialPersonalMenu());
+        bank.setDisable(customer.isHasBankAccount());
         loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
         logoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
         signUpButton.disableProperty().bind(MainMenuUIController.isLoggedIn);
@@ -381,6 +398,22 @@ public class CustomerMenuUI implements Initializable {
         phoneNumberTextField.setText(customer.getPhoneNumber());
         usernameTextField.setText(customer.getUsername());
         usernameTextField.setEditable(false);
+        createBankAccount.setOnMouseClicked(e -> {
+            try {
+                openStage("createBankAccount");
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+        createBankAccount.setDisable(!customer.isHasBankAccount());
+        loginBankAccount.setOnMouseClicked(e -> {
+            try {
+                openStage("loginBankAccount");
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+
     }
 
     public void changePassAction()
@@ -403,6 +436,106 @@ public class CustomerMenuUI implements Initializable {
             }
         } catch (Exception exception) {
             throwError(exception.getMessage());
+        }
+    }
+
+    public void createBankAccountFinal() {
+        if (bankPass.getText().isEmpty() || bankPassRepeat.getText().isEmpty())
+            throwError("Something is wrong!");
+        else {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("message", "bank");
+            hashMap.put("sent to bank server", "create_account " + customer.getName() + " " + customer.getFamilyName() + " " + customer.getUsername() + " " + bankPass.getText() + " " + bankPassRepeat.getText());
+            hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
+            if (hashMap.get("content").equals("error"))
+                throwError((String)hashMap.get("type"));
+            else
+                ((Stage)bankPass.getScene().getWindow()).close();
+        }
+    }
+
+    public void loginBankAccountFinal(){
+        if (bankPass.getText().isEmpty())
+            throwError("Something is wrong!");
+        else {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("message", "bank");
+            hashMap.put("sent to bank server", "get_token " + customer.getUsername() + " " + bankPass.getText());
+            hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
+            if (hashMap.get("content").equals("error"))
+                throwError((String)hashMap.get("type"));
+            else{
+                token = (String)hashMap.get("content");
+                ((Stage)bankPass.getScene().getWindow()).close();
+            }
+        }
+    }
+
+    public void moveMoneyBank()
+    {
+        createReceipt(token, "move", moneyBank.getText(), sourceId.getText(), destId.getText(), descriptionBank.getText());
+    }
+
+    public void deposit()
+    {
+        createReceipt(token, "deposit", moneyBank.getText(), -1 + "", destId.getText(), descriptionBank.getText());
+    }
+
+    public void withdraw()
+    {
+        createReceipt(token, "move", moneyBank.getText(), sourceId.getText(), -1 + "", descriptionBank.getText());
+    }
+
+    public void createReceipt(String token, String type, String money, String source, String dest, String descriptionBank)
+    {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "bank");
+        hashMap.put("sent to bank server", "create_receipt " + token + " " + type + " " + money + " " + source + " " + dest + " " + descriptionBank);
+        hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
+        if (hashMap.get("content").equals("error")) {
+            throwError((String) hashMap.get("type"));
+        }
+        else{
+            ((Stage)moneyBank.getScene().getWindow()).close();
+        }
+    }
+
+    public void getBalance()
+    {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "bank");
+        hashMap.put("sent to bank server", "get_balance " + token);
+        hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
+        if (hashMap.get("content").equals("error"))
+            throwError((String)hashMap.get("type"));
+        else{
+            bankBalance.setText((String)hashMap.get("content"));
+        }
+    }
+
+    public void getTransactionsFinal()
+    {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "bank");
+        hashMap.put("sent to bank server", "get_transactions " + token + " " + type.getText());
+        hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
+        if (hashMap.get("content").equals("error"))
+            throwError((String)hashMap.get("type"));
+        else{
+            showTransactions(hashMap.get("content"));
+        }
+    }
+
+    public void pay()
+    {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "bank");
+        hashMap.put("sent to bank server", "pay " + receiptId.getText());
+        hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
+        if (hashMap.get("content").equals("error"))
+            throwError((String)hashMap.get("type"));
+        else{
+            throwError((String)hashMap.get("content"));
         }
     }
 

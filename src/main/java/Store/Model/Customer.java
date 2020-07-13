@@ -12,6 +12,7 @@ public class Customer extends User {
     private double money;
     private ArrayList<BuyLogItem> buyLog = new ArrayList<BuyLogItem>();
     private ArrayList<Product> cart = new ArrayList<Product>();
+    private boolean hasBankAccount = false;
 
     public Customer(String username, String name, String familyName, String email, String phoneNumber, String password, double money) {
         super(username, name, familyName, email, phoneNumber, password);
@@ -23,6 +24,15 @@ public class Customer extends User {
         super(user.getUsername(), user.getName(), user.getFamilyName(), user.getEmail(), user.getPhoneNumber(), password);
         this.money = money;
         this.type = "Customer";
+    }
+
+
+    public boolean isHasBankAccount() {
+        return hasBankAccount;
+    }
+
+    public void setHasBankAccount(boolean hasBankAccount) {
+        this.hasBankAccount = hasBankAccount;
     }
 
     public static void addCustomer(Customer customer) {

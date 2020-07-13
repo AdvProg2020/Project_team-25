@@ -112,6 +112,9 @@ public class MainServer {
                     if (input.get("message").equals("getProducts")) {
                         getProductsServer(input);
                     }
+                    if (input.get("messege").equals("getAuctionsProducts")){
+                        getAuctionsServer(input);
+                    }
                     if (input.get("message").equals("getOfferedProducts")) {
                         getOfferedProductsServer(input);
                     }
@@ -154,8 +157,11 @@ public class MainServer {
                     if (input.get("message").equals("addToCart")) {
                         addToCartServer(input);
                     }
-
-                } catch (IOException exception) {
+                    if (input.get("message").equals("bank"))
+                    {
+                        bankFuncs(input.get("sent to bank server"));
+                    }
+                } catch (Exception exception) {
                     //exception.printStackTrace();
                 }
             }
@@ -287,10 +293,21 @@ public class MainServer {
         }
 
         private void getProductsServer(HashMap input) {
-            ;
             ArrayList<Product> productsToBeShown = ProductsController.getFilteredList((ArrayList<String>) input.get("filters"));
             productsToBeShown = ProductsController.handleStaticFiltering(productsToBeShown, (String) input.get("categoryFilter"), (Double) input.get("priceLowFilter"),
                     (Double) input.get("priceHighFilter"), (String) input.get("brandFilter"), (String) input.get("nameFilter"), (String) input.get("sellerUsernameFilter"), (String) input.get("availabilityFilter"));
+            productsToBeShown = ProductsController.filterProductsWithSearchQuery(productsToBeShown, (String) input.get("searchQuery"));
+            productsToBeShown = ProductsController.sort((String) input.get("currentSort"), productsToBeShown);
+
+            HashMap<String, Object> hashMap = new HashMap<>();
+
+            hashMap.put("content", HashMapGenerator.getListOfProducts(productsToBeShown));
+            sendMessage(hashMap);
+        }
+
+        private void getAuctionsServer(HashMap input) {
+            ArrayList<Product> productsToBeShown = AuctionsController.getFilteredList((ArrayList<String>) input.get("filters"));
+            productsToBeShown = AuctionsController.handleStaticFiltering(productsToBeShown, (String) input.get("categoryFilter"), (String) input.get("brandFilter"), (String) input.get("nameFilter"), (String) input.get("sellerUsernameFilter"), (String) input.get("availabilityFilter"));
             productsToBeShown = ProductsController.filterProductsWithSearchQuery(productsToBeShown, (String) input.get("searchQuery"));
             productsToBeShown = ProductsController.sort((String) input.get("currentSort"), productsToBeShown);
 
@@ -338,6 +355,87 @@ public class MainServer {
             sendMessage(hashMap);
         }
 
+        private void bankFuncs(Object sent_to_bank_server) throws Exception {
+            String object = (String)BankAPI.sendMessageAndReceive(sent_to_bank_server);
+            HashMap<String, Object> hashMap = new HashMap<>();
+            if (object.equalsIgnoreCase("invalid receipt type")){
+                hashMap.put("content", "error");
+                hashMap.put("type", "invalid receipt type");
+            }
+            else if (object.equalsIgnoreCase("invalid receipt id")){
+                hashMap.put("content", "error");
+                hashMap.put("type", "invalid receipt id");
+            }
+            else if (object.equalsIgnoreCase("invalid username or password")){
+                hashMap.put("content", "error");
+                hashMap.put("type", "invalid username or password");
+            }
+            else if (object.equalsIgnoreCase("invalid money")){
+                hashMap.put("content", "error");
+                hashMap.put("type", "invalid money");
+            }
+            else if (object.equalsIgnoreCase("invalid parameters passed")){
+                hashMap.put("content", "error");
+                hashMap.put("type", "invalid parameters passed");
+            }
+            else if (object.equalsIgnoreCase("token is invalid")){
+                hashMap.put("content", "error");
+                hashMap.put("type", "token is invalid");
+            }
+            else if (object.equalsIgnoreCase("token expired")){
+                hashMap.put("content", "error");
+                hashMap.put("type", "token expired");
+            }
+            else if (object.equalsIgnoreCase("source account id is invalid")){
+                hashMap.put("content", "error");
+                hashMap.put("type", "source account id is invalid");
+            }
+            else if (object.equalsIgnoreCase("source account does not have enough money")){
+                hashMap.put("content", "error");
+                hashMap.put("type", "source account does not have enough money");
+            }
+            else if (object.equalsIgnoreCase("dest account id is invalid")){
+                hashMap.put("content", "error");
+                hashMap.put("type", "dest account id is invalid");
+            }
+            else if (object.equalsIgnoreCase("receipt is paid before")){
+                hashMap.put("content", "error");
+                hashMap.put("type", "receipt is paid before");
+            }
+            else if (object.equalsIgnoreCase("equal source and dest account")){
+                hashMap.put("content", "error");
+                hashMap.put("type", "equal source and dest account");
+            }
+            else if (object.equalsIgnoreCase("invalid account id")){
+                hashMap.put("content", "error");
+                hashMap.put("type", "invalid account id");
+            }
+            else if (object.equalsIgnoreCase("your input contains invalid characters")){
+                hashMap.put("content", "error");
+                hashMap.put("type", "your input contains invalid characters");
+            }
+            else if (object.equalsIgnoreCase("passwords do not match")){
+                hashMap.put("content", "error");
+                hashMap.put("type", "passwords do not match");
+            }
+            else if (object.equalsIgnoreCase("username is not available")){
+                hashMap.put("content", "error");
+                hashMap.put("type", "username is not available");
+            }
+            else if (object.equalsIgnoreCase("invalid input")){
+                hashMap.put("content", "error");
+                hashMap.put("type", "invalid input");
+            }
+            else if (object.equalsIgnoreCase("database error")){
+                hashMap.put("content", "error");
+                hashMap.put("type", "database error");
+            }
+            else{
+                hashMap.put("content", object);
+            }
+            sendMessage(hashMap);
+        }
+
         private void sendMessage(HashMap<String, Object> hashMap) {
             if (!token.isEmpty()) {
                 if (!TokenHandler.validateToken(token)) {
@@ -358,7 +456,5 @@ public class MainServer {
 //
             }
         }
-
-
     }
 }
