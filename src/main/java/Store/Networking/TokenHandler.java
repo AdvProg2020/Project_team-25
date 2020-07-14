@@ -6,7 +6,8 @@ import java.util.Random;
 public class TokenHandler {
 
     public static final int TOKEN_LENGTH = 50;
-    private static final long EXPIRATION_TIME_MILLISECONDS = 3600000000L;
+//    private static final long EXPIRATION_TIME_MILLISECONDS = 3600000000L;
+    private static final long EXPIRATION_TIME_MILLISECONDS = 10000L;
     private static final String CHARACTER_POOL = "abcdefghijklmnopqrstuvwxyz1234567890";
 
     private static HashMap<String, String> usernameToToken = new HashMap<String, String>();

@@ -158,6 +158,10 @@ public class Main extends Application {
         applicationStage.setScene(scene);
     }
 
+    public static void setApplicationStage(Stage applicationStage) {
+        Main.applicationStage = applicationStage;
+    }
+
     public static void setTest() {
         Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
         Manager manager2 = new Manager("jojoRabbit", "jojo", "rabbit", "lab@lab.com", "0936", "1234");
@@ -222,7 +226,7 @@ public class Main extends Application {
 
         Request request = new Request(seller1);
         Manager.addRequest(request);
-        manager1.handleRequest(request, true);
+//        manager1.handleRequest(request, true);
 
         product1.assignToSeller();
         product2.assignToSeller();

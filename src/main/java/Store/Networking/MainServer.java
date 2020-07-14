@@ -3,13 +3,17 @@ package Store.Networking;
 import Store.Controller.*;
 import Store.Model.*;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MainServer {
@@ -70,6 +74,7 @@ public class MainServer {
         private DataInputStream dataInputStream;
         private Customer guest;
         private String token;
+        private User user;
 
         private ClientThread(Socket socket) throws IOException {
             this.token = "";
@@ -87,6 +92,11 @@ public class MainServer {
                     Gson gson = new Gson();
                     HashMap input = gson.fromJson(string, HashMap.class);
                     token = (String) input.get("token");
+                    if (token.isEmpty() || TokenHandler.getUsernameOfToken(token) == null || token == null) {
+                        user = guest;
+                    } else {
+                        user = User.getUserByUsername(TokenHandler.getUsernameOfToken(token));
+                    }
 //                    System.out.println("Token: " + token + "Command: " + input.get("message"));
                     if (input.get("message").equals("login")) {
                         moveShoppingCartAndLoginServer((String) input.get("username"));
@@ -154,16 +164,194 @@ public class MainServer {
                     if (input.get("message").equals("addToCart")) {
                         addToCartServer(input);
                     }
-
+                    if (input.get("message").equals("editManagerPersonalInfo")) {
+                        editManagerPersonalInfoServer(input);
+                    }
+                    if (input.get("message").equals("getSortedOffCodes")) {
+                        getSortedOffCodesServer(input);
+                    }
+                    if (input.get("message").equals("removeOffCode")) {
+                        removeOffCodeServer(input);
+                    }
+                    if (input.get("message").equals("editOffCode")) {
+                        editOffCodeServer(input);
+                    }
+                    if (input.get("message").equals("isOffCodeWithThisCode")) {
+                        isOffCodeWithThisCodeServer(input);
+                    }
+                    if (input.get("message").equals("assignOffCodeToUser")) {
+                        assignOffCodeToUserServer(input);
+                    }
+                    if (input.get("message").equals("createOffCode")) {
+                        createOffCodeServer(input);
+                    }
+                    if (input.get("message").equals("getAllUsers")) {
+                        getAllUsersServer(input);
+                    }
+                    if (input.get("message").equals("deleteUserByName")) {
+                        deleteUserByNameServer(input);
+                    }
+                    if (input.get("message").equals("removeProduct")) {
+                        removeProductServer(input);
+                    }
+                    if (input.get("message").equals("removeCategory")) {
+                        removeCategoryServer(input);
+                    }
+                    if (input.get("message").equals("isCategoryWithThisName")) {
+                        isCategoryWithThisNameServer(input);
+                    }
+                    if (input.get("message").equals("editCategory")) {
+                        editCategoryServer(input);
+                    }
+                    if (input.get("message").equals("isInFilter")) {
+                        isInFilterServer(input);
+                    }
+                    if (input.get("message").equals("addCategory")) {
+                        addCategoryServer(input);
+                    }
+                    if (input.get("message").equals("getPendingRequests")) {
+                        getPendingRequestsServer();
+                    }
+                    if (input.get("message").equals("removeRequest")) {
+                        removeRequestsServer(input);
+                    }
+                    if (input.get("message").equals("handleRequest")) {
+                        handleRequestsServer(input);
+                    }
                 } catch (IOException exception) {
                     //exception.printStackTrace();
                 }
             }
         }
 
+        private void handleRequestsServer(HashMap input) {
+            ManagerController.handleRequest((Manager) user, (Boolean) input.get("status"), Manager.getRequestById(Integer.parseInt((String) input.get("id"))));
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", "Ok");
+            sendMessage(hashMap);
+        }
+
+        private void removeRequestsServer(HashMap input) {
+            Manager.removeRequest(Manager.getRequestById(Integer.parseInt((String) input.get("id"))));
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", "Ok");
+            sendMessage(hashMap);
+        }
+
+        private void getPendingRequestsServer() {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", HashMapGenerator.getListOfOffRequests(Manager.getPendingRequests()));
+            sendMessage(hashMap);
+        }
+
+        private void addCategoryServer(HashMap input) {
+            ManagerController.addCategory((Manager) user, (String) input.get("name"), (String) input.get("parentName"));
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", "Ok");
+            sendMessage(hashMap);
+        }
+
+        private void isInFilterServer(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", Manager.categoryByName((String) input.get("name")).isInFilter((String) input.get("filter")));
+            sendMessage(hashMap);
+        }
+
+        private void editCategoryServer(HashMap input) {
+            ManagerController.editCategory((Manager) user, Manager.categoryByName((String) input.get("name")), (String) input.get("field"), (String) input.get("newValue"));
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", "Ok");
+            sendMessage(hashMap);
+        }
+
+        private void isCategoryWithThisNameServer(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", Manager.categoryByName((String) input.get("name")) != null);
+            sendMessage(hashMap);
+        }
+
+        private void removeCategoryServer(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", ManagerController.removeCategory((Manager) user, Manager.categoryByName((String) input.get("name"))));
+            sendMessage(hashMap);
+        }
+
+        private void removeProductServer(HashMap input) {
+            ManagerController.removeProducts((Manager) user, Product.getProductByID(Integer.parseInt((String) input.get("id"))));
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", "Ok");
+            sendMessage(hashMap);
+        }
+
+        private void deleteUserByNameServer(HashMap input) {
+            ManagerController.deleteUserByName((Manager) user, (String) input.get("username"));
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", "Ok");
+            sendMessage(hashMap);
+        }
+
+        private void getAllUsersServer(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", HashMapGenerator.getListOfUsers(ManagerController.sortUsers((String) input.get("sort"), User.getAllUsers())));
+            sendMessage(hashMap);
+        }
+
+        private void createOffCodeServer(HashMap input) {
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            try {
+                Date startingDate = format.parse((String) input.get("startingDate"));
+                Date endingDate = format.parse((String) input.get("endingDate"));
+                ManagerController.createOffCode((Manager) user, (String) input.get("code"), (Double) input.get("offPercent"), (Double) input.get("maximumValue"), Integer.parseInt((String) input.get("usageCount")), startingDate, endingDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", "Ok");
+            sendMessage(hashMap);
+        }
+
+        private void assignOffCodeToUserServer(HashMap input) {
+            Manager.assignOffCodeToUser(Manager.getOffCodeByCode((String) input.get("code")), (Customer) User.getUserByUsername((String) input.get("username")));
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", "Ok");
+            sendMessage(hashMap);
+        }
+
+        private void isOffCodeWithThisCodeServer(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", Manager.getOffCodeByCode((String) input.get("code")) != null);
+            sendMessage(hashMap);
+        }
+
+        private void editOffCodeServer(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", ManagerController.editOffCode((Manager) user, Manager.getOffCodeByCode((String) input.get("code")), (String) input.get("field"), (String) input.get("newValue")));
+            sendMessage(hashMap);
+        }
+
+        private void removeOffCodeServer(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", ManagerController.removeOffCode((Manager) user, (String) input.get("code")));
+            sendMessage(hashMap);
+        }
+
+        private void getSortedOffCodesServer(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", HashMapGenerator.getListOfOffCodes(ManagerController.sortOffCodes((String) input.get("sort"), Manager.getOffCodes())));
+            sendMessage(hashMap);
+        }
+
+        private void editManagerPersonalInfoServer(HashMap input) {
+            ManagerController.editPersonalInfo(User.getUserByUsername((String) input.get("username")), (String) input.get("field"), (String) input.get("newValue"));
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", ManagerController.editPersonalInfo(user, (String) input.get("field"), (String) input.get("newValue")));
+            sendMessage(hashMap);
+        }
+
         private void addToCartServer(HashMap input) {
             Product product = Product.getProductByID(Integer.parseInt((String) input.get("id")));
-            Customer customer = (Customer) User.getUserByUsername((String) input.get("username"));
+            Customer customer = (Customer) user;
             HashMap<String, Object> hashMap = new HashMap<>();
             if (customer == null) {
                 guest.addToCart(product);
@@ -235,7 +423,7 @@ public class MainServer {
 
         private void getAllSellerOfProductServer(String productID) {
             HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("content", HashMapGenerator.getListOfUsers(ProductController.getAllSellersOfProduct(Product.getProductByID(Integer.parseInt(productID)))));
+            hashMap.put("content", HashMapGenerator.getListOfSellers(ProductController.getAllSellersOfProduct(Product.getProductByID(Integer.parseInt(productID)))));
             sendMessage(hashMap);
         }
 

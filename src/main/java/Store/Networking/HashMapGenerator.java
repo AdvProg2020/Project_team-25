@@ -21,10 +21,10 @@ public class HashMapGenerator {
         hashMap.put("email", user.getEmail());
         hashMap.put("phoneNumber", user.getPhoneNumber());
         if (user instanceof Customer) {
-            hashMap.put("money", ((Customer) user).getMoney());
+            hashMap.put("money", ((Customer) user).getMoney() + "");
         }
         if (user instanceof Seller) {
-            hashMap.put("money", ((Seller) user).getMoney());
+            hashMap.put("money", ((Seller) user).getMoney() + "");
             hashMap.put("companyName", ((Seller) user).getCompanyName());
             hashMap.put("companyDescription", ((Seller) user).getCompanyDescription());
         }
@@ -102,7 +102,15 @@ public class HashMapGenerator {
         return hashMap;
     }
 
-    public static ArrayList getListOfUsers(ArrayList<Seller> allUsers) {
+    public static ArrayList getListOfSellers(ArrayList<Seller> allUsers) {
+        ArrayList<Map<String, Object>> arrayList = new ArrayList<>();
+        for (User user : allUsers) {
+            arrayList.add(getUserHashMap(user));
+        }
+        return arrayList;
+    }
+
+    public static ArrayList getListOfUsers(ArrayList<User> allUsers) {
         ArrayList<Map<String, Object>> arrayList = new ArrayList<>();
         for (User user : allUsers) {
             arrayList.add(getUserHashMap(user));
@@ -126,8 +134,49 @@ public class HashMapGenerator {
     public static ArrayList getListOfComments(ArrayList<Comment> allComments) {
         ArrayList<Map<String, Object>> arrayList = new ArrayList<>();
         for (Comment comment : allComments) {
-            System.out.println(comment);
             arrayList.add(getCommentHashMap(comment));
+        }
+        return arrayList;
+    }
+
+    public static HashMap<String, Object> getOffCodeHashMap(OffCode offCode) {
+        if (offCode == null) {
+            return null;
+        }
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("code", offCode.getCode());
+        hashMap.put("usageCount", offCode.getUsageCount() + "");
+        hashMap.put("offPercentage", offCode.getOffPercentage() + "");
+        hashMap.put("maximumOff", offCode.getMaximumOff() + "");
+        hashMap.put("startingTime", new Date(offCode.getStartingTime().getTime()).toLocalDate().toString());
+        hashMap.put("endingTime", new Date(offCode.getStartingTime().getTime()).toLocalDate().toString());
+        return hashMap;
+    }
+
+    public static ArrayList getListOfOffCodes(ArrayList<OffCode> allOffCodes) {
+        ArrayList<Map<String, Object>> arrayList = new ArrayList<>();
+        for (OffCode offCode : allOffCodes) {
+            arrayList.add(getOffCodeHashMap(offCode));
+        }
+        return arrayList;
+    }
+
+    public static HashMap<String, Object> getRequestHashMap(Request request) {
+        if (request == null) {
+            return null;
+        }
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("id", request.getId() + "");
+        hashMap.put("sellerName", request.getSeller().getUsername());
+        hashMap.put("status", request.getStatus());
+        hashMap.put("requestType", request.getRequestType());
+        return hashMap;
+    }
+
+    public static ArrayList getListOfOffRequests(ArrayList<Request> allRequests) {
+        ArrayList<Map<String, Object>> arrayList = new ArrayList<>();
+        for (Request request : allRequests) {
+            arrayList.add(getRequestHashMap(request));
         }
         return arrayList;
     }
