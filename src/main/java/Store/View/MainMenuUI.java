@@ -26,6 +26,7 @@ public class MainMenuUI {
     public Button productsButton;
     public Button offersButton;
     public Button userPageButton;
+    public Button supportPageButton;
     public Button signUpButton;
     public Button loginLogoutButton;
     public Label loggedInStatusText;
@@ -131,6 +132,7 @@ public class MainMenuUI {
             else if (userInfo.get("type").equals("Manager"))
                 ManagerMenuUI.showManagerMenu();
         });
+        supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
     }
 
 }

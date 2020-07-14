@@ -56,6 +56,7 @@ public class ProductsMenuUI {
     public Button productsButton;
     public Button offersButton;
     public Button userPageButton;
+    public Button supportPageButton;
     public Button signUpButton;
     public Button loginLogoutButton;
     public Label loggedInStatusText;
@@ -119,6 +120,7 @@ public class ProductsMenuUI {
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
         showCategoryButton.setOnAction(event -> showCategories());
         offersButton.setOnAction((e) -> OffersMenuUI.showOffersMenu());
+        supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
 
         userPageButton.setOnAction(e -> {
             Map<String, Object> userInfo = ClientSignUpAndLoginController.getUserInfo(ClientHandler.username);

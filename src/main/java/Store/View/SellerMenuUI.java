@@ -119,6 +119,8 @@ public class SellerMenuUI implements Initializable {
 
     public TextField requestedProductId;
 
+    public Button supportPageButton;
+
     Offer copyOffer;
     static SellLogItem showedSellLog;
     String currentSortOffer = new String("time of starting");
@@ -559,6 +561,7 @@ public class SellerMenuUI implements Initializable {
     @FXML
     private void setupInitial()
     {
+        supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
         product.setOnSelectionChanged(e ->  setupInitialPersonalMenu());
         offer.setOnSelectionChanged(e -> setupInitialPersonalMenu());
         viewBuyers.setOnSelectionChanged(e -> setupInitialPersonalMenu());

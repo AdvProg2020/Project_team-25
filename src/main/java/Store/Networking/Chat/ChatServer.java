@@ -1,4 +1,8 @@
-package Store.Networking;
+package Store.Networking.Chat;
+
+import Store.Model.Operator;
+import Store.Model.User;
+import Store.Networking.TokenHandler;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -138,11 +142,17 @@ public class ChatServer {
                 synchronized (reentrantLock) {
                     username = matcher.group(1);
                     clientOutputStreams.put(username, dataOutputStream);
-                    operators.add(username);
+                    if (User.getUserByUsername(username) instanceof Operator) {
+                        operators.add(username);
+                    }
                 }
                 System.out.println("CLIENT CONNECTED WITH USERNAME: " + username);
+                dataOutputStream.writeUTF("ACK");
+                dataOutputStream.flush();
                 return true;
             }
+            dataOutputStream.writeUTF("NOT ACK");
+            dataOutputStream.flush();
             return false;
         }
 

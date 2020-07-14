@@ -64,6 +64,7 @@ public class ProductMenuUI {
     public Button productsButton;
     public Button offersButton;
     public Button userPageButton;
+    public Button supportPageButton;
 
     public Label loggedInStatusText;
     public Button signUpButton;
@@ -313,6 +314,7 @@ public class ProductMenuUI {
         offersButton.setOnAction((e) -> OffersMenuUI.showOffersMenu());
 
         userPageButton.setOnAction(e -> UserPageHandlerUI.handleEvent());
+        supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
 
         Button[] starButtons = new Button[] {ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5};
         for (int buttonIndex = 0; buttonIndex < 5; buttonIndex++) {
