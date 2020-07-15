@@ -218,10 +218,96 @@ public class MainServer {
                     if (input.get("message").equals("handleRequest")) {
                         handleRequestsServer(input);
                     }
+                    if (input.get("message").equals("validatePassword")) {
+                        validatePasswordServer(input);
+                    }
+                    if (input.get("message").equals("canOfferBeUsedInDate")) {
+                        canOfferBeUsedInDateServer(input);
+                    }
+                    if (input.get("message").equals("editCustomerPersonalInfo")) {
+                        editCustomerPersonalInfoServer(input);
+                    }
+                    if (input.get("message").equals("canBuyWithoutOffCode")) {
+                        canBuyWithoutOffCodeServer();
+                    }
+                    if (input.get("message").equals("canBuyWithOffCode")) {
+                        canBuyWithOffCodeServer(input);
+                    }
+                    if (input.get("message").equals("buyWithoutOffCode")) {
+                        buyWithoutOffCodeServer();
+                    }
+                    if (input.get("message").equals("buyWithOffCode")) {
+                        buyWithOffCodeServer(input);
+                    }
+                    if (input.get("message").equals("removeProductFromCart")) {
+                        removeProductFromCartServer(input);
+                    }
                 } catch (IOException exception) {
                     //exception.printStackTrace();
                 }
             }
+        }
+
+        private void removeProductFromCartServer(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            Customer customer = (Customer) user;
+            Product product = Product.getProductByID(Integer.parseInt((String) input.get("id")));
+            if (customer.isInCart(product)) {
+                customer.removeFromCart(product);
+                hashMap.put("content", true);
+            } else {
+                hashMap.put("content", false);
+            }
+            sendMessage(hashMap);
+        }
+
+        private void buyWithOffCodeServer(HashMap input) {
+            ((Customer) user).buy(Manager.getOffCodeByCode((String) input.get("code")));
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", ((Customer) user).getNewFactor());
+            sendMessage(hashMap);
+        }
+
+        private void buyWithoutOffCodeServer() {
+            ((Customer) user).buy();
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", ((Customer) user).getNewFactor());
+            sendMessage(hashMap);
+        }
+
+        private void canBuyWithOffCodeServer(HashMap input) {
+            OffCode offCode = Manager.getOffCodeByCode((String) input.get("code"));
+            HashMap<String, Object> hashMap = new HashMap<>();
+            if (offCode != null && offCode.canBeUsedInDate(new Date()) && offCode.isUserIncluded((Customer) user)) {
+                hashMap.put("content", ((Customer) user).canBuy());
+            } else {
+                hashMap.put("content", false);
+            }
+            sendMessage(hashMap);
+        }
+
+        private void canBuyWithoutOffCodeServer() {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", ((Customer) user).canBuy());
+            sendMessage(hashMap);
+        }
+
+        private void editCustomerPersonalInfoServer(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", ManagerController.editPersonalInfo(user, (String) input.get("field"), (String) input.get("newValue")));
+            sendMessage(hashMap);
+        }
+
+        private void canOfferBeUsedInDateServer(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", Offer.getOfferOfProduct(Product.getProductByID(Integer.parseInt((String) input.get("id")))).canBeUsedInDate(new Date()));
+            sendMessage(hashMap);
+        }
+
+        private void validatePasswordServer(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", user.validatePassword((String) input.get("password")));
+            sendMessage(hashMap);
         }
 
         private void handleRequestsServer(HashMap input) {
@@ -343,7 +429,7 @@ public class MainServer {
         }
 
         private void editManagerPersonalInfoServer(HashMap input) {
-            ManagerController.editPersonalInfo(User.getUserByUsername((String) input.get("username")), (String) input.get("field"), (String) input.get("newValue"));
+            ManagerController.editPersonalInfo(user, (String) input.get("field"), (String) input.get("newValue"));
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", ManagerController.editPersonalInfo(user, (String) input.get("field"), (String) input.get("newValue")));
             sendMessage(hashMap);
@@ -353,11 +439,7 @@ public class MainServer {
             Product product = Product.getProductByID(Integer.parseInt((String) input.get("id")));
             Customer customer = (Customer) user;
             HashMap<String, Object> hashMap = new HashMap<>();
-            if (customer == null) {
-                guest.addToCart(product);
-            } else {
-                customer.addToCart(product);
-            }
+            customer.addToCart(product);
             hashMap.put("content", "Ok");
             sendMessage(hashMap);
         }
@@ -386,22 +468,21 @@ public class MainServer {
 
         private void hasBeenRatedServer(HashMap input) {
             Product product = Product.getProductByID(Integer.parseInt((String) input.get("id")));
-            Customer customer = (Customer) User.getUserByUsername((String) input.get("username"));
+            Customer customer = (Customer) user;
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", product.hasBeenRatedBefore(customer));
             sendMessage(hashMap);
         }
 
         private void commentProductServer(HashMap input) {
-            ProductController.addComment(Product.getProductByID(Integer.parseInt((String) input.get("id"))), (Customer) User.getUserByUsername((String) input.get("username")), (String) input.get("title"), (String) input.get("content"));
+            ProductController.addComment(Product.getProductByID(Integer.parseInt((String) input.get("id"))), user, (String) input.get("title"), (String) input.get("content"));
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", "Ok");
             sendMessage(hashMap);
         }
 
         private void rateProductServer(HashMap input) {
-            CustomerController.rateProduct((Customer) User.getUserByUsername((String) input.get("username")), Product.getProductByID(Integer.parseInt((String) input.get("id"))), (Double) input.get("currentRating"));
-//            check
+            CustomerController.rateProduct((Customer) user, Product.getProductByID(Integer.parseInt((String) input.get("id"))), (Double) input.get("currentRating"));
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", "Ok");
             sendMessage(hashMap);
@@ -496,7 +577,11 @@ public class MainServer {
 
         private void getUserByUsernameServer(String username) {
             HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("content", HashMapGenerator.getUserHashMap(User.getUserByUsername(username)));
+            User user = User.getUserByUsername(username);
+            if (user == null) {
+                user = guest;
+            }
+            hashMap.put("content", HashMapGenerator.getUserHashMap(user));
             sendMessage(hashMap);
         }
 
