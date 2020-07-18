@@ -35,6 +35,8 @@ import org.codehaus.plexus.util.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -950,6 +952,19 @@ public class SellerMenuUI implements Initializable {
         FileChooser fileChooser = new FileChooser();
         try {
             selectedProduct.setVideoPath(fileChooser.showOpenDialog(new Stage()).getPath());
+        }
+        catch (Exception exception) {
+            // do nothing
+        }
+    }
+
+    public void filePathClicked()
+    {
+        FileChooser fileChooser = new FileChooser();
+        try {
+            Path path = Paths.get(fileChooser.showOpenDialog(new Stage()).getPath());
+            System.out.println("############ " + path.getFileName().toString());
+            selectedProduct.setVideoPath(path.getFileName().toString());
         }
         catch (Exception exception) {
             // do nothing
