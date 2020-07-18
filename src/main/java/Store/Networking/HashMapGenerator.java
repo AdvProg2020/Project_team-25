@@ -2,11 +2,10 @@ package Store.Networking;
 
 import Store.Model.*;
 import Store.Model.Log.BuyLogItem;
+import Store.Model.Log.SellLogItem;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class HashMapGenerator {
     public static HashMap<String, Object> getUserHashMap(User user) {
@@ -24,7 +23,7 @@ public class HashMapGenerator {
         if (user instanceof Customer) {
             hashMap.put("money", ((Customer) user).getMoney() + "");
             hashMap.put("cart", getListOfProducts(((Customer) user).getCart()));
-            hashMap.put("log", getListOfOffBuyLogItems(((Customer) user).getBuyLog()));
+            hashMap.put("log", getListOfBuyLogItems(((Customer) user).getBuyLog()));
             hashMap.put("totalCartPrice", ((Customer) user).getTotalCartPrice() + "");
             hashMap.put("offCodes", getListOfCustomerOffCodes(((Customer) user).getOffCodes()));
         }
@@ -32,9 +31,22 @@ public class HashMapGenerator {
             hashMap.put("money", ((Seller) user).getMoney() + "");
             hashMap.put("companyName", ((Seller) user).getCompanyName());
             hashMap.put("companyDescription", ((Seller) user).getCompanyDescription());
+            hashMap.put("log", getListOfSellLogItems(((Seller) user).getSellLog()));
+            hashMap.put("buyers", getListOfBuyersOfSeller(((Seller) user).getBuyers()));
+            hashMap.put("products", getListOfProducts(((Seller) user).getProducts()));
         }
         hashMap.put("type", user.getType());
         return hashMap;
+    }
+
+    private static ArrayList getListOfBuyersOfSeller(ArrayList<String> buyers) {
+        ArrayList<Map<String, Object>> arrayList = new ArrayList<>();
+        Set<Map<String, Object>> set = new HashSet<>();
+        for (String buyer : buyers) {
+            set.add(HashMapGenerator.getUserHashMap(User.getUserByUsername(buyer)));
+        }
+        arrayList.addAll(set);
+        return arrayList;
     }
 
     public static ArrayList getListOfCategories(ArrayList<Category> allCategories) {
@@ -71,12 +83,12 @@ public class HashMapGenerator {
         hashMap.put("brand", product.getBrand());
         hashMap.put("description", product.getDescription());
         hashMap.put("id", product.getProductID() + "");
-        hashMap.put("sellerName", product.getSeller().getName());
+        hashMap.put("sellerName", product.getSeller().getUsername());
         hashMap.put("filters", product.getFilters());
         hashMap.put("startingTime", product.getStartingDate());
-        hashMap.put("seller", getUserHashMap(product.getSeller()));
         hashMap.put("comments", getListOfComments(product.getComments()));
         hashMap.put("offer", getOfferHashMap(Offer.getOfferOfProduct(product)));
+        hashMap.put("status", product.getProductStatus());
         return hashMap;
     }
 
@@ -202,10 +214,33 @@ public class HashMapGenerator {
         return hashMap;
     }
 
-    public static ArrayList getListOfOffBuyLogItems(ArrayList<BuyLogItem> allLogs) {
+    public static ArrayList getListOfBuyLogItems(ArrayList<BuyLogItem> allLogs) {
         ArrayList<Map<String, Object>> arrayList = new ArrayList<>();
         for (BuyLogItem logItem : allLogs) {
             arrayList.add(getBuyLogItemHashMap(logItem));
+        }
+        return arrayList;
+    }
+
+    public static HashMap<String, Object> getSellLogItemHashMap(SellLogItem sellLogItem) {
+        if (sellLogItem == null) {
+            return null;
+        }
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("id", sellLogItem.getId() + "");
+        hashMap.put("customerName", sellLogItem.getCustomerName());
+        hashMap.put("offValue", sellLogItem.getOffValue() + "");
+        hashMap.put("date", new Date(sellLogItem.getDate().getTime()).toLocalDate().toString());
+        hashMap.put("products", getListOfProducts(sellLogItem.getProducts()));
+        hashMap.put("isSendStatus", sellLogItem.isSendStatus());
+        hashMap.put("incomeValue", sellLogItem.getIncomeValue());
+        return hashMap;
+    }
+
+    public static ArrayList getListOfSellLogItems(ArrayList<SellLogItem> allLogs) {
+        ArrayList<Map<String, Object>> arrayList = new ArrayList<>();
+        for (SellLogItem logItem : allLogs) {
+            arrayList.add(getSellLogItemHashMap(logItem));
         }
         return arrayList;
     }
@@ -217,6 +252,14 @@ public class HashMapGenerator {
             hashMap.put("offCode", getOffCodeHashMap(offCode));
             hashMap.put("number", allOffCodes.get(offCode));
             arrayList.add(hashMap);
+        }
+        return arrayList;
+    }
+
+    public static ArrayList getListOfOffers(ArrayList<Offer> allOffers) {
+        ArrayList<Map<String, Object>> arrayList = new ArrayList<>();
+        for (Offer offer : allOffers) {
+            arrayList.add(HashMapGenerator.getOfferHashMap(offer));
         }
         return arrayList;
     }

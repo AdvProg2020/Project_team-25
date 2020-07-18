@@ -17,9 +17,6 @@ public class SellerController {
 
     public static void editPersonalInfo(Seller seller, String field, String value) throws InvalidValueException {
         if (field.equalsIgnoreCase("first name")) {
-            if (!StringUtils.isAlpha(value)) {
-                throw new InvalidValueException(INVALID_VALUE_ERROR);
-            }
             seller.setName(value);
         }
         if (field.equalsIgnoreCase("family name")) {
@@ -38,12 +35,7 @@ public class SellerController {
             seller.setPhoneNumber(value);
         }
         else if (field.equalsIgnoreCase("password")) {
-            if (value.matches("^[a-zA-Z]\\w{3,14}$")) {
                 seller.setPassword(value);
-            }
-            else {
-                throw new InvalidValueException(INVALID_VALUE_ERROR);
-            }
         }
         else if (field.equalsIgnoreCase("company name")) {
             seller.setCompanyName(value);
@@ -63,7 +55,7 @@ public class SellerController {
             if (!product1.equals(product) && product1.equals(newProduct))
                 return "Your new product is in current seller's products!";
         Manager.addRequest(new Request(product, true, newProduct));
-        return "Request has been sent.";
+        return "Ok";
     }
 
     public static void addProduct(Seller seller, Product product) {
@@ -79,7 +71,7 @@ public class SellerController {
             if (!offer1.equals(offer) && offer1.equals(newOffer))
                 return "Your new offer has at least one product which is in off!";
         Manager.addRequest(new Request(seller, offer, true, newOffer));
-        return "Request has been sent.";
+        return "Ok";
     }
 
     public static void addOff(Seller seller, Offer offer) {
@@ -147,7 +139,7 @@ public class SellerController {
             return "This product already has this filter!";
         }
         product.addFilter(filter);
-        return "Filter added.";
+        return "Ok";
     }
 
     public static String removeFilterFromProduct(Seller seller, String idString, String filter) {
@@ -162,7 +154,7 @@ public class SellerController {
             return "This product does not have this filter!";
         }
         product.deleteFilter(filter);
-        return "Filter removed.";
+        return "Ok";
     }
 
     public static String addFilterToOffer(Seller seller, String idString, String filter) {
@@ -177,7 +169,7 @@ public class SellerController {
             return "This offer already has this filter!";
         }
         offer.addFilter(filter);
-        return "Filter added.";
+        return "Ok";
     }
 
     public static String removeFilterFromOffer(Seller seller, String idString, String filter) {
@@ -192,6 +184,17 @@ public class SellerController {
             return "This offer does not have this filter!";
         }
         offer.removeFilter(filter);
-        return "Filter removed.";
+        return "Ok";
+    }
+
+    public static String addAds(Seller seller, int id) {
+        if (Product.getProductByID(id) == null)
+            return "This product doesn't exist!";
+        else if (!seller.getProducts().contains(Product.getProductByID(id)))
+            return "This seller doesn't have this product!";
+        else{
+            Manager.addRequest(new Request(seller, Product.getProductByID(id)));
+            return "Ok";
+        }
     }
 }

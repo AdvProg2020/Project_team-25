@@ -1,12 +1,16 @@
 package Store.Networking.Client.Controller;
 
+import Store.Main;
 import Store.Model.Customer;
 import Store.Model.Product;
 import Store.Model.User;
 import Store.Networking.Client.ClientHandler;
+import Store.View.MainMenuUI;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.Scene;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -22,6 +26,7 @@ public class ClientMainMenuController {
             logout();
             ClientHandler.hasLoggedIn = false;
             ClientHandler.token = "";
+            ClientHandler.forceLogout();
         }
         else {
             login();

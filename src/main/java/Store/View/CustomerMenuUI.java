@@ -318,7 +318,7 @@ public class CustomerMenuUI implements Initializable {
     private void setupInitialMyDiscount() {
         customer = ClientCustomerController.getUserInfo(ClientHandler.username);
         for (Map<String, Object> offCode : (List<Map<String, Object>>) customer.get("offCodes")) {
-            showEachDiscountInHBox((Map<String, Object>) offCode.get("offCode"), (int) Math.round(((Double)offCode.get("number"))));
+            showEachDiscountInHBox((Map<String, Object>) offCode.get("offCode"), (int) Math.round(((Double) offCode.get("number"))));
         }
 
     }
@@ -479,7 +479,12 @@ public class CustomerMenuUI implements Initializable {
         id.setText(product.get("id") + "");
         name.setText((String) product.get("name"));
         sellerName.setText((String) product.get("sellerName"));
-        category.setText(((Map<String, Object>) product.get("category")).get("name") + "");
+        try {
+            category.setText(((Map<String, Object>) product.get("category")).get("name") + "");
+        }
+        catch (Exception exception) {
+            category.setText("null");
+        }
         brand.setText((String) product.get("brand"));
         average.setText(product.get("averageRating") + "");
         productStatus.setText(product.get("productStatus") + "");
@@ -609,7 +614,11 @@ public class CustomerMenuUI implements Initializable {
         id.setText(product.get("id") + "");
         name.setText((String) product.get("name"));
         sellerName.setText((String) product.get("sellerName"));
-        category.setText(((Map<String, Object>) product.get("category")).get("name") + "");
+        try {
+            category.setText(((Map<String, Object>) product.get("category")).get("name") + "");
+        } catch (Exception exception) {
+            category.setText("null");
+        }
         brand.setText((String) product.get("brand"));
         average.setText(product.get("averageRating") + "");
         productStatus.setText(product.get("productStatus") + "");

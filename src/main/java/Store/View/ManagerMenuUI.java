@@ -70,9 +70,9 @@ public class ManagerMenuUI {
     public Button editPersonalInfoButton;
     public Button changeImageButton;
 
-    private static ArrayList<String> availableSortsProducts = new ArrayList<String>(Arrays.asList("rating", "price", "visit", "lexicographical"));
-    private static ArrayList<String> availableSortsOffCodes = new ArrayList<String>(Arrays.asList("time of starting", "time of ending", "code", "off percentage", "maximum off", "usage count"));
-    private static ArrayList<String> availableSortsUsers = new ArrayList<String>(Arrays.asList("name", "family name", "phone number", "username", "email"));
+    private static List<String> availableSortsProducts = new ArrayList<String>(Arrays.asList("rating", "price", "visit", "lexicographical"));
+    private static List<String> availableSortsOffCodes = new ArrayList<String>(Arrays.asList("time of starting", "time of ending", "code", "off percentage", "maximum off", "usage count"));
+    private static List<String> availableSortsUsers = new ArrayList<String>(Arrays.asList("name", "family name", "phone number", "username", "email"));
     private static String currentProductsSort = "";
     private static String currentUsersSort = "";
     private static String currentOffCodesSort = "";
@@ -183,7 +183,7 @@ public class ManagerMenuUI {
     }
 
     private void addOffCode() {
-        ArrayList<String> assignedCustomers = new ArrayList<>();
+        List<String> assignedCustomers = new ArrayList<>();
 
         VBox addNewOffCodeContainer = new VBox();
         TextField nameTextField = new TextField();
@@ -293,7 +293,7 @@ public class ManagerMenuUI {
         usersList.getChildren().clear();
         for (Map<String, Object> user : ClientManagerController.getAllUsers(currentUsersSort)) {
             Label userLabel = new Label(String.format("Username: %s, User's Name: %s %s, User's PhoneNumber: %s, Users's Email: %s", user.get("username"), user.get("name"), user.get("familyName"), user.get("phoneNumber"), user.get("email")));
-            if (user.get("type").equals("Manager")) {
+            if (user.get("type").equals("Manager") || user.get("type").equals("Operator")) {
                 userLabel.setDisable(true);
             }
             userLabel.setOnMouseClicked(event -> {

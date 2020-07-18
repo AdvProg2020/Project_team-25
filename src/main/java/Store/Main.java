@@ -48,7 +48,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         otherStage.initModality(Modality.APPLICATION_MODAL);
 
-  //      setOffers();
+        //      setOffers();
         Parent root = MainMenuUI.getContent();
         /*Seller seller1 = new Seller("jackRipper", "jack", "ripper", "lab@lab.com", "0950", "1234", 1000, "company1", "describe");
         Product product = new Product(CheckingStatus.CREATION, null, "product1", seller1, "brand1", 10, false, "describe");
@@ -78,7 +78,8 @@ public class Main extends Application {
 
         //MainMenuUIController.currentUser = manager1;
         //Parent root = ManagerMenuUI.getContent();
-        */applicationStage = primaryStage;
+        */
+        applicationStage = primaryStage;
         primaryStage.setResizable(false);
         primaryStage.setTitle("Shop");
         primaryStage.setScene(new Scene(root));
@@ -110,8 +111,7 @@ public class Main extends Application {
         Scanner scanner = new Scanner(System.in);
         if (scanner.nextLine().equals("S")) {
             handleServer();
-        }
-        else {
+        } else {
             MainMenuUIController.currentUser = MainMenuUIController.guest;
 //        Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
 //        setTest();
@@ -126,6 +126,7 @@ public class Main extends Application {
             launch(args);
         }
     }
+
 
     public static void setupBGM() {
         backgroundMusic = new Media(Main.class.getResource("/Audio/Tarantulas_by_Christian_Nanzell_Trimmed.wav").toExternalForm());
@@ -327,7 +328,6 @@ public class Main extends Application {
                 30, 0,
                 190, 405
         );
-
 
 
 //        applicationStage.setScene(new Scene(new Group(imageView)));

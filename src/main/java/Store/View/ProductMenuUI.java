@@ -272,7 +272,7 @@ public class ProductMenuUI {
         for (Map<String, Object> seller : allSellersOfProduct) {
             System.out.println("SELLER: " + seller.get("username"));
             Button currentButton = new Button((String) seller.get("username"));
-            if (seller.get("username").equals(((Map<String, Object>)productToShow.get("seller")).get("username"))) {
+            if (seller.get("username").equals(productToShow.get("sellerName"))) {
                 currentButton.setDisable(true);
             }
             currentButton.setOnAction((e) -> changeProductSeller((String) seller.get("username")));
@@ -288,7 +288,7 @@ public class ProductMenuUI {
         Map<String, Object> newProduct = ClientProductController.getProductWithDifferentSeller((String)productToShow.get("id"), username);
         for (Button button : sellerButtons) {
             button.setDisable(false);
-            if (button.getText().equalsIgnoreCase((String) ((Map<String, Object>)newProduct.get("seller")).get("username"))) {
+            if (button.getText().equalsIgnoreCase((String) (newProduct.get("sellerName")))) {
                 button.setDisable(true);
             }
         }

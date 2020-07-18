@@ -251,7 +251,7 @@ public class OffersMenuUI {
             showProducts();
         });
         vBox.getChildren().addAll(base, new Separator(), new Separator());
-        ArrayList<Map<String, Object>> allCategories = ClientProductsController.getAllCategories();
+        List<Map<String, Object>> allCategories = ClientProductsController.getAllCategories();
         for (Map<String, Object> category : allCategories) {
             Label categoryName = new Label((String) category.get("name"));
             categoryName.setId("categoryButton");
@@ -264,7 +264,7 @@ public class OffersMenuUI {
                 showProducts();
             });
             HBox hBox = new HBox();
-            for (String filter : new HashSet<String>((ArrayList) category.get("filters"))) {
+            for (String filter : new HashSet<String>((List) category.get("filters"))) {
                 Button button = new Button(filter);
                 button.setId("filter");
                 Region region = new Region();
