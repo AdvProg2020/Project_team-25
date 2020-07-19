@@ -10,6 +10,7 @@ import Store.Networking.Client.Controller.ClientMainMenuController;
 import Store.Networking.Client.Controller.ClientManagerController;
 import Store.Networking.Client.Controller.ClientProductController;
 import Store.Networking.Client.Controller.ClientProductsController;
+import Store.Networking.FileTransportClient;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -35,6 +36,8 @@ import javafx.stage.WindowEvent;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
@@ -688,30 +691,27 @@ public class ManagerMenuUI {
         });
 
 
-//        changeImageButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent event) {
-//                FileChooser fileChooser = new FileChooser();
-//                try {
-//                    manager.setProfilePicturePath(fileChooser.showOpenDialog(new Stage()).getPath());
-//                }
-//                catch (Exception exception) {
-//                    // do nothing
-//                }
-//                handlePersonalInfo();
-//            }
-//        });
+        changeImageButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                FileChooser fileChooser = new FileChooser();
+                try {
+                    String path = fileChooser.showOpenDialog(new Stage()).getPath();
+                    File file = new File(path);
+                    File copyFile = new File("src/main/resources/Images/" + ClientHandler.username + ".jpg");
+                    Files.copy(file.toPath(), copyFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    FileTransportClient.sendFile(ClientHandler.username, ClientHandler.token, "I", ClientHandler.username + ".jpg");
+                }
+                catch (Exception exception) {
+                    // do nothing
+                }
+                handlePersonalInfo();
+            }
+        });
 //
-//        String path;
-//        if (manager.getProfilePicturePath().isEmpty()) {
-//            path = "src/main/resources/Images/images.jpg";
-//        }
-//        else {
-//            path = manager.getProfilePicturePath();
-//        }
-//
-//        File file = new File(path);
-//        imageProfile.setImage(new Image(file.toURI().toString()));
+        FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", ClientHandler.username + ".jpg");
+        File file = new File("src/main/resources/Images/" + ClientHandler.username + ".jpg");
+        imageProfile.setImage(new Image(file.toURI().toString()));
 //
 //        final Circle clip = new Circle(100, 100, 100);
 //        imageProfile.setClip(clip);
