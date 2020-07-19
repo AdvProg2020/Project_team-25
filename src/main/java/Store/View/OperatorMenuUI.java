@@ -6,6 +6,8 @@ import Store.Controller.ProductsController;
 import Store.Main;
 import Store.Model.*;
 import Store.Model.Enums.VerifyStatus;
+import Store.Networking.Client.ClientHandler;
+import Store.Networking.Client.Controller.ClientManagerController;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -30,6 +32,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
 public class OperatorMenuUI {
     public Button mainMenuButton;
@@ -109,20 +112,20 @@ public class OperatorMenuUI {
     }
 
     private void handlePersonalInfo() {
-        Operator operator = (Operator) MainMenuUIController.currentUser;
-        usernameField.setText(operator.getUsername());
+        Map<String, Object> operator = ClientManagerController.getUserInfo(ClientHandler.username);
+        usernameField.setText((String) operator.get("username"));
         usernameField.setDisable(true);
-        firstNameField.setText(operator.getName());
-        lastNameField.setText(operator.getFamilyName());
-        passwordField.setText(operator.getPassword());
-        phoneNumberField.setText(operator.getPhoneNumber());
-        emailField.setText(operator.getEmail());
-        usernameField.setPromptText(operator.getUsername());
-        firstNameField.setPromptText(operator.getName());
-        lastNameField.setPromptText(operator.getFamilyName());
-        passwordField.setPromptText(operator.getPassword());
-        phoneNumberField.setPromptText(operator.getPhoneNumber());
-        emailField.setPromptText(operator.getEmail());
+        firstNameField.setText((String) operator.get("name"));
+        lastNameField.setText((String) operator.get("familyName"));
+        passwordField.setText((String) operator.get("password"));
+        phoneNumberField.setText((String) operator.get("phoneNumber"));
+        emailField.setText((String) operator.get("email"));
+        usernameField.setPromptText((String) operator.get("username"));
+        firstNameField.setPromptText((String) operator.get("name"));
+        lastNameField.setPromptText((String) operator.get("familyName"));
+        passwordField.setPromptText((String) operator.get("password"));
+        phoneNumberField.setPromptText((String) operator.get("phoneNumber"));
+        emailField.setPromptText((String) operator.get("email"));
 
         firstNameField.setId("infoField");
         lastNameField.setId("infoField");
@@ -132,15 +135,16 @@ public class OperatorMenuUI {
         usernameField.setId("infoField");
 
         editPersonalInfoButton.setOnMouseClicked(event -> {
-            if (firstNameField.getText().equals(operator.getName()) && lastNameField.getText().equals(operator.getFamilyName()) && passwordField.getText().equals(operator.getPassword()) && phoneNumberField.getText().equals(operator.getPhoneNumber()) && emailField.getText().equals(operator.getEmail())) {
+            if (firstNameField.getText().equals(operator.get("name")) && lastNameField.getText().equals(operator.get("familyName")) && passwordField.getText().equals(operator.get("password")) && phoneNumberField.getText().equals(operator.get("phoneNumber")) && emailField.getText().equals(operator.get("email"))) {
                 Main.errorPopUp("You Should Change Some Fields.", "error", (Stage) usernameField.getScene().getWindow());
                 return;
             }
-            ManagerController.editPersonalInfo(operator, "first name", firstNameField.getText());
-            ManagerController.editPersonalInfo(operator, "family name", lastNameField.getText());
-            String changePasswordMessage = ManagerController.editPersonalInfo(operator, "password", passwordField.getText());
-            String changePhoneMessage = ManagerController.editPersonalInfo(operator, "phone number", phoneNumberField.getText());
-            String changeEmailMessage = ManagerController.editPersonalInfo(operator, "email", emailField.getText());
+            ClientManagerController.editPersonalInfo((String) operator.get("username"), "first name", firstNameField.getText());
+            ClientManagerController.editPersonalInfo((String) operator.get("username"), "family name", lastNameField.getText());
+
+            String changePasswordMessage = ClientManagerController.editPersonalInfo((String) operator.get("username"), "password", passwordField.getText());
+            String changePhoneMessage = ClientManagerController.editPersonalInfo((String) operator.get("username"), "phone number", phoneNumberField.getText());
+            String changeEmailMessage = ClientManagerController.editPersonalInfo((String) operator.get("username"), "email", emailField.getText());
 
             if (changeEmailMessage.equals("Invalid email format!")) {
                 Main.errorPopUp(changeEmailMessage, "error", (Stage) usernameField.getScene().getWindow());
@@ -159,33 +163,33 @@ public class OperatorMenuUI {
         });
 
 
-        changeImageButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                FileChooser fileChooser = new FileChooser();
-                try {
-                    operator.setProfilePicturePath(fileChooser.showOpenDialog(new Stage()).getPath());
-                }
-                catch (Exception exception) {
-                    // do nothing
-                }
-                handlePersonalInfo();
-            }
-        });
-
-        String path;
-        if (operator.getProfilePicturePath().isEmpty()) {
-            path = "src/main/resources/Images/images.jpg";
-        }
-        else {
-            path = operator.getProfilePicturePath();
-        }
-
-        File file = new File(path);
-        imageProfile.setImage(new Image(file.toURI().toString()));
-
-        final Circle clip = new Circle(100, 100, 100);
-        imageProfile.setClip(clip);
-        clip.setStroke(Color.ORANGE);
+//        changeImageButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent event) {
+//                FileChooser fileChooser = new FileChooser();
+//                try {
+//                    operator.setProfilePicturePath(fileChooser.showOpenDialog(new Stage()).getPath());
+//                }
+//                catch (Exception exception) {
+//                    // do nothing
+//                }
+//                handlePersonalInfo();
+//            }
+//        });
+//
+//        String path;
+//        if (operator.getProfilePicturePath().isEmpty()) {
+//            path = "src/main/resources/Images/images.jpg";
+//        }
+//        else {
+//            path = operator.getProfilePicturePath();
+//        }
+//
+//        File file = new File(path);
+//        imageProfile.setImage(new Image(file.toURI().toString()));
+//
+//        final Circle clip = new Circle(100, 100, 100);
+//        imageProfile.setClip(clip);
+//        clip.setStroke(Color.ORANGE);
     }
 }
