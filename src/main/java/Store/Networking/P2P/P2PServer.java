@@ -1,4 +1,4 @@
-package Store.Networking;
+package Store.Networking.P2P;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -6,25 +6,29 @@ import java.net.Socket;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FileTransportServer {
-
-    private static final int FILE_SERVER_PORT = 9890;
-    private static final String UPLOAD_REGEX = "^UPLOAD (\\S+) (\\S{50}) ([IVF]) (\\S+) (\\d+)$";
-    private static final String DOWNLOAD_REGEX = "^DOWNLOAD (\\S+) (\\S{50}) ([IVF]) (\\S+)$";
+public class P2PServer {
+    private static final int P2P_MANAGER_PORT = 10880;
+    private static final String P2P_MANAGER_IP_ADDRESS = "127.0.0.1";
     private static final String RESOURCE_PATH = "src/main/resources/";
+
+    private static final String DOWNLOAD_REGEX = "^DOWNLOAD ([IVF]) (\\S+)$";
 
     private ServerSocket serverSocket;
 
-    public FileTransportServer() throws IOException {
-        serverSocket = new ServerSocket(FILE_SERVER_PORT);
-
-        System.out.println("SERVER CREATED");
+    public P2PServer(String username, String token) {
+        try {
+            serverSocket = new ServerSocket(0);
+            setup(username, token);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    FileTransportServer.this.run();
+                    P2PServer.this.run();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -39,7 +43,7 @@ public class FileTransportServer {
                 clientSocket = serverSocket.accept();
                 DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
                 DataInputStream dataInputStream = new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()));
-                new FileTransportServer.ClientHandler(clientSocket, dataOutputStream, dataInputStream).start();
+                new P2PServer.ClientHandler(clientSocket, dataOutputStream, dataInputStream).start();
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -64,19 +68,12 @@ public class FileTransportServer {
         @Override
         public void run() {
             try {
+                System.out.println("HANDLING TRANSFER");
                 String metaData = dataInputStream.readUTF();
                 Matcher matcher;
                 if ((matcher = getMatcher(metaData, DOWNLOAD_REGEX)).find()) {
-                    if (!TokenHandler.checkUsernameAndToken(matcher.group(1), matcher.group(2))) {
-                        return;
-                    }
-                    sendFile(matcher.group(3), matcher.group(4));
-                }
-                else if ((matcher = getMatcher(metaData, UPLOAD_REGEX)).find()) {
-                    if (!TokenHandler.checkUsernameAndToken(matcher.group(1), matcher.group(2))) {
-                        return;
-                    }
-                    receiveFile(matcher.group(3), matcher.group(4), Long.parseLong(matcher.group(5)));
+                    System.out.println(matcher.group(1) + "______________" + matcher.group(2));
+                    sendFile(matcher.group(1), matcher.group(2));
                 }
             }
             catch (IOException e) {
@@ -106,6 +103,7 @@ public class FileTransportServer {
             }
 
             dataOutputStream.writeLong(requestedFile.length());
+            dataOutputStream.flush();
 
             FileInputStream fileInputStream = new FileInputStream(requestedFile);
             int count;
@@ -117,29 +115,43 @@ public class FileTransportServer {
             fileInputStream.close();
         }
 
-        private void receiveFile(String type, String fileName, long fileLength) throws IOException {
-            String middleFolderName = convertTypeToFolderName(type);
-            File newFile = new File(RESOURCE_PATH + middleFolderName + "/" + fileName);
-            if (newFile.exists()) {
-                return;
-            }
-            newFile.createNewFile();
-            FileOutputStream fileOutputStream = new FileOutputStream(newFile);
+    }
 
-            long count = fileLength;
-            byte[] buffer = new byte[8192];
-            while (count > 0) {
-                dataInputStream.read(buffer);
-                fileOutputStream.write(buffer, 0, (int) Math.min(count, buffer.length));
-                count -= Math.min(count, buffer.length);
-            }
+    private void setup(String username, String token) throws IOException {
+        Socket managerSocket = new Socket(P2P_MANAGER_IP_ADDRESS, P2P_MANAGER_PORT);
+        DataInputStream dataInputStream = new DataInputStream(new BufferedInputStream(managerSocket.getInputStream()));
+        DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(managerSocket.getOutputStream()));
 
-            fileOutputStream.close();
+        String address = serverSocket.getInetAddress().getHostAddress();
+        if (address.equals("0.0.0.0")) {
+            address = "127.0.0.1";
         }
+
+        dataOutputStream.writeUTF("add " + username + " " + token + " "
+                + address + ":" + serverSocket.getLocalPort());
+        dataOutputStream.flush();
+
+        dataInputStream.readUTF();
+    }
+
+    public void cleanup(String username, String token) throws IOException {
+        Socket managerSocket = new Socket(P2P_MANAGER_IP_ADDRESS, P2P_MANAGER_PORT);
+        DataInputStream dataInputStream = new DataInputStream(new BufferedInputStream(managerSocket.getInputStream()));
+        DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(managerSocket.getOutputStream()));
+
+        System.out.println("remove " + username + " " + token);
+        dataOutputStream.writeUTF("remove " + username + " " + token);
+        dataOutputStream.flush();
+
+        System.out.println(dataInputStream.readUTF());
+
+        if (serverSocket != null) {
+            serverSocket.close();
+        }
+        serverSocket = null;
     }
 
     private static Matcher getMatcher(String string, String regex) {
         return Pattern.compile(regex).matcher(string);
     }
-
 }

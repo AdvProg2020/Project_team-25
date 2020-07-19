@@ -9,6 +9,7 @@ import Store.Networking.Client.ClientHandler;
 import Store.Networking.Client.Controller.ClientMainMenuController;
 import Store.Networking.Client.Controller.ClientProductController;
 import Store.Networking.Client.Controller.ClientSignUpAndLoginController;
+import Store.Networking.P2P.P2PClient;
 import Store.View.AdditionalUtils.NodeGestures;
 import Store.View.AdditionalUtils.PannableCanvas;
 import Store.View.AdditionalUtils.SceneGestures;
@@ -109,6 +110,8 @@ public class ProductMenuUI {
     public TextField compareProductIDTextField;
     public Button compareButton;
 
+    public Button downloadButton;
+
     private ArrayList<Button> sellerButtons = new ArrayList<Button>();
 
 
@@ -144,6 +147,7 @@ public class ProductMenuUI {
         setupSellerOptions();
         handleCanRate();
         setupCommentsSection();
+        setupDownloadButton();
     }
 
     private void setupOffPercentageLabel() {
@@ -509,5 +513,55 @@ public class ProductMenuUI {
         setError(compareProductIDTextField, false);
         compareProductIDTextField.setText("");
         CompareProducts.showLoginMenu(productToShow, secondProduct);
+    }
+
+    private void setupDownloadButton() {
+        Map<String, Object> customer = ClientSignUpAndLoginController.getUserInfo(ClientHandler.username);
+        if (!ClientHandler.hasLoggedIn || !(customer.get("type").equals("Customer"))) {
+            return;
+        }
+
+
+        String fileName = ((String) productToShow.get("filePath"));
+        if (fileName.isEmpty() ||
+                !ClientProductController.hasBoughtProduct((String) productToShow.get("id"), ClientHandler.username)) {
+            return;
+        }
+
+        downloadButton.setVisible(true);
+        downloadButton.setOnAction((e) -> {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    boolean errorFound = false;
+                    try {
+                        P2PClient.receiveFile(ClientHandler.username, ClientHandler.token,
+                                (String) productToShow.get("sellerName"), fileName);
+                    }
+                    catch (Exception e) {
+                        errorFound = true;
+                    }
+                    boolean finalErrorFound = errorFound;
+                    Platform.runLater(() -> {
+                        if (finalErrorFound) {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Connection Error");
+                            alert.setHeaderText("Seller Server Offline");
+                            alert.setContentText("It seems the sellers aren't running the server\non their end");
+
+                            alert.show();
+                        }
+                        else {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Download Complete");
+                            alert.setHeaderText("File of " + productToShow.get("name") + " Downloaded");
+                            alert.setContentText("You can access this file from the Downloads folder");
+
+                            alert.show();
+                        }
+                    });
+                }
+            }).start();
+        });
     }
 }

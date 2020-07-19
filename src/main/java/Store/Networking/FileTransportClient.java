@@ -6,7 +6,7 @@ import java.net.Socket;
 public class FileTransportClient {
     private static final String FILE_SERVER_IP_ADDRESS = "127.0.0.1";
     private static final int FILE_SERVER_PORT = 9890;
-    private static final String RESOURCE_PATH = "src/com/company/Resources/";
+    private static final String RESOURCE_PATH = "src/main/resources/";
 
     private static Socket fileClientSocket;
     private static DataOutputStream fileDataOutputStream;

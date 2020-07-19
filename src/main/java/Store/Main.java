@@ -6,6 +6,7 @@ import Store.Model.Enums.CheckingStatus;
 import Store.Networking.Chat.ChatServer;
 import Store.Networking.Client.ClientHandler;
 import Store.Networking.MainServer;
+import Store.Networking.P2P.P2PManager;
 import Store.View.*;
 import Store.View.AdditionalUtils.SpriteAnimation;
 import javafx.animation.Animation;
@@ -196,6 +197,7 @@ public class Main extends Application {
 
         Product product1 = new Product(CheckingStatus.CREATION, null, "product1", seller1, "brand1", 10, true, "describe");
         product1.setVideoPath("grb_2.mp4");
+        product1.setFilePath("Iino_Miko.png");
         Product product2 = new Product(CheckingStatus.CREATION, null, "product2", seller2, "brand1", 5, true, "describe");
         Product product3 = new Product(CheckingStatus.CREATION, null, "product3", seller1, "brand1", 10, true, "describe");
         Product product4 = new Product(CheckingStatus.CREATION, null, "product3", seller2, "brand1", 15.5, true, "describe");
@@ -346,6 +348,7 @@ public class Main extends Application {
         try {
             MainServer server = new MainServer();
             ChatServer chatServer = new ChatServer();
+            P2PManager p2PManager = new P2PManager();
             System.out.println(server.getPort());
         } catch (IOException exception) {
             exception.printStackTrace();

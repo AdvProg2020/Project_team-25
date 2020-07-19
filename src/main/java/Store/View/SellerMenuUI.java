@@ -7,7 +7,6 @@ import Store.Model.Enums.CheckingStatus;
 import Store.Model.Seller;
 import Store.Networking.Client.ClientHandler;
 import Store.Networking.Client.Controller.*;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

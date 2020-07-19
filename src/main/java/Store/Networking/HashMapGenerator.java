@@ -89,6 +89,7 @@ public class HashMapGenerator {
         hashMap.put("comments", getListOfComments(product.getComments()));
         hashMap.put("offer", getOfferHashMap(Offer.getOfferOfProduct(product)));
         hashMap.put("status", product.getProductStatus());
+        hashMap.put("filePath", product.getFilePath());
         return hashMap;
     }
 
