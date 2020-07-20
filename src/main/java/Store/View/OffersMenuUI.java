@@ -2,8 +2,10 @@ package Store.View;
 
 import Store.Main;
 
+import Store.Networking.Client.ClientHandler;
 import Store.Networking.Client.Controller.ClientMainMenuController;
 import Store.Networking.Client.Controller.ClientProductsController;
+import Store.Networking.FileTransportClient;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -374,7 +376,8 @@ public class OffersMenuUI {
 //        } else {
 //            file = new File(product.getImagePath());
 //        }
-        File file = new File("src/main/resources/Images/images.jpg");
+        FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", product.get("id") + ".jpg");
+        File file = new File("src/main/resources/Images/" + product.get("id") + ".jpg");
         ImageView imageView = new ImageView(new Image(file.toURI().toString()));
 
         imageView.setFitWidth(225);

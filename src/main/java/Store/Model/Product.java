@@ -55,6 +55,10 @@ public class Product implements Serializable {
         this.visited = 0;
     }
 
+    public void setProductID(int productID) {
+        this.productID = productID;
+    }
+
     public Product(CheckingStatus productStatus, Category category, String name, Seller seller, String brand, double price,
                    boolean availablity, String description, String imagePath, String videoPath) {
         this.productID = idCounter++;
