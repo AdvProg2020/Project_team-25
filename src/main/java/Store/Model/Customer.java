@@ -1,6 +1,8 @@
 package Store.Model;
 
 import Store.Model.Log.BuyLogItem;
+import Store.Networking.BankAPI;
+import Store.Networking.MainServer;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,33 +11,32 @@ import java.util.HashMap;
 public class Customer extends User {
 
     private HashMap<OffCode, Integer> offCodes = new HashMap<OffCode, Integer>();
-    private double money;
+    private double money = Manager.getMinimumRemaining();
     private ArrayList<BuyLogItem> buyLog = new ArrayList<BuyLogItem>();
     private ArrayList<Product> cart = new ArrayList<Product>();
-    private boolean hasBankAccount = false;
+    private int bankAccount;
 
-    public Customer(String username, String name, String familyName, String email, String phoneNumber, String password, double money) {
+    public Customer(String username, String name, String familyName, String email, String phoneNumber, String password) {
         super(username, name, familyName, email, phoneNumber, password);
-        this.money = money;
         this.type = "Customer";
     }
 
-    public Customer(User user, String password, double money) {
+    public Customer(User user, String password) {
         super(user.getUsername(), user.getName(), user.getFamilyName(), user.getEmail(), user.getPhoneNumber(), password);
-        this.money = money;
         this.type = "Customer";
     }
 
 
-    public boolean isHasBankAccount() {
-        return hasBankAccount;
+    public int getBankAccount() {
+        return bankAccount;
     }
 
-    public void setHasBankAccount(boolean hasBankAccount) {
-        this.hasBankAccount = hasBankAccount;
+    public void setBankAccount(int bankAccount) {
+        this.bankAccount = bankAccount;
     }
 
-    public static void addCustomer(Customer customer) {
+    public static void addCustomer(Customer customer, int bankAccount) {
+        customer.setBankAccount(bankAccount);
         allUsers.add(customer);
     }
 
@@ -55,21 +56,60 @@ public class Customer extends User {
         offCodes.put(offCode, 0);
     }
 
-    public boolean canBuy(OffCode offCode) {
-        if (money >= getTotalCartPriceWithDiscount(offCode))
-            return true;
+    public boolean canBuy(OffCode offCode, boolean bank) throws Exception {
+        double money = this.money;
+        if (bank)
+        {
+            try {
+                Object input = MainServer.sendAndReceiveToBankAPIBalance();
+                if (input != null)
+                    money = Double.parseDouble((String)input);
+                else
+                    throw new Exception("something is wrong!");
+                if (money >= getTotalCartPriceWithDiscount(offCode))
+                    return true;
+            }catch (Exception e) {
+                throw e;
+            }
+        }else {
+            if (money - Manager.getMinimumRemaining() >= getTotalCartPriceWithDiscount(offCode))
+                return true;
+        }
         return false;
     }
 
-    public boolean canBuy() {
-        if (money >= getTotalCartPrice())
-            return true;
+    public boolean canBuy(boolean bank) throws Exception {
+        double money = this.money;
+        if (bank)
+        {
+            try {
+                Object input = MainServer.sendAndReceiveToBankAPIBalance();
+                if (input != null)
+                    money = Double.parseDouble((String)input);
+                else
+                    throw new Exception("something is wrong!");
+                if (money >= getTotalCartPrice())
+                    return true;
+            }catch (Exception e) {
+                throw e;
+            }
+        }else {
+            if (money - Manager.getMinimumRemaining() >= getTotalCartPrice())
+                return true;
+        }
         return false;
     }
 
-    public void buy(OffCode offCode) {
+    public void buy(OffCode offCode, boolean bank) throws Exception {
         offCodeAfterBuy();
-        money -= getTotalCartPriceWithDiscount(offCode);
+        if (bank){
+            String result = "";
+            result = (String)MainServer.sendAndReceiveToBankAPIMove(getTotalCartPriceWithDiscount(offCode), bankAccount, Manager.getBankAccount(), "");
+            if (!result.equalsIgnoreCase("done"))
+                throw new Exception("some problem happens");
+        }
+        else
+            money -= getTotalCartPriceWithDiscount(offCode);
         handleLogs(getTotalCartPrice() - getTotalCartPriceWithDiscount(offCode));
         cart.clear();
         offCodes.put(offCode, offCodes.get(offCode) + 1);
@@ -83,9 +123,16 @@ public class Customer extends User {
         offCode.removeUser(this);
     }
 
-    public void buy() {
+    public void buy(boolean bank) throws Exception {
         offCodeAfterBuy();
-        money -= getTotalCartPrice();
+        if (bank){
+            String result = "";
+            result = (String)MainServer.sendAndReceiveToBankAPIMove(getTotalCartPrice(), bankAccount, Manager.getBankAccount(), "");
+            if (!result.equalsIgnoreCase("done"))
+                throw new Exception("some problem happens");
+        }
+        else
+            money -= getTotalCartPrice();
         handleLogs(0);
         cart.clear();
     }
@@ -137,9 +184,9 @@ public class Customer extends User {
             }
             offerOff = calOfferOff(productsOfOneSeller);
             buyLog.add(new BuyLogItem(buyLog.size() + 1, date, productsOfOneSeller, priceOfList(productsOfOneSeller) - (priceOfList(productsOfOneSeller) - offerOff) * (1.0 - (discount / totalPrice)), seller.getUsername(), false));
-            seller.handleLogs(offerOff, productsOfOneSeller, date, this, priceOfList(productsOfOneSeller) - offerOff);
+            seller.handleLogs(offerOff, productsOfOneSeller, date, this, (priceOfList(productsOfOneSeller) - offerOff) * (100.0 - Manager.getKarmozd()) / 100.0);
            // seller.removeProducts(productsOfOneSeller);
-            seller.setMoney(seller.getMoney() + priceOfList(productsOfOneSeller) - offerOff);
+            seller.setMoney(seller.getMoney() + (priceOfList(productsOfOneSeller) - offerOff) * (100.0 - Manager.getKarmozd()) / 100.0);
         }
     }
 

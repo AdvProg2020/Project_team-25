@@ -70,5 +70,6 @@ public class ClientProductController {
         hashMap.put("message", "addToCart");
         hashMap.put("id", id);
         hashMap.put("username", username);
+        ClientHandler.sendAndReceiveMessage(hashMap);
     }
 }

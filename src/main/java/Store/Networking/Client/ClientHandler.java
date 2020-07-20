@@ -1,7 +1,11 @@
 package Store.Networking.Client;
 
+import Store.Main;
 import Store.Networking.Client.Controller.ClientMainMenuController;
+import Store.View.MainMenuUI;
 import com.google.gson.Gson;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.Socket;
@@ -39,13 +43,23 @@ public class ClientHandler {
             dataOutputStream.flush();
             DataInputStream dataInputStream = new DataInputStream(new BufferedInputStream(ClientHandler.getSocket().getInputStream()));
             hashMap = gson.fromJson(dataInputStream.readUTF(), HashMap.class);
-            if (((String) hashMap.get("tokenStatus")).equals("expired")) {
+            if (((String) hashMap.get("tokenStatus")).equals("expired") && hasLoggedIn) {
+                hasLoggedIn = false;
                 ClientMainMenuController.setCurrentUser("");
+                forceLogout();
             }
         } catch (Exception exception) {
             hashMap = new HashMap<>();
         } finally {
             return hashMap;
+        }
+    }
+
+    public static void forceLogout() {
+        try {
+            Main.getApplicationStage().setScene(new Scene(MainMenuUI.getContent()));
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
     }
 }

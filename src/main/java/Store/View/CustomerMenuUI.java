@@ -1,9 +1,11 @@
 package Store.View;
 
-import Store.Controller.CustomerUIController;
 import Store.Controller.MainMenuUIController;
-import Store.InputManager;
 import Store.Main;
+import Store.Networking.Client.ClientHandler;
+import Store.Networking.Client.Controller.ClientCustomerController;
+import Store.Networking.Client.Controller.ClientMainMenuController;
+import Store.Networking.Client.Controller.ClientProductController;
 import Store.Model.*;
 import Store.Model.Log.BuyLogItem;
 import Store.Networking.BankAPI;
@@ -12,7 +14,6 @@ import Store.Networking.HashMapGenerator;
 import com.jfoenix.animation.alert.CenterTransition;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -42,7 +43,7 @@ import java.util.regex.Pattern;
 
 public class CustomerMenuUI implements Initializable {
 
-    private static Customer customer;
+    private static Map<String, Object> customer;
     private static String menuState = "CustomerMenu";
 
     public GridPane gridPane;
@@ -57,7 +58,6 @@ public class CustomerMenuUI implements Initializable {
     public Tab product;
     public Tab discount;
     public Tab buyHistory;
-    public Tab bank;
 
     public Label balance;
     public Button personalInfoButton;
@@ -82,8 +82,7 @@ public class CustomerMenuUI implements Initializable {
     public TextField emailTextField;
     public TextField phoneNumberTextField;
     public TextField initialMoneyTextField;
-    public Button createBankAccount;
-    public Button loginBankAccount;
+    public Button chargeWalletButton;
     public Label errorText;
 
     public Label factor = new Label("");
@@ -102,26 +101,34 @@ public class CustomerMenuUI implements Initializable {
     public PasswordField passEdit;
     public TextField offCodeTextField;
     public TextArea addressTextArea;
+    public RadioButton byWallet;
+    public RadioButton byBank;
     public TextField oldPass;
     public PasswordField newPass;
     public PasswordField confirmationNewPass;
-
-    public PasswordField bankPass;
-    public PasswordField bankPassRepeat;
+    public TextField moneyBank;
+    public TextField bankPass;
 
     public Button supportPageButton;
 
-    static String token = "";
+    static Map<String, Object> showedBuyLog;
 
-    static BuyLogItem showedBuyLog;
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        customer = (Customer) MainMenuUIController.currentUser;
-        if (menuState.equalsIgnoreCase("changePass"))
-        {
+        customer = ClientCustomerController.getUserInfo(ClientHandler.username);
+        if (menuState.equalsIgnoreCase("changePass")) {
 
         }
         else if (menuState.equalsIgnoreCase("extraInfoPurchase"))
+        {
+            byBank.setOnAction(e -> {
+                byWallet.setSelected(false);
+            });
+            byWallet.setOnAction(e -> {
+                byBank.setSelected(false);
+            });
+        }
+        else if (menuState.equalsIgnoreCase("chargeWallet"))
         {
 
         }
@@ -131,10 +138,6 @@ public class CustomerMenuUI implements Initializable {
             menuState = "CustomerMenu";
         }
         else if (menuState.equalsIgnoreCase("enterPass"))
-        {
-
-        }
-        else if (menuState.equalsIgnoreCase("createBankAccount"))
         {
 
         }
@@ -203,15 +206,13 @@ public class CustomerMenuUI implements Initializable {
         personal.setOnSelectionChanged(e -> setupInitialPersonalMenu());
         discount.setOnSelectionChanged(e -> setupInitialPersonalMenu());
         buyHistory.setOnSelectionChanged(e -> setupInitialPersonalMenu());
-        bank.setOnSelectionChanged(e -> setupInitialPersonalMenu());
-        bank.setDisable(customer.isHasBankAccount());
         loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
         logoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
         signUpButton.disableProperty().bind(MainMenuUIController.isLoggedIn);
         supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
         logoutButton.setOnAction((e) -> {
             LoginMenuUI.handleEvent();
-            if (MainMenuUIController.currentUser instanceof Seller || MainMenuUIController.currentUser instanceof Manager) {
+            if (customer.get("type").equals("Seller") || customer.get("type").equals("Manager")) {
                 try {
                     mainMenuButtonClicked();
                 } catch (IOException ioException) {
@@ -222,7 +223,7 @@ public class CustomerMenuUI implements Initializable {
                 showCustomerMenu();
         });
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
-        balance.textProperty().bind(new SimpleStringProperty(String.valueOf(customer.getMoney())));
+        balance.textProperty().bind(new SimpleStringProperty(String.valueOf(customer.get("money"))));
         setupInitialMyDiscount();
         setupInitialCart();
         setupInitialMyProducts();
@@ -230,17 +231,17 @@ public class CustomerMenuUI implements Initializable {
         setupInitialBuyHistory();
     }
 
-    private void showBuyLog()
-    {
+    private void showBuyLog() {
+        customer = ClientCustomerController.getUserInfo(ClientHandler.username);
         Label[] labels = new Label[6];
         for (int i = 0; i < 6; i++)
             labels[i] = new Label();
-        labels[0].setText(showedBuyLog.getId() + "");
-        labels[1].setText(showedBuyLog.getDate() + "");
-        labels[2].setText(showedBuyLog.getSellerName());
-        labels[3].setText(showedBuyLog.isReceived() + "");
-        labels[4].setText(showedBuyLog.getOffValue() + "");
-        labels[5].setText(showedBuyLog.getProducts() + "");
+        labels[0].setText(showedBuyLog.get("id") + "");
+        labels[1].setText(showedBuyLog.get("date") + "");
+        labels[2].setText((String) showedBuyLog.get("sellerName"));
+        labels[3].setText(showedBuyLog.get("isReceived") + "");
+        labels[4].setText(showedBuyLog.get("offValue") + "");
+        labels[5].setText(showedBuyLog.get("products") + "");
         labels[5].setWrapText(true);
         gridPane.addRow(1, labels[0], labels[1], labels[2], labels[3], labels[4], labels[5]);
         for (int i = 0; i < 6; i++) {
@@ -250,8 +251,8 @@ public class CustomerMenuUI implements Initializable {
         }
     }
 
-    private void showEachBuyLog(BuyLogItem buyLogItem)
-    {
+    private void showEachBuyLog(Map<String, Object> buyLogItem) {
+        customer = ClientCustomerController.getUserInfo(ClientHandler.username);
         HBox hBox = new HBox();
         hBox.setMaxHeight(100);     hBox.setMinHeight(100);
         hBox.setSpacing(20);
@@ -261,14 +262,16 @@ public class CustomerMenuUI implements Initializable {
         Label incomeText = new Label();
         Label offValueText = new Label();
         Label sendStatusText = new Label();
-        */dateText.setText(buyLogItem.getDate() + "");
+        */
+        dateText.setText(buyLogItem.get("date") + "");
         /*incomeText.setText(String.valueOf(sellLog.getIncomeValue()));
         offValueText.setText(String.valueOf(sellLog.getOffValue()));
         if (sellLog.isSendStatus())
             sendStatusText.setText("Arrived");
         else
             sendStatusText.setText("Not Arrived");
-        */sellerText.setText(buyLogItem.getSellerName());
+        */
+        sellerText.setText((String) buyLogItem.get("sellerName"));
         /*for(Product product: sellLog.getProducts())
             productsText.setText(productsText.getText() + "\n-" + product.getName() + "-----" + product.getBrand());
         productsText.setEditable(false);
@@ -302,49 +305,50 @@ public class CustomerMenuUI implements Initializable {
         viewBuysVBox.getChildren().add(hBox);
     }
 
-    private void setupInitialBuyHistory()
-    {
-        for (BuyLogItem buyLogItem: customer.getBuyLog())
+    private void setupInitialBuyHistory() {
+        for (Map<String, Object> buyLogItem : ((List<Map<String, Object>>) customer.get("log")))
             showEachBuyLog(buyLogItem);
     }
 
-    private void setupInitialMyProducts()
-    {
-        ArrayList<Product> showProducts = new ArrayList<>();
-        for (BuyLogItem buyLogItem: customer.getBuyLog()) {
-            for (Product product : buyLogItem.getProducts())
+    private void setupInitialMyProducts() {
+        customer = ClientCustomerController.getUserInfo(ClientHandler.username);
+        ArrayList<Map<String, Object>> showProducts = new ArrayList<>();
+        for (Map<String, Object> buyLogItem : (List<Map<String, Object>>) customer.get("log")) {
+            for (Map<String, Object> product : (List<Map<String, Object>>) buyLogItem.get("products"))
                 showProducts.add(product);
         }
         int i = 0;
         showProducts = makeUnique(showProducts);
-        for (Product product: showProducts)
+        for (Map<String, Object> product : showProducts)
             showEachProductInHBox(product, i++);
         averageRatingLabels = new Label[showProducts.size()];
         currentRatings = new int[showProducts.size()];
-        for (int currentRating: currentRatings)
+        for (int currentRating : currentRatings)
             currentRating = 0;
     }
 
-    private ArrayList<Product> makeUnique(ArrayList<Product> showProducts) {
-        ArrayList<Product> returnedArray = new ArrayList<>();
-        for (Product product : showProducts){
+    private ArrayList<Map<String, Object>> makeUnique(ArrayList<Map<String, Object>> showProducts) {
+        ArrayList<Map<String, Object>> returnedArray = new ArrayList<>();
+        for (Map<String, Object> product : showProducts) {
             if (!returnedArray.contains(product))
                 returnedArray.add(product);
         }
         return returnedArray;
     }
 
-    private void setupInitialMyDiscount()
-    {
-        for (OffCode offCode: customer.getOffCodes().keySet())
-            showEachDiscountInHBox(offCode, customer.getOffCodes().get(offCode));
+    private void setupInitialMyDiscount() {
+        customer = ClientCustomerController.getUserInfo(ClientHandler.username);
+        for (Map<String, Object> offCode : (List<Map<String, Object>>) customer.get("offCodes")) {
+            showEachDiscountInHBox((Map<String, Object>) offCode.get("offCode"), (int) Math.round(((Double) offCode.get("number"))));
+        }
+
     }
     @FXML
-    private void setupInitialCart()
-    {
-        ArrayList<Product> cartExample = new ArrayList<>();
-        for (Product product: customer.getCart())
-            if(!cartExample.contains(product))
+    private void setupInitialCart() {
+        customer = ClientCustomerController.getUserInfo(ClientHandler.username);
+        ArrayList<Map<String, Object>> cartExample = new ArrayList<>();
+        for (Map<String, Object> product : (List<Map<String, Object>>) customer.get("cart"))
+            if (!cartExample.contains(product))
                 cartExample.add(product);
         /*for (int i = 0; i < cartExample.size(); i++) {
             for (int j = 0; j < cartExample.size(); j++)
@@ -357,10 +361,10 @@ public class CustomerMenuUI implements Initializable {
             }
         }*/
         System.out.println(cartExample);
-        for (Product product: cartExample)
+        for (Map<String, Object> product : cartExample)
             showEachProductInHBoxCart(product, numberOfrepeat(product));
-        totalPriceCart.setText(customer.getTotalCartPrice() + "");
-        totalPriceCart.textProperty().bind(new SimpleStringProperty(String.valueOf(customer.getTotalCartPrice())));
+        totalPriceCart.setText(customer.get("totalCartPrice") + "");
+        totalPriceCart.textProperty().bind(new SimpleStringProperty(String.valueOf(customer.get("totalCartPrice"))));
     }
 
     /*private void makeUnique(ArrayList<Product> cartExample)
@@ -368,52 +372,41 @@ public class CustomerMenuUI implements Initializable {
 
     }*/
 
-    private int numberOfrepeat(Product product) {
+    private int numberOfrepeat(Map<String, Object> product) {
         int count = 0;
-        for (Product product1 : customer.getCart())
-        {
-            if (product.getProductID() == product1.getProductID() && product.getSeller().getUsername().equals(product1.getSeller().getUsername()))
+        for (Map<String, Object> product1 : (List<Map<String, Object>>) customer.get("cart")) {
+            if (product.get("id").equals(product1.get("id")) && product.get("sellerName").equals(product1.get("sellerName")))
                 count++;
         }
         return count;
     }
 
     @FXML
-    private void setupInitialPersonalMenu()
-    {
-        String path;
-        if (customer.getProfilePicturePath().isEmpty()) {
-            path = "src/main/resources/Images/images.jpg";
-        }
-        else {
-            path = customer.getProfilePicturePath();
-        }
+    private void setupInitialPersonalMenu() {
+//        String path;
+//        if (customer.getProfilePicturePath().isEmpty()) {
+//            path = "src/main/resources/Images/images.jpg";
+//        }
+//        else {
+//            path = customer.getProfilePicturePath();
+//        }
 
-        File file = new File(path);
-        profile.setImage(new Image(file.toURI().toString()));
+//        File file = new File(path);
+//        profile.setImage(new Image(file.toURI().toString()));
 
-        emailTextField.setText(customer.getEmail());
-        firstNameTextField.setText(customer.getName());
-        lastNameTextField.setText(customer.getFamilyName());
-        phoneNumberTextField.setText(customer.getPhoneNumber());
-        usernameTextField.setText(customer.getUsername());
+        emailTextField.setText((String) customer.get("email"));
+        firstNameTextField.setText((String) customer.get("name"));
+        lastNameTextField.setText((String) customer.get("familyName"));
+        phoneNumberTextField.setText((String) customer.get("phoneNumber"));
+        usernameTextField.setText((String) customer.get("username"));
         usernameTextField.setEditable(false);
-        createBankAccount.setOnMouseClicked(e -> {
+        chargeWalletButton.setOnAction(e -> {
             try {
-                openStage("createBankAccount");
+                openStage("chargeWallet");
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
         });
-        createBankAccount.setDisable(!customer.isHasBankAccount());
-        loginBankAccount.setOnMouseClicked(e -> {
-            try {
-                openStage("loginBankAccount");
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-        });
-
     }
 
     public void changePassAction()
@@ -428,8 +421,8 @@ public class CustomerMenuUI implements Initializable {
     public void finalChangePassButtonClicked()
     {
         try {
-            if (customer.validatePassword(oldPass.getText()) && newPass.getText().equals(confirmationNewPass.getText())) {
-                CustomerUIController.editPersonalInfo(customer, "password", newPass.getText());
+            if (ClientCustomerController.validatePassword(oldPass.getText()) && newPass.getText().equals(confirmationNewPass.getText())) {
+                ClientCustomerController.editPersonalInfo(customer, "password", newPass.getText());
                 ((Stage) oldPass.getScene().getWindow()).close();
                 menuState = "personal";
                 CustomerMenuUI.showCustomerMenu();
@@ -439,108 +432,7 @@ public class CustomerMenuUI implements Initializable {
         }
     }
 
-    public void createBankAccountFinal() {
-        if (bankPass.getText().isEmpty() || bankPassRepeat.getText().isEmpty())
-            throwError("Something is wrong!");
-        else {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("message", "bank");
-            hashMap.put("sent to bank server", "create_account " + customer.getName() + " " + customer.getFamilyName() + " " + customer.getUsername() + " " + bankPass.getText() + " " + bankPassRepeat.getText());
-            hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
-            if (hashMap.get("content").equals("error"))
-                throwError((String)hashMap.get("type"));
-            else
-                ((Stage)bankPass.getScene().getWindow()).close();
-        }
-    }
-
-    public void loginBankAccountFinal(){
-        if (bankPass.getText().isEmpty())
-            throwError("Something is wrong!");
-        else {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("message", "bank");
-            hashMap.put("sent to bank server", "get_token " + customer.getUsername() + " " + bankPass.getText());
-            hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
-            if (hashMap.get("content").equals("error"))
-                throwError((String)hashMap.get("type"));
-            else{
-                token = (String)hashMap.get("content");
-                ((Stage)bankPass.getScene().getWindow()).close();
-            }
-        }
-    }
-
-    public void moveMoneyBank()
-    {
-        createReceipt(token, "move", moneyBank.getText(), sourceId.getText(), destId.getText(), descriptionBank.getText());
-    }
-
-    public void deposit()
-    {
-        createReceipt(token, "deposit", moneyBank.getText(), -1 + "", destId.getText(), descriptionBank.getText());
-    }
-
-    public void withdraw()
-    {
-        createReceipt(token, "move", moneyBank.getText(), sourceId.getText(), -1 + "", descriptionBank.getText());
-    }
-
-    public void createReceipt(String token, String type, String money, String source, String dest, String descriptionBank)
-    {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("message", "bank");
-        hashMap.put("sent to bank server", "create_receipt " + token + " " + type + " " + money + " " + source + " " + dest + " " + descriptionBank);
-        hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
-        if (hashMap.get("content").equals("error")) {
-            throwError((String) hashMap.get("type"));
-        }
-        else{
-            ((Stage)moneyBank.getScene().getWindow()).close();
-        }
-    }
-
-    public void getBalance()
-    {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("message", "bank");
-        hashMap.put("sent to bank server", "get_balance " + token);
-        hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
-        if (hashMap.get("content").equals("error"))
-            throwError((String)hashMap.get("type"));
-        else{
-            bankBalance.setText((String)hashMap.get("content"));
-        }
-    }
-
-    public void getTransactionsFinal()
-    {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("message", "bank");
-        hashMap.put("sent to bank server", "get_transactions " + token + " " + type.getText());
-        hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
-        if (hashMap.get("content").equals("error"))
-            throwError((String)hashMap.get("type"));
-        else{
-            showTransactions(hashMap.get("content"));
-        }
-    }
-
-    public void pay()
-    {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("message", "bank");
-        hashMap.put("sent to bank server", "pay " + receiptId.getText());
-        hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
-        if (hashMap.get("content").equals("error"))
-            throwError((String)hashMap.get("type"));
-        else{
-            throwError((String)hashMap.get("content"));
-        }
-    }
-
-    private void showEachProductInHBox(Product product, int i)
-    {
+    private void showEachProductInHBox(Map<String, Object> product, int i) {
         HBox hBox = new HBox();
         hBox.setSpacing(5);
         /*hBox.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
@@ -612,18 +504,24 @@ public class CustomerMenuUI implements Initializable {
 //            }
 //        });
         vBoxes.get(10).getChildren().add(viewProduct);
-        id.setText(product.getProductID() + "");
-        name.setText(product.getName());
-        sellerName.setText(product.getSeller().getUsername());
-        category.setText(product.getCategory() + "");
-        brand.setText(product.getBrand());
-        average.setText(product.getAverageRating() + "");
-        productStatus.setText(product.getProductStatus() + "");
-        price.setText(product.getPrice() + "");
+        id.setText(product.get("id") + "");
+        name.setText((String) product.get("name"));
+        sellerName.setText((String) product.get("sellerName"));
+        try {
+            category.setText(((Map<String, Object>) product.get("category")).get("name") + "");
+        }
+        catch (Exception exception) {
+            category.setText("null");
+        }
+        brand.setText((String) product.get("brand"));
+        average.setText(product.get("averageRating") + "");
+        productStatus.setText(product.get("productStatus") + "");
+        price.setText(product.get("price") + "");
         TextArea filters = new TextArea(), discription = new TextArea();
-        filters.setEditable(false);         discription.setEditable(false);
-        discription.setText(product.getDescription());
-        for (String filter: product.getFilters())
+        filters.setEditable(false);
+        discription.setEditable(false);
+        discription.setText((String) product.get("description"));
+        for (String filter : (List<String>) product.get("filters"))
             filters.setText(filters.getText() + "-" + filter + "\n");
         vBoxes.get(0).getChildren().add(id);
         vBoxes.get(1).getChildren().add(name);
@@ -649,14 +547,12 @@ public class CustomerMenuUI implements Initializable {
         myProductsVBox.getChildren().addAll(hBox);
     }
 
-    private void handleCanRate(Product product, Button ratingStar1, Button ratingStar2, Button ratingStar3, Button ratingStar4, Button ratingStar5, Button rateProductButton, ImageView activeStar, ImageView activeStar1, ImageView activeStar2, ImageView activeStar3, ImageView activeStar4) {
-        if (!(MainMenuUIController.currentUser instanceof Customer)) {
+    private void handleCanRate(Map<String, Object> product, Button ratingStar1, Button ratingStar2, Button ratingStar3, Button ratingStar4, Button ratingStar5, Button rateProductButton, ImageView activeStar, ImageView activeStar1, ImageView activeStar2, ImageView activeStar3, ImageView activeStar4) {
+        if (!(customer.get("type").equals("Customer"))) {
             setRatingDisable(true, ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5, rateProductButton, activeStar, activeStar1, activeStar2, activeStar3, activeStar4);
-        }
-        else if (product.hasBeenRatedBefore((Customer) MainMenuUIController.currentUser)) {
+        } else if (ClientProductController.hasBeenRated((String) product.get("id"), ClientHandler.username)) {
             setRatingDisable(true, ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5, rateProductButton, activeStar, activeStar1, activeStar2, activeStar3, activeStar4);
-        }
-        else if (!((Customer) MainMenuUIController.currentUser).hasBoughtProduct(product)) {
+        } else if (!ClientProductController.hasBoughtProduct((String) product.get("id"), ClientHandler.username)) {
             setRatingDisable(true, ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5, rateProductButton, activeStar, activeStar1, activeStar2, activeStar3, activeStar4);
         }
         else {
@@ -673,15 +569,16 @@ public class CustomerMenuUI implements Initializable {
         }
     }
 
-    private void handleRating(Product product, int currentRating, Button ratingStar1, Button ratingStar2, Button ratingStar3, Button ratingStar4, Button ratingStar5, Button rateProductButton, ImageView activeStar, ImageView activeStar1, ImageView activeStar2, ImageView activeStar3, ImageView activeStar4, int i) {
+    private void handleRating(Map<String, Object> product, int currentRating, Button ratingStar1, Button ratingStar2, Button ratingStar3, Button ratingStar4, Button ratingStar5, Button rateProductButton, ImageView activeStar, ImageView activeStar1, ImageView activeStar2, ImageView activeStar3, ImageView activeStar4, int i) {
+        customer = ClientCustomerController.getUserInfo(ClientHandler.username);
         try {
-            CustomerUIController.rateProduct((Customer) MainMenuUIController.currentUser, product, currentRating);
+            ClientCustomerController.rateProduct(customer, product, currentRating);
         } catch (Exception exception) {
             throwError(exception.getMessage());
         }
         resetStars(activeStar, activeStar1, activeStar2, activeStar3, activeStar4);
         handleCanRate(product, ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5, rateProductButton, activeStar, activeStar1, activeStar2, activeStar3, activeStar4);
-        averageRatingLabels[i].setText("" + product.getAverageRating());
+        averageRatingLabels[i].setText("" + product.get("averageRating"));
     }
 
 
@@ -701,8 +598,7 @@ public class CustomerMenuUI implements Initializable {
         rateProductButton.setDisable(disable);
     }
 
-    private void showEachProductInHBoxCart(Product product, int count)
-    {
+    private void showEachProductInHBoxCart(Map<String, Object> product, int count) {
         HBox hBox = new HBox();
         /*Image productImage = new Image(product.getImagePath());
         ImageView productView = new ImageView(productImage);
@@ -738,27 +634,31 @@ public class CustomerMenuUI implements Initializable {
         }
         vBoxes.get(0).setPrefWidth(74);
         Label id = new Label(), name = new Label(), sellerName = new Label(), category = new Label(), brand = new Label(), average = new Label(), price = new Label(), productStatus = new Label(), number = new Label(), priceInNumber = new Label();
-        id.setText(product.getProductID() + "");
-        name.setText(product.getName());
-        sellerName.setText(product.getSeller().getUsername());
-        category.setText(product.getCategory() + "");
-        brand.setText(product.getBrand());
-        average.setText(product.getAverageRating() + "");
-        productStatus.setText(product.getProductStatus() + "");
-        price.setText(product.getPrice() + "");
-        number.setText(count + "");
-        if (Offer.getOfferOfProduct(product) == null)
-            priceInNumber.setText((count * product.getPrice()) + "");
-        else if(Offer.getOfferOfProduct(product).canBeUsedInDate(new Date())){
-            priceInNumber.setText((count * product.getPrice() * (100 - Offer.getOfferOfProduct(product).getOffPercent()) / 100.0) + "");
+        id.setText(product.get("id") + "");
+        name.setText((String) product.get("name"));
+        sellerName.setText((String) product.get("sellerName"));
+        try {
+            category.setText(((Map<String, Object>) product.get("category")).get("name") + "");
+        } catch (Exception exception) {
+            category.setText("null");
         }
-        else{
-            priceInNumber.setText((count * product.getPrice()) + "");
+        brand.setText((String) product.get("brand"));
+        average.setText(product.get("averageRating") + "");
+        productStatus.setText(product.get("productStatus") + "");
+        price.setText(product.get("price") + "");
+        number.setText(count + "");
+        if (product.get("offer") == null)
+            priceInNumber.setText((count * Double.parseDouble((String) product.get("price"))) + "");
+        else if (ClientCustomerController.canOfferBeUsedInDate(new Date(), (String) product.get("id"))) {
+            priceInNumber.setText((count * Double.parseDouble((String) product.get("price")) * (100 - Double.parseDouble((String) ((Map<String, Object>) product.get("offer")).get("offPercent"))) / 100.0) + "");
+        } else {
+            priceInNumber.setText((count * Double.parseDouble((String) product.get("price"))) + "");
         }
         TextArea filters = new TextArea(), discription = new TextArea();
-        filters.setEditable(false);         discription.setEditable(false);
-        discription.setText(product.getDescription());
-        for (String filter: product.getFilters())
+        filters.setEditable(false);
+        discription.setEditable(false);
+        discription.setText((String) product.get("description"));
+        for (String filter : (List<String>) product.get("filters"))
             filters.setText(filters.getText() + "-" + filter + "\n");
         filters.setMaxWidth(100);   discription.setMaxWidth(100);
         vBoxes.get(0).getChildren().addAll(plusViewLabel, id, minesViewLabel);
@@ -780,12 +680,13 @@ public class CustomerMenuUI implements Initializable {
         ImageView imageView = new ImageView();
         imageView.setFitHeight(10);
         imageView.setFitWidth(10);
-        File file = null;
-        if (product.getImagePath().equals("")) {
-            file = new File("src/main/resources/Images/images.jpg");
-        } else {
-            file = new File(product.getImagePath());
-        }
+//        File file = null;
+//        if (product.getImagePath().equals("")) {
+//            file = new File("src/main/resources/Images/images.jpg");
+//        } else {
+//            file = new File(product.getImagePath());
+//        }
+        File file = new File("src/main/resources/Images/images.jpg");
         Image image = new Image(file.toURI().toString());
         imageView = new ImageView(image);
         imageHBox.setMaxHeight(40);
@@ -795,7 +696,7 @@ public class CustomerMenuUI implements Initializable {
         cartVBox.getChildren().addAll(hBox, imageHBox);
         plusViewLabel.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
             try {
-                CustomerUIController.increaseProduct(customer, product);
+                ClientCustomerController.increaseProduct(customer, product);
                 menuState = "cart";
                 showCustomerMenu();
             }
@@ -806,7 +707,7 @@ public class CustomerMenuUI implements Initializable {
         });
         minesViewLabel.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
             try {
-                CustomerUIController.decreaseProduct(customer, product);
+                ClientCustomerController.decreaseProduct(customer, product);
                 menuState = "cart";
                 showCustomerMenu();
             }
@@ -817,8 +718,7 @@ public class CustomerMenuUI implements Initializable {
         });
     }
 
-    private void showEachDiscountInHBox(OffCode offCode, int quantity)
-    {
+    private void showEachDiscountInHBox(Map<String, Object> offCode, int quantity) {
         HBox hBox = new HBox();
         Label offCodeText = new Label("Code");
         Label maximumOff = new Label("Maximum Off");
@@ -832,12 +732,12 @@ public class CustomerMenuUI implements Initializable {
         Label endingTime2 = new Label();
         Label numberCanBeUsed2 = new Label();
         Label startingTime2 = new Label();
-        offCodeText2.setText(offCode.getCode());
-        maximumOff2.setText(String.valueOf(offCode.getMaximumOff()));
-        numberCanBeUsed2.setText(String.valueOf(offCode.getUsageCount() - quantity));
-        offPercent2.setText(String.valueOf(offCode.getOffPercentage()));
-        endingTime2.setText(String.valueOf(offCode.getEndingTime()));
-        startingTime2.setText(String.valueOf(offCode.getStartingTime()));
+        offCodeText2.setText((String) offCode.get("code"));
+        maximumOff2.setText(String.valueOf(offCode.get("maximumOff")));
+        numberCanBeUsed2.setText(String.valueOf(Integer.parseInt((String) offCode.get("usageCount")) - quantity));
+        offPercent2.setText(String.valueOf(offCode.get("offPercentage")));
+        endingTime2.setText(String.valueOf(offCode.get("endingTime")));
+        startingTime2.setText(String.valueOf(offCode.get("startingTime")));
         VBox vBox1 = new VBox(), vBox2 = new VBox(), vBox3 = new VBox(), vBox4 = new VBox(), vBox5 = new VBox(), vBox6 = new VBox();
         vBox1.getChildren().addAll(offCodeText, offCodeText2);
         vBox2.getChildren().addAll(offPercent, offPercent2);
@@ -885,30 +785,30 @@ public class CustomerMenuUI implements Initializable {
     }
 
     public void purchaseButtonClicked() throws IOException {
-        if (customer == MainMenuUIController.guest) {
+        if (!ClientHandler.hasLoggedIn) {
             throwError("You must login");
-        }
-        else if (customer.getCart().isEmpty()) {
+        } else if (((List) customer.get("cart")).isEmpty()) {
             throwError("Your cart is empty!");
-        }
-        else
+        } else
             openStage("extraInfoPurchase");
     }
 
-    public void doneImageButton()
-    {
-        if (imagePath.getText().isEmpty())
-            throwError("Path field is empty!");
-        else
-            customer.setProfilePicturePath(imagePath.getText());
+    public void doneImageButton() {
+//        if (imagePath.getText().isEmpty())
+//            throwError("Path field is empty!");
+//        else
+//            customer.setProfilePicturePath(imagePath.getText());
     }
 
     public void finalBuyButton() throws Exception {
         try {
             if (addressTextArea.getText() != null) {
-                factorString = CustomerUIController.purchase(customer, offCodeTextField.getText());
+                if (byBank.isSelected())
+                    factorString = ClientCustomerController.purchase(customer, offCodeTextField.getText(), true);
+                else
+                    factorString = ClientCustomerController.purchase(customer, offCodeTextField.getText(), false);
                 menuState = "CustomerMenu";
-                ((Stage)addressTextArea.getScene().getWindow()).close();
+                ((Stage) addressTextArea.getScene().getWindow()).close();
                 menuState = "cart";
                 showFactor();
                 Platform.runLater(new Runnable() {
@@ -917,13 +817,33 @@ public class CustomerMenuUI implements Initializable {
                         showCustomerMenu();
                     }
                 });
-            }
-            else
+            } else
                 throwError("Address field is empty!");
         }
         catch (Exception exception)
         {
             throwError(exception.getMessage());
+        }
+    }
+
+    public void chargeWallet()
+    {
+        if (!Pattern.matches("(\\d+)(\\.(\\d+))?", moneyBank.getText()))
+            throwError("Money filed should be filled correctly!");
+        else{
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("message", "chargeWallet");
+            hashMap.put("money", Double.parseDouble(moneyBank.getText()));
+            hashMap.put("username", customer.get("username"));
+            hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
+            if (hashMap.get("content").equals("error")){
+                throwError((String)hashMap.get("type"));
+            }
+            else{
+                menuState = "personal";
+                ((Stage)moneyBank.getScene().getWindow()).close();
+                showCustomerMenu();
+            }
         }
     }
 
@@ -933,12 +853,12 @@ public class CustomerMenuUI implements Initializable {
 
     public void changePic() throws IOException {
         FileChooser fileChooser = new FileChooser();
-        try {
-            customer.setProfilePicturePath(fileChooser.showOpenDialog(new Stage()).getPath());
-        }
-        catch (Exception exception) {
-            // do nothing
-        }
+//        try {
+//            customer.setProfilePicturePath(fileChooser.showOpenDialog(new Stage()).getPath());
+//        }
+//        catch (Exception exception) {
+//            // do nothing
+//        }
         menuState = "personal";
         showCustomerMenu();
     }
@@ -951,16 +871,14 @@ public class CustomerMenuUI implements Initializable {
         openStage("enterPass");
     }
 
-    public void editPasswordSubmit()
-    {
-        if (customer.validatePassword(passEdit.getText()))
-        {
+    public void editPasswordSubmit() {
+        if (ClientCustomerController.validatePassword(passEdit.getText())) {
             try {
-                CustomerUIController.editPersonalInfo(customer, "phone number", phoneNumber);
-                CustomerUIController.editPersonalInfo(customer, "email", email);
-                CustomerUIController.editPersonalInfo(customer, "family name", lastName);
-                CustomerUIController.editPersonalInfo(customer, "first name", firstName);
-                ((Stage)passEdit.getScene().getWindow()).close();
+                ClientCustomerController.editPersonalInfo(customer, "phone number", phoneNumber);
+                ClientCustomerController.editPersonalInfo(customer, "email", email);
+                ClientCustomerController.editPersonalInfo(customer, "family name", lastName);
+                ClientCustomerController.editPersonalInfo(customer, "first name", firstName);
+                ((Stage) passEdit.getScene().getWindow()).close();
                 menuState = "personal";
                 showCustomerMenu();
             }catch (Exception exception)

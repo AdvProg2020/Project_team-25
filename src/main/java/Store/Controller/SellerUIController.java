@@ -3,11 +3,16 @@ package Store.Controller;
 import Store.Model.*;
 import org.codehaus.plexus.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class SellerUIController {
 
     private static final String INVALID_VALUE_ERROR = "The value you entered for this field is invalid!";
+
+    public static void addAuction(Product product, LocalDateTime dateTime) {
+        Manager.addRequest(new Request(product, dateTime));
+    }
 
     public static class InvalidValueException extends Exception {
         InvalidValueException(String message) {

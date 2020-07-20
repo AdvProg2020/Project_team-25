@@ -122,15 +122,7 @@ public class ProductsMenuUI {
         offersButton.setOnAction((e) -> OffersMenuUI.showOffersMenu());
         supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
 
-        userPageButton.setOnAction(e -> {
-            Map<String, Object> userInfo = ClientSignUpAndLoginController.getUserInfo(ClientHandler.username);
-            if (userInfo.get("type").equals("Customer"))
-                CustomerMenuUI.showCustomerMenu();
-            else if (userInfo.get("type").equals("Customer"))
-                SellerMenuUI.showSellerMenu();
-            else if (userInfo.get("type").equals("Customer"))
-                ManagerMenuUI.showManagerMenu();
-        });
+        userPageButton.setOnAction(e -> UserPageHandlerUI.handleEvent());
 
         mainMenuButton.setOnAction((e) -> {
             try {

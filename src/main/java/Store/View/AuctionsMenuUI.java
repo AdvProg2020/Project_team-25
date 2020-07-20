@@ -95,7 +95,6 @@ public class AuctionsMenuUI {
         setupBindings();
         setCategoryFiltersVBox();
         showProducts();
-
     }
 
 

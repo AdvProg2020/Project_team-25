@@ -1,6 +1,7 @@
 package Store.View;
 
 
+import Store.Controller.MainMenuUIController;
 import Store.Main;
 import Store.Model.Auction;
 import Store.Networking.Client.ClientHandler;
@@ -27,10 +28,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class AuctionMenuUI {
 
@@ -58,6 +57,11 @@ public class AuctionMenuUI {
     public Label dateOfOfferLabel;
     public Label productStatusLabel;
     public Label filtersLabel;
+    public Label currentBuyer;
+    public Label highestPrice;
+
+    public TextField auctionPrice;
+    public TextArea message;
 
     public Button ratingStar1;
     public ImageView activeStar;
@@ -239,6 +243,7 @@ public class AuctionMenuUI {
         }
         rateProductButton.setOnAction((e) -> handleRating());
 
+
     }
 
     private void setRatingDisable(boolean disable) {
@@ -352,4 +357,25 @@ public class AuctionMenuUI {
         result.setPrefHeight(Region.USE_COMPUTED_SIZE);
         return result;
     }
+
+    public void tryHigherPrice(){
+        if (!Pattern.matches("\\d+(\\.(\\d+))?", auctionPrice.getText()))
+            throwError("Enter correct money!");
+        else{
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("message", "increaseAuctionPrice");
+            hashMap.put("auctionId", auctionToShow.get("id"));
+            hashMap.put("newPrice", Double.parseDouble(auctionPrice.getText()));
+            hashMap.put("buyer", ClientMainMenuController.currentUserUsername.getValue());
+            hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
+            if (hashMap.get("content").equals("error")){
+                throwError((String)hashMap.get("type"));
+            }
+        }
+    }
+
+    public void sendMessage(){
+
+    }
+
 }

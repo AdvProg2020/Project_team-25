@@ -45,7 +45,6 @@ public class ClientSignUpAndLoginController {
         hashMap.put("message", "getUserInfo");
         hashMap.put("username", username);
         return (Map) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
-
     }
 
     public static void moveShoppingCart(String username) {

@@ -9,6 +9,7 @@ import Store.Networking.Client.ClientHandler;
 import Store.Networking.Client.Controller.ClientMainMenuController;
 import Store.Networking.Client.Controller.ClientProductController;
 import Store.Networking.Client.Controller.ClientSignUpAndLoginController;
+import Store.Networking.P2P.P2PClient;
 import Store.View.AdditionalUtils.NodeGestures;
 import Store.View.AdditionalUtils.PannableCanvas;
 import Store.View.AdditionalUtils.SceneGestures;
@@ -109,6 +110,8 @@ public class ProductMenuUI {
     public TextField compareProductIDTextField;
     public Button compareButton;
 
+    public Button downloadButton;
+
     private ArrayList<Button> sellerButtons = new ArrayList<Button>();
 
 
@@ -133,7 +136,7 @@ public class ProductMenuUI {
         loggedInStatusText.textProperty().bind(ClientMainMenuController.currentUserUsername);
         signUpButton.disableProperty().bind(ClientMainMenuController.isLoggedIn);
         loginLogoutButton.textProperty().bind(ClientMainMenuController.loginLogoutButtonText);
-        addToCartButton.setDisable((Boolean) productToShow.get("availability"));
+        addToCartButton.setDisable(!(Boolean) productToShow.get("availability"));
 
 //        Media media = new Media(ProductMenuUI.class.getResource("/Undertale_Enemy_Approaching_Yellow_Trimmed.wav").toExternalForm());
 //        MediaPlayer mediaPlayer = new MediaPlayer(media);
@@ -144,6 +147,7 @@ public class ProductMenuUI {
         setupSellerOptions();
         handleCanRate();
         setupCommentsSection();
+        setupDownloadButton();
     }
 
     private void setupOffPercentageLabel() {
@@ -272,7 +276,7 @@ public class ProductMenuUI {
         for (Map<String, Object> seller : allSellersOfProduct) {
             System.out.println("SELLER: " + seller.get("username"));
             Button currentButton = new Button((String) seller.get("username"));
-            if (seller.get("username").equals(((Map<String, Object>)productToShow.get("seller")).get("username"))) {
+            if (seller.get("username").equals(productToShow.get("sellerName"))) {
                 currentButton.setDisable(true);
             }
             currentButton.setOnAction((e) -> changeProductSeller((String) seller.get("username")));
@@ -288,7 +292,7 @@ public class ProductMenuUI {
         Map<String, Object> newProduct = ClientProductController.getProductWithDifferentSeller((String)productToShow.get("id"), username);
         for (Button button : sellerButtons) {
             button.setDisable(false);
-            if (button.getText().equalsIgnoreCase((String) ((Map<String, Object>)newProduct.get("seller")).get("username"))) {
+            if (button.getText().equalsIgnoreCase((String) (newProduct.get("sellerName")))) {
                 button.setDisable(true);
             }
         }
@@ -509,5 +513,55 @@ public class ProductMenuUI {
         setError(compareProductIDTextField, false);
         compareProductIDTextField.setText("");
         CompareProducts.showLoginMenu(productToShow, secondProduct);
+    }
+
+    private void setupDownloadButton() {
+        Map<String, Object> customer = ClientSignUpAndLoginController.getUserInfo(ClientHandler.username);
+        if (!ClientHandler.hasLoggedIn || !(customer.get("type").equals("Customer"))) {
+            return;
+        }
+
+
+        String fileName = ((String) productToShow.get("filePath"));
+        if (fileName.isEmpty() ||
+                !ClientProductController.hasBoughtProduct((String) productToShow.get("id"), ClientHandler.username)) {
+            return;
+        }
+
+        downloadButton.setVisible(true);
+        downloadButton.setOnAction((e) -> {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    boolean errorFound = false;
+                    try {
+                        P2PClient.receiveFile(ClientHandler.username, ClientHandler.token,
+                                (String) productToShow.get("sellerName"), fileName);
+                    }
+                    catch (Exception e) {
+                        errorFound = true;
+                    }
+                    boolean finalErrorFound = errorFound;
+                    Platform.runLater(() -> {
+                        if (finalErrorFound) {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Connection Error");
+                            alert.setHeaderText("Seller Server Offline");
+                            alert.setContentText("It seems the sellers aren't running the server\non their end");
+
+                            alert.show();
+                        }
+                        else {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Download Complete");
+                            alert.setHeaderText("File of " + productToShow.get("name") + " Downloaded");
+                            alert.setContentText("You can access this file from the Downloads folder");
+
+                            alert.show();
+                        }
+                    });
+                }
+            }).start();
+        });
     }
 }

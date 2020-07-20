@@ -27,7 +27,6 @@ public class SignUpCustomerAndSellerMenuUI {
     public TextField lastNameTextField;
     public TextField emailTextField;
     public TextField phoneNumberTextField;
-    public TextField initialMoneyTextField;
     public TextField companyNameTextField;
     public TextArea companyDescriptionTextArea;
     public Button signUpButton;
@@ -114,10 +113,6 @@ public class SignUpCustomerAndSellerMenuUI {
             setError(phoneNumberTextField, true);
             result = false;
         }
-        if (initialMoneyTextField.getText().isEmpty()) {
-            setError(initialMoneyTextField, true);
-            result = false;
-        }
         if (isSeller && companyNameTextField.getText().isEmpty()) {
             setError(companyNameTextField, true);
             result = false;
@@ -174,14 +169,7 @@ public class SignUpCustomerAndSellerMenuUI {
             isValid = false;
         }
 
-        String initialMoney = initialMoneyTextField.getText();
-        if (!initialMoney.matches("^\\d+(.\\d+)?$")) {
-            throwError("Invalid floating-point number format!");
-            setError(initialMoneyTextField, true);
-            isValid = false;
-        }
-
-        ArrayList<String> attributes = new ArrayList<String>(Arrays.asList(username, firstName, lastName, email, phoneNumber, password, initialMoney));
+        ArrayList<String> attributes = new ArrayList<String>(Arrays.asList(username, firstName, lastName, email, phoneNumber, password));
         if (type.equalsIgnoreCase("Seller")) {
             attributes.add(companyNameTextField.getText());
             attributes.add(companyDescriptionTextArea.getText());
@@ -203,7 +191,6 @@ public class SignUpCustomerAndSellerMenuUI {
         lastNameTextField.setText("");
         emailTextField.setText("");
         phoneNumberTextField.setText("");
-        initialMoneyTextField.setText("");
         companyNameTextField.setText("");
         companyDescriptionTextArea.setText("");
     }
@@ -217,7 +204,6 @@ public class SignUpCustomerAndSellerMenuUI {
         setError(lastNameTextField, false);
         setError(emailTextField, false);
         setError(phoneNumberTextField, false);
-        setError(initialMoneyTextField, false);
         setError(companyNameTextField, false);
     }
 

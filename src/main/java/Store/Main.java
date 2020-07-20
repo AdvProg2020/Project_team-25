@@ -6,6 +6,7 @@ import Store.Model.Enums.CheckingStatus;
 import Store.Networking.Chat.ChatServer;
 import Store.Networking.Client.ClientHandler;
 import Store.Networking.MainServer;
+import Store.Networking.P2P.P2PManager;
 import Store.View.*;
 import Store.View.AdditionalUtils.SpriteAnimation;
 import javafx.animation.Animation;
@@ -48,7 +49,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         otherStage.initModality(Modality.APPLICATION_MODAL);
 
-  //      setOffers();
+        //      setOffers();
         Parent root = MainMenuUI.getContent();
         /*Seller seller1 = new Seller("jackRipper", "jack", "ripper", "lab@lab.com", "0950", "1234", 1000, "company1", "describe");
         Product product = new Product(CheckingStatus.CREATION, null, "product1", seller1, "brand1", 10, false, "describe");
@@ -78,7 +79,8 @@ public class Main extends Application {
 
         //MainMenuUIController.currentUser = manager1;
         //Parent root = ManagerMenuUI.getContent();
-        */applicationStage = primaryStage;
+        */
+        applicationStage = primaryStage;
         primaryStage.setResizable(false);
         primaryStage.setTitle("Shop");
         primaryStage.setScene(new Scene(root));
@@ -110,8 +112,7 @@ public class Main extends Application {
         Scanner scanner = new Scanner(System.in);
         if (scanner.nextLine().equals("S")) {
             handleServer();
-        }
-        else {
+        } else {
             MainMenuUIController.currentUser = MainMenuUIController.guest;
 //        Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
 //        setTest();
@@ -126,6 +127,7 @@ public class Main extends Application {
             launch(args);
         }
     }
+
 
     public static void setupBGM() {
         backgroundMusic = new Media(Main.class.getResource("/Audio/Tarantulas_by_Christian_Nanzell_Trimmed.wav").toExternalForm());
@@ -166,6 +168,10 @@ public class Main extends Application {
         applicationStage.setScene(scene);
     }
 
+    public static void setApplicationStage(Stage applicationStage) {
+        Main.applicationStage = applicationStage;
+    }
+/*
     public static void setTest() {
         Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
         Manager manager2 = new Manager("jojoRabbit", "jojo", "rabbit", "lab@lab.com", "0936", "1234");
@@ -191,6 +197,7 @@ public class Main extends Application {
 
         Product product1 = new Product(CheckingStatus.CREATION, null, "product1", seller1, "brand1", 10, true, "describe");
         product1.setVideoPath("grb_2.mp4");
+        product1.setFilePath("Iino_Miko.png");
         Product product2 = new Product(CheckingStatus.CREATION, null, "product2", seller2, "brand1", 5, true, "describe");
         Product product3 = new Product(CheckingStatus.CREATION, null, "product3", seller1, "brand1", 10, true, "describe");
         Product product4 = new Product(CheckingStatus.CREATION, null, "product3", seller2, "brand1", 15.5, true, "describe");
@@ -232,7 +239,7 @@ public class Main extends Application {
 
         Request request = new Request(seller1);
         Manager.addRequest(request);
-        manager1.handleRequest(request, true);
+//        manager1.handleRequest(request, true);
 
         product1.assignToSeller();
         product2.assignToSeller();
@@ -306,7 +313,7 @@ public class Main extends Application {
         offer2.setStartingTime(new Date());
         offer1.setEndingTime(new Date(2020, 6, 10));
         offer2.setEndingTime(new Date(2020, 6, 9));
-    }
+    }*/
 
     public static Popup setProgressPopup() {
         Popup popup = new Popup();
@@ -325,7 +332,6 @@ public class Main extends Application {
         );
 
 
-
 //        applicationStage.setScene(new Scene(new Group(imageView)));
         popup.getContent().add(new Group(imageView));
 
@@ -337,11 +343,12 @@ public class Main extends Application {
 
     public static void handleServer() {
         Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
-        Main.setTest();
+        /*Main.setTest();
         Main.setOffers();
-        try {
+        */try {
             MainServer server = new MainServer();
             ChatServer chatServer = new ChatServer();
+            P2PManager p2PManager = new P2PManager();
             System.out.println(server.getPort());
         } catch (IOException exception) {
             exception.printStackTrace();

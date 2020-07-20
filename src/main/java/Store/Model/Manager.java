@@ -18,6 +18,9 @@ public class Manager extends User {
     private static Date periodOffCodeDate;
     private static boolean periodOffTillNow;
     public static boolean hasManager = false;
+    private static int bankAccount;
+    private static double karmozd = 5;
+    private static double minimumRemaining = 5;
 
     public Manager(String username, String name, String familyName, String email, String phoneNumber, String password) {
         super(username, name, familyName, email, phoneNumber, password);
@@ -25,6 +28,22 @@ public class Manager extends User {
             allUsers.add(this);
         hasManager = true;
         this.type = "Manager";
+    }
+
+    public static double getKarmozd() {
+        return karmozd;
+    }
+
+    public static double getMinimumRemaining() {
+        return minimumRemaining;
+    }
+
+    public static void setMinimumRemaining(double minimumRemaining) {
+        Manager.minimumRemaining = minimumRemaining;
+    }
+
+    public static void setKarmozd(double karmozd) {
+        Manager.karmozd = karmozd;
     }
 
     public static void setPeriodOffCodeDate(Date nextPeriodOffCodeDate)
@@ -42,6 +61,14 @@ public class Manager extends User {
 
     public static void setPendingRequests(ArrayList<Request> pendingRequests) {
         Manager.pendingRequests = pendingRequests;
+    }
+
+    public static int getBankAccount() {
+        return bankAccount;
+    }
+
+    public static void setBankAccount(int bankAccount) {
+        Manager.bankAccount = bankAccount;
     }
 
     public static boolean isUsernameExistInRequests(String username) {

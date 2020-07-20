@@ -2,29 +2,62 @@ package Store.Controller;
 
 import Store.Model.*;
 import Store.Networking.BankAPI;
+import Store.Networking.MainServer;
 import Store.View.MainMenu;
 import Store.View.SignUpAndLoginMenu;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 public class SignUpAndLoginController {
 
-    public static void createManager(ArrayList<String> attributes) {
+    public static void createManager(ArrayList<String> attributes) throws Exception {
         if (Manager.hasManager)
             ((Manager)MainMenuUIController.currentUser).addNewManager(new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5)));
-        else
+        else{
             new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5));
+            int bankAccount = 0;
+            String input = "";
+            try {
+                input = (String) MainServer.sendAndReceiveToBankAPICreateAccount();
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (Pattern.matches("\\d+", input))
+                {
+                    bankAccount = Integer.parseInt(input);
+                    Manager.setBankAccount(bankAccount);
+                }
+                else{
+                    throw new Exception(input);
+                }
+            }
     }
 
-    public static void createSeller(ArrayList<String> attributes, double money, String companyName, String companyDescription) {
+    public static void createSeller(ArrayList<String> attributes, String companyName, String companyDescription) {
         Seller seller = new Seller(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4),
-                attributes.get(5), money, companyName, companyDescription);
+                attributes.get(5), companyName, companyDescription);
         Manager.addRequest(new Request(seller));
     }
 
-    public static void createCustomer(ArrayList<String> attributes, double money) {
-        Customer customer = new Customer(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5), money);
-        Customer.addCustomer(customer);
+    public static void createCustomer(ArrayList<String> attributes) throws Exception {
+        Customer customer = new Customer(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5));
+        int bankAccount = 0;
+        String input = "";
+        try {
+            input = (String) MainServer.sendAndReceiveToBankAPICreateAccount();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (Pattern.matches("\\d+", input))
+        {
+            bankAccount = Integer.parseInt(input);
+            Customer.addCustomer(customer, bankAccount);
+        }
+        else{
+            throw new Exception(input);
+        }
     }
 
     public static String handleLogin(String username, String password) {
@@ -38,7 +71,7 @@ public class SignUpAndLoginController {
         }
     }
 
-    public static String handleCreateAccount(String type, String username) {
+    /*public static String handleCreateAccount(String type, String username) {
         if (User.getUserByUsername(username) != null) {
             return "A user with this username already exists!";
         }
@@ -57,18 +90,16 @@ public class SignUpAndLoginController {
             SignUpAndLoginController.createManager(attributes);
         }
         return "Register successfully.";
-    }
+    }*/
 
-    public static void handleCreateAccount(String type, ArrayList<String> attributes) {
+    public static void handleCreateAccount(String type, ArrayList<String> attributes) throws Exception {
         if (type.equalsIgnoreCase("seller")) {
-            double initialMoney = Double.parseDouble(attributes.get(6));
-            String companyName = attributes.get(7);
-            String companyDescription = attributes.get(8);
-            SignUpAndLoginController.createSeller(new ArrayList<>(attributes.subList(0, 6)), initialMoney, companyName, companyDescription);
+            String companyName = attributes.get(6);
+            String companyDescription = attributes.get(7);
+            SignUpAndLoginController.createSeller(new ArrayList<>(attributes.subList(0, 6)), companyName, companyDescription);
         }
         else if (type.equalsIgnoreCase("customer")) {
-            double initialMoney = Double.parseDouble(attributes.get(6));
-            SignUpAndLoginController.createCustomer(new ArrayList<>(attributes.subList(0, 6)), initialMoney);
+            SignUpAndLoginController.createCustomer(new ArrayList<>(attributes.subList(0, 6)));
         }
         else {
             SignUpAndLoginController.createManager(attributes);

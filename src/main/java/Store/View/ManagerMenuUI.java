@@ -1,12 +1,16 @@
 package Store.View;
 
-import Store.Controller.MainMenuUIController;
-import Store.Controller.ManagerController;
-import Store.Controller.ProductController;
-import Store.Controller.ProductsController;
+
 import Store.Main;
-import Store.Model.*;
+
 import Store.Model.Enums.VerifyStatus;
+
+import Store.Networking.Client.ClientHandler;
+import Store.Networking.Client.Controller.ClientMainMenuController;
+import Store.Networking.Client.Controller.ClientManagerController;
+import Store.Networking.Client.Controller.ClientProductController;
+import Store.Networking.Client.Controller.ClientProductsController;
+import Store.Networking.FileTransportClient;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -32,7 +36,10 @@ import javafx.stage.WindowEvent;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.*;
 
 public class ManagerMenuUI {
@@ -66,13 +73,12 @@ public class ManagerMenuUI {
     public Button editPersonalInfoButton;
     public Button changeImageButton;
 
-    private static ArrayList<String> availableSortsProducts = new ArrayList<String>(Arrays.asList("rating", "price", "visit", "lexicographical"));
-    private static ArrayList<String> availableSortsOffCodes = new ArrayList<String>(Arrays.asList("time of starting", "time of ending", "code", "off percentage", "maximum off", "usage count"));
-    private static ArrayList<String> availableSortsUsers = new ArrayList<String>(Arrays.asList("name", "family name", "phone number", "username", "email"));
+    private static List<String> availableSortsProducts = new ArrayList<String>(Arrays.asList("rating", "price", "visit", "lexicographical"));
+    private static List<String> availableSortsOffCodes = new ArrayList<String>(Arrays.asList("time of starting", "time of ending", "code", "off percentage", "maximum off", "usage count"));
+    private static List<String> availableSortsUsers = new ArrayList<String>(Arrays.asList("name", "family name", "phone number", "username", "email"));
     private static String currentProductsSort = "";
     private static String currentUsersSort = "";
     private static String currentOffCodesSort = "";
-
 
 
     public static Parent getContent() throws IOException {
@@ -95,8 +101,8 @@ public class ManagerMenuUI {
 
     private void showOffCodes() {
         offCodesList.getChildren().clear();
-        for (OffCode offCode : ManagerController.sortOffCodes(currentOffCodesSort, Manager.getOffCodes())) {
-            Label userLabel = new Label(String.format("Code: %s, OffPercent: %s, MaximumOff: %s$, UsageCounts: %s, StartingTime: %s, EndingTime: %s", offCode.getCode(), offCode.getOffPercentage(), offCode.getMaximumOff(), offCode.getUsageCount(), new Date(offCode.getStartingTime().getTime()).toLocalDate().toString(), new Date(offCode.getEndingTime().getTime()).toLocalDate().toString()));
+        for (Map<String, Object> offCode : ClientManagerController.getSortedOffCodes(currentOffCodesSort)) {
+            Label userLabel = new Label(String.format("Code: %s, OffPercent: %s, MaximumOff: %s$, UsageCounts: %s, StartingTime: %s, EndingTime: %s", offCode.get("code"), offCode.get("offPercentage"), offCode.get("maximumOff"), offCode.get("usageCount"), offCode.get("startingTime"), offCode.get("startingTime")));
             userLabel.setOnMouseClicked(event -> {
                 editOffCode(offCode);
             });
@@ -108,7 +114,7 @@ public class ManagerMenuUI {
         }
     }
 
-    private void editOffCode(OffCode offCode) {
+    private void editOffCode(Map<String, Object> offCode) {
         VBox addNewOffCodeContainer = new VBox();
         TextField nameTextField = new TextField();
         TextField maximumOffField = new TextField();
@@ -121,19 +127,19 @@ public class ManagerMenuUI {
 
         addNewOffCodeContainer.setAlignment(Pos.TOP_CENTER);
         addNewOffCodeContainer.setPrefSize(300, 300);
-        nameTextField.setPromptText(offCode.getCode());
-        maximumOffField.setPromptText(offCode.getMaximumOff() + "$");
-        offValueField.setPromptText(offCode.getOffPercentage() + "");
-        usageOffField.setPromptText(offCode.getUsageCount() + "");
-        startingDatePicker.setValue(new Date(offCode.getStartingTime().getTime()).toLocalDate());
-        endingDatePicker.setValue(new Date(offCode.getEndingTime().getTime()).toLocalDate());
+        nameTextField.setPromptText((String) offCode.get("code"));
+        maximumOffField.setPromptText(offCode.get("maximumOff") + "$");
+        offValueField.setPromptText(offCode.get("offPercentage") + "");
+        usageOffField.setPromptText(offCode.get("usageCount") + "");
+        startingDatePicker.setValue(LocalDate.parse((String) offCode.get("startingTime")));
+        endingDatePicker.setValue(LocalDate.parse((String) offCode.get("endingTime")));
         nameTextField.setDisable(true);
         startingDatePicker.setDisable(true);
         endingDatePicker.setDisable(true);
         usageOffField.setDisable(true);
 
         deleteButton.setOnMouseClicked(event -> {
-            Main.errorPopUp(ManagerController.removeOffCode((Manager) MainMenuUIController.currentUser, offCode.getCode()), "confirm", (Stage) deleteButton.getScene().getWindow());
+            Main.errorPopUp(ClientManagerController.removeOffCode(ClientHandler.username, (String) offCode.get("code")), "confirm", (Stage) deleteButton.getScene().getWindow());
             Stage stage = (Stage) deleteButton.getScene().getWindow();
             stage.close();
             showOffCodes();
@@ -146,7 +152,7 @@ public class ManagerMenuUI {
             try {
                 if (!maximumOffField.getText().isEmpty()) {
                     maximumOffValue = Double.parseDouble(maximumOffField.getText());
-                    ManagerController.editOffCode((Manager) MainMenuUIController.currentUser, offCode, "maximumOff", maximumOffValue + "");
+                    ClientManagerController.editOffCode(ClientHandler.username, (String) offCode.get("code"), "maximumOff", maximumOffValue + "");
                 }
             } catch (Exception exception) {
                 Main.errorPopUp("Invalid Format!", "error", (Stage) okButton.getScene().getWindow());
@@ -155,7 +161,7 @@ public class ManagerMenuUI {
             try {
                 if (!offValueField.getText().isEmpty()) {
                     offPercent = Double.parseDouble(offValueField.getText());
-                    ManagerController.editOffCode((Manager) MainMenuUIController.currentUser, offCode, "offPercentage", offPercent + "");
+                    ClientManagerController.editOffCode(ClientHandler.username, (String) offCode.get("code"), "offPercentage", offPercent + "");
                 }
             } catch (Exception exception) {
                 Main.errorPopUp("Invalid Format!", "error", (Stage) okButton.getScene().getWindow());
@@ -180,7 +186,7 @@ public class ManagerMenuUI {
     }
 
     private void addOffCode() {
-        ArrayList<Customer> assignedCustomers = new ArrayList<>();
+        List<String> assignedCustomers = new ArrayList<>();
 
         VBox addNewOffCodeContainer = new VBox();
         TextField nameTextField = new TextField();
@@ -201,7 +207,7 @@ public class ManagerMenuUI {
             double maximumOffValue;
             double offPercent;
             int usageCount;
-            if (Manager.getOffCodeByCode(nameTextField.getText()) != null) {
+            if (ClientManagerController.isOffCodeWithThisCode(nameTextField.getText())) {
                 Main.errorPopUp("Code is already created!", "error", (Stage) okButton.getScene().getWindow());
                 return;
             }
@@ -232,14 +238,14 @@ public class ManagerMenuUI {
                 return;
             }
             try {
-                ManagerController.createOffCode((Manager) MainMenuUIController.currentUser, nameTextField.getText(), offPercent, maximumOffValue, usageCount, Date.valueOf(startingDatePicker.getValue()), Date.valueOf(endingDatePicker.getValue()));
+                ClientManagerController.createOffCode(ClientHandler.username, nameTextField.getText(), offPercent, maximumOffValue, usageCount, Date.valueOf(startingDatePicker.getValue()), Date.valueOf(endingDatePicker.getValue()));
             } catch (Exception exception) {
                 Main.errorPopUp("Invalid Format!", "error", (Stage) okButton.getScene().getWindow());
                 return;
             }
             Main.errorPopUp("OffCode added.", "confirm", (Stage) okButton.getScene().getWindow());
-            for (Customer assignedCustomer : assignedCustomers) {
-                Manager.assignOffCodeToUser(Manager.getOffCodeByCode(nameTextField.getText()), assignedCustomer);
+            for (String assignedCustomer : assignedCustomers) {
+                ClientManagerController.assignOffCodeToUser(nameTextField.getText(), assignedCustomer);
             }
             Stage stage = (Stage) okButton.getScene().getWindow();
             stage.close();
@@ -254,18 +260,18 @@ public class ManagerMenuUI {
         scrollPane.setContent(allCustomers);
         allCustomers.setAlignment(Pos.TOP_CENTER);
 
-        for (User user : User.getAllUsers()) {
-            if (user instanceof Customer) {
-                ToggleButton toggleButton = new ToggleButton(user.getName());
+
+        for (Map<String, Object> user : ClientManagerController.getAllUsers("")) {
+            if (user.get("type").equals("Customer")) {
+                ToggleButton toggleButton = new ToggleButton((String) user.get("name"));
                 toggleButton.setId("customerButton");
                 toggleButton.setAlignment(Pos.TOP_CENTER);
 
                 toggleButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
                     if (newValue) {
-                        assignedCustomers.add((Customer) user);
-                    }
-                    else {
-                        assignedCustomers.remove(user);
+                        assignedCustomers.add((String) user.get("name"));
+                    } else {
+                        assignedCustomers.remove((String)user.get("name"));
                     }
                 });
                 Region region = new Region();
@@ -288,9 +294,9 @@ public class ManagerMenuUI {
 
     private void showUsers() {
         usersList.getChildren().clear();
-        for (User user : ManagerController.sortUsers(currentUsersSort, User.getAllUsers())) {
-            Label userLabel = new Label(String.format("Username: %s, User's Name: %s %s, User's PhoneNumber: %s, Users's Email: %s", user.getUsername(), user.getName(), user.getFamilyName(), user.getPhoneNumber(), user.getEmail()));
-            if (user instanceof Manager) {
+        for (Map<String, Object> user : ClientManagerController.getAllUsers(currentUsersSort)) {
+            Label userLabel = new Label(String.format("Username: %s, User's Name: %s %s, User's PhoneNumber: %s, Users's Email: %s", user.get("username"), user.get("name"), user.get("familyName"), user.get("phoneNumber"), user.get("email")));
+            if (user.get("type").equals("Manager") || user.get("type").equals("Operator")) {
                 userLabel.setDisable(true);
             }
             userLabel.setOnMouseClicked(event -> {
@@ -305,7 +311,7 @@ public class ManagerMenuUI {
 
     }
 
-    private void deleteUser(User user) {
+    private void deleteUser(Map<String, Object> user) {
         HBox hBox = new HBox();
         hBox.setPrefSize(200, 50);
         hBox.getStylesheets().add("CSS/manager_menu_stylesheet.css");
@@ -314,7 +320,7 @@ public class ManagerMenuUI {
         deleteButton.setId("deleteButton");
         deleteButton.setPrefSize(100, 50);
         deleteButton.setOnMouseClicked(event -> {
-            ManagerController.deleteUserByName((Manager) MainMenuUIController.currentUser, user.getUsername());
+            ClientManagerController.deleteUserByName(ClientHandler.username, (String)user.get("username"));
             deleteButton.setDisable(true);
             showUsers();
         });
@@ -324,8 +330,8 @@ public class ManagerMenuUI {
 
     private void showProducts() {
         productsList.getChildren().clear();
-        for (Product allProduct : ProductsController.sort(currentProductsSort, Product.getAllProducts())) {
-            Label productLabel = new Label(String.format("Product's Name: %s, Product's Price: %s, Product's Rating: %s, Product's Brand: %s", allProduct.getName(), allProduct.getPrice(), allProduct.getAverageRating(), allProduct.getBrand()));
+        for (Map<String, Object> allProduct : ClientProductsController.getToBeShownProducts(new ArrayList<>(), "null", -1, -1, "null", "null", "null", "null", "(.*)", currentProductsSort)) {
+            Label productLabel = new Label(String.format("Product's Name: %s, Product's Price: %s, Product's Rating: %s, Product's Brand: %s", allProduct.get("name"), allProduct.get("price"), allProduct.get("averageRating"), allProduct.get("brand")));
             productLabel.setOnMouseClicked(event -> {
                 deleteProduct(allProduct);
             });
@@ -337,7 +343,7 @@ public class ManagerMenuUI {
         }
     }
 
-    private void deleteProduct(Product product) {
+    private void deleteProduct(Map<String, Object> product) {
         HBox hBox = new HBox();
         hBox.setPrefSize(200, 50);
         hBox.getStylesheets().add("CSS/manager_menu_stylesheet.css");
@@ -347,7 +353,7 @@ public class ManagerMenuUI {
         deleteButton.setId("deleteButton");
         deleteButton.setPrefSize(100, 50);
         deleteButton.setOnMouseClicked(event -> {
-            ManagerController.removeProducts((Manager) MainMenuUIController.currentUser, product);
+            ClientManagerController.removeProduct(ClientHandler.username, (String) product.get("id"));
             deleteButton.setDisable(true);
             showProducts();
         });
@@ -357,8 +363,8 @@ public class ManagerMenuUI {
 
     private void showCategories() {
         categoriesList.getChildren().clear();
-        for (Category category : Manager.getAllCategories()) {
-            Label categoryLabel = new Label(String.format("\t\tCategory ID: %s,\t\tCategory Directory: %s", category.getId(), category.getFullName()));
+        for (Map<String, Object> category : ClientProductsController.getAllCategories()) {
+            Label categoryLabel = new Label(String.format("\t\tCategory ID: %s,\t\tCategory Directory: %s", category.get("id"), category.get("fullName")));
             categoryLabel.setOnMouseClicked(event -> {
                 editCategory(category);
             });
@@ -367,7 +373,7 @@ public class ManagerMenuUI {
             Region region = new Region();
             region.setPrefHeight(10);
             HBox hBox = new HBox();
-            for (String filter : Product.getAllFilters(category.getName())) {
+            for (String filter : ClientProductsController.getAllFilters((String) category.get("name"))) {
                 Button button = new Button(filter);
                 button.setId("filter");
                 hBox.getChildren().addAll(button);
@@ -376,7 +382,7 @@ public class ManagerMenuUI {
         }
     }
 
-    private void editCategory(Category category) {
+    private void editCategory(Map<String, Object> category) {
         VBox addNewCategoryContainer = new VBox();
         VBox vBox = new VBox();
         TextField categoryNameTextField = new TextField();
@@ -393,17 +399,17 @@ public class ManagerMenuUI {
         vBox.setAlignment(Pos.TOP_CENTER);
 
         deleteButton.setOnMouseClicked(event -> {
-            Main.errorPopUp(ManagerController.removeCategory((Manager) MainMenuUIController.currentUser, category), "confirm", (Stage) deleteButton.getScene().getWindow());
+            Main.errorPopUp(ClientManagerController.removeCategory(ClientHandler.username, (String)category.get("name")), "confirm", (Stage) deleteButton.getScene().getWindow());
             Stage stage = (Stage) deleteButton.getScene().getWindow();
             stage.close();
             showCategories();
         });
 
         okButton.setOnMouseClicked(event -> {
-            if (Manager.categoryByName(categoryNameTextField.getText()) != null) {
+            if (ClientManagerController.isCategoryWithThisName(categoryNameTextField.getText())) {
                 Main.errorPopUp("Process failed: the category exists.", "error", (Stage) okButton.getScene().getWindow());
             } else if (!categoryNameTextField.getText().isEmpty()) {
-                ManagerController.editCategory((Manager) MainMenuUIController.currentUser, category, "change name", categoryNameTextField.getText());
+                ClientManagerController.editCategory(ClientHandler.username, (String)category.get("name"), "change name", categoryNameTextField.getText());
                 Main.errorPopUp("Category's name changed.", "confirm", (Stage) okButton.getScene().getWindow());
             }
             Stage stage = (Stage) okButton.getScene().getWindow();
@@ -411,17 +417,17 @@ public class ManagerMenuUI {
             showCategories();
         });
 
-        for (String filter : Product.getAllFilters("null")) {
+        for (String filter : ClientProductsController.getAllFilters("null")) {
             ToggleButton filterButton = new ToggleButton(filter);
             filterButton.setId("categoryButton");
-            if (category.isInFilter(filter)) {
+            if (ClientManagerController.isInFilter((String)category.get("name"), filter)) {
                 filterButton.setSelected(true);
             }
             filterButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    ManagerController.editCategory((Manager) MainMenuUIController.currentUser, category, "add filter", filter);
+                    ClientManagerController.editCategory(ClientHandler.username, (String) category.get("name"), "add filter", filter);
                 } else {
-                    ManagerController.editCategory((Manager) MainMenuUIController.currentUser, category, "remove filter", filter);
+                    ClientManagerController.editCategory(ClientHandler.username, (String) category.get("name"), "remove filter", filter);
                 }
                 showCategories();
             });
@@ -458,10 +464,10 @@ public class ManagerMenuUI {
         base.setToggleGroup(toggleGroup);
         base.setId("categoryButton");
         button.setOnMouseClicked(event -> {
-            if (Manager.categoryByName(categoryNameTextField.getText()) != null) {
+            if (ClientManagerController.isCategoryWithThisName(categoryNameTextField.getText())) {
                 Main.errorPopUp("Process failed: the category exists.", "error", (Stage) button.getScene().getWindow());
             } else if (!parentCategory[0].isEmpty() && !categoryNameTextField.getText().isEmpty()) {
-                ManagerController.addCategory((Manager) MainMenuUIController.currentUser, categoryNameTextField.getText(), parentCategory[0]);
+                ClientManagerController.addCategory(ClientHandler.username, categoryNameTextField.getText(), parentCategory[0]);
                 Main.errorPopUp("Category added.", "confirm", (Stage) button.getScene().getWindow());
             } else {
                 Main.errorPopUp("Process failed: fields should be filled.", "error", (Stage) button.getScene().getWindow());
@@ -475,12 +481,12 @@ public class ManagerMenuUI {
         });
         vBox.getChildren().addAll(base, new Separator());
 
-        for (Category category : Manager.getAllCategories()) {
-            ToggleButton categoryName = new ToggleButton(category.getName());
+        for (Map<String, Object> category : ClientProductsController.getAllCategories()) {
+            ToggleButton categoryName = new ToggleButton((String) category.get("name"));
             categoryName.setToggleGroup(toggleGroup);
             categoryName.setId("categoryButton");
             categoryName.setOnMouseClicked(event -> {
-                parentCategory[0] = category.getName();
+                parentCategory[0] = (String) category.get("name");
             });
             Region region = new Region();
             region.setPrefHeight(10);
@@ -494,8 +500,8 @@ public class ManagerMenuUI {
 
     private void showRequests() {
         requestsList.getChildren().clear();
-        for (Request pendingRequest : Manager.getPendingRequests()) {
-            Label request = new Label(String.format("\t\tRequest ID: %s,\t\tRequestType: %s,\t\tStatus: %s", pendingRequest.getId(), pendingRequest.getRequestType(), pendingRequest.getStatus(), pendingRequest.getSeller()));
+        for (Map<String, Object> pendingRequest : ClientManagerController.getPendingRequests()) {
+            Label request = new Label(String.format("\t\tRequest ID: %s,\t\tRequestType: %s,\t\tStatus: %s", pendingRequest.get("id"), pendingRequest.get("requestType"), pendingRequest.get("status"), pendingRequest.get("sellerName")));
             request.setOnMouseClicked(event -> handleRequest(pendingRequest));
             request.setId("request");
             request.setPrefWidth(requestsList.getPrefWidth());
@@ -505,28 +511,30 @@ public class ManagerMenuUI {
         }
     }
 
-    private void handleRequest(Request request) {
+    private void handleRequest(Map<String, Object> request) {
         HBox hBox = new HBox();
         hBox.setPrefSize(200, 50);
         hBox.getStylesheets().add("CSS/manager_menu_stylesheet.css");
-        if (request.getStatus() == VerifyStatus.ACCEPTED || request.getStatus() == VerifyStatus.REJECTED) {
+        if ((request.get("status")).equals("ACCEPTED") || request.get("status").equals("REJECTED")) {
             hBox.setAlignment(Pos.CENTER);
             Button deleteButton = new Button("Delete");
             deleteButton.setId("deleteButton");
             deleteButton.setPrefSize(100, 50);
             deleteButton.setOnMouseClicked(event -> {
-                Manager.removeRequest(request);
+                ClientManagerController.removeRequest((String)request.get("id"));
                 deleteButton.setDisable(true);
                 showRequests();
             });
             hBox.getChildren().add(deleteButton);
         }
 
-        if (request.getStatus() == VerifyStatus.WAITING) {
+        if (request.get("status").equals("WAITING")) {
             Button acceptButton = new Button("Accept");
+            Button rejectButton = new Button("Reject");
             acceptButton.setOnMouseClicked(event -> {
-                ManagerController.handleRequest((Manager) MainMenuUIController.currentUser, true, request);
+                ClientManagerController.handleRequest(ClientHandler.username, true, (String)request.get("id"));
                 acceptButton.setDisable(true);
+                rejectButton.setDisable(true);
                 showRequests();
                 showProducts();
                 showCategories();
@@ -537,11 +545,11 @@ public class ManagerMenuUI {
             acceptButton.setPrefSize(100, 50);
             Region region = new Region();
             region.setPrefWidth(10);
-            Button rejectButton = new Button("Reject");
             rejectButton.setPrefSize(100, 50);
             rejectButton.setOnMouseClicked(event -> {
-                ManagerController.handleRequest((Manager) MainMenuUIController.currentUser, false, request);
+                ClientManagerController.handleRequest(ClientHandler.username, false, (String)request.get("id"));
                 rejectButton.setDisable(true);
+                acceptButton.setDisable(true);
                 showRequests();
             });
             rejectButton.setId("rejectButton");
@@ -552,9 +560,9 @@ public class ManagerMenuUI {
 
 
     private void initialSetup() {
-        loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
-        signUpButton.disableProperty().bind(MainMenuUIController.isLoggedIn);
-        loginLogoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
+        loggedInStatusText.textProperty().bind(ClientMainMenuController.currentUserUsername);
+        signUpButton.disableProperty().bind(ClientMainMenuController.isLoggedIn);
+        loginLogoutButton.textProperty().bind(ClientMainMenuController.loginLogoutButtonText);
         imageProfile.setPreserveRatio(false);
         imageProfile.setFitWidth(200);
         imageProfile.setFitHeight(200);
@@ -614,8 +622,7 @@ public class ManagerMenuUI {
 
     }
 
-    public static void showManagerMenu()
-    {
+    public static void showManagerMenu() {
         try {
             Main.setPrimaryStageScene(new Scene(getContent()));
         } catch (IOException exception) {
@@ -633,20 +640,20 @@ public class ManagerMenuUI {
     }
 
     private void handlePersonalInfo() {
-        Manager manager = (Manager) MainMenuUIController.currentUser;
-        usernameField.setText(manager.getUsername());
+        Map<String, Object> manager = ClientManagerController.getUserInfo(ClientHandler.username);
+        usernameField.setText((String) manager.get("username"));
         usernameField.setDisable(true);
-        firstNameField.setText(manager.getName());
-        lastNameField.setText(manager.getFamilyName());
-        passwordField.setText(manager.getPassword());
-        phoneNumberField.setText(manager.getPhoneNumber());
-        emailField.setText(manager.getEmail());
-        usernameField.setPromptText(manager.getUsername());
-        firstNameField.setPromptText(manager.getName());
-        lastNameField.setPromptText(manager.getFamilyName());
-        passwordField.setPromptText(manager.getPassword());
-        phoneNumberField.setPromptText(manager.getPhoneNumber());
-        emailField.setPromptText(manager.getEmail());
+        firstNameField.setText((String) manager.get("name"));
+        lastNameField.setText((String) manager.get("familyName"));
+        passwordField.setText((String) manager.get("password"));
+        phoneNumberField.setText((String) manager.get("phoneNumber"));
+        emailField.setText((String) manager.get("email"));
+        usernameField.setPromptText((String) manager.get("username"));
+        firstNameField.setPromptText((String) manager.get("name"));
+        lastNameField.setPromptText((String) manager.get("familyName"));
+        passwordField.setPromptText((String) manager.get("password"));
+        phoneNumberField.setPromptText((String) manager.get("phoneNumber"));
+        emailField.setPromptText((String) manager.get("email"));
 
         firstNameField.setId("infoField");
         lastNameField.setId("infoField");
@@ -656,15 +663,16 @@ public class ManagerMenuUI {
         usernameField.setId("infoField");
 
         editPersonalInfoButton.setOnMouseClicked(event -> {
-            if (firstNameField.getText().equals(manager.getName()) && lastNameField.getText().equals(manager.getFamilyName()) && passwordField.getText().equals(manager.getPassword()) && phoneNumberField.getText().equals(manager.getPhoneNumber()) && emailField.getText().equals(manager.getEmail())) {
+            if (firstNameField.getText().equals(manager.get("name")) && lastNameField.getText().equals(manager.get("familyName")) && passwordField.getText().equals(manager.get("password")) && phoneNumberField.getText().equals(manager.get("phoneNumber")) && emailField.getText().equals(manager.get("email"))) {
                 Main.errorPopUp("You Should Change Some Fields.", "error", (Stage) usernameField.getScene().getWindow());
                 return;
             }
-            ManagerController.editPersonalInfo(manager, "first name", firstNameField.getText());
-            ManagerController.editPersonalInfo(manager, "family name", lastNameField.getText());
-            String changePasswordMessage = ManagerController.editPersonalInfo(manager, "password", passwordField.getText());
-            String changePhoneMessage = ManagerController.editPersonalInfo(manager, "phone number", phoneNumberField.getText());
-            String changeEmailMessage = ManagerController.editPersonalInfo(manager, "email", emailField.getText());
+            ClientManagerController.editPersonalInfo((String) manager.get("username"), "first name", firstNameField.getText());
+            ClientManagerController.editPersonalInfo((String) manager.get("username"), "family name", lastNameField.getText());
+
+            String changePasswordMessage = ClientManagerController.editPersonalInfo((String) manager.get("username"), "password", passwordField.getText());
+            String changePhoneMessage = ClientManagerController.editPersonalInfo((String) manager.get("username"), "phone number", phoneNumberField.getText());
+            String changeEmailMessage = ClientManagerController.editPersonalInfo((String) manager.get("username"), "email", emailField.getText());
 
             if (changeEmailMessage.equals("Invalid email format!")) {
                 Main.errorPopUp(changeEmailMessage, "error", (Stage) usernameField.getScene().getWindow());
@@ -688,7 +696,11 @@ public class ManagerMenuUI {
             public void handle(MouseEvent event) {
                 FileChooser fileChooser = new FileChooser();
                 try {
-                    manager.setProfilePicturePath(fileChooser.showOpenDialog(new Stage()).getPath());
+                    String path = fileChooser.showOpenDialog(new Stage()).getPath();
+                    File file = new File(path);
+                    File copyFile = new File("src/main/resources/Images/" + ClientHandler.username + ".jpg");
+                    Files.copy(file.toPath(), copyFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    FileTransportClient.sendFile(ClientHandler.username, ClientHandler.token, "I", ClientHandler.username + ".jpg");
                 }
                 catch (Exception exception) {
                     // do nothing
@@ -696,20 +708,13 @@ public class ManagerMenuUI {
                 handlePersonalInfo();
             }
         });
-
-        String path;
-        if (manager.getProfilePicturePath().isEmpty()) {
-            path = "src/main/resources/Images/images.jpg";
-        }
-        else {
-            path = manager.getProfilePicturePath();
-        }
-
-        File file = new File(path);
+//
+        FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", ClientHandler.username + ".jpg");
+        File file = new File("src/main/resources/Images/" + ClientHandler.username + ".jpg");
         imageProfile.setImage(new Image(file.toURI().toString()));
-
-        final Circle clip = new Circle(100, 100, 100);
-        imageProfile.setClip(clip);
-        clip.setStroke(Color.ORANGE);
+//
+//        final Circle clip = new Circle(100, 100, 100);
+//        imageProfile.setClip(clip);
+//        clip.setStroke(Color.ORANGE);
     }
 }

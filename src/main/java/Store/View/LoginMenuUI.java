@@ -55,6 +55,7 @@ public class LoginMenuUI {
         if (!ClientHandler.hasLoggedIn) {
             showLoginMenu();
         } else {
+            ClientMainMenuController.shutdownP2P();
             ClientMainMenuController.setCurrentUser("");
             logoutSoundEffect = new Media(LoginMenuUI.class.getResource("/Audio/Bubble-Pop-Sound-Effect.wav").toExternalForm());
             soundEffectPlayer = new MediaPlayer(logoutSoundEffect);

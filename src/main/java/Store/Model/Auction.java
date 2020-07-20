@@ -3,17 +3,22 @@ package Store.Model;
 import Store.Model.Enums.CheckingStatus;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
+import java.util.Queue;
 
 public class Auction implements Serializable {
     int auctionId;
     private Seller seller;
     private Product product;
     private Customer currentBuyer;
-    private int highestPrice = 0;
-    private Date endingTime;
+    private double basePrice;
+    private double highestPrice = 0.0;
+    private LocalDateTime endingTime;
+    private Queue<String> messages;
+    private int messagePort;
 
     private static ArrayList<Auction> allAuctions = new ArrayList<>();
     private static ArrayList<Product> allAuctionsProducts = new ArrayList<>();
@@ -21,13 +26,30 @@ public class Auction implements Serializable {
 
     private static int idCounter = 0;
 
-    public Auction(Seller seller, Product product, Date endingTime) {
+    public Auction(Seller seller, Product product, LocalDateTime endingTime) {
         this.auctionId = idCounter++;
         this.seller = seller;
         this.product = product;
         this.endingTime = endingTime;
+        this.basePrice = product.getPrice();
         allAuctions.add(this);
         allAuctionsProducts.add(product);
+    }
+
+    public double getBasePrice() {
+        return basePrice;
+    }
+
+    public void setMessagePort(int messagePort) {
+        this.messagePort = messagePort;
+    }
+
+    public Queue<String> getMessages() {
+        return messages;
+    }
+
+    public int getMessegePort() {
+        return messagePort;
     }
 
     public static ArrayList<Product> getAllAuctionsProducts() {
@@ -52,7 +74,7 @@ public class Auction implements Serializable {
         return currentBuyer;
     }
 
-    public int getHighestPrice() {
+    public double getHighestPrice() {
         return highestPrice;
     }
 
@@ -77,16 +99,28 @@ public class Auction implements Serializable {
         return auctionId;
     }
 
-    public void setEndingTime(Date endingTime) {
+    public void setEndingTime(LocalDateTime endingTime) {
         this.endingTime = endingTime;
     }
 
-    public Date getEndingTime() {
+    public LocalDateTime getEndingTime() {
         return this.endingTime;
     }
 
     public static ArrayList<Auction> getAllAuctions() {
         return allAuctions;
+    }
+
+    public void finish(){
+        currentBuyer.setMoney(currentBuyer.getMoney() - highestPrice);
+        seller.setMoney(seller.getMoney() + highestPrice);
+        allAuctions.remove(this);
+        boolean flag = false;
+        for (Auction auction: allAuctions)
+            if (auction.getProduct().equals(product))
+                flag = true;
+        if (!flag)
+            allAuctionsProducts.remove(product);
     }
 
     @Override
@@ -97,6 +131,7 @@ public class Auction implements Serializable {
                 ", Product=" + this.product +
                 '}';
     }
+
     @Override
     public boolean equals(Object object)
     {
@@ -104,5 +139,10 @@ public class Auction implements Serializable {
         if(seller.equals(auction.getSeller()) && product.equals(auction.getProduct()))
             return true;
         return false;
+    }
+
+    public void changeBet(Customer customer, double newPrice) {
+        this.currentBuyer = customer;
+        this.highestPrice = newPrice;
     }
 }
