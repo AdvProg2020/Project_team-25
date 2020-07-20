@@ -291,10 +291,20 @@ public class MainServer {
                     if (input.get("message").equals("getOffersOfThisSeller")) {
                         getOffersOfThisSellerServer();
                     }
+                    if (input.get("message").equals("createOperator")) {
+                        createOperatorServer(input);
+                    }
                 } catch (IOException exception) {
                     //exception.printStackTrace();
                 }
             }
+        }
+
+        private void createOperatorServer(HashMap input) {
+            ManagerController.createOperatorProfile((Manager) user, (String) input.get("username"), (String) input.get("firstName"), (String) input.get("lastName"), (String) input.get("email"), (String) input.get("phoneNumber"), (String) input.get("password"));
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", "Ok");
+            sendMessage(hashMap);
         }
 
         private void getOffersOfThisSellerServer() {
@@ -317,7 +327,7 @@ public class MainServer {
 
         private void editOfferServer(HashMap input) {
             Map<String, Object> offerHashMap = (Map<String, Object>) input.get("offer");
-            Offer offer = new Offer(user, CheckingStatus.CREATION, (Double)offerHashMap.get("offPercentage"));
+            Offer offer = new Offer(user, CheckingStatus.CREATION, (Double) offerHashMap.get("offPercentage"));
             offer.setStartingTime(new Date(Long.parseLong((String) offerHashMap.get("startingTime"))));
             offer.setEndingTime(new Date(Long.parseLong((String) offerHashMap.get("endingTime"))));
             for (String product : (List<String>) offerHashMap.get("products")) {
@@ -342,7 +352,7 @@ public class MainServer {
 
         private void addOfferFromSellerServer(HashMap input) {
             Map<String, Object> offerHashMap = (Map<String, Object>) input.get("offer");
-            Offer offer = new Offer(user, CheckingStatus.CREATION, (Double)offerHashMap.get("offPercentage"));
+            Offer offer = new Offer(user, CheckingStatus.CREATION, (Double) offerHashMap.get("offPercentage"));
 //            offer.setStartingTime((Date) offerHashMap.get("startingTime"));
 //            offer.setEndingTime((Date) offerHashMap.get("endingTime"));
             offer.setStartingTime(new Date(Long.parseLong((String) offerHashMap.get("startingTime"))));
@@ -776,10 +786,11 @@ public class MainServer {
         }
 
         private void handleCreateManagerAccountServer(ArrayList<String> attributes) {
-            if (Manager.hasManager)
-                ((Manager)user).addNewManager(new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5)));
-            else
+            if (Manager.hasManager) {
+                ((Manager) user).addNewManager(new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5)));
+            } else {
                 new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5));
+            }
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", "Ok");
             sendMessage(hashMap);

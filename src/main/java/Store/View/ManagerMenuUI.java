@@ -708,13 +708,13 @@ public class ManagerMenuUI {
                 handlePersonalInfo();
             }
         });
-//
+
         FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", ClientHandler.username + ".jpg");
         File file = new File("src/main/resources/Images/" + ClientHandler.username + ".jpg");
         imageProfile.setImage(new Image(file.toURI().toString()));
-//
-//        final Circle clip = new Circle(100, 100, 100);
-//        imageProfile.setClip(clip);
-//        clip.setStroke(Color.ORANGE);
+
+        final Circle clip = new Circle(100, 100, 100);
+        imageProfile.setClip(clip);
+        clip.setStroke(Color.ORANGE);
     }
 }

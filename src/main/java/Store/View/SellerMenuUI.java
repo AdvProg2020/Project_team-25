@@ -7,10 +7,12 @@ import Store.Model.Enums.CheckingStatus;
 import Store.Model.Seller;
 import Store.Networking.Client.ClientHandler;
 import Store.Networking.Client.Controller.*;
+import Store.Networking.FileTransportClient;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -33,6 +35,8 @@ import org.codehaus.plexus.util.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -340,9 +344,6 @@ public class SellerMenuUI implements Initializable {
 
     @FXML
     private void setupInitialAddProduct() {
-//        if (ClientSellerController.isProductInCategory((String) selectedProduct.get("id")))
-//            categoryString = (String) ((Map<String, Object>) selectedProduct.get("category")).get("name");
-//        else
         categoryString = "";
         ArrayList<String> categories = new ArrayList<>();
         selectedProduct.put("filters", new ArrayList<>());
@@ -549,15 +550,15 @@ public class SellerMenuUI implements Initializable {
 
     @FXML
     private void setupInitialPersonalMenu() {
-        String path = "src/main/resources/Icons/unknown.png";
-//        if (seller.getProfilePicturePath().isEmpty()) {
-//            path = "src/main/resources/Icons/unknown.png";
-//        }
-//        else {
-//            path = seller.getProfilePicturePath();
-//        }
-
-        File file = new File(path);
+//        String path = "src/main/resources/Icons/unknown.png";
+////        if (seller.getProfilePicturePath().isEmpty()) {
+////            path = "src/main/resources/Icons/unknown.png";
+////        }
+////        else {
+////            path = seller.getProfilePicturePath();
+////        }
+        FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", ClientHandler.username + ".jpg");
+        File file = new File("src/main/resources/Images/" + ClientHandler.username + ".jpg");
         profile.setImage(new Image(file.toURI().toString()));
 
         emailTextField.setText((String) seller.get("email"));
@@ -800,13 +801,15 @@ public class SellerMenuUI implements Initializable {
         username.setText((String) customer1.get("username"));
         email.setText((String) customer1.get("email"));
         phoneNumber.setText((String) customer1.get("phoneNumber"));
-        File file = null;
+//        File file = null;
 //        if (customer1.getProfilePicturePath().equals("")) {
 //            file = new File("src/main/resources/Icons/unknown.png");
 //        } else {
 //            file = new File(customer1.getProfilePicturePath());
 //        }
-        file = new File("src/main/resources/Icons/unknown.png");
+//        file = new File("src/main/resources/Icons/unknown.png");
+        FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", customer1.get("username") + ".jpg");
+        File file = new File("src/main/resources/Images/" + customer1.get("username") + ".jpg");
         imageView.setImage(new Image(file.toURI().toString()));
         HBox.setMargin(username, new Insets(0, 0, 0, 10));
         hBox1.getChildren().addAll(username, email, phoneNumber, imageView);
@@ -820,12 +823,15 @@ public class SellerMenuUI implements Initializable {
             username.setText((String) customer2.get("username"));
             email.setText((String) customer2.get("email"));
             phoneNumber.setText((String) customer2.get("phoneNumber"));
-//            if (customer2.getProfilePicturePath().equals("")) {
-//                file = new File("src/main/resources/Icons/unknown.png");
-//            } else {
-//                file = new File(customer2.getProfilePicturePath());
-//            }
-            file = new File("src/main/resources/Icons/unknown.png");
+//            File file = null;
+////        if (customer1.getProfilePicturePath().equals("")) {
+////            file = new File("src/main/resources/Icons/unknown.png");
+////        } else {
+////            file = new File(customer1.getProfilePicturePath());
+////        }
+////        file = new File("src/main/resources/Icons/unknown.png");
+            FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", customer2.get("username") + ".jpg");
+            file = new File("src/main/resources/Images/" + customer2.get("username") + ".jpg");
             imageView.setImage(new Image(file.toURI().toString()));
             hBox2.getChildren().addAll(username, email, phoneNumber, imageView);
         }
@@ -870,7 +876,11 @@ public class SellerMenuUI implements Initializable {
     public void changePic() throws IOException {
         FileChooser fileChooser = new FileChooser();
         try {
-//            seller.setProfilePicturePath(fileChooser.showOpenDialog(new Stage()).getPath());
+            String path = fileChooser.showOpenDialog(new Stage()).getPath();
+            File file = new File(path);
+            File copyFile = new File("src/main/resources/Images/" + ClientHandler.username + ".jpg");
+            Files.copy(file.toPath(), copyFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            FileTransportClient.sendFile(ClientHandler.username, ClientHandler.token, "I", ClientHandler.username + ".jpg");
         } catch (Exception exception) {
             // do nothing
         }
@@ -891,7 +901,11 @@ public class SellerMenuUI implements Initializable {
     public void imagePathClicked() {
         FileChooser fileChooser = new FileChooser();
         try {
-//            selectedProduct.setImagePath(fileChooser.showOpenDialog(new Stage()).getPath());
+            String path = fileChooser.showOpenDialog(new Stage()).getPath();
+            File file = new File(path);
+            File copyFile = new File("src/main/resources/Images/" + selectedProduct.get("id") + ".jpg");
+            Files.copy(file.toPath(), copyFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            FileTransportClient.sendFile(ClientHandler.username, ClientHandler.token, "I", selectedProduct.get("id") + ".jpg");
         } catch (Exception exception) {
             // do nothing
         }
@@ -900,7 +914,11 @@ public class SellerMenuUI implements Initializable {
     public void videoPathClicked() {
         FileChooser fileChooser = new FileChooser();
         try {
-//            selectedProduct.setVideoPath(fileChooser.showOpenDialog(new Stage()).getPath());
+            String path = fileChooser.showOpenDialog(new Stage()).getPath();
+            File file = new File(path);
+            File copyFile = new File("src/main/resources/Videos/" + selectedProduct.get("id") + ".mp4");
+            Files.copy(file.toPath(), copyFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            FileTransportClient.sendFile(ClientHandler.username, ClientHandler.token, "V", selectedProduct.get("id") + ".mp4");
         } catch (Exception exception) {
             // do nothing
         }
@@ -999,4 +1017,15 @@ public class SellerMenuUI implements Initializable {
         }
     }
 
+    public void filePathClicked() {
+        FileChooser fileChooser = new FileChooser();
+//        try {
+//            String path = fileChooser.showOpenDialog(new Stage()).getPath();
+//            File file = new File(path);
+//            File copyFile = new File("src/main/resources/Files/" + selectedProduct.get("id"));
+//            Files.copy(file.toPath(), copyFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+//        } catch (Exception exception) {
+//            // do nothing
+//        }
+    }
 }

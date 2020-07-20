@@ -53,4 +53,16 @@ public class ClientSignUpAndLoginController {
         hashMap.put("username", username);
         ClientHandler.sendAndReceiveMessage(hashMap);
     }
+
+    public static void createOperator(String username, String firstName, String lastName, String email, String phoneNumber, String password) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "createOperator");
+        hashMap.put("username", username);
+        hashMap.put("firstName", firstName);
+        hashMap.put("lastName", lastName);
+        hashMap.put("email", email);
+        hashMap.put("password", password);
+        hashMap.put("phoneNumber", phoneNumber);
+        ClientHandler.sendAndReceiveMessage(hashMap);
+    }
 }

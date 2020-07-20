@@ -5,6 +5,7 @@ import Store.Networking.Client.ClientHandler;
 import Store.Networking.Client.Controller.ClientCustomerController;
 import Store.Networking.Client.Controller.ClientMainMenuController;
 import Store.Networking.Client.Controller.ClientProductController;
+import Store.Networking.FileTransportClient;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -28,6 +29,8 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -370,9 +373,12 @@ public class CustomerMenuUI implements Initializable {
 //        else {
 //            path = customer.getProfilePicturePath();
 //        }
+        if (ClientHandler.hasLoggedIn) {
+            FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", ClientHandler.username + ".jpg");
+            File file = new File("src/main/resources/Images/" + ClientHandler.username + ".jpg");
+            profile.setImage(new Image(file.toURI().toString()));
+        }
 
-//        File file = new File(path);
-//        profile.setImage(new Image(file.toURI().toString()));
 
         emailTextField.setText((String) customer.get("email"));
         firstNameTextField.setText((String) customer.get("name"));
@@ -468,21 +474,20 @@ public class CustomerMenuUI implements Initializable {
         Label id = new Label(), name = new Label(), sellerName = new Label(), category = new Label(), brand = new Label(), average = new Label(), price = new Label(), productStatus = new Label();
         Button viewProduct = new Button("View Product");
         viewProduct.setPrefWidth(100);
-//        viewProduct.setOnAction(e -> {
-//            try {
-//                Main.setPrimaryStageScene(new Scene(ProductMenuUI.getContent(product)));
-//            } catch (IOException ioException) {
-//                ioException.printStackTrace();
-//            }
-//        });
+        viewProduct.setOnAction(e -> {
+            try {
+                Main.setPrimaryStageScene(new Scene(ProductMenuUI.getContent(product)));
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
         vBoxes.get(10).getChildren().add(viewProduct);
         id.setText(product.get("id") + "");
         name.setText((String) product.get("name"));
         sellerName.setText((String) product.get("sellerName"));
         try {
             category.setText(((Map<String, Object>) product.get("category")).get("name") + "");
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             category.setText("null");
         }
         brand.setText((String) product.get("brand"));
@@ -664,7 +669,10 @@ public class CustomerMenuUI implements Initializable {
 //        } else {
 //            file = new File(product.getImagePath());
 //        }
-        File file = new File("src/main/resources/Images/images.jpg");
+//        File file = new File("src/main/resources/Images/images.jpg");
+
+        FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", product.get("id") + ".jpg");
+        File file = new File("src/main/resources/Images/" + product.get("id") + ".jpg");
         Image image = new Image(file.toURI().toString());
         imageView = new ImageView(image);
         imageHBox.setMaxHeight(40);
@@ -814,12 +822,15 @@ public class CustomerMenuUI implements Initializable {
 
     public void changePic() throws IOException {
         FileChooser fileChooser = new FileChooser();
-//        try {
-//            customer.setProfilePicturePath(fileChooser.showOpenDialog(new Stage()).getPath());
-//        }
-//        catch (Exception exception) {
-//            // do nothing
-//        }
+        try {
+            String path = fileChooser.showOpenDialog(new Stage()).getPath();
+            File file = new File(path);
+            File copyFile = new File("src/main/resources/Images/" + ClientHandler.username + ".jpg");
+            Files.copy(file.toPath(), copyFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            FileTransportClient.sendFile(ClientHandler.username, ClientHandler.token, "I", ClientHandler.username + ".jpg");
+        } catch (Exception exception) {
+            // do nothing
+        }
         menuState = "personal";
         showCustomerMenu();
     }
