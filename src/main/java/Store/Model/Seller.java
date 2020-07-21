@@ -50,6 +50,11 @@ public class Seller extends User {
     }
 
     public void setBankAccount(int bankAccount) {
+        try {
+            MainServer.sendAndReceiveToBankAPIMove(money, bankAccount, Manager.getBankAccount(), "");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         this.bankAccount = bankAccount;
     }
 

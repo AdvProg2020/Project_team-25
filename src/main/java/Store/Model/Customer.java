@@ -4,6 +4,7 @@ import Store.Model.Log.BuyLogItem;
 import Store.Networking.BankAPI;
 import Store.Networking.MainServer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,6 +33,11 @@ public class Customer extends User {
     }
 
     public void setBankAccount(int bankAccount) {
+        try {
+            MainServer.sendAndReceiveToBankAPIMove(money, bankAccount, Manager.getBankAccount(), "");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         this.bankAccount = bankAccount;
     }
 

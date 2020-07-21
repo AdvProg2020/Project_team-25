@@ -141,6 +141,14 @@ public class MainServer {
         dataOutputStream1.flush();
         return dataInputStream1.readUTF();
     }
+    public static Object sendAndReceiveToBankAPIDeposit(double money, int source, String description) throws IOException {
+        String output = "deposit" + " " + money + " " + source + " " + description;
+        DataOutputStream dataOutputStream1 = new DataOutputStream(new BufferedOutputStream(bankAPISocket.getOutputStream()));
+        DataInputStream dataInputStream1 = new DataInputStream(new BufferedInputStream(bankAPISocket.getInputStream()));
+        dataOutputStream1.writeUTF(output);
+        dataOutputStream1.flush();
+        return dataInputStream1.readUTF();
+    }
 
     public int getPort() {
         return port;
@@ -1203,7 +1211,15 @@ public class MainServer {
                 }
                 guest.getCart().clear();
             }
-
+            if (user instanceof Seller){
+                if (((Seller)user).getBankAccount() == 0) {
+                    try {
+                        ((Seller)user).setBankAccount((Integer)sendAndReceiveToBankAPICreateAccount());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
             HashMap<String, Object> hashMap = new HashMap<>();
             TokenHandler.createToken(username);
             hashMap.put("content", TokenHandler.getTokenOfUsername(username));
