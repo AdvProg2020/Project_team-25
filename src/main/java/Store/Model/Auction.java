@@ -37,6 +37,15 @@ public class Auction implements Serializable {
         allAuctionsProducts.add(product);
     }
 
+    public static double getMoneyInAuctions(Customer customer) {
+        double sum = 0;
+        for (Auction auction: allAuctions){
+            if (auction.getCurrentBuyer().equals(customer))
+                sum += auction.getHighestPrice();
+        }
+        return sum;
+    }
+
     public double getBasePrice() {
         return basePrice;
     }

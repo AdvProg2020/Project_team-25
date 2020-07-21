@@ -343,6 +343,46 @@
                   </VBox>
                </content>
             </Tab>
+            <Tab text="Manage Logs">
+               <content>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <ScrollPane prefHeight="562.0" prefWidth="943.0">
+                           <content>
+                              <VBox fx:id="viewBuysVBox" prefHeight="540.0" prefWidth="951.0">
+                                 <children>
+                                    <HBox prefHeight="25.0" prefWidth="969.0" spacing="20.0">
+                                       <children>
+                                          <VBox alignment="TOP_CENTER" prefHeight="25.0" prefWidth="200.0" spacing="15.0">
+                                             <children>
+                                                <Label text="Date" />
+                                             </children>
+                                          </VBox>
+                                          <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0">
+                                             <children>
+                                                <Label text="Customer" />
+                                             </children>
+                                          </VBox>
+                                          <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                                             <children>
+                                                <Label text="Details" />
+                                             </children>
+                                          </VBox>
+                                          <VBox alignment="TOP_CENTER" prefHeight="23.0" prefWidth="267.0">
+                                             <children>
+                                                <Label text="Address" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
         </tabs>
       </TabPane>
    </children>

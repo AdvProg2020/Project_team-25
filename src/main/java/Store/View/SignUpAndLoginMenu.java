@@ -19,7 +19,7 @@ public class SignUpAndLoginMenu {
         System.out.println("\nSign up and Login menu\n");
         while (!(input = InputManager.getNextLine()).equalsIgnoreCase("back")) {
             if ((matcher = InputManager.getMatcher(input, CREATE_ACCOUNT_REGEX)).find()) {
-                handleCreateAccount(matcher.group(1), matcher.group(2));
+            //    handleCreateAccount(matcher.group(1), matcher.group(2));
             } else if ((matcher = InputManager.getMatcher(input, LOGIN_REGEX)).find()) {
                 if (handleLogin(matcher.group(1))) {
                     break;
@@ -38,9 +38,9 @@ public class SignUpAndLoginMenu {
         }
     }
 
-    private static void handleCreateAccount(String type, String username) {
+    /*private static void handleCreateAccount(String type, String username) {
         System.out.println(SignUpAndLoginController.handleCreateAccount(type, username));
-    }
+    }*/
 
     public static ArrayList<String> getCompanyDescription() {
         String companyName, companyDescription;

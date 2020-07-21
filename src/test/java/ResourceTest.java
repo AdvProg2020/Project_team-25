@@ -7,7 +7,7 @@ import org.junit.Test;
 public class ResourceTest {
     @Test
     public void setResourceTest() {
-        Main.setTest();
+        //Main.setTest();
         ResourceHandler.writeAll();
         Assert.assertTrue(true);
     }

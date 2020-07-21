@@ -20,7 +20,7 @@ public class ProductsTest {
     @Before
     public void setUpTest()
     {
-        Main.setTest();
+        //Main.setTest();
         MainMenu.currentUser = User.getAllUsers().get(1);
         System.setOut(new PrintStream(outContent));
     }

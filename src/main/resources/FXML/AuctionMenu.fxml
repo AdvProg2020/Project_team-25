@@ -344,7 +344,7 @@
                                  <children>
                                     <ScrollPane prefHeight="501.0" prefWidth="610.0">
                                        <content>
-                                          <AnchorPane prefHeight="482.0" prefWidth="612.0" />
+                                          <VBox fx:id="messagesVBox" prefHeight="471.0" prefWidth="609.0" />
                                        </content>
                                     </ScrollPane>
                                     <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">

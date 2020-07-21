@@ -3,6 +3,7 @@ package Store.View;
 import Store.InputManager;
 import Store.Model.*;
 import Store.ResourceHandler;
+import Store.View.SignUpAndLoginMenu;
 
 import java.util.regex.Matcher;
 
@@ -23,7 +24,7 @@ public class MainMenu {
                     System.out.println("You must login before going into your user page!");
                 }
                 else if (currentUser instanceof Customer) {
-                    CustomerMenu.init();
+                 //   CustomerMenu.init();
                 }
                 else if (currentUser instanceof Seller) {
                     SellerMenu.init();

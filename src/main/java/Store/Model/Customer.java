@@ -72,7 +72,7 @@ public class Customer extends User {
                 throw e;
             }
         }else {
-            if (money - Manager.getMinimumRemaining() >= getTotalCartPriceWithDiscount(offCode))
+            if (money - Manager.getMinimumRemaining() - Auction.getMoneyInAuctions(this) >= getTotalCartPriceWithDiscount(offCode))
                 return true;
         }
         return false;
@@ -94,7 +94,7 @@ public class Customer extends User {
                 throw e;
             }
         }else {
-            if (money - Manager.getMinimumRemaining() >= getTotalCartPrice())
+            if (money - Manager.getMinimumRemaining() - Auction.getMoneyInAuctions(this) >= getTotalCartPrice())
                 return true;
         }
         return false;

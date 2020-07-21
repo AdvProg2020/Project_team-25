@@ -17,7 +17,7 @@ public class DirectTest {
     @Before
     public void setUpTest()
     {
-        Main.setTest();
+        //Main.setTest();
         MainMenu.currentUser = User.getAllUsers().get(1);
         System.setOut(new PrintStream(outContent));
     }
@@ -43,8 +43,8 @@ public class DirectTest {
     @Test
     public void checkRepetitiousSellerRequests()
     {
-        Seller seller1 = new Seller("check","check","check","check@check.com", "0912", "check", 10000, "", "");
-        Seller seller2 = new Seller("check","check2","check2","check2@check2.com", "0912", "check", 10000, "", "");
+        Seller seller1 = new Seller("check","check","check","check@check.com", "0912", "check", "", "");
+        Seller seller2 = new Seller("check","check2","check2","check2@check2.com", "0912", "check", "", "");
         Request request1 = new Request(seller1);
         Request request2 = new Request(seller2);
         Manager.addRequest(request1);
@@ -87,7 +87,7 @@ public class DirectTest {
     @Test
     public void checkRepetitiousOfferRequests()
     {
-        Main.setOffers();
+        //Main.setOffers();
         Seller seller = (Seller)User.getUserByUsername("seller2");
         Product product1 = new Product(CheckingStatus.CREATION, null, "X", seller, "B", 980, true, "describe");
         Product product2 = new Product(CheckingStatus.CREATION, null, "Y", seller, "B", 980, true, "describe");

@@ -16,7 +16,7 @@ public class ManagerModelTest {
 
     @Test
     public void editPhoneTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream("view personal info\nedit phone number\n123\nback\nback".getBytes()));
@@ -26,7 +26,7 @@ public class ManagerModelTest {
 
     @Test
     public void ViewEditEmailTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream("view personal info\nedit email\ntest@test.com\nback\nback".getBytes()));
@@ -36,7 +36,7 @@ public class ManagerModelTest {
 
     @Test
     public void ViewEditFirstNameTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream("view personal info\nedit first name\nali\nback\nback".getBytes()));
@@ -46,7 +46,7 @@ public class ManagerModelTest {
 
     @Test
     public void ViewEditLastNameTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream("view personal info\nedit family name\ntest\nback\nback".getBytes()));
@@ -56,7 +56,7 @@ public class ManagerModelTest {
 
     @Test
     public void ViewEditPasswordTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream("view personal info\nedit password\n1234\ntest\nback\nback".getBytes()));
@@ -66,7 +66,7 @@ public class ManagerModelTest {
 
     @Test
     public void DeleteCustomerTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("manage users\ndelete user customer1\nback\nback\n").getBytes()));
@@ -76,8 +76,8 @@ public class ManagerModelTest {
 
     @Test
     public void DeleteSellerTest() {
-        Main.setTest();
-        Main.setOffers();
+        //Main.setTest();
+        //Main.setOffers();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("manage users\ndelete user seller2\nback\nback\n").getBytes()));
@@ -87,7 +87,7 @@ public class ManagerModelTest {
 
     @Test
     public void CreateManagerTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("manage users\ncreate manager profile\nali\n123\nali\nchekah\nali@ali.com\n0912\nback\nback\n").getBytes()));
@@ -97,7 +97,7 @@ public class ManagerModelTest {
 
     @Test
     public void manageAllProductsTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("manage all products\nremove 1\nback\nback\n").getBytes()));
@@ -107,7 +107,7 @@ public class ManagerModelTest {
 
     @Test
     public void createDiscountCodeTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("create discount code\ntest\n20\n123.4\n2\n2020/1/1\n2019/1/1\nback\nback\n").getBytes()));
@@ -117,7 +117,7 @@ public class ManagerModelTest {
 
     @Test
     public void removeDiscountCodeTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("create discount code\ntest\n20\n123.4\n2\n2020/1/1\n2019/1/1\nview discount codes\nremove discount code test\nback\nback\n").getBytes()));
@@ -127,7 +127,7 @@ public class ManagerModelTest {
 
     @Test
     public void editDiscountCodePercentTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("create discount code\ntest\n20\n123.4\n2\n2020/1/1\n2019/1/1\nview discount codes\nedit discount code test offPercentage 30\nback\nback\n").getBytes()));
@@ -141,7 +141,7 @@ public class ManagerModelTest {
 
     @Test
     public void editMaximumOffTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("create discount code\ntest\n20\n123.4\n2\n2020/1/1\n2019/1/1\nview discount codes\nedit discount code test offPercentage 22.5\nback\nback\n").getBytes()));
@@ -155,7 +155,7 @@ public class ManagerModelTest {
 
     @Test
     public void ManageRequestTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("manage requests\naccept 1\nback\nback\n").getBytes()));
@@ -166,7 +166,7 @@ public class ManagerModelTest {
 
     @Test
     public void addCategoryTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("manage categories\nadd test\nnull\nback\nback\n").getBytes()));
@@ -176,7 +176,7 @@ public class ManagerModelTest {
 
     @Test
     public void removeCategoryTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("manage categories\nadd test\nnull\nremove test\nback\nback\n").getBytes()));
@@ -186,7 +186,7 @@ public class ManagerModelTest {
 
     @Test
     public void changeCategoryNameTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("manage categories\nadd test\nnull\nedit test change name test2\nback\nback\n").getBytes()));
@@ -197,7 +197,7 @@ public class ManagerModelTest {
 
     @Test
     public void addFilterCategoryTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("manage categories\nadd test\nnull\nedit test add filter filter1\nedit test add filter filter2\nback\nback\n").getBytes()));
@@ -208,7 +208,7 @@ public class ManagerModelTest {
 
     @Test
     public void removeFilterCategoryTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("manage categories\nadd test\nnull\nedit test add filter filter1\nedit test add filter filter2\nedit test remove filter filter1\nback\nback\n").getBytes()));
@@ -219,7 +219,7 @@ public class ManagerModelTest {
 
     @Test
     public void addProductCategoryTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("manage categories\nadd test\nnull\nedit test add product 0\nback\nback\n").getBytes()));
@@ -230,7 +230,7 @@ public class ManagerModelTest {
 
     @Test
     public void removeProductCategoryTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("manage categories\nadd test\nnull\nadd test2\ntest\nedit test2 add product 0\nedit test2 add product 1\nedit test remove product 0\nback\nback\n").getBytes()));
@@ -240,7 +240,7 @@ public class ManagerModelTest {
 
     @Test
     public void helpTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setOut(new PrintStream(outContent));
@@ -251,7 +251,7 @@ public class ManagerModelTest {
 
     @Test
     public void viewOffCodeTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setOut(new PrintStream(outContent));
@@ -262,7 +262,7 @@ public class ManagerModelTest {
 
     @Test
     public void viewUserTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setOut(new PrintStream(outContent));
@@ -273,7 +273,7 @@ public class ManagerModelTest {
 
     @Test
     public void viewRequestTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setOut(new PrintStream(outContent));
@@ -284,7 +284,7 @@ public class ManagerModelTest {
 
     @Test
     public void userSortTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("manage users\nsort by phone number\nsort by name\nsort by family name\nsort by username\nsort by email\nback\nback").getBytes()));
@@ -294,7 +294,7 @@ public class ManagerModelTest {
 
     @Test
     public void productSortTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("manage all products\nsort by visit\nsort by lexicographical\nsort by price\nsort by rating\nback\nback").getBytes()));
@@ -304,7 +304,7 @@ public class ManagerModelTest {
 
     @Test
     public void offCodeSortTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("view discount codes\nsort by time of starting\nsort by time of ending\nsort by code\nsort by usage count\nsort by maximum off\nsort by off percentage\nback\nback").getBytes()));
@@ -315,7 +315,7 @@ public class ManagerModelTest {
     @Test
     public void logoutTest() {  // should comment exitAll in MainMenu
         System.setOut(new PrintStream(outContent));
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("logout\nlogout\nexit\nback").getBytes()));
@@ -325,7 +325,7 @@ public class ManagerModelTest {
 
     @Test
     public void assignOffCodeTest() {
-        Main.setTest();
+        //Main.setTest();
         Manager manager = (Manager) Manager.getUserByUsername("cloudStrife");
         MainMenu.currentUser = manager;
         System.setIn(new ByteArrayInputStream(("assign discount code\nAP333\ncustomer1\nback").getBytes()));

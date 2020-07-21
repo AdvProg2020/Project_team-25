@@ -4,7 +4,6 @@ import Store.Model.*;
 import Store.Networking.BankAPI;
 import Store.Networking.MainServer;
 import Store.View.MainMenu;
-import Store.View.SignUpAndLoginMenu;
 
 import java.io.IOException;
 import java.util.ArrayList;

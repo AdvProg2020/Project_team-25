@@ -18,7 +18,7 @@ public class CustomerModelTest {
     @Before
     public void setUpTest()
     {
-        Main.setTest();
+       // Main.setTest();
         MainMenu.currentUser = User.getAllUsers().get(1);
         System.setOut(new PrintStream(outContent));
     }
@@ -27,7 +27,7 @@ public class CustomerModelTest {
     {
         String input = "view personal info\nback\nback";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
-        CustomerMenu.init();
+        //CustomerMenu.init();
         Assert.assertTrue(outContent.toString().contains(MainMenu.currentUser.toString()));
     }
     @Test
@@ -35,7 +35,7 @@ public class CustomerModelTest {
     {
         String input = "view personal info\nedit email\nxx@gmail.com\nback\nback";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
-        CustomerMenu.init();
+        //CustomerMenu.init();
         Assert.assertEquals(MainMenu.currentUser.getEmail(), "xx@gmail.com");
     }
     @Test
@@ -43,7 +43,7 @@ public class CustomerModelTest {
     {
         String input = "help\nback\nback";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
-        CustomerMenu.init();
+        //CustomerMenu.init();
         Assert.assertTrue(outContent.toString().contains("List of main commands:"));
     }
     @Test
@@ -54,7 +54,7 @@ public class CustomerModelTest {
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         ((Customer)MainMenu.currentUser).addToCart(Product.getAllProducts().get(0));
         ((Customer)MainMenu.currentUser).addToCart(Product.getAllProducts().get(1));
-        CustomerMenu.init();
+        //CustomerMenu.init();
         Assert.assertTrue(outContent.toString().contains(Product.getAllProducts().get(0) + "\r\n*******\r\n" + Product.getAllProducts().get(1)));
     }
     @Test
@@ -63,7 +63,7 @@ public class CustomerModelTest {
         System.setOut(originalOut);
         String input = "view cart\nincrease 0\n increase 1\ndecrease 0\ndecrease 0\nback\nback\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
-        CustomerMenu.init();
+       // CustomerMenu.init();
         Assert.assertTrue(!((Customer)MainMenu.currentUser).isInCart(Product.getProductByID(0)) && ((Customer)MainMenu.currentUser).isInCart(Product.getProductByID(1)));
     }
     @Test
@@ -72,7 +72,7 @@ public class CustomerModelTest {
         System.setOut(originalOut);
         String input = "view cart\nincrease 0\nincrease 1\nincrease 2\nincrease 1\ndecrease 0\nshow total price\nback\nback\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
-        CustomerMenu.init();
+        //CustomerMenu.init();
         Assert.assertEquals(20,((Customer)MainMenu.currentUser).getTotalCartPrice(),3);
     }
     @Test
@@ -80,7 +80,7 @@ public class CustomerModelTest {
     {
         String input = "view cart\nview 0\nview 4\nback\nback";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
-        CustomerMenu.init();
+        //CustomerMenu.init();
         Assert.assertTrue(outContent.toString().contains(Product.getAllProducts().get(0).toString()));
     }
     @Test
@@ -94,7 +94,7 @@ public class CustomerModelTest {
         ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(1));
         Seller seller1 = Product.getProductByID(0).getSeller();
         Seller seller2 = Product.getProductByID(1).getSeller();
-        CustomerMenu.init();
+        //CustomerMenu.init();
         Assert.assertTrue(((Customer)MainMenu.currentUser).getMoney() == 975 && seller1.getMoney() == 1020 && seller2.getMoney() == 105);
     }
     @Test
@@ -107,7 +107,7 @@ public class CustomerModelTest {
         ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
         ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
         Seller seller1 = Product.getProductByID(0).getSeller();
-        CustomerMenu.init();
+        //CustomerMenu.init();
         Assert.assertTrue(((Customer)MainMenu.currentUser).getMoney() == 979 && seller1.getMoney() == 1030);
     }
     @Test
@@ -119,15 +119,15 @@ public class CustomerModelTest {
         ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
         ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
         Seller seller1 = Product.getProductByID(0).getSeller();
-        CustomerMenu.init();
+        //CustomerMenu.init();
         ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
         ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
         ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
-        CustomerMenu.init();
+        //CustomerMenu.init();
         ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
         ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
         ((Customer) MainMenu.currentUser).addToCart(Product.getProductByID(0));
-        CustomerMenu.init();
+        //CustomerMenu.init();
         Assert.assertTrue(outContent.toString().contains("The offCode is invalid!"));
     }
     @Test

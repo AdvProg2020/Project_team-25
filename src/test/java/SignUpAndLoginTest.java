@@ -30,7 +30,7 @@ public class SignUpAndLoginTest {
 
     @Test
     public void createSecondManagerTest() {
-        Main.setTest();
+        //Main.setTest();
         System.setOut(new PrintStream(outContent));
         System.setIn(new ByteArrayInputStream(("create account manager newManager\n1234\n1234\n1234\nlab@lab.com\n1234\nback").getBytes()));
         SignUpAndLoginMenu.init();
@@ -39,7 +39,7 @@ public class SignUpAndLoginTest {
 
     @Test
     public void createSellerTest() {
-        Main.setTest();
+        //Main.setTest();
         System.setOut(new PrintStream(outContent));
         System.setIn(new ByteArrayInputStream(("create account seller newSeller\n1234\n1234\n1234\nlab@lab.com\n1234\n123\nali\nali\nback").getBytes()));
         SignUpAndLoginMenu.init();
@@ -48,7 +48,7 @@ public class SignUpAndLoginTest {
 
     @Test
     public void createCustomerTest() {
-        Main.setTest();
+        //Main.setTest();
         System.setOut(new PrintStream(outContent));
         System.setIn(new ByteArrayInputStream(("create account customer newCustomer\n1234\n1234\n1234\nlab@lab.com\n1234\n123\nback").getBytes()));
         SignUpAndLoginMenu.init();
@@ -57,7 +57,7 @@ public class SignUpAndLoginTest {
 
     @Test
     public void loginTest() {
-        Main.setTest();
+        //Main.setTest();
         System.setOut(new PrintStream(outContent));
         System.setIn(new ByteArrayInputStream(("login cloudStrife\n1234\nback\nback").getBytes()));
         SignUpAndLoginMenu.init();

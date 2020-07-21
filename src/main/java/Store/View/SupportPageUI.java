@@ -1,6 +1,5 @@
 package Store.View;
 
-import Store.Controller.CustomerController;
 import Store.Controller.MainMenuUIController;
 import Store.Controller.ProductController;
 import Store.Main;

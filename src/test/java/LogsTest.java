@@ -15,7 +15,7 @@ public class LogsTest {
     @Test
     public void sellLogTests() {
         ArrayList<Product> products = new ArrayList<>(Arrays.asList(Product.getProductByName("product1"), Product.getProductByName("product2")));
-        SellLogItem test = new SellLogItem(1, new Date(), products, 10.9, 12, "testname", true);
+        SellLogItem test = new SellLogItem(new Date(), products, 10.9, 12, "testname", true);
         test.setSendStatus(false);
         Assert.assertEquals(test.toString(), "SellLogItem{" +
                 "incomeValue=" + 10.9 +
@@ -32,8 +32,8 @@ public class LogsTest {
     @Test
     public void buyLogItems() {
         ArrayList<Product> products = new ArrayList<>(Arrays.asList(Product.getProductByName("product1"), Product.getProductByName("product2")));
-        Main.setTest();
-        BuyLogItem test = new BuyLogItem(10, new Date(), products, 1098.989, "testname", true);
+       // Main.setTest();
+        BuyLogItem test = new BuyLogItem(new Date(), products, 1098.989, "testname", true, " ");
         test.setReceived(false);
         Assert.assertEquals(test.toString(), "BuyLogItem{" +
                 "offValue=" + 1098.989 +

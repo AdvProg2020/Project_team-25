@@ -1,6 +1,7 @@
 package Store.View;
 
 
+import Store.Controller.AuctionsController;
 import Store.Controller.MainMenuUIController;
 import Store.Main;
 import Store.Model.Auction;
@@ -62,6 +63,7 @@ public class AuctionMenuUI {
 
     public TextField auctionPrice;
     public TextArea message;
+    public VBox messagesVBox;
 
     public Button ratingStar1;
     public ImageView activeStar;
@@ -83,6 +85,9 @@ public class AuctionMenuUI {
     public HBox sellersHBox;
     public ImageView productImageView;
 
+    static boolean isInAuction;
+    static Queue<String> messages;
+
     public AuctionMenuUI() {
 
     }
@@ -90,6 +95,7 @@ public class AuctionMenuUI {
     public static Parent getContent(Map<String, Object> auction) throws IOException {
         auctionToShow = auction;
         productToShow = (Map)auctionToShow.get("product");
+        isInAuction = true;
         Parent root = FXMLLoader.load(SignUpCustomerAndSellerMenuUI.class.getClassLoader().getResource("FXML/AuctionMenu.fxml"));
         return root;
     }
@@ -225,8 +231,23 @@ public class AuctionMenuUI {
         currentBuyer.textProperty().bind(ClientAuctionController.getCurrentBuyer(auctionToShow));
         conditionLabel.textProperty().bind(ClientAuctionController.getCondition(auctionToShow));
 
+        Thread chatThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (isInAuction && conditionLabel.getText().equalsIgnoreCase("in progress")){
+                    try {
+                        messages = ClientAuctionController.getMessages(auctionToShow);
+                    } catch (IOException e) {
+                        throwError(e.getMessage());
+                    }
+                    showMessages();
+                }
+                ClientAuctionController.disconnect(auctionToShow);
+            }
+        });chatThread.start();
         mainMenuButton.setOnAction((e) -> {
             try {
+                isInAuction = false;
                 Main.setPrimaryStageScene(new Scene(MainMenuUI.getContent()));
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -235,12 +256,27 @@ public class AuctionMenuUI {
 
         loginLogoutButton.setOnAction((e) -> LoginMenuUI.handleEvent());
         signUpButton.setOnAction((e) -> SignUpCustomerAndSellerMenuUI.showSignUpMenu());
-        productsButton.setOnAction((e) -> ProductsMenuUI.showProductsMenu());
-        offersButton.setOnAction((e) -> OffersMenuUI.showOffersMenu());
+        productsButton.setOnAction((e) -> {
+            isInAuction = false;
+            ProductsMenuUI.showProductsMenu();
+        });
+        offersButton.setOnAction((e) -> {
+            isInAuction = false;
+            OffersMenuUI.showOffersMenu();
+        });
 
-        userPageButton.setOnAction(e -> UserPageHandlerUI.handleEvent());
-        supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
-        auctionPageButton.setOnAction(e -> AuctionsMenuUI.showAuctionsMenu());
+        userPageButton.setOnAction(e -> {
+            isInAuction = false;
+            UserPageHandlerUI.handleEvent();
+        });
+        supportPageButton.setOnAction((e) -> {
+            isInAuction = false;
+            SupportPageUI.showSupportPage();
+        });
+        auctionPageButton.setOnAction(e -> {
+            isInAuction = false;
+            AuctionsMenuUI.showAuctionsMenu();
+        });
 
         Button[] starButtons = new Button[] {ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5};
         for (int buttonIndex = 0; buttonIndex < 5; buttonIndex++) {
@@ -249,6 +285,19 @@ public class AuctionMenuUI {
         }
         rateProductButton.setOnAction((e) -> handleRating());
 
+    }
+
+    private void showMessages() {
+        for (String message: messages)
+            showMessage(message);
+    }
+
+    private void showMessage(String message) {
+        HBox hBox = new HBox();
+        Label label = new Label(message);
+        label.setWrapText(true);
+        hBox.getChildren().add(label);
+        messagesVBox.getChildren().add(hBox);
     }
 
     private void setRatingDisable(boolean disable) {
@@ -380,7 +429,13 @@ public class AuctionMenuUI {
     }
 
     public void sendMessage(){
-
+        if (!message.getText().isEmpty()){
+            try {
+                ClientAuctionController.sendMessage(message, auctionToShow);
+            } catch (Exception exception) {
+                throwError(exception.getMessage());
+            }
+        }
     }
 
 }

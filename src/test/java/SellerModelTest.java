@@ -17,7 +17,7 @@ public class SellerModelTest {
 
     @Before
     public void setSellerTest() {
-        Main.setTest();
+        //Main.setTest();
         seller = (Seller) Seller.getUserByUsername("seller2");
         MainMenu.currentUser = seller;
     }
@@ -186,7 +186,7 @@ public class SellerModelTest {
     public void viewOneOfferTest()
     {
         System.setOut(new PrintStream(outContent));
-        Main.setOffers();
+        //Main.setOffers();
         String input = "view offs\n.dsa\nview 1\nback\nback\nback";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         SellerMenu.init();
@@ -196,7 +196,7 @@ public class SellerModelTest {
     public void sortOffsTest()
     {
         System.setOut(new PrintStream(outContent));
-        Main.setOffers();
+        //Main.setOffers();
         String input = "view offs\nsort by time of starting\nsort by x\nsort by time of ending\nback\nback\nback";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         SellerMenu.init();
@@ -204,7 +204,7 @@ public class SellerModelTest {
     @Test
     public void editOfferTest()
     {
-        Main.setOffers();
+        //Main.setOffers();
         String input = "view offs\nedit 1\n11-1-2021 08:08:08\n11-1-2026 08:08:08\n60\n1\n2\n3\n1\n-1\nQR\nRS\n-1\nback\nback\nback";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         SellerMenu.init();
@@ -212,7 +212,7 @@ public class SellerModelTest {
     }
     @Test
     public void addOffTest() {
-        Main.setOffers();
+        //Main.setOffers();
         String input = "view offs\nadd off\n11-1-2021 08:08:08\n11-1-2026 08:08:08\n60\n1\n2\n3\n1\n-1\nQR\nRS\n-1\nback\nback\nback";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         SellerMenu.init();
@@ -222,7 +222,7 @@ public class SellerModelTest {
     @Test
     public void addFilterOffs()
     {
-        Main.setOffers();
+        //Main.setOffers();
         String input = "view offs\nadd filter 10 HI\nadd filter 1 HI\nadd filter 1 IJ\nadd filter 1 HI\nback\nback\nback";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         SellerMenu.init();
@@ -232,7 +232,7 @@ public class SellerModelTest {
     @Test
     public void removeFilterOffs()
     {
-        Main.setOffers();
+        //Main.setOffers();
         String input = "view offs\nadd filter 1 HI\nadd filter 1 IJ\nremove filter 10 XY\nremove filter 1 HI\nremove filter 1 HI\nback\nback\nback";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         SellerMenu.init();

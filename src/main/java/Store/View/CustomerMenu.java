@@ -1,6 +1,5 @@
 package Store.View;
 
-import Store.Controller.CustomerController;
 import Store.Controller.ManagerController;
 import Store.InputManager;
 import Store.Model.Customer;
@@ -150,11 +149,11 @@ public class CustomerMenu {
     }
 
     private static void increaseProductWrapper(String attribute) {
-        System.out.println(CustomerController.increaseProduct(customer, Product.getProductByID(Integer.parseInt(attribute))));
+       // System.out.println(CustomerController.increaseProduct(customer, Product.getProductByID(Integer.parseInt(attribute))));
     }
 
     private static void decreaseProductWrapper(String attribute) {
-        System.out.println(CustomerController.decreaseProduct(customer, Product.getProductByID(Integer.parseInt(attribute))));
+        //System.out.println(CustomerController.decreaseProduct(customer, Product.getProductByID(Integer.parseInt(attribute))));
     }
 
     private static void showTotalCartPrice() {
@@ -175,7 +174,7 @@ public class CustomerMenu {
         String input = InputManager.getNextLine();
         System.out.println("*******");
 
-        System.out.println(CustomerController.purchase(customer, input));
+        //System.out.println(CustomerController.purchase(customer, input));
     }
 
     public static ArrayList<String> getReceiverInfo() {
@@ -221,7 +220,7 @@ public class CustomerMenu {
     }
 
     private static void rateProductWrapper(int id, double rating) {
-        System.out.println(CustomerController.rateProduct(customer, Product.getProductByID(id), rating));
+        //System.out.println(CustomerController.rateProduct(customer, Product.getProductByID(id), rating));
     }
 
     private static void viewBalance() {
