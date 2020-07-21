@@ -100,7 +100,7 @@ public class Customer extends User {
         return false;
     }
 
-    public void buy(OffCode offCode, boolean bank) throws Exception {
+    public void buy(OffCode offCode, boolean bank, String address) throws Exception {
         offCodeAfterBuy();
         if (bank){
             String result = "";
@@ -110,7 +110,7 @@ public class Customer extends User {
         }
         else
             money -= getTotalCartPriceWithDiscount(offCode);
-        handleLogs(getTotalCartPrice() - getTotalCartPriceWithDiscount(offCode));
+        handleLogs(getTotalCartPrice() - getTotalCartPriceWithDiscount(offCode), address);
         cart.clear();
         offCodes.put(offCode, offCodes.get(offCode) + 1);
         if (offCodes.get(offCode) >= offCode.getUsageCount()) {
@@ -123,7 +123,7 @@ public class Customer extends User {
         offCode.removeUser(this);
     }
 
-    public void buy(boolean bank) throws Exception {
+    public void buy(boolean bank, String address) throws Exception {
         offCodeAfterBuy();
         if (bank){
             String result = "";
@@ -133,7 +133,7 @@ public class Customer extends User {
         }
         else
             money -= getTotalCartPrice();
-        handleLogs(0);
+        handleLogs(0, address);
         cart.clear();
     }
 
@@ -156,7 +156,7 @@ public class Customer extends User {
         return output;
     }
 
-    private void handleLogs(double discount) {
+    private void handleLogs(double discount, String address) {
         double totalPrice = getTotalCartPrice();
         Product product = null;
         Seller seller = null;
@@ -183,7 +183,7 @@ public class Customer extends User {
                 }
             }
             offerOff = calOfferOff(productsOfOneSeller);
-            buyLog.add(new BuyLogItem(buyLog.size() + 1, date, productsOfOneSeller, priceOfList(productsOfOneSeller) - (priceOfList(productsOfOneSeller) - offerOff) * (1.0 - (discount / totalPrice)), seller.getUsername(), false));
+            buyLog.add(new BuyLogItem(date, productsOfOneSeller, priceOfList(productsOfOneSeller) - (priceOfList(productsOfOneSeller) - offerOff) * (1.0 - (discount / totalPrice)), seller.getUsername(), false, address));
             seller.handleLogs(offerOff, productsOfOneSeller, date, this, (priceOfList(productsOfOneSeller) - offerOff) * (100.0 - Manager.getKarmozd()) / 100.0);
            // seller.removeProducts(productsOfOneSeller);
             seller.setMoney(seller.getMoney() + (priceOfList(productsOfOneSeller) - offerOff) * (100.0 - Manager.getKarmozd()) / 100.0);

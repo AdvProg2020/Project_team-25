@@ -3,6 +3,8 @@ package Store.Networking;
 import Store.Controller.*;
 import Store.Model.*;
 import Store.Model.Enums.CheckingStatus;
+import Store.Model.Log.BuyLogItem;
+import Store.Model.Log.LogItem;
 import com.google.gson.Gson;
 
 import java.io.*;
@@ -420,10 +422,107 @@ public class MainServer {
                     if (input.get("message").equals("addAuction")){
                         addAuction(input);
                     }
+                    if (input.get("message").equals("isInAuction")){
+                        isInAuction(input);
+                    }
+                    if (input.get("message").equals("getHighestPriceAuction")){
+                        getHighestPriceAuction(input);
+                    }
+                    if (input.get("message").equals("getCurrentBuyerAuction")){
+                        getCurrentBuyerAuction(input);
+                    }
+                    if (input.get("message").equals("getConditionAuction")){
+                        getConditionAuction(input);
+                    }
+                    if (input.get("message").equals("getAuctionOfProduct")){
+                        getAuctionOfProduct(input);
+                    }
+                    if (input.get("message").equals("isReceivedLog")) {
+                        isReceivedLog(input);
+                    }
+                    if (input.get("message").equals("getBuyLogs")){
+                        getBuyLogs();
+                    }
+                    if (input.get("message").equals("sendProduct")){
+                        sendProduct(input);
+                    }
                 }catch (IOException exception) {
                     //exception.printStackTrace();
                 }
             }
+        }
+
+        private void sendProduct(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            BuyLogItem buyLogItem = (BuyLogItem)input.get("buyLogId");
+            buyLogItem.setReceived(true);
+            hashMap.put("content", "done");
+            sendMessage(hashMap);
+        }
+
+        private void getBuyLogs() {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            HashMap<String, ArrayList> content = new HashMap<>();
+            for (User user: User.getAllUsers()){
+                if (user instanceof Customer){
+                    content.put(user.getUsername(), HashMapGenerator.getListOfBuyLogItems(((Customer)user).getBuyLog()));
+                }
+            }
+            hashMap.put("content", content);
+            sendMessage(hashMap);
+        }
+
+        private void isReceivedLog(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            int id = (Integer)input.get("id");
+            if (LogItem.getLogById(id) != null)
+                hashMap.put("content", ((BuyLogItem) LogItem.getLogById(id)).isReceived());
+            else
+                hashMap.put("content", "error");
+        }
+
+        private void getAuctionOfProduct(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            Product product = Product.getProductByID((Integer)input.get("productId"));
+            Auction auction = Auction.getAuctionOfProduct(product);
+            if (auction != null)
+                hashMap.put("content", HashMapGenerator.getAuctionHashMap(auction));
+            else
+                hashMap.put("content", "error");
+            sendMessage(hashMap);
+        }
+
+        private void getConditionAuction(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            if (Auction.getAuctionByID((Integer)input.get("auctionId")) == null)
+                hashMap.put("content", "Sold");
+            else
+                hashMap.put("content", "In Progress");
+            sendMessage(hashMap);
+        }
+
+        private void getCurrentBuyerAuction(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            Auction auction = Auction.getAuctionByID((Integer)input.get("auctionId"));
+            hashMap.put("content", auction.getCurrentBuyer().getUsername());
+            sendMessage(hashMap);
+        }
+
+        private void getHighestPriceAuction(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            Auction auction = Auction.getAuctionByID((Integer)input.get("auctionId"));
+            hashMap.put("content", auction.getHighestPrice());
+            sendMessage(hashMap);
+        }
+
+        private void isInAuction(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            Product product = Product.getProductByID((Integer)((Map)input.get("product")).get("id"));
+            if (Auction.getAuctionOfProduct(product) == null)
+                hashMap.put("content", "false");
+            else
+                hashMap.put("content", "true");
+            sendMessage(hashMap);
         }
 
         private void addAuction(HashMap input) {
@@ -437,6 +536,7 @@ public class MainServer {
                 hashMap.put("content", "error");
                 hashMap.put("type", e.getMessage());
             }
+            sendMessage(hashMap);
         }
 
         private void increaseAuctionPrice(HashMap input) {
@@ -449,7 +549,7 @@ public class MainServer {
                 hashMap.put("type", "You are not customer!");
             }else{
                 Customer customer = (Customer) tryer;
-                if (customer.getMoney() < newPrice) {
+                if (customer.getMoney() - Manager.getMinimumRemaining() < newPrice) {
                     hashMap.put("content", "error");
                     hashMap.put("type", "Your money is not enough!");
                 }else if (newPrice < auction.getHighestPrice() + 5){
@@ -489,8 +589,9 @@ public class MainServer {
             HashMap<String, Object> hashMap = new HashMap<>();
             Customer customer = (Customer)User.getUserByUsername((String) input.get("username"));
             String offCode = (String)input.get("offCode");
+            String address = (String)input.get("address");
             try {
-                hashMap.put("content", CustomerUIController.purchase(customer, offCode, true));
+                hashMap.put("content", CustomerUIController.purchase(customer, offCode, true, address));
             } catch (Exception e) {
                 hashMap.put("content", "error");
                 hashMap.put("type", e.getMessage());
@@ -503,8 +604,9 @@ public class MainServer {
             HashMap<String, Object> hashMap = new HashMap<>();
             Customer customer = (Customer)User.getUserByUsername((String) input.get("username"));
             String offCode = (String)input.get("offCode");
+            String address = (String)input.get("address");
             try {
-                hashMap.put("content", CustomerUIController.purchase(customer, offCode, false));
+                hashMap.put("content", CustomerUIController.purchase(customer, offCode, false, address));
             } catch (Exception e) {
                 hashMap.put("content", "error");
                 hashMap.put("type", e.getMessage());

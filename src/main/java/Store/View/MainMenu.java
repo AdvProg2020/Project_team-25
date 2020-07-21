@@ -10,7 +10,7 @@ public class MainMenu {
 
     public static User currentUser;
     public static Customer guest = new Customer("guest", "guest", "guest",
-            "guest@approject.com", "00000000000", "guest", 0.0);
+            "guest@approject.com", "00000000000", "guest");
 
     public static void init() {
         // Set current user

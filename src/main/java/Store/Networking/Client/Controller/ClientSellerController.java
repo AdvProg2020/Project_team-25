@@ -3,6 +3,9 @@ package Store.Networking.Client.Controller;
 import Store.InputManager;
 import Store.Model.Manager;
 import Store.Networking.Client.ClientHandler;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -186,5 +189,16 @@ public class ClientSellerController {
         hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
         if (((String)hashMap.get("content")).equalsIgnoreCase("error"))
             throw new Exception((String)hashMap.get("type"));
+    }
+
+    public static SimpleBooleanProperty getIsInAuction(Map<String, Object> product) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "isInAuction");
+        hashMap.put("product", product);
+        String string = (String)ClientHandler.sendAndReceiveMessage(hashMap).get("content");
+        if (string.equalsIgnoreCase("false"))
+            return new SimpleBooleanProperty(false);
+        else
+            return new SimpleBooleanProperty(true);
     }
 }

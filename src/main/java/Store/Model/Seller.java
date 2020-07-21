@@ -79,7 +79,7 @@ public class Seller extends User {
     }
 
     public void handleLogs(double offValue, ArrayList<Product> sellProducts, Date date, Customer customer, double income) {
-        sellLog.add(new SellLogItem(sellLog.size() + 1, date, sellProducts, income, offValue, customer.getUsername(), false));
+        sellLog.add(new SellLogItem(date, sellProducts, income, offValue, customer.getUsername(), false));
     }
 
     public void removeProduct(Product productToRemove)

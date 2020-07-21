@@ -40,6 +40,7 @@ public class SupportPageUI {
     public Button offersButton;
     public Button userPageButton;
     public Button supportPageButton;
+    public Button auctionPageButton;
 
     public Label loggedInStatusText;
     public Button signUpButton;
@@ -100,6 +101,7 @@ public class SupportPageUI {
     }
 
     private void setupBindings() {
+        auctionPageButton.setOnAction(e -> AuctionsMenuUI.showAuctionsMenu());
         mainMenuButton.setOnAction((e) -> {
             try {
                 Main.setPrimaryStageScene(new Scene(MainMenuUI.getContent()));

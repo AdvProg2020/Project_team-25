@@ -54,6 +54,7 @@ public class AuctionsMenuUI {
     public Button offersButton;
     public Button userPageButton;
     public Button supportPageButton;
+    public Button auctionPageButton;
     public Button signUpButton;
     public Button loginLogoutButton;
     public Label loggedInStatusText;
@@ -74,6 +75,7 @@ public class AuctionsMenuUI {
     public Button showCategoryButton;
     public HBox mainNode;
 
+    public Label errorText;
 
     public static Parent getContent() throws IOException {
         Parent root = FXMLLoader.load(AuctionsMenuUI.class.getClassLoader().getResource("FXML/AuctionsMenu.fxml"));
@@ -131,6 +133,7 @@ public class AuctionsMenuUI {
             }
         });
 
+        auctionPageButton.setOnAction(e -> AuctionsMenuUI.showAuctionsMenu());
 
         searchString.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty()) {
@@ -346,12 +349,20 @@ public class AuctionsMenuUI {
         vBox.getChildren().add(productInfo);
         productInfo.setOnMouseClicked(event -> {
             try {
-                Main.setPrimaryStageScene(new Scene(AuctionMenuUI.getContent(Auction.getAuctionOfProduct(product))));
+                Main.setPrimaryStageScene(new Scene(AuctionMenuUI.getContent(ClientAuctionsController.getAuctionOfProduct(product))));
             } catch (IOException exception) {
                 exception.printStackTrace();
+            } catch (Exception exception) {
+                throwError(exception.getMessage());
             }
         });
 
+    }
+
+    private void throwError(String error)
+    {
+        errorText.setText(error);
+        errorText.setVisible(true);
     }
 
     private void setTobeShownProducts() {

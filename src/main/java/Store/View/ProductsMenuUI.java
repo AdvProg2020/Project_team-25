@@ -58,6 +58,7 @@ public class ProductsMenuUI {
     public Button offersButton;
     public Button userPageButton;
     public Button supportPageButton;
+    public Button auctionPageButton;
     public Button signUpButton;
     public Button loginLogoutButton;
     public Label loggedInStatusText;
@@ -115,6 +116,7 @@ public class ProductsMenuUI {
     }
 
     public void setupBindings() {
+        auctionPageButton.setOnAction(e -> AuctionsMenuUI.showAuctionsMenu());
         nextPageButton.setOnMouseClicked(event -> showNextPage());
         previousPageButton.setOnMouseClicked(event -> showPreviousPage());
         loginLogoutButton.setOnAction((e) -> LoginMenuUI.handleEvent());

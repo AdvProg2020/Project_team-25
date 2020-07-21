@@ -88,6 +88,15 @@
                   </ImageView>
                </graphic>
             </Button>
+            <Button fx:id="auctionPageButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Auctions">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Icons/Auction.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
             <Separator orientation="VERTICAL" prefHeight="93.0" prefWidth="6.0" visible="false" />
             <GridPane vgap="5.0">
               <columnConstraints>
@@ -318,6 +327,15 @@
                                     </HBox>
                                     <Separator orientation="VERTICAL" prefHeight="20.0" prefWidth="13.0" visible="false" />
                                     <Button mnemonicParsing="false" onAction="#tryHigherPrice" prefHeight="21.0" prefWidth="103.0" text="Try Higher Price" />
+                                    <Separator orientation="VERTICAL" prefHeight="14.0" prefWidth="1.0" visible="false" />
+                                    <TextField fx:id="auctionPrice" promptText="Price" />
+                                    <Separator orientation="VERTICAL" prefHeight="14.0" prefWidth="1.0" visible="false" />
+                                    <HBox prefWidth="200.0">
+                                       <children>
+                                          <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Condition: " />
+                                          <Label id="averageRatingLabel" fx:id="conditionLabel" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
+                                       </children>
+                                    </HBox>
                                  </children></VBox>
                               <VBox id="imageAndVideoVBox" fx:id="chatVBox" prefHeight="517.0" prefWidth="610.0" spacing="10.0">
                                  <HBox.margin>
@@ -332,12 +350,12 @@
                                     <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                                        <children>
                                           <Label text="Messege" />
-                                          <TextArea prefHeight="62.0" prefWidth="477.0">
+                                          <TextArea fx:id="message" prefHeight="62.0" prefWidth="477.0">
                                              <HBox.margin>
                                                 <Insets bottom="10.0" />
                                              </HBox.margin>
                                           </TextArea>
-                                          <Button mnemonicParsing="false" text="Send">
+                                          <Button mnemonicParsing="false" onAction="#sendMessage" text="Send">
                                              <HBox.margin>
                                                 <Insets top="15.0" />
                                              </HBox.margin>

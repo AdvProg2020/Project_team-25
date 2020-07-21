@@ -59,11 +59,11 @@ public class ClientCustomerController {
         ClientProductController.rateProduct((String) customer.get("username"), product, rating);
     }
 
-    public static String purchase(Map<String, Object> customer, String input, boolean by) throws Exception {
+    public static String purchase(Map<String, Object> customer, String input, boolean by, String address) throws Exception {
         if (input.isEmpty()) {
-            return buy(by);
+            return buy(by, address);
         } else {
-            return buy(input, by);
+            return buy(input, by, address);
         }
     }
 
@@ -112,10 +112,11 @@ public class ClientCustomerController {
         return (Boolean) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
     }
 
-    public static String buy(boolean by) {
+    public static String buy(boolean by, String address) {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("message", "buy");
         hashMap.put("code", "");
+        hashMap.put("address", address);
         if (by)
             hashMap.put("by", "bank");
         else
@@ -123,10 +124,11 @@ public class ClientCustomerController {
         return (String) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
     }
 
-    public static String buy(String code, boolean by) {
+    public static String buy(String code, boolean by, String address) {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("message", "buy");
         hashMap.put("code", code);
+        hashMap.put("address", address);
         if (by)
             hashMap.put("by", "bank");
         else

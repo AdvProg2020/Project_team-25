@@ -67,6 +67,7 @@ public class SellerMenuUI implements Initializable {
     public Button offersButton;
     public Button productsButton;
     public Button mainMenuButton;
+    public Button auctionPageButton;
     public Button logoutButton;
     public Label loggedInStatusText;
     public ComboBox myOffersSortBy;
@@ -544,6 +545,7 @@ public class SellerMenuUI implements Initializable {
 
     @FXML
     private void setupInitial() {
+        auctionPageButton.setOnAction(e -> AuctionsMenuUI.showAuctionsMenu());
         supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
         product.setOnSelectionChanged(e -> setupInitialPersonalMenu());
         offer.setOnSelectionChanged(e -> setupInitialPersonalMenu());
@@ -718,6 +720,7 @@ public class SellerMenuUI implements Initializable {
             menuState = "product";
             showSellerMenu();
         });
+        auction.disableProperty().bind(ClientSellerController.getIsInAuction(product));
         auction.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->{
             try {
                 selectedProduct = product;
@@ -1083,6 +1086,15 @@ public class SellerMenuUI implements Initializable {
         } else if (lock.equalsIgnoreCase("sellLog")) {
             Parent root = FXMLLoader.load(SignUpAndLoginMenu.class.getClassLoader().getResource("FXML/SellLog.fxml"));
             Main.setupOtherStage(new Scene(root), "Sell Log");
+        } else if (lock.equalsIgnoreCase("endDate")) {
+            Parent root = FXMLLoader.load(SignUpAndLoginMenu.class.getClassLoader().getResource("FXML/EndDate.fxml"));
+            Main.setupOtherStage(new Scene(root), "Enter Ending Time Of Auction");
+        } else if (lock.equalsIgnoreCase("chargeWallet")) {
+            Parent root = FXMLLoader.load(SignUpAndLoginMenu.class.getClassLoader().getResource("FXML/ChargeWalletSeller.fxml"));
+            Main.setupOtherStage(new Scene(root), "Charge Wallet");
+        } else if (lock.equalsIgnoreCase("dechargeWallet")) {
+            Parent root = FXMLLoader.load(SignUpAndLoginMenu.class.getClassLoader().getResource("FXML/DechargeWalletSeller.fxml"));
+            Main.setupOtherStage(new Scene(root), "Decharge Wallet");
         }
     }
 

@@ -68,6 +68,7 @@ public class CustomerMenuUI implements Initializable {
     public Button offersButton;
     public Button productsButton;
     public Button mainMenuButton;
+    public Button auctionPageButton;
     public Button logoutButton;
     public Button ordersButton;
     public Label loggedInStatusText;
@@ -210,6 +211,7 @@ public class CustomerMenuUI implements Initializable {
         logoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
         signUpButton.disableProperty().bind(MainMenuUIController.isLoggedIn);
         supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
+        auctionPageButton.setOnAction(e -> AuctionsMenuUI.showAuctionsMenu());
         logoutButton.setOnAction((e) -> {
             LoginMenuUI.handleEvent();
             if (customer.get("type").equals("Seller") || customer.get("type").equals("Manager")) {
@@ -804,9 +806,9 @@ public class CustomerMenuUI implements Initializable {
         try {
             if (addressTextArea.getText() != null) {
                 if (byBank.isSelected())
-                    factorString = ClientCustomerController.purchase(customer, offCodeTextField.getText(), true);
+                    factorString = ClientCustomerController.purchase(customer, offCodeTextField.getText(), true, addressTextArea.getText());
                 else
-                    factorString = ClientCustomerController.purchase(customer, offCodeTextField.getText(), false);
+                    factorString = ClientCustomerController.purchase(customer, offCodeTextField.getText(), false, addressTextArea.getText());
                 menuState = "CustomerMenu";
                 ((Stage) addressTextArea.getScene().getWindow()).close();
                 menuState = "cart";
@@ -921,6 +923,10 @@ public class CustomerMenuUI implements Initializable {
         {
             Parent root = FXMLLoader.load(SignUpAndLoginMenu.class.getClassLoader().getResource("FXML/BuyLog.fxml"));
             Main.setupOtherStage(new Scene(root), "Buy Log");
+        }
+        else if (lock.equalsIgnoreCase("chargeWallet")) {
+            Parent root = FXMLLoader.load(SignUpAndLoginMenu.class.getClassLoader().getResource("FXML/ChargeWallet.fxml"));
+            Main.setupOtherStage(new Scene(root), "Charge Wallet");
         }
     }
 

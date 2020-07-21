@@ -72,11 +72,11 @@ public class CustomerUIController {
         product.rate(customer, rating);
     }
 
-    public static String purchase(Customer customer, String input, boolean bank) throws Exception {
+    public static String purchase(Customer customer, String input, boolean bank, String address) throws Exception {
         if (input.isEmpty()) {
             try{
                 if (customer.canBuy(bank)) {
-                    customer.buy(bank);
+                    customer.buy(bank, address);
                     return customer.getNewFactor();
                 }
             }catch (Exception e){
@@ -88,7 +88,7 @@ public class CustomerUIController {
             if (offCode != null && offCode.canBeUsedInDate(new Date()) && offCode.isUserIncluded(customer)) {
                 try {
                     if (customer.canBuy(offCode, bank)) {
-                        customer.buy(offCode, bank);
+                        customer.buy(offCode, bank, address);
                         return customer.getNewFactor();
                     }
                 }catch (Exception e){

@@ -1,8 +1,12 @@
 package Store.Networking.Client.Controller;
 
 import Store.Networking.Client.ClientHandler;
+import Store.Networking.HashMapGenerator;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -176,5 +180,25 @@ public class ClientManagerController {
         hashMap.put("message", "setKarmozd");
         hashMap.put("karmozd", karmozd);
         ClientHandler.sendAndReceiveMessage(hashMap).get("content");
+    }
+
+    public static SimpleBooleanProperty isReceived(Map buyLog) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "isReceivedLog");
+        hashMap.put("logId", buyLog.get("id"));
+        return new SimpleBooleanProperty((boolean)ClientHandler.sendAndReceiveMessage(hashMap).get("content"));
+    }
+
+    public static void sendProduct(Map buyLog) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "sendProduct");
+        hashMap.put("buyLogId", buyLog.get("id"));
+        ClientHandler.sendAndReceiveMessage(hashMap);
+    }
+
+    public static HashMap<String, ArrayList<Map<String, Object>>> getBuyLogs() {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "getBuyLogs");
+        return (HashMap)ClientHandler.sendAndReceiveMessage(hashMap).get("content");
     }
 }

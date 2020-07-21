@@ -1,6 +1,7 @@
 package Store.Model;
 
 import Store.Model.Enums.CheckingStatus;
+import Store.Model.Log.BuyLogItem;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -60,11 +61,10 @@ public class Auction implements Serializable {
         return idCounter;
     }
 
-    public static Auction getAuctionOfProduct(Map<String, Object> product) {
-        Product product1 = Product.getProductByID((Integer)product.get("id"));
+    public static Auction getAuctionOfProduct(Product product) {
         for (Auction auction: allAuctions)
         {
-            if (auction.getProduct().equals(product1) && auction.getSeller().equals(product1.getSeller()))
+            if (auction.getProduct().equals(product) && auction.getSeller().equals(product.getSeller()))
                 return auction;
         }
         return null;
@@ -114,6 +114,10 @@ public class Auction implements Serializable {
     public void finish(){
         currentBuyer.setMoney(currentBuyer.getMoney() - highestPrice);
         seller.setMoney(seller.getMoney() + highestPrice);
+        ArrayList<Product> arrayList = new ArrayList<>();
+        arrayList.add(product);
+        currentBuyer.getBuyLog().add(new BuyLogItem(new Date(), arrayList, 0, seller.getUsername(), false, "Address"));
+        seller.handleLogs(0, arrayList, new Date(), currentBuyer, highestPrice);
         allAuctions.remove(this);
         boolean flag = false;
         for (Auction auction: allAuctions)

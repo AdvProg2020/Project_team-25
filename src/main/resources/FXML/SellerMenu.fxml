@@ -417,6 +417,15 @@
                   </ImageView>
                </graphic>
             </Button>
+            <Button fx:id="auctionPageButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Auctions">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Icons/Auction.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
                 <Separator orientation="VERTICAL" prefHeight="84.0" prefWidth="10.0" visible="false" />
                 <GridPane alignment="BOTTOM_LEFT" vgap="5.0">
                     <children>

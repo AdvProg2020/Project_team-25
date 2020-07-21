@@ -5,9 +5,7 @@ import Store.Controller.MainMenuUIController;
 import Store.Main;
 import Store.Model.Auction;
 import Store.Networking.Client.ClientHandler;
-import Store.Networking.Client.Controller.ClientMainMenuController;
-import Store.Networking.Client.Controller.ClientProductController;
-import Store.Networking.Client.Controller.ClientSignUpAndLoginController;
+import Store.Networking.Client.Controller.*;
 import Store.Networking.HashMapGenerator;
 import Store.View.AdditionalUtils.PannableCanvas;
 import Store.View.AdditionalUtils.SceneGestures;
@@ -43,6 +41,7 @@ public class AuctionMenuUI {
     public Button offersButton;
     public Button userPageButton;
     public Button supportPageButton;
+    public Button auctionPageButton;
 
     public Label loggedInStatusText;
     public Button signUpButton;
@@ -59,6 +58,7 @@ public class AuctionMenuUI {
     public Label filtersLabel;
     public Label currentBuyer;
     public Label highestPrice;
+    public Label conditionLabel;
 
     public TextField auctionPrice;
     public TextArea message;
@@ -87,9 +87,9 @@ public class AuctionMenuUI {
 
     }
 
-    public static Parent getContent(Auction auction) throws IOException {
-        auctionToShow = HashMapGenerator.getAuctionHashMap(auction);
-        productToShow = HashMapGenerator.getProductHashMap(auction.getProduct());
+    public static Parent getContent(Map<String, Object> auction) throws IOException {
+        auctionToShow = auction;
+        productToShow = (Map)auctionToShow.get("product");
         Parent root = FXMLLoader.load(SignUpCustomerAndSellerMenuUI.class.getClassLoader().getResource("FXML/AuctionMenu.fxml"));
         return root;
     }
@@ -220,6 +220,11 @@ public class AuctionMenuUI {
     }
 
     public void setupBindings() {
+
+        highestPrice.textProperty().bind(ClientAuctionController.getHighestPrice(auctionToShow));
+        currentBuyer.textProperty().bind(ClientAuctionController.getCurrentBuyer(auctionToShow));
+        conditionLabel.textProperty().bind(ClientAuctionController.getCondition(auctionToShow));
+
         mainMenuButton.setOnAction((e) -> {
             try {
                 Main.setPrimaryStageScene(new Scene(MainMenuUI.getContent()));
@@ -235,6 +240,7 @@ public class AuctionMenuUI {
 
         userPageButton.setOnAction(e -> UserPageHandlerUI.handleEvent());
         supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
+        auctionPageButton.setOnAction(e -> AuctionsMenuUI.showAuctionsMenu());
 
         Button[] starButtons = new Button[] {ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5};
         for (int buttonIndex = 0; buttonIndex < 5; buttonIndex++) {
@@ -242,7 +248,6 @@ public class AuctionMenuUI {
             starButtons[buttonIndex].setOnAction((e) -> handleRatingChange(finalButtonIndex));
         }
         rateProductButton.setOnAction((e) -> handleRating());
-
 
     }
 

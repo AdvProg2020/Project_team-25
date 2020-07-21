@@ -40,6 +40,7 @@ public class OperatorMenuUI {
     public Button offersButton;
     public Button userPageButton;
     public Button supportPageButton;
+    public Button auctionPageButton;
     public Button signUpButton;
     public Button loginLogoutButton;
     public Label loggedInStatusText;
@@ -77,6 +78,7 @@ public class OperatorMenuUI {
     }
 
     public void setupBindings() {
+        auctionPageButton.setOnAction(e -> AuctionsMenuUI.showAuctionsMenu());
         offersButton.setOnAction((e) -> OffersMenuUI.showOffersMenu());
         supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
         loginLogoutButton.setOnAction((e) -> {
