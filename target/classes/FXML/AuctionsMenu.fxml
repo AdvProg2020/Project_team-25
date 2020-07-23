@@ -77,24 +77,24 @@
                         </ImageView>
                     </graphic>
                 </Button>
-            <Button fx:id="supportPageButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Support">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../Icons/Support.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <Button fx:id="auctionPageButton" disable="true" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Auctions">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../Icons/Auction.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
+                <Button fx:id="supportPageButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Support">
+                    <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../Icons/Support.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="auctionPageButton" disable="true" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Auctions">
+                    <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../Icons/Auction.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
                 <Separator orientation="VERTICAL" prefHeight="84.0" prefWidth="6.0" visible="false" />
                 <GridPane vgap="5.0">
                     <children>
@@ -152,8 +152,8 @@
                                             </graphic>
                                         </Button>
                                         <Region prefHeight="60.0" prefWidth="184.0" />
-                              <Label fx:id="errorText" prefHeight="19.0" prefWidth="129.0" />
-                              <Region prefHeight="60.0" prefWidth="204.0" />
+                                        <Label fx:id="errorText" prefHeight="19.0" prefWidth="129.0" />
+                                        <Region prefHeight="60.0" prefWidth="204.0" />
                                         <Button id="searchButton" fx:id="searchButton" disable="true" mnemonicParsing="false" prefHeight="51.0" prefWidth="49.0">
                                             <graphic>
                                                 <ImageView fitHeight="33.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">

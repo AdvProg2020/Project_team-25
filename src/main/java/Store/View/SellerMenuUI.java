@@ -40,6 +40,8 @@ import org.codehaus.plexus.util.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -1111,4 +1113,24 @@ public class SellerMenuUI implements Initializable {
         }
     }
 
+    public void filePathClicked()
+    {
+        FileChooser fileChooser = new FileChooser();
+        try {
+            Path path = Paths.get(fileChooser.showOpenDialog(new Stage()).getPath());
+            System.out.println("############ " + path.getFileName().toString());
+
+            if (selectedProduct.containsKey("filePath")) {
+                selectedProduct.replace("filePath", path.getFileName().toString());
+            }
+            else {
+                selectedProduct.put("filePath", path.getFileName().toString());
+            }
+        }
+        catch (Exception exception) {
+            // do nothing
+        }
+    }
+
 }
+

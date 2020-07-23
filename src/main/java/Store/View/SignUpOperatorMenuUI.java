@@ -147,7 +147,6 @@ public class SignUpOperatorMenuUI {
         ArrayList<String> attributes = new ArrayList<String>(Arrays.asList(username, firstName, lastName, email, phoneNumber, password));
         if (isValid) {
             ClientSignUpAndLoginController.createOperator(username, firstName, lastName, email, phoneNumber, password);
-            ClientManagerController.createOperatorProfile(ClientMainMenuController.currentUserUsername.getValue(), username, firstName, lastName, email, phoneNumber, password);
             resetAllFields();
             System.out.println(password);
             throwError("Register Successful!");

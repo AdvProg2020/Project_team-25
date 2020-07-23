@@ -27,352 +27,352 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" styleClass="backgroundAnchor" stylesheets="@../CSS/general_stylesheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Store.View.AuctionMenuUI">
-   <children>
-      <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="247.0" style="-fx-background-color: #3F2563; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" styleClass="quickAccess" stylesheets="@../CSS/general_stylesheet.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="77.0" prefWidth="247.0" style="-fx-background-color: #FA2C56; -fx-background-radius: 5;">
-               <children>
-                  <Label fx:id="currentScreenTitle" text="Main Menu" textFill="WHITE">
-                     <font>
-                        <Font name="Dyuthi" size="24.0" />
-                     </font>
-                  </Label>
-               </children>
-               <padding>
-                  <Insets left="25.0" />
-               </padding>
-            </HBox>
-            <Separator orientation="VERTICAL" prefHeight="25.0" prefWidth="5.0" visible="false" />
-            <Button id="productsButton" fx:id="mainMenuButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Main Menu">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../Icons/MainMenu.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <Button id="productsButton" fx:id="productsButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Products">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../Icons/Products.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <Button id="offersButton" fx:id="offersButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Offers">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../Icons/Offers.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <Button fx:id="userPageButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="User Page">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../Icons/User_Page.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <Button fx:id="supportPageButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Support">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../Icons/Support.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <Button fx:id="auctionPageButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Auctions">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../Icons/Auction.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <Separator orientation="VERTICAL" prefHeight="93.0" prefWidth="6.0" visible="false" />
-            <GridPane vgap="5.0">
-              <columnConstraints>
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Button fx:id="signUpButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="110.0" styleClass="quickAccessLoginSignUpButton" stylesheets="@../CSS/general_stylesheet.css" text="Sign Up" GridPane.columnIndex="1">
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../Icons/SignUp.png" />
-                           </image>
+    <children>
+        <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="247.0" style="-fx-background-color: #3F2563; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" styleClass="quickAccess" stylesheets="@../CSS/general_stylesheet.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <HBox alignment="CENTER_LEFT" prefHeight="77.0" prefWidth="247.0" style="-fx-background-color: #FA2C56; -fx-background-radius: 5;">
+                    <children>
+                        <Label fx:id="currentScreenTitle" text="Main Menu" textFill="WHITE">
+                            <font>
+                                <Font name="Dyuthi" size="24.0" />
+                            </font>
+                        </Label>
+                    </children>
+                    <padding>
+                        <Insets left="25.0" />
+                    </padding>
+                </HBox>
+                <Separator orientation="VERTICAL" prefHeight="25.0" prefWidth="5.0" visible="false" />
+                <Button id="productsButton" fx:id="mainMenuButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Main Menu">
+                    <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../Icons/MainMenu.png" />
+                            </image>
                         </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="loginLogoutButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="110.0" styleClass="quickAccessLoginSignUpButton" stylesheets="@../CSS/general_stylesheet.css" text="Login" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                     <graphic>
-                        <ImageView id="loginLogoutButtonIcon" fx:id="loginLogoutButtonIcon" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../Icons/Login.png" />
-                           </image>
+                    </graphic>
+                </Button>
+                <Button id="productsButton" fx:id="productsButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Products">
+                    <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../Icons/Products.png" />
+                            </image>
                         </ImageView>
-                     </graphic>
-                  </Button>
-                  <Label text="Login Status:" textFill="#7f7f7f" />
-                  <Label id="loggedInStatusText" fx:id="loggedInStatusText" text="Not Logged In" textFill="#7f7f7f" GridPane.rowIndex="1" />
-               </children>
-            </GridPane>
-            <Separator orientation="VERTICAL" prefHeight="18.0" prefWidth="7.0" visible="false" />
-         </children>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </VBox>
-      <ScrollPane hbarPolicy="NEVER" layoutX="263.0" layoutY="14.0" prefHeight="572.0" prefWidth="924.0" styleClass="viewport" stylesheets="@../CSS/product_menu_stylesheet.css" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="262.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="566.0" prefWidth="916.0">
-               <children>
-                  <VBox alignment="TOP_CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <HBox prefHeight="565.0" prefWidth="916.0">
-                           <children>
-                              <VBox alignment="TOP_CENTER" prefHeight="458.0" prefWidth="277.0">
-                                 <HBox.margin>
-                                    <Insets left="20.0" top="20.0" />
-                                 </HBox.margin>
-                                 <children>
-                                    <HBox prefWidth="200.0">
-                                       <children>
-                                          <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Product Name: " />
-                                          <Label id="nameLabel" fx:id="nameLabel" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
-                                       </children>
-                                    </HBox>
-                                    <HBox prefWidth="200.0">
-                                       <children>
-                                          <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Product Brand: " />
-                                          <Label id="brandLabel" fx:id="brandLabel" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
-                                       </children>
-                                    </HBox>
-                                    <HBox prefWidth="200.0">
-                                       <children>
-                                          <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Description: " />
-                                          <Label id="descriptionLabel" fx:id="descriptionLabel" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
-                                       </children>
-                                    </HBox>
-                                    <HBox prefWidth="200.0">
-                                       <children>
-                                          <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Price: " />
-                                          <Label id="priceLabel" fx:id="priceLabel" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
-                                       </children>
-                                    </HBox>
-                                    <HBox prefWidth="200.0">
-                                       <children>
-                                          <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Category: " />
-                                          <Label id="categoryLabel" fx:id="categoryLabel" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
-                                       </children>
-                                    </HBox>
-                                    <HBox prefWidth="200.0">
-                                       <children>
-                                          <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Sellers: " />
-                                          <HBox id="sellersHBox" fx:id="sellersHBox" spacing="5.0" />
-                                       </children>
-                                    </HBox>
-                                    <HBox prefWidth="200.0">
-                                       <children>
-                                          <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Average Rating: " />
-                                          <Label id="averageRatingLabel" fx:id="averageRatingLabel" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
-                                       </children>
-                                    </HBox>
-                                    <HBox prefWidth="200.0">
-                                       <children>
-                                          <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Date of Offer: " />
-                                          <Label id="dateOfOfferLabel" fx:id="dateOfOfferLabel" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
-                                       </children>
-                                    </HBox>
-                                    <HBox prefWidth="200.0">
-                                       <children>
-                                          <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Product Status: " />
-                                          <Label id="productStatusLabel" fx:id="productStatusLabel" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
-                                       </children>
-                                    </HBox>
-                                    <HBox prefWidth="200.0">
-                                       <children>
-                                          <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Filters: " />
-                                          <Label id="filtersLabel" fx:id="filtersLabel" styleClass="digestFilters" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
-                                       </children>
-                                    </HBox>
-                                    <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="322.0">
-                                       <children>
-                                          <Separator prefHeight="3.0" prefWidth="14.0" visible="false" />
-                                          <VBox alignment="TOP_CENTER">
-                                             <children>
-                                                <HBox alignment="CENTER_LEFT">
-                                                   <children>
-                                                      <Button fx:id="ratingStar1" mnemonicParsing="false" prefHeight="30.0" prefWidth="20.0" styleClass="ratingButton" stylesheets="@../CSS/product_menu_stylesheet.css">
-                                                         <graphic>
-                                                            <StackPane>
-                                                               <children>
-                                                                  <ImageView fx:id="activeStar" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" visible="false">
-                                                                     <image>
-                                                                        <Image url="@../Icons/StarSelected.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                                  <ImageView fx:id="inactiveStar" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@../Icons/StarNotSelected.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                               </children>
-                                                            </StackPane>
-                                                         </graphic>
-                                                      </Button>
-                                                      <Button fx:id="ratingStar2" mnemonicParsing="false" styleClass="ratingButton" stylesheets="@../CSS/product_menu_stylesheet.css">
-                                                         <graphic>
-                                                            <StackPane>
-                                                               <children>
-                                                                  <ImageView fx:id="activeStar1" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" visible="false">
-                                                                     <image>
-                                                                        <Image url="@../Icons/StarSelected.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                                  <ImageView fx:id="inactiveStar1" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@../Icons/StarNotSelected.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                               </children>
-                                                            </StackPane>
-                                                         </graphic>
-                                                      </Button>
-                                                      <Button fx:id="ratingStar3" mnemonicParsing="false" styleClass="ratingButton" stylesheets="@../CSS/product_menu_stylesheet.css">
-                                                         <graphic>
-                                                            <StackPane>
-                                                               <children>
-                                                                  <ImageView fx:id="activeStar2" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" visible="false">
-                                                                     <image>
-                                                                        <Image url="@../Icons/StarSelected.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                                  <ImageView fx:id="inactiveStar2" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@../Icons/StarNotSelected.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                               </children>
-                                                            </StackPane>
-                                                         </graphic>
-                                                      </Button>
-                                                      <Button fx:id="ratingStar4" mnemonicParsing="false" styleClass="ratingButton" stylesheets="@../CSS/product_menu_stylesheet.css">
-                                                         <graphic>
-                                                            <StackPane>
-                                                               <children>
-                                                                  <ImageView fx:id="activeStar3" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" visible="false">
-                                                                     <image>
-                                                                        <Image url="@../Icons/StarSelected.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                                  <ImageView fx:id="inactiveStar3" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@../Icons/StarNotSelected.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                               </children>
-                                                            </StackPane>
-                                                         </graphic>
-                                                      </Button>
-                                                      <Button fx:id="ratingStar5" mnemonicParsing="false" styleClass="ratingButton" stylesheets="@../CSS/product_menu_stylesheet.css">
-                                                         <graphic>
-                                                            <StackPane>
-                                                               <children>
-                                                                  <ImageView fx:id="activeStar4" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" visible="false">
-                                                                     <image>
-                                                                        <Image url="@../Icons/StarSelected.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                                  <ImageView fx:id="inactiveStar4" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@../Icons/StarNotSelected.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                               </children>
-                                                            </StackPane>
-                                                         </graphic>
-                                                      </Button>
-                                                   </children>
+                    </graphic>
+                </Button>
+                <Button id="offersButton" fx:id="offersButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Offers">
+                    <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../Icons/Offers.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="userPageButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="User Page">
+                    <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../Icons/User_Page.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="supportPageButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Support">
+                    <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../Icons/Support.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="auctionPageButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Auctions">
+                    <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../Icons/Auction.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Separator orientation="VERTICAL" prefHeight="93.0" prefWidth="6.0" visible="false" />
+                <GridPane vgap="5.0">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Button fx:id="signUpButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="110.0" styleClass="quickAccessLoginSignUpButton" stylesheets="@../CSS/general_stylesheet.css" text="Sign Up" GridPane.columnIndex="1">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../Icons/SignUp.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="loginLogoutButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="110.0" styleClass="quickAccessLoginSignUpButton" stylesheets="@../CSS/general_stylesheet.css" text="Login" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <graphic>
+                                <ImageView id="loginLogoutButtonIcon" fx:id="loginLogoutButtonIcon" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../Icons/Login.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Label text="Login Status:" textFill="#7f7f7f" />
+                        <Label id="loggedInStatusText" fx:id="loggedInStatusText" text="Not Logged In" textFill="#7f7f7f" GridPane.rowIndex="1" />
+                    </children>
+                </GridPane>
+                <Separator orientation="VERTICAL" prefHeight="18.0" prefWidth="7.0" visible="false" />
+            </children>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+        </VBox>
+        <ScrollPane hbarPolicy="NEVER" layoutX="263.0" layoutY="14.0" prefHeight="572.0" prefWidth="924.0" styleClass="viewport" stylesheets="@../CSS/product_menu_stylesheet.css" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="262.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="566.0" prefWidth="916.0">
+                    <children>
+                        <VBox alignment="TOP_CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <children>
+                                <HBox prefHeight="565.0" prefWidth="916.0">
+                                    <children>
+                                        <VBox alignment="TOP_CENTER" prefHeight="458.0" prefWidth="277.0">
+                                            <HBox.margin>
+                                                <Insets left="20.0" top="20.0" />
+                                            </HBox.margin>
+                                            <children>
+                                                <HBox prefWidth="200.0">
+                                                    <children>
+                                                        <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Product Name: " />
+                                                        <Label id="nameLabel" fx:id="nameLabel" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
+                                                    </children>
                                                 </HBox>
-                                             </children>
-                                          </VBox>
-                                       </children>
-                                    </HBox>
-                                    <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="5.0" visible="false" />
-                                    <HBox prefWidth="200.0">
-                                       <children>
-                                          <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Current Buyer: " />
-                                          <Label id="productStatusLabel" fx:id="currentBuyer" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
-                                       </children>
-                                    </HBox>
-                                    <HBox prefWidth="200.0">
-                                       <children>
-                                          <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Highest Price: " />
-                                          <Label id="productStatusLabel" fx:id="highestPrice" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
-                                       </children>
-                                    </HBox>
-                                    <Separator orientation="VERTICAL" prefHeight="20.0" prefWidth="13.0" visible="false" />
-                                    <Button mnemonicParsing="false" onAction="#tryHigherPrice" prefHeight="21.0" prefWidth="103.0" text="Try Higher Price" />
-                                    <Separator orientation="VERTICAL" prefHeight="14.0" prefWidth="1.0" visible="false" />
-                                    <TextField fx:id="auctionPrice" promptText="Price" />
-                                    <Separator orientation="VERTICAL" prefHeight="14.0" prefWidth="1.0" visible="false" />
-                                    <HBox prefWidth="200.0">
-                                       <children>
-                                          <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Condition: " />
-                                          <Label id="averageRatingLabel" fx:id="conditionLabel" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
-                                       </children>
-                                    </HBox>
-                                 </children></VBox>
-                              <VBox id="imageAndVideoVBox" fx:id="chatVBox" prefHeight="517.0" prefWidth="610.0" spacing="10.0">
-                                 <HBox.margin>
-                                    <Insets right="10.0" top="10.0" />
-                                 </HBox.margin>
-                                 <children>
-                                    <ScrollPane prefHeight="501.0" prefWidth="610.0">
-                                       <content>
-                                          <VBox fx:id="messagesVBox" prefHeight="471.0" prefWidth="609.0" />
-                                       </content>
-                                    </ScrollPane>
-                                    <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-                                       <children>
-                                          <Label text="Messege" />
-                                          <TextArea fx:id="message" prefHeight="62.0" prefWidth="477.0">
-                                             <HBox.margin>
-                                                <Insets bottom="10.0" />
-                                             </HBox.margin>
-                                          </TextArea>
-                                          <Button mnemonicParsing="false" onAction="#sendMessage" text="Send">
-                                             <HBox.margin>
-                                                <Insets top="15.0" />
-                                             </HBox.margin>
-                                          </Button>
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </VBox>
-                           </children>
-                        </HBox>
-                        <Line endX="596.5" startX="-100.0" />
-                        <Separator orientation="VERTICAL" prefHeight="5.0" prefWidth="6.0" visible="false" />
-                     </children>
-                  </VBox>
-               </children>
-            </AnchorPane>
-        </content>
-      </ScrollPane>
-   </children>
+                                                <HBox prefWidth="200.0">
+                                                    <children>
+                                                        <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Product Brand: " />
+                                                        <Label id="brandLabel" fx:id="brandLabel" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
+                                                    </children>
+                                                </HBox>
+                                                <HBox prefWidth="200.0">
+                                                    <children>
+                                                        <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Description: " />
+                                                        <Label id="descriptionLabel" fx:id="descriptionLabel" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
+                                                    </children>
+                                                </HBox>
+                                                <HBox prefWidth="200.0">
+                                                    <children>
+                                                        <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Price: " />
+                                                        <Label id="priceLabel" fx:id="priceLabel" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
+                                                    </children>
+                                                </HBox>
+                                                <HBox prefWidth="200.0">
+                                                    <children>
+                                                        <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Category: " />
+                                                        <Label id="categoryLabel" fx:id="categoryLabel" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
+                                                    </children>
+                                                </HBox>
+                                                <HBox prefWidth="200.0">
+                                                    <children>
+                                                        <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Sellers: " />
+                                                        <HBox id="sellersHBox" fx:id="sellersHBox" spacing="5.0" />
+                                                    </children>
+                                                </HBox>
+                                                <HBox prefWidth="200.0">
+                                                    <children>
+                                                        <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Average Rating: " />
+                                                        <Label id="averageRatingLabel" fx:id="averageRatingLabel" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
+                                                    </children>
+                                                </HBox>
+                                                <HBox prefWidth="200.0">
+                                                    <children>
+                                                        <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Date of Offer: " />
+                                                        <Label id="dateOfOfferLabel" fx:id="dateOfOfferLabel" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
+                                                    </children>
+                                                </HBox>
+                                                <HBox prefWidth="200.0">
+                                                    <children>
+                                                        <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Product Status: " />
+                                                        <Label id="productStatusLabel" fx:id="productStatusLabel" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
+                                                    </children>
+                                                </HBox>
+                                                <HBox prefWidth="200.0">
+                                                    <children>
+                                                        <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Filters: " />
+                                                        <Label id="filtersLabel" fx:id="filtersLabel" styleClass="digestFilters" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
+                                                    </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="322.0">
+                                                    <children>
+                                                        <Separator prefHeight="3.0" prefWidth="14.0" visible="false" />
+                                                        <VBox alignment="TOP_CENTER">
+                                                            <children>
+                                                                <HBox alignment="CENTER_LEFT">
+                                                                    <children>
+                                                                        <Button fx:id="ratingStar1" mnemonicParsing="false" prefHeight="30.0" prefWidth="20.0" styleClass="ratingButton" stylesheets="@../CSS/product_menu_stylesheet.css">
+                                                                            <graphic>
+                                                                                <StackPane>
+                                                                                    <children>
+                                                                                        <ImageView fx:id="activeStar" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                                                                                            <image>
+                                                                                                <Image url="@../Icons/StarSelected.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fx:id="inactiveStar" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../Icons/StarNotSelected.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                    </children>
+                                                                                </StackPane>
+                                                                            </graphic>
+                                                                        </Button>
+                                                                        <Button fx:id="ratingStar2" mnemonicParsing="false" styleClass="ratingButton" stylesheets="@../CSS/product_menu_stylesheet.css">
+                                                                            <graphic>
+                                                                                <StackPane>
+                                                                                    <children>
+                                                                                        <ImageView fx:id="activeStar1" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                                                                                            <image>
+                                                                                                <Image url="@../Icons/StarSelected.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fx:id="inactiveStar1" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../Icons/StarNotSelected.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                    </children>
+                                                                                </StackPane>
+                                                                            </graphic>
+                                                                        </Button>
+                                                                        <Button fx:id="ratingStar3" mnemonicParsing="false" styleClass="ratingButton" stylesheets="@../CSS/product_menu_stylesheet.css">
+                                                                            <graphic>
+                                                                                <StackPane>
+                                                                                    <children>
+                                                                                        <ImageView fx:id="activeStar2" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                                                                                            <image>
+                                                                                                <Image url="@../Icons/StarSelected.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fx:id="inactiveStar2" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../Icons/StarNotSelected.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                    </children>
+                                                                                </StackPane>
+                                                                            </graphic>
+                                                                        </Button>
+                                                                        <Button fx:id="ratingStar4" mnemonicParsing="false" styleClass="ratingButton" stylesheets="@../CSS/product_menu_stylesheet.css">
+                                                                            <graphic>
+                                                                                <StackPane>
+                                                                                    <children>
+                                                                                        <ImageView fx:id="activeStar3" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                                                                                            <image>
+                                                                                                <Image url="@../Icons/StarSelected.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fx:id="inactiveStar3" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../Icons/StarNotSelected.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                    </children>
+                                                                                </StackPane>
+                                                                            </graphic>
+                                                                        </Button>
+                                                                        <Button fx:id="ratingStar5" mnemonicParsing="false" styleClass="ratingButton" stylesheets="@../CSS/product_menu_stylesheet.css">
+                                                                            <graphic>
+                                                                                <StackPane>
+                                                                                    <children>
+                                                                                        <ImageView fx:id="activeStar4" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                                                                                            <image>
+                                                                                                <Image url="@../Icons/StarSelected.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fx:id="inactiveStar4" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../Icons/StarNotSelected.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                    </children>
+                                                                                </StackPane>
+                                                                            </graphic>
+                                                                        </Button>
+                                                                    </children>
+                                                                </HBox>
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </HBox>
+                                                <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="5.0" visible="false" />
+                                                <HBox prefWidth="200.0">
+                                                    <children>
+                                                        <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Current Buyer: " />
+                                                        <Label id="productStatusLabel" fx:id="currentBuyer" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
+                                                    </children>
+                                                </HBox>
+                                                <HBox prefWidth="200.0">
+                                                    <children>
+                                                        <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Highest Price: " />
+                                                        <Label id="productStatusLabel" fx:id="highestPrice" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
+                                                    </children>
+                                                </HBox>
+                                                <Separator orientation="VERTICAL" prefHeight="20.0" prefWidth="13.0" visible="false" />
+                                                <Button mnemonicParsing="false" onAction="#tryHigherPrice" prefHeight="21.0" prefWidth="103.0" text="Try Higher Price" />
+                                                <Separator orientation="VERTICAL" prefHeight="14.0" prefWidth="1.0" visible="false" />
+                                                <TextField fx:id="auctionPrice" promptText="Price" />
+                                                <Separator orientation="VERTICAL" prefHeight="14.0" prefWidth="1.0" visible="false" />
+                                                <HBox prefWidth="200.0">
+                                                    <children>
+                                                        <Label styleClass="digestLabels" stylesheets="@../CSS/product_menu_stylesheet.css" text="Condition: " />
+                                                        <Label id="averageRatingLabel" fx:id="conditionLabel" styleClass="digestData" stylesheets="@../CSS/product_menu_stylesheet.css" text="Label" />
+                                                    </children>
+                                                </HBox>
+                                            </children></VBox>
+                                        <VBox id="imageAndVideoVBox" fx:id="chatVBox" prefHeight="517.0" prefWidth="610.0" spacing="10.0">
+                                            <HBox.margin>
+                                                <Insets right="10.0" top="10.0" />
+                                            </HBox.margin>
+                                            <children>
+                                                <ScrollPane prefHeight="501.0" prefWidth="610.0">
+                                                    <content>
+                                                        <VBox fx:id="messagesVBox" prefHeight="471.0" prefWidth="609.0" />
+                                                    </content>
+                                                </ScrollPane>
+                                                <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                                    <children>
+                                                        <Label text="Messege" />
+                                                        <TextArea fx:id="message" prefHeight="62.0" prefWidth="477.0">
+                                                            <HBox.margin>
+                                                                <Insets bottom="10.0" />
+                                                            </HBox.margin>
+                                                        </TextArea>
+                                                        <Button mnemonicParsing="false" onAction="#sendMessage" text="Send">
+                                                            <HBox.margin>
+                                                                <Insets top="15.0" />
+                                                            </HBox.margin>
+                                                        </Button>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                                <Line endX="596.5" startX="-100.0" />
+                                <Separator orientation="VERTICAL" prefHeight="5.0" prefWidth="6.0" visible="false" />
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+            </content>
+        </ScrollPane>
+    </children>
 </AnchorPane>

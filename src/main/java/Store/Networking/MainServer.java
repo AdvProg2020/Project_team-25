@@ -7,16 +7,13 @@ import Store.Model.Log.BuyLogItem;
 import Store.Model.Log.LogItem;
 import com.google.gson.Gson;
 
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
@@ -60,7 +57,8 @@ public class MainServer {
 
 
     public MainServer() throws IOException {
-        this.port = 12000;//nextFreePort(9000, 20000);
+        this.port = nextFreePort(9000, 20000);
+
         serverSocket = new ServerSocket(port);
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -75,61 +73,33 @@ public class MainServer {
                 }
             }
         });
+
         thread.start();
-        for (Auction auction: Auction.getAllAuctions()) {
-            chatAuctionPorts.put(auction, nextFreePort(9000, 20000));
-            chatWriteAuctionPort.put(auction, nextFreePort(9000, 20000));
-            chatAuctionArray.put(auction, new ArrayList<>());
-        }
-        for (Auction auction: Auction.getAllAuctions()){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        ServerSocket serverSocket = new ServerSocket(chatAuctionPorts.get(auction));
-                        Socket socket;
-                        while (true) {
-                            socket = serverSocket.accept();
-                            socketAuctionsAvailable.put(socket, new ArrayList<>());
-                            chatAuctionArray.get(auction).add(new ChatAuctionClientThread(socket, auction));
-                            chatAuctionArray.get(auction).get(chatAuctionArray.get(auction).size() - 1).start();
-                        }
-                    }catch (Exception e){
 
+    }
 
-                    }
-                }
-            }).start();
-        }
+    public int getPort() {
+        return port;
+    }
 
-        for (Auction auction: Auction.getAllAuctions()){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        ServerSocket serverSocket = new ServerSocket(chatWriteAuctionPort.get(auction));
-                        Socket socket;
-                        while (true) {
-                            socket = serverSocket.accept();
-                            new ChatAuctionWriteClientThread(socket, auction).start();
-                        }
-                    }catch (Exception e){
-
-                    }
-                }
-            }).start();
-        }
-        Thread checkAuctionThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true){
-                    for (Auction auction: Auction.getAllAuctions())
-                        if ((LocalDateTime.now()).isAfter(auction.getEndingTime()))
-                            auction.finish();
-                }
+    private int nextFreePort(int from, int to) {
+        int port = ThreadLocalRandom.current().nextInt(from, to);
+        while (true) {
+            if (isLocalPortFree(port)) {
+                return port;
+            } else {
+                port = ThreadLocalRandom.current().nextInt(from, to);
             }
-        });
-        checkAuctionThread.start();
+        }
+    }
+
+    private boolean isLocalPortFree(int port) {
+        try {
+            new ServerSocket(port).close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     public static Object sendAndReceiveToBankAPICreateAccount() throws IOException {
@@ -164,67 +134,6 @@ public class MainServer {
         dataOutputStream1.writeUTF(output);
         dataOutputStream1.flush();
         return dataInputStream1.readUTF();
-    }
-
-    public static void portAuction(Auction auction) {
-        chatAuctionPorts.put(auction, nextFreePort(9000, 20000));
-        chatWriteAuctionPort.put(auction, nextFreePort(9000, 20000));
-        chatAuctionArray.put(auction, new ArrayList<>());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ServerSocket serverSocket = new ServerSocket(chatAuctionPorts.get(auction));
-                    Socket socket;
-                    while (true) {
-                        socket = serverSocket.accept();
-                        chatAuctionArray.get(auction).add(new ChatAuctionClientThread(socket, auction));
-                        chatAuctionArray.get(auction).get(chatAuctionArray.get(auction).size() - 1).start();
-                    }
-                }catch (Exception e){
-
-                }
-            }
-        }).start();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ServerSocket serverSocket = new ServerSocket(chatWriteAuctionPort.get(auction));
-                    Socket socket;
-                    while (true) {
-                        socket = serverSocket.accept();
-                        new ChatAuctionWriteClientThread(socket, auction).start();
-                    }
-                } catch (Exception e) {
-                }
-            }
-        }).start();
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    private static int nextFreePort(int from, int to) {
-        int port = ThreadLocalRandom.current().nextInt(from, to);
-        while (true) {
-            if (isLocalPortFree(port)) {
-                return port;
-            } else {
-                port = ThreadLocalRandom.current().nextInt(from, to);
-            }
-        }
-    }
-
-    private static boolean isLocalPortFree(int port) {
-        try {
-            new ServerSocket(port).close();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
     }
 
     private static class ChatAuctionClientThread extends Thread{
@@ -389,446 +298,272 @@ public class MainServer {
                         user = User.getUserByUsername(TokenHandler.getUsernameOfToken(token));
                     }
 //                    System.out.println("Token: " + token + "Command: " + input.get("message"));
-                    System.out.println(input.get("message"));
-                    if (input.get("message").equals("login")) {
-                        moveShoppingCartAndLoginServer((String) input.get("username"));
-                    }
-                    if (input.get("message").equals("isUsernameWithThisName")) {
-                        isUsernameWithThisNameServer((String) input.get("username"));
-                    }
-                    if (input.get("message").equals("isUsernameExistInRequests")) {
-                        isUsernameExistInRequestsServer((String) input.get("username"));
-                    }
-                    if (input.get("message").equals("createOrdinaryAccount")) {
-                        handleCreateOrdinaryAccountServer((String) input.get("type"), (ArrayList<String>) input.get("attributes"));
-                    }
-                    if (input.get("message").equals("createManagerAccount")) {
-                        handleCreateManagerAccountServer((ArrayList<String>) input.get("attributes"));
-                    }
-                    if (input.get("message").equals("getUserInfo")) {
-                        getUserByUsernameServer((String) input.get("username"));
-                    }
-                    if (input.get("message").equals("getAllCategories")) {
-                        getAllCategoriesServer();
-                    }
-                    if (input.get("message").equals("getProducts")) {
-                        getProductsServer(input);
-                    }
-                    if (input.get("message").equals("getAuctionsProducts")){
-                        getAuctionsServer(input);
-                    }
-                    if (input.get("message").equals("getOfferedProducts")) {
-                        getOfferedProductsServer(input);
-                    }
-                    if (input.get("message").equals("getPriceHigh")) {
-                        getPriceHighServer();
-                    }
-                    if (input.get("message").equals("getPriceLow")) {
-                        getPriceLowServer();
-                    }
-                    if (input.get("message").equals("getAllFilters")) {
-                        getAllFiltersServer((String) input.get("categoryFilter"));
-                    }
-                    if (input.get("message").equals("logout")) {
-                        logoutServer();
-                    }
-                    if (input.get("message").equals("hasManager?")) {
-                        hasManagerServer();
-                    }
-                    if (input.get("message").equals("getAllSellersOfProduct")) {
-                        getAllSellerOfProductServer((String) input.get("id"));
-                    }
-                    if (input.get("message").equals("getProductWithDifferentSeller")) {
-                        getProductWithDifferentSellerServer((String) input.get("id"), (String) input.get("username"));
-                    }
-                    if (input.get("message").equals("getComparedProduct")) {
-                        getComparedProductServer((String) input.get("id"));
-                    }
-                    if (input.get("message").equals("rateProduct")) {
-                        rateProductServer(input);
-                    }
-                    if (input.get("message").equals("commentProduct")) {
-                        commentProductServer(input);
-                    }
-                    if (input.get("message").equals("hasBeenRated?")) {
-                        hasBeenRatedServer(input);
-                    }
-                    if (input.get("message").equals("hasBoughtProduct?")) {
-                        hasBoughtProductServer(input);
-                    }
-                    if (input.get("message").equals("addToCart")) {
-                        addToCartServer(input);
-                    }
-                    if (input.get("message").equals("editManagerPersonalInfo")) {
-                        editManagerPersonalInfoServer(input);
-                    }
-                    if (input.get("message").equals("getSortedOffCodes")) {
-                        getSortedOffCodesServer(input);
-                    }
-                    if (input.get("message").equals("removeOffCode")) {
-                        removeOffCodeServer(input);
-                    }
-                    if (input.get("message").equals("editOffCode")) {
-                        editOffCodeServer(input);
-                    }
-                    if (input.get("message").equals("isOffCodeWithThisCode")) {
-                        isOffCodeWithThisCodeServer(input);
-                    }
-                    if (input.get("message").equals("assignOffCodeToUser")) {
-                        assignOffCodeToUserServer(input);
-                    }
-                    if (input.get("message").equals("createOffCode")) {
-                        createOffCodeServer(input);
-                    }
-                    if (input.get("message").equals("createOperator")){
-                        createOperator(input);
-                    }
-                    if (input.get("message").equals("getAllUsers")) {
-                        getAllUsersServer(input);
-                    }
-                    if (input.get("message").equals("deleteUserByName")) {
-                        deleteUserByNameServer(input);
-                    }
-                    if (input.get("message").equals("removeProduct")) {
-                        removeProductServer(input);
-                    }
-                    if (input.get("message").equals("removeCategory")) {
-                        removeCategoryServer(input);
-                    }
-                    if (input.get("message").equals("isCategoryWithThisName")) {
-                        isCategoryWithThisNameServer(input);
-                    }
-                    if (input.get("message").equals("editCategory")) {
-                        editCategoryServer(input);
-                    }
-                    if (input.get("message").equals("isInFilter")) {
-                        isInFilterServer(input);
-                    }
-                    if (input.get("message").equals("addCategory")) {
-                        addCategoryServer(input);
-                    }
-                    if (input.get("message").equals("getPendingRequests")) {
-                        getPendingRequestsServer();
-                    }
-                    if (input.get("message").equals("removeRequest")) {
-                        removeRequestsServer(input);
-                    }
-                    if (input.get("message").equals("handleRequest")) {
-                        handleRequestsServer(input);
-                    }
-                    if (input.get("message").equals("validatePassword")) {
-                        validatePasswordServer(input);
-                    }
-                    if (input.get("message").equals("canOfferBeUsedInDate")) {
-                        canOfferBeUsedInDateServer(input);
-                    }
-                    if (input.get("message").equals("editCustomerPersonalInfo")) {
-                        editCustomerPersonalInfoServer(input);
-                    }
-                    if (input.get("message").equals("canBuy")) {
-                        if (input.get("by").equals("wallet"))
-                            purchaseByWallet(input);
-                        else if (input.get("by").equals("bank"))
-                            purchaseByBank(input);
-                    }
-                    if (input.get("message").equals("buy")) {
-                        if (input.get("by").equals("wallet"))
-                            purchaseByWallet(input);
-                        else if (input.get("by").equals("bank")) {
-                            purchaseByBank(input);
+                    synchronized (user) {
+                        if (input.get("message").equals("login")) {
+                            moveShoppingCartAndLoginServer((String) input.get("username"));
                         }
-                    }
-                    if (input.get("message").equals("removeProductFromCart")) {
-                        removeProductFromCartServer(input);
-                    }
-                    if (input.get("message").equals("chargeWallet")){
-                        chargeWallet(input);
-                    }
-                    if (input.get("message").equals("dechargeWallet")){
-                        dechargeWallet(input);
-                    }
-                    if (input.get("message").equals("purchase")){
-                        if (input.get("by").equals("wallet"))
-                            purchaseByWallet(input);
-                        else if (input.get("by").equals("bank"))
-                            purchaseByBank(input);
-                    }
+                        if (input.get("message").equals("isUsernameWithThisName")) {
+                            isUsernameWithThisNameServer((String) input.get("username"));
+                        }
+                        if (input.get("message").equals("isUsernameExistInRequests")) {
+                            isUsernameExistInRequestsServer((String) input.get("username"));
+                        }
+                        if (input.get("message").equals("createOrdinaryAccount")) {
+                            handleCreateOrdinaryAccountServer((String) input.get("type"), (ArrayList<String>) input.get("attributes"));
+                        }
+                        if (input.get("message").equals("createManagerAccount")) {
+                            handleCreateManagerAccountServer((ArrayList<String>) input.get("attributes"));
+                        }
+                        if (input.get("message").equals("getUserInfo")) {
+                            getUserByUsernameServer((String) input.get("username"));
+                        }
+                        if (input.get("message").equals("getAllCategories")) {
+                            getAllCategoriesServer();
+                        }
+                        if (input.get("message").equals("getProducts")) {
+                            getProductsServer(input);
+                        }
+                        if (input.get("message").equals("getAuctionsProducts")){
+                            getAuctionsServer(input);
+                        }
+                        if (input.get("message").equals("getOfferedProducts")) {
+                            getOfferedProductsServer(input);
+                        }
+                        if (input.get("message").equals("getPriceHigh")) {
+                            getPriceHighServer();
+                        }
+                        if (input.get("message").equals("getPriceLow")) {
+                            getPriceLowServer();
+                        }
+                        if (input.get("message").equals("getAllFilters")) {
+                            getAllFiltersServer((String) input.get("categoryFilter"));
+                        }
+                        if (input.get("message").equals("logout")) {
+                            logoutServer();
+                        }
+                        if (input.get("message").equals("hasManager?")) {
+                            hasManagerServer();
+                        }
+                        if (input.get("message").equals("getAllSellersOfProduct")) {
+                            getAllSellerOfProductServer((String) input.get("id"));
+                        }
+                        if (input.get("message").equals("getProductWithDifferentSeller")) {
+                            getProductWithDifferentSellerServer((String) input.get("id"), (String) input.get("username"));
+                        }
+                        if (input.get("message").equals("getComparedProduct")) {
+                            getComparedProductServer((String) input.get("id"));
+                        }
+                        if (input.get("message").equals("rateProduct")) {
+                            rateProductServer(input);
+                        }
+                        if (input.get("message").equals("commentProduct")) {
+                            commentProductServer(input);
+                        }
+                        if (input.get("message").equals("hasBeenRated?")) {
+                            hasBeenRatedServer(input);
+                        }
+                        if (input.get("message").equals("hasBoughtProduct?")) {
+                            hasBoughtProductServer(input);
+                        }
+                        if (input.get("message").equals("addToCart")) {
+                            addToCartServer(input);
+                        }
+                        if (input.get("message").equals("editManagerPersonalInfo")) {
+                            editManagerPersonalInfoServer(input);
+                        }
+                        if (input.get("message").equals("getSortedOffCodes")) {
+                            getSortedOffCodesServer(input);
+                        }
+                        if (input.get("message").equals("removeOffCode")) {
+                            removeOffCodeServer(input);
+                        }
+                        if (input.get("message").equals("editOffCode")) {
+                            editOffCodeServer(input);
+                        }
+                        if (input.get("message").equals("isOffCodeWithThisCode")) {
+                            isOffCodeWithThisCodeServer(input);
+                        }
+                        if (input.get("message").equals("assignOffCodeToUser")) {
+                            assignOffCodeToUserServer(input);
+                        }
+                        if (input.get("message").equals("createOffCode")) {
+                            createOffCodeServer(input);
+                        }
+                        if (input.get("message").equals("createOperator")){
+                            createOperatorServer(input);
+                        }
+                        if (input.get("message").equals("getAllUsers")) {
+                            getAllUsersServer(input);
+                        }
+                        if (input.get("message").equals("deleteUserByName")) {
+                            deleteUserByNameServer(input);
+                        }
+                        if (input.get("message").equals("removeProduct")) {
+                            removeProductServer(input);
+                        }
+                        if (input.get("message").equals("removeCategory")) {
+                            removeCategoryServer(input);
+                        }
+                        if (input.get("message").equals("isCategoryWithThisName")) {
+                            isCategoryWithThisNameServer(input);
+                        }
+                        if (input.get("message").equals("editCategory")) {
+                            editCategoryServer(input);
+                        }
+                        if (input.get("message").equals("isInFilter")) {
+                            isInFilterServer(input);
+                        }
+                        if (input.get("message").equals("addCategory")) {
+                            addCategoryServer(input);
+                        }
+                        if (input.get("message").equals("getPendingRequests")) {
+                            getPendingRequestsServer();
+                        }
+                        if (input.get("message").equals("removeRequest")) {
+                            removeRequestsServer(input);
+                        }
+                        if (input.get("message").equals("handleRequest")) {
+                            handleRequestsServer(input);
+                        }
+                        if (input.get("message").equals("validatePassword")) {
+                            validatePasswordServer(input);
+                        }
+                        if (input.get("message").equals("canOfferBeUsedInDate")) {
+                            canOfferBeUsedInDateServer(input);
+                        }
+                        if (input.get("message").equals("editCustomerPersonalInfo")) {
+                            editCustomerPersonalInfoServer(input);
+                        }
+                        if (input.get("message").equals("canBuy")) {
+                            if (input.get("by").equals("wallet"))
+                                purchaseByWallet(input);
+                            else if (input.get("by").equals("bank"))
+                                purchaseByBank(input);
+                        }
+                        if (input.get("message").equals("buy")) {
+                            if (input.get("by").equals("wallet"))
+                                purchaseByWallet(input);
+                            else if (input.get("by").equals("bank")) {
+                                purchaseByBank(input);
+                            }
+                        }
+                        if (input.get("message").equals("removeProductFromCart")) {
+                            removeProductFromCartServer(input);
+                        }
+                        if (input.get("message").equals("chargeWallet")){
+                            chargeWallet(input);
+                        }
+                        if (input.get("message").equals("dechargeWallet")){
+                            dechargeWallet(input);
+                        }
+                        if (input.get("message").equals("purchase")){
+                            if (input.get("by").equals("wallet"))
+                                purchaseByWallet(input);
+                            else if (input.get("by").equals("bank"))
+                                purchaseByBank(input);
+                        }
                     /*if (input.get("message").equals("enterAuction")){
                         chatAuction(input);
                     }*/
-                    if (input.get("message").equals("increaseAuctionPrice")){
-                        increaseAuctionPrice(input);
+                        if (input.get("message").equals("increaseAuctionPrice")){
+                            increaseAuctionPrice(input);
+                        }
+                        if (input.get("message").equals("setMinimum")){
+                            setMinimum(input);
+                        }
+                        if (input.get("message").equals("setKarmozd")){
+                            setKarmozd(input);
+                        }
+                        if (input.get("message").equals("editSellerPersonalInfo")) {
+                            editSellerPersonalInfoServer(input);
+                        }
+                        if (input.get("message").equals("removeProductFromSeller")) {
+                            removeProductFromSellerServer(input);
+                        }
+                        if (input.get("message").equals("removeFilterFromSeller")) {
+                            removeFilterFromSellerServer(input);
+                        }
+                        if (input.get("message").equals("addAds")) {
+                            addAdsServer(input);
+                        }
+                        if (input.get("message").equals("addFilterToProductFromSeller")) {
+                            addFilterToProductFromSellerServer(input);
+                        }
+                        if (input.get("message").equals("isProductFromThisSeller")) {
+                            isProductFromThisSellerServer(input);
+                        }
+                        if (input.get("message").equals("isProductWithThisID")) {
+                            isProductWithThisIDServer(input);
+                        }
+                        if (input.get("message").equals("isProductInOffer")) {
+                            isProductInOfferServer(input);
+                        }
+                        if (input.get("message").equals("addProductToOffer")) {
+                            addProductToOfferServer(input);
+                        }
+                        if (input.get("message").equals("isProductInCategory")) {
+                            isProductInCategoryServer(input);
+                        }
+                        if (input.get("message").equals("sortProductsOfSeller")) {
+                            sortProductsOfSellerServer(input);
+                        }
+                        if (input.get("message").equals("sortOffersOfSeller")) {
+                            sortOffersOfSellerServer(input);
+                        }
+                        if (input.get("message").equals("addOfferFromSeller")) {
+                            addOfferFromSellerServer(input);
+                        }
+                        if (input.get("message").equals("addProductFromSeller")) {
+                            addProductFromSellerServer(input);
+                        }
+                        if (input.get("message").equals("editOffer")) {
+                            editOfferServer(input);
+                        }
+                        if (input.get("message").equals("editProduct")) {
+                            editProductServer(input);
+                        }
+                        if (input.get("message").equals("getOffersOfThisSeller")) {
+                            getOffersOfThisSellerServer();
+                        }
+                        if (input.get("message").equals("addAuction")){
+                            addAuction(input);
+                        }
+                        if (input.get("message").equals("isInAuction")){
+                            isInAuction(input);
+                        }
+                        if (input.get("message").equals("getHighestPriceAuction")){
+                            getHighestPriceAuction(input);
+                        }
+                        if (input.get("message").equals("getCurrentBuyerAuction")){
+                            getCurrentBuyerAuction(input);
+                        }
+                        if (input.get("message").equals("getConditionAuction")){
+                            getConditionAuction(input);
+                        }
+                        if (input.get("message").equals("getAuctionOfProduct")){
+                            getAuctionOfProduct(input);
+                        }
+                        if (input.get("message").equals("isReceivedLog")) {
+                            isReceivedLog(input);
+                        }
+                        if (input.get("message").equals("getBuyLogs")){
+                            getBuyLogs();
+                        }
+                        if (input.get("message").equals("sendProduct")){
+                            sendProduct(input);
+                        }
+                        if (input.get("message").equals("portAuctionChat")){
+                            portAuctionChat(input);
+                        }
+                        if (input.get("message").equals("portAuctionChatWrite")){
+                            portAuctionChatWrite(input);
+                        }
                     }
-                    if (input.get("message").equals("setMinimum")){
-                        setMinimum(input);
-                    }
-                    if (input.get("message").equals("setKarmozd")){
-                        setKarmozd(input);
-                    }
-                    if (input.get("message").equals("editSellerPersonalInfo")) {
-                        editSellerPersonalInfoServer(input);
-                    }
-                    if (input.get("message").equals("removeProductFromSeller")) {
-                        removeProductFromSellerServer(input);
-                    }
-                    if (input.get("message").equals("removeFilterFromSeller")) {
-                        removeFilterFromSellerServer(input);
-                    }
-                    if (input.get("message").equals("addAds")) {
-                        addAdsServer(input);
-                    }
-                    if (input.get("message").equals("addFilterToProductFromSeller")) {
-                        addFilterToProductFromSellerServer(input);
-                    }
-                    if (input.get("message").equals("isProductFromThisSeller")) {
-                        isProductFromThisSellerServer(input);
-                    }
-                    if (input.get("message").equals("isProductWithThisID")) {
-                        isProductWithThisIDServer(input);
-                    }
-                    if (input.get("message").equals("isProductInOffer")) {
-                        isProductInOfferServer(input);
-                    }
-                    if (input.get("message").equals("addProductToOffer")) {
-                        addProductToOfferServer(input);
-                    }
-                    if (input.get("message").equals("isProductInCategory")) {
-                        isProductInCategoryServer(input);
-                    }
-                    if (input.get("message").equals("sortProductsOfSeller")) {
-                        sortProductsOfSellerServer(input);
-                    }
-                    if (input.get("message").equals("sortOffersOfSeller")) {
-                        sortOffersOfSellerServer(input);
-                    }
-                    if (input.get("message").equals("addOfferFromSeller")) {
-                        addOfferFromSellerServer(input);
-                    }
-                    if (input.get("message").equals("addProductFromSeller")) {
-                        addProductFromSellerServer(input);
-                    }
-                    if (input.get("message").equals("editOffer")) {
-                        editOfferServer(input);
-                    }
-                    if (input.get("message").equals("editProduct")) {
-                        editProductServer(input);
-                    }
-                    if (input.get("message").equals("getOffersOfThisSeller")) {
-                        getOffersOfThisSellerServer();
-                    }
-                    if (input.get("message").equals("addAuction")){
-                        addAuction(input);
-                    }
-                    if (input.get("message").equals("isInAuction")){
-                        isInAuction(input);
-                    }
-                    if (input.get("message").equals("getHighestPriceAuction")){
-                        getHighestPriceAuction(input);
-                    }
-                    if (input.get("message").equals("getCurrentBuyerAuction")){
-                        getCurrentBuyerAuction(input);
-                    }
-                    if (input.get("message").equals("getConditionAuction")){
-                        getConditionAuction(input);
-                    }
-                    if (input.get("message").equals("getAuctionOfProduct")){
-                        getAuctionOfProduct(input);
-                    }
-                    if (input.get("message").equals("isReceivedLog")) {
-                        isReceivedLog(input);
-                    }
-                    if (input.get("message").equals("getBuyLogs")){
-                        getBuyLogs();
-                    }
-                    if (input.get("message").equals("sendProduct")){
-                        sendProduct(input);
-                    }
-                    if (input.get("message").equals("portAuctionChat")){
-                        portAuctionChat(input);
-                    }
-                    if (input.get("message").equals("portAuctionChatWrite")){
-                        portAuctionChatWrite(input);
-                    }
-                }catch (IOException exception) {
+                } catch (IOException exception) {
                     //exception.printStackTrace();
                 }
             }
         }
-
-        private void setMinimum(HashMap input) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            Manager.setMinimumRemaining((Double)input.get("minimum"));
-            hashMap.put("content", "done");
-            sendMessage(hashMap);
-        }
-
-        private void setKarmozd(HashMap input) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            Manager.setKarmozd((Double)input.get("karmozd"));
-            hashMap.put("content", "done");
-            sendMessage(hashMap);
-        }
-
-        private void createOperator(HashMap input) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            String creator = (String)input.get("creator");
-            String username = (String)input.get("username");
-            String firstName = (String)input.get("firstName");
-            String lastName = (String)input.get("lastName");
-            String email = (String)input.get("email");
-            String phoneNumber = (String)input.get("phoneNumber");
-            String password = (String)input.get("password");
-            ManagerController.createOperatorProfile((Manager)User.getUserByUsername(creator), username, firstName, lastName, email, phoneNumber, password);
-            hashMap.put("content", "done");
-            sendMessage(hashMap);
-        }
-
-        private void portAuctionChatWrite(HashMap input) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            Auction auction = Auction.getAuctionByID((Integer)input.get("auctionId"));
-            hashMap.put("content", chatWriteAuctionPort.get(auction));
-            sendMessage(hashMap);
-        }
-
-        private void portAuctionChat(HashMap input) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            Auction auction = Auction.getAuctionByID((Integer)input.get("auctionId"));
-            hashMap.put("content", chatAuctionPorts.get(auction));
-            sendMessage(hashMap);
-        }
-
-        synchronized private void sendProduct(HashMap input) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            BuyLogItem buyLogItem = (BuyLogItem)input.get("buyLogId");
-            buyLogItem.setReceived(true);
-            hashMap.put("content", "done");
-            sendMessage(hashMap);
-        }
-
-        private void getBuyLogs() {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            HashMap<String, ArrayList> content = new HashMap<>();
-            for (User user: User.getAllUsers()){
-                if (user instanceof Customer){
-                    content.put(user.getUsername(), HashMapGenerator.getListOfBuyLogItems(((Customer)user).getBuyLog()));
-                }
-            }
-            hashMap.put("content", content);
-            sendMessage(hashMap);
-        }
-
-        private void isReceivedLog(HashMap input) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            int id = (Integer)input.get("id");
-            if (LogItem.getLogById(id) != null)
-                hashMap.put("content", ((BuyLogItem) LogItem.getLogById(id)).isReceived());
-            else
-                hashMap.put("content", "error");
-        }
-
-        private void getAuctionOfProduct(HashMap input) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            Product product = Product.getProductByID((Integer)input.get("productId"));
-            Auction auction = Auction.getAuctionOfProduct(product);
-            if (auction != null)
-                hashMap.put("content", HashMapGenerator.getAuctionHashMap(auction));
-            else
-                hashMap.put("content", "error");
-            sendMessage(hashMap);
-        }
-
-        private void getConditionAuction(HashMap input) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            if (Auction.getAuctionByID((Integer)input.get("auctionId")) == null)
-                hashMap.put("content", "Sold");
-            else
-                hashMap.put("content", "In Progress");
-            sendMessage(hashMap);
-        }
-
-        private void getCurrentBuyerAuction(HashMap input) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            Auction auction = Auction.getAuctionByID((Integer)input.get("auctionId"));
-            hashMap.put("content", auction.getCurrentBuyer().getUsername());
-            sendMessage(hashMap);
-        }
-
-        private void getHighestPriceAuction(HashMap input) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            Auction auction = Auction.getAuctionByID((Integer)input.get("auctionId"));
-            hashMap.put("content", auction.getHighestPrice());
-            sendMessage(hashMap);
-        }
-
-        private void isInAuction(HashMap input) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            Product product = Product.getProductByID((Integer)((Map)input.get("product")).get("id"));
-            if (Auction.getAuctionOfProduct(product) == null)
-                hashMap.put("content", "false");
-            else
-                hashMap.put("content", "true");
-            sendMessage(hashMap);
-        }
-
-        synchronized private void addAuction(HashMap input) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            Product product = Product.getProductByID(Integer.parseInt((String)(((Map)input.get("product")).get("id"))));
-            LocalDateTime dateTime = (LocalDateTime)input.get("date");
-            try {
-                SellerUIController.addAuction(product, dateTime);
-                hashMap.put("content", "done");
-            }catch (Exception e){
-                hashMap.put("content", "error");
-                hashMap.put("type", e.getMessage());
-            }
-            sendMessage(hashMap);
-        }
-
-        synchronized private void increaseAuctionPrice(HashMap input) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            Auction auction = (Auction) Auction.getAuctionByID((Integer)input.get("auctionId"));
-            double newPrice = (Double) input.get("newPrice");
-            User tryer = User.getUserByUsername((String)input.get("buyer"));
-            if (!(tryer instanceof Customer)) {
-                hashMap.put("content", "error");
-                hashMap.put("type", "You are not customer!");
-            }else{
-                Customer customer = (Customer) tryer;
-                if (customer.getMoney() - Manager.getMinimumRemaining() - Auction.getMoneyInAuctions(customer) < newPrice) {
-                    hashMap.put("content", "error");
-                    hashMap.put("type", "Your money is not enough!");
-                }else if (newPrice < auction.getHighestPrice() + 5){
-                    hashMap.put("content", "error");
-                    hashMap.put("type", "Your bet should be higher!");
-                } else if (newPrice < auction.getBasePrice()){
-                    hashMap.put("content", "error");
-                    hashMap.put("type", "Your bet should be more than base price!");
-                }
-                else{
-                    auction.changeBet(customer, newPrice);
-                    hashMap.put("content", "done");
-                }
-            }
-            sendMessage(hashMap);
-        }
-
-        /*private void chatAuction(HashMap input) throws IOException {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Auction auction = (Auction) input.get("auction");
-                    auction.setMessagePort(nextFreePort(9000, 20000));
-                    try {
-                        ServerSocket chatAuctionServerSocket = new ServerSocket(auction.getMessegePort());
-                        while (true){
-
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-        }*/
 
         synchronized private void purchaseByBank(HashMap input) {
             HashMap<String, Object> hashMap = new HashMap<>();
@@ -907,6 +642,185 @@ public class MainServer {
             sendMessage(hashMap);
         }
 
+        synchronized private void increaseAuctionPrice(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            Auction auction = (Auction) Auction.getAuctionByID((Integer)input.get("auctionId"));
+            double newPrice = (Double) input.get("newPrice");
+            User tryer = User.getUserByUsername((String)input.get("buyer"));
+            if (!(tryer instanceof Customer)) {
+                hashMap.put("content", "error");
+                hashMap.put("type", "You are not customer!");
+            }else{
+                Customer customer = (Customer) tryer;
+                if (customer.getMoney() - Manager.getMinimumRemaining() - Auction.getMoneyInAuctions(customer) < newPrice) {
+                    hashMap.put("content", "error");
+                    hashMap.put("type", "Your money is not enough!");
+                }else if (newPrice < auction.getHighestPrice() + 5){
+                    hashMap.put("content", "error");
+                    hashMap.put("type", "Your bet should be higher!");
+                } else if (newPrice < auction.getBasePrice()){
+                    hashMap.put("content", "error");
+                    hashMap.put("type", "Your bet should be more than base price!");
+                }
+                else{
+                    auction.changeBet(customer, newPrice);
+                    hashMap.put("content", "done");
+                }
+            }
+            sendMessage(hashMap);
+        }
+
+        private void setMinimum(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            Manager.setMinimumRemaining((Double)input.get("minimum"));
+            hashMap.put("content", "done");
+            sendMessage(hashMap);
+        }
+
+        private void setKarmozd(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            Manager.setKarmozd((Double)input.get("karmozd"));
+            hashMap.put("content", "done");
+            sendMessage(hashMap);
+        }
+
+        private void portAuctionChatWrite(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            Auction auction = Auction.getAuctionByID((Integer)input.get("auctionId"));
+            hashMap.put("content", chatWriteAuctionPort.get(auction));
+            sendMessage(hashMap);
+        }
+
+        private void portAuctionChat(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            Auction auction = Auction.getAuctionByID((Integer)input.get("auctionId"));
+            hashMap.put("content", chatAuctionPorts.get(auction));
+            sendMessage(hashMap);
+        }
+
+        private void getAuctionOfProduct(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            Product product = Product.getProductByID((Integer)input.get("productId"));
+            Auction auction = Auction.getAuctionOfProduct(product);
+            if (auction != null)
+                hashMap.put("content", HashMapGenerator.getAuctionHashMap(auction));
+            else
+                hashMap.put("content", "error");
+            sendMessage(hashMap);
+        }
+
+        private void getConditionAuction(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            if (Auction.getAuctionByID((Integer)input.get("auctionId")) == null)
+                hashMap.put("content", "Sold");
+            else
+                hashMap.put("content", "In Progress");
+            sendMessage(hashMap);
+        }
+
+        private void getCurrentBuyerAuction(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            Auction auction = Auction.getAuctionByID((Integer)input.get("auctionId"));
+            hashMap.put("content", auction.getCurrentBuyer().getUsername());
+            sendMessage(hashMap);
+        }
+
+        private void getHighestPriceAuction(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            Auction auction = Auction.getAuctionByID((Integer)input.get("auctionId"));
+            hashMap.put("content", auction.getHighestPrice());
+            sendMessage(hashMap);
+        }
+
+        private void isInAuction(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            Product product = Product.getProductByID((Integer)((Map)input.get("product")).get("id"));
+            if (Auction.getAuctionOfProduct(product) == null)
+                hashMap.put("content", "false");
+            else
+                hashMap.put("content", "true");
+            sendMessage(hashMap);
+        }
+
+        synchronized private void addAuction(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            Product product = Product.getProductByID(Integer.parseInt((String)(((Map)input.get("product")).get("id"))));
+            LocalDateTime dateTime = (LocalDateTime) input.get("date");
+            try {
+                SellerUIController.addAuction(product, dateTime);
+                hashMap.put("content", "done");
+            }catch (Exception e){
+                hashMap.put("content", "error");
+                hashMap.put("type", e.getMessage());
+            }
+            sendMessage(hashMap);
+        }
+
+        private void getAuctionsServer(HashMap input) {
+            ArrayList<Product> productsToBeShown = AuctionsController.getFilteredList((ArrayList<String>) input.get("filters"));
+            productsToBeShown = AuctionsController.handleStaticFiltering(productsToBeShown, (String) input.get("categoryFilter"), (String) input.get("brandFilter"), (String) input.get("nameFilter"), (String) input.get("sellerUsernameFilter"), (String) input.get("availabilityFilter"));
+            productsToBeShown = ProductsController.filterProductsWithSearchQuery(productsToBeShown, (String) input.get("searchQuery"));
+            productsToBeShown = ProductsController.sort((String) input.get("currentSort"), productsToBeShown);
+
+            HashMap<String, Object> hashMap = new HashMap<>();
+
+            hashMap.put("content", HashMapGenerator.getListOfProducts(productsToBeShown));
+            sendMessage(hashMap);
+        }
+
+        /*private void chatAuction(HashMap input) throws IOException {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Auction auction = (Auction) input.get("auction");
+                    auction.setMessagePort(nextFreePort(9000, 20000));
+                    try {
+                        ServerSocket chatAuctionServerSocket = new ServerSocket(auction.getMessegePort());
+                        while (true){
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }*/
+
+        synchronized private void sendProduct(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            BuyLogItem buyLogItem = (BuyLogItem)input.get("buyLogId");
+            buyLogItem.setReceived(true);
+            hashMap.put("content", "done");
+            sendMessage(hashMap);
+        }
+
+        private void getBuyLogs() {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            HashMap<String, ArrayList> content = new HashMap<>();
+            for (User user: User.getAllUsers()){
+                if (user instanceof Customer){
+                    content.put(user.getUsername(), HashMapGenerator.getListOfBuyLogItems(((Customer)user).getBuyLog()));
+                }
+            }
+            hashMap.put("content", content);
+            sendMessage(hashMap);
+        }
+
+        private void isReceivedLog(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            int id = (Integer)input.get("id");
+            if (LogItem.getLogById(id) != null)
+                hashMap.put("content", ((BuyLogItem) LogItem.getLogById(id)).isReceived());
+            else
+                hashMap.put("content", "error");
+        }
+
+        private void createOperatorServer(HashMap input) {
+            ManagerController.createOperatorProfile((Manager) user, (String) input.get("username"), (String) input.get("firstName"), (String) input.get("lastName"), (String) input.get("email"), (String) input.get("phoneNumber"), (String) input.get("password"));
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", "Ok");
+            sendMessage(hashMap);
+        }
+
         private void getOffersOfThisSellerServer() {
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", HashMapGenerator.getListOfOffers(SellerController.getOffersOfThisSeller((Seller) user)));
@@ -915,27 +829,33 @@ public class MainServer {
 
         private void editProductServer(HashMap input) {
             Map<String, Object> productHashMap = (Map<String, Object>) input.get("product");
-            Product product = new Product(CheckingStatus.CREATION, Manager.categoryByName((String) productHashMap.get("category")), (String) productHashMap.get("name"), (Seller) user, (String) productHashMap.get("brand"), (Double) productHashMap.get("price"), (Boolean) productHashMap.get("availability"), (String) productHashMap.get("description"));
+            Product newProduct = new Product(CheckingStatus.CREATION, Manager.categoryByName((String) productHashMap.get("category")), (String) productHashMap.get("name"), (Seller) user, (String) productHashMap.get("brand"), (Double) productHashMap.get("price"), (Boolean) productHashMap.get("availability"), (String) productHashMap.get("description"));
+            newProduct.setFilePath((String) productHashMap.get("filePath"));
             for (String filterToAdd : (List<String>) productHashMap.get("filters")) {
-                product.addFilter(filterToAdd);
+                newProduct.addFilter(filterToAdd);
             }
-            SellerController.editProduct((Seller) user, Product.getProductByID(Integer.parseInt((String) input.get("id"))), product);
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("content", SellerController.editProduct((Seller) user, Product.getProductByID(Integer.parseInt((String) input.get("id"))), product));
-            sendMessage(hashMap);
+            Product product = Product.getProductByID(Integer.parseInt((String) input.get("id")));
+            synchronized (product) {
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("content", SellerController.editProduct((Seller) user, Product.getProductByID(Integer.parseInt((String) input.get("id"))), newProduct));
+                sendMessage(hashMap);
+            }
         }
 
         private void editOfferServer(HashMap input) {
             Map<String, Object> offerHashMap = (Map<String, Object>) input.get("offer");
-            Offer offer = new Offer(user, CheckingStatus.CREATION, (Double)offerHashMap.get("offPercentage"));
-            offer.setStartingTime(new Date(Long.parseLong((String) offerHashMap.get("startingTime"))));
-            offer.setEndingTime(new Date(Long.parseLong((String) offerHashMap.get("endingTime"))));
+            Offer newOffer = new Offer(user, CheckingStatus.CREATION, (Double) offerHashMap.get("offPercentage"));
+            newOffer.setStartingTime(new Date(Long.parseLong((String) offerHashMap.get("startingTime"))));
+            newOffer.setEndingTime(new Date(Long.parseLong((String) offerHashMap.get("endingTime"))));
             for (String product : (List<String>) offerHashMap.get("products")) {
-                offer.addProduct(Product.getProductByID(Integer.parseInt(product)));
+                newOffer.addProduct(Product.getProductByID(Integer.parseInt(product)));
             }
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("content", SellerController.editOff((Seller) user, Offer.getOfferByID(Integer.parseInt((String) input.get("id"))), offer));
-            sendMessage(hashMap);
+            Offer offer = Offer.getOfferByID(Integer.parseInt((String) input.get("id")));
+            synchronized (offer) {
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("content", SellerController.editOff((Seller) user, Offer.getOfferByID(Integer.parseInt((String) input.get("id"))), newOffer));
+                sendMessage(hashMap);
+            }
         }
 
         private void addProductFromSellerServer(HashMap input) {
@@ -952,13 +872,15 @@ public class MainServer {
 
         private void addOfferFromSellerServer(HashMap input) {
             Map<String, Object> offerHashMap = (Map<String, Object>) input.get("offer");
-            Offer offer = new Offer(user, CheckingStatus.CREATION, (Double)offerHashMap.get("offPercentage"));
+            Offer offer = new Offer(user, CheckingStatus.CREATION, (Double) offerHashMap.get("offPercentage"));
 //            offer.setStartingTime((Date) offerHashMap.get("startingTime"));
 //            offer.setEndingTime((Date) offerHashMap.get("endingTime"));
             offer.setStartingTime(new Date(Long.parseLong((String) offerHashMap.get("startingTime"))));
             offer.setEndingTime(new Date(Long.parseLong((String) offerHashMap.get("endingTime"))));
             for (String product : (List<String>) offerHashMap.get("products")) {
-                offer.addProduct(Product.getProductByID(Integer.parseInt(product)));
+                synchronized (product) {
+                    offer.addProduct(Product.getProductByID(Integer.parseInt(product)));
+                }
             }
             SellerController.addOff((Seller) user, offer);
             HashMap<String, Object> hashMap = new HashMap<>();
@@ -987,6 +909,12 @@ public class MainServer {
         private void addProductToOfferServer(HashMap input) {
             Offer offer = Offer.getOfferByID(Integer.parseInt((String) input.get("offerId")));
             offer.addProduct(Product.getProductByID(Integer.parseInt((String) input.get("productId"))));
+            synchronized (offer) {
+                Product product = Product.getProductByID(Integer.parseInt((String) input.get("productId")));
+                synchronized (product) {
+                    offer.addProduct(product);
+                }
+            }
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", "Ok");
             sendMessage(hashMap);
@@ -1013,8 +941,12 @@ public class MainServer {
 
         private void addFilterToProductFromSellerServer(HashMap input) {
             HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("content", SellerController.addFilterToProduct((Seller) user, (String) input.get("id"), (String) input.get("filter")));
-            sendMessage(hashMap);
+            Product product = Product.getProductByID(Integer.parseInt((String) input.get("id")));
+            synchronized (product) {
+                hashMap.put("content", SellerController.addFilterToProduct((Seller) user, (String) input.get("id"), (String) input.get("filter")));
+                sendMessage(hashMap);
+            }
+
         }
 
         private void addAdsServer(HashMap input) {
@@ -1025,12 +957,18 @@ public class MainServer {
 
         private void removeFilterFromSellerServer(HashMap input) {
             HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("content", SellerController.removeFilterFromProduct((Seller) user, (String) input.get("id"), (String) input.get("filter")));
-            sendMessage(hashMap);
+            Product product = Product.getProductByID(Integer.parseInt((String) input.get("id")));
+            synchronized (product) {
+                hashMap.put("content", SellerController.removeFilterFromProduct((Seller) user, (String) input.get("id"), (String) input.get("filter")));
+                sendMessage(hashMap);
+            }
         }
 
         private void removeProductFromSellerServer(HashMap input) {
-            SellerController.removeProduct((Seller) user, Product.getProductByID(Integer.parseInt((String) input.get("id"))));
+            Product product = Product.getProductByID(Integer.parseInt((String) input.get("id")));
+            synchronized (product) {
+                SellerController.removeProduct((Seller) user, product);
+            }
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", "Ok");
             sendMessage(hashMap);
@@ -1061,6 +999,37 @@ public class MainServer {
             sendMessage(hashMap);
         }
 
+//        private void buyWithOffCodeServer(HashMap input) {
+//            ((Customer) user).buy(Manager.getOffCodeByCode((String) input.get("code")));
+//            HashMap<String, Object> hashMap = new HashMap<>();
+//            hashMap.put("content", ((Customer) user).getNewFactor());
+//            sendMessage(hashMap);
+//        }
+
+//        private void buyWithoutOffCodeServer() {
+//            ((Customer) user).buy();
+//            HashMap<String, Object> hashMap = new HashMap<>();
+//            hashMap.put("content", ((Customer) user).getNewFactor());
+//            sendMessage(hashMap);
+//        }
+
+//        private void canBuyWithOffCodeServer(HashMap input) {
+//            OffCode offCode = Manager.getOffCodeByCode((String) input.get("code"));
+//            HashMap<String, Object> hashMap = new HashMap<>();
+//            if (offCode != null && offCode.canBeUsedInDate(new Date()) && offCode.isUserIncluded((Customer) user)) {
+//                hashMap.put("content", ((Customer) user).canBuy());
+//            } else {
+//                hashMap.put("content", false);
+//            }
+//            sendMessage(hashMap);
+//        }
+
+//        private void canBuyWithoutOffCodeServer() {
+//            HashMap<String, Object> hashMap = new HashMap<>();
+//            hashMap.put("content", ((Customer) user).canBuy());
+//            sendMessage(hashMap);
+//        }
+
         private void editCustomerPersonalInfoServer(HashMap input) {
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", ManagerController.editPersonalInfo(user, (String) input.get("field"), (String) input.get("newValue")));
@@ -1080,14 +1049,20 @@ public class MainServer {
         }
 
         private void handleRequestsServer(HashMap input) {
-            ManagerController.handleRequest((Manager) user, (Boolean) input.get("status"), Manager.getRequestById(Integer.parseInt((String) input.get("id"))));
+            Request request = Manager.getRequestById(Integer.parseInt((String) input.get("id")));
+            synchronized (request) {
+                ManagerController.handleRequest((Manager) user, (Boolean) input.get("status"), Manager.getRequestById(Integer.parseInt((String) input.get("id"))));
+            }
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", "Ok");
             sendMessage(hashMap);
         }
 
         private void removeRequestsServer(HashMap input) {
-            Manager.removeRequest(Manager.getRequestById(Integer.parseInt((String) input.get("id"))));
+            Request request = Manager.getRequestById(Integer.parseInt((String) input.get("id")));
+            synchronized (request) {
+                Manager.removeRequest(request);
+            }
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", "Ok");
             sendMessage(hashMap);
@@ -1100,7 +1075,10 @@ public class MainServer {
         }
 
         private void addCategoryServer(HashMap input) {
-            ManagerController.addCategory((Manager) user, (String) input.get("name"), (String) input.get("parentName"));
+            Category category = Manager.categoryByName((String) input.get("name"));
+            synchronized (category) {
+                ManagerController.editCategory((Manager) user, category, (String) input.get("field"), (String) input.get("newValue"));
+            }
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", "Ok");
             sendMessage(hashMap);
@@ -1244,21 +1222,22 @@ public class MainServer {
         }
 
         private void commentProductServer(HashMap input) {
-            ProductController.addComment(Product.getProductByID(Integer.parseInt((String) input.get("id"))), user, (String) input.get("title"), (String) input.get("content"));
+            Product product = Product.getProductByID(Integer.parseInt((String) input.get("id")));
+            synchronized (product) {
+                ProductController.addComment(product, user, (String) input.get("title"), (String) input.get("content"));
+            }
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", "Ok");
             sendMessage(hashMap);
         }
 
         private void rateProductServer(HashMap input) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            try {
-                CustomerUIController.rateProduct((Customer) user, Product.getProductByID(Integer.parseInt((String) input.get("id"))), (Double) input.get("currentRating"));
-                hashMap.put("content", "Ok");
-            }catch (Exception e){
-                hashMap.put("content", "error");
-                hashMap.put("type", e.getMessage());
+            Product product = Product.getProductByID(Integer.parseInt((String) input.get("id")));
+            synchronized (product) {
+                CustomerController.rateProduct((Customer) user, product, (Double) input.get("currentRating"));
             }
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", "Ok");
             sendMessage(hashMap);
         }
 
@@ -1303,23 +1282,8 @@ public class MainServer {
                     ((Customer) user).addToCart(product);
                 }
                 guest.getCart().clear();
-                if (((Customer)user).getBankAccount() == 0) {
-                    try {
-                        ((Customer)user).setBankAccount((Integer)sendAndReceiveToBankAPICreateAccount());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
-            if (user instanceof Seller){
-                if (((Seller)user).getBankAccount() == 0) {
-                    try {
-                        ((Seller)user).setBankAccount((Integer)sendAndReceiveToBankAPICreateAccount());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+
             HashMap<String, Object> hashMap = new HashMap<>();
             TokenHandler.createToken(username);
             hashMap.put("content", TokenHandler.getTokenOfUsername(username));
@@ -1358,18 +1322,6 @@ public class MainServer {
             sendMessage(hashMap);
         }
 
-        private void getAuctionsServer(HashMap input) {
-            ArrayList<Product> productsToBeShown = AuctionsController.getFilteredList((ArrayList<String>) input.get("filters"));
-            productsToBeShown = AuctionsController.handleStaticFiltering(productsToBeShown, (String) input.get("categoryFilter"), (String) input.get("brandFilter"), (String) input.get("nameFilter"), (String) input.get("sellerUsernameFilter"), (String) input.get("availabilityFilter"));
-            productsToBeShown = ProductsController.filterProductsWithSearchQuery(productsToBeShown, (String) input.get("searchQuery"));
-            productsToBeShown = ProductsController.sort((String) input.get("currentSort"), productsToBeShown);
-
-            HashMap<String, Object> hashMap = new HashMap<>();
-
-            hashMap.put("content", HashMapGenerator.getListOfProducts(productsToBeShown));
-            sendMessage(hashMap);
-        }
-
         private void getAllCategoriesServer() {
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", HashMapGenerator.getListOfCategories(Manager.getAllCategories()));
@@ -1387,14 +1339,13 @@ public class MainServer {
         }
 
         private void handleCreateManagerAccountServer(ArrayList<String> attributes) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            try {
-                SignUpAndLoginController.createManager(attributes);
-                hashMap.put("content", "Ok");
-            }catch (Exception exception){
-                hashMap.put("content", "error");
-                hashMap.put("type", exception.getMessage());
+            if (Manager.hasManager) {
+                ((Manager) user).addNewManager(new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5)));
+            } else {
+                new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5));
             }
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", "Ok");
             sendMessage(hashMap);
         }
 
@@ -1411,14 +1362,15 @@ public class MainServer {
         }
 
         private void handleCreateOrdinaryAccountServer(String type, ArrayList<String> attributes) {
-            HashMap<String, Object> hashMap = new HashMap<>();
             try {
                 SignUpAndLoginController.handleCreateAccount(type, attributes);
-                hashMap.put("content", "Ok");
-            } catch (Exception exception) {
-                hashMap.put("content", "error");
-                hashMap.put("type", exception.getMessage());
             }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("content", "Ok");
             sendMessage(hashMap);
         }
 
@@ -1433,7 +1385,6 @@ public class MainServer {
                 hashMap.put("tokenStatus", "ok");
             }
             try {
-                System.out.println(hashMap.get("content"));
                 DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
                 Gson gson = new Gson();
 
@@ -1450,8 +1401,7 @@ public class MainServer {
             DataInputStream dataInputStream1 = new DataInputStream(new BufferedInputStream(bankAPISocket.getInputStream()));
             dataOutputStream1.writeUTF(output);
             dataOutputStream1.flush();
-            return (String)dataInputStream1.readUTF();
+            return (String) dataInputStream1.readUTF();
         }
-
     }
 }

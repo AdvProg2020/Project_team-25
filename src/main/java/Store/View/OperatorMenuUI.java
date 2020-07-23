@@ -42,6 +42,7 @@ public class OperatorMenuUI {
     public Button supportPageButton;
     public Button auctionPageButton;
     public Button signUpButton;
+    public Button auctionPageButton;
     public Button loginLogoutButton;
     public Label loggedInStatusText;
     public ImageView imageProfile;

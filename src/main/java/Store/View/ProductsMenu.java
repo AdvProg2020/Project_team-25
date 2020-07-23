@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 
 public class ProductsMenu {
 
-    private static final String SHOW_PRODUCT_REGEX = "^show product (\\d+)$";
+    /*private static final String SHOW_PRODUCT_REGEX = "^show product (\\d+)$";
     private static final String FILTER_REGEX = "^filter (\\w+)$";
     private static final String DISABLE_FILTER_REGEX = "^disable filter (\\w+)$";
     private static final String SORT_REGEX = "^sort (\\w+)$";
@@ -344,5 +344,5 @@ public class ProductsMenu {
         System.out.println("logout");
         System.out.println("back");
         System.out.println("*******");
-    }
+    }*/
 }

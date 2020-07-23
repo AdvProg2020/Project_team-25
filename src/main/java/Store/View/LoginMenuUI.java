@@ -170,14 +170,14 @@ public class LoginMenuUI {
 //        return false;
 //    }
 
-    public static void logoutWrapper() {
-        if (MainMenu.currentUser == MainMenu.guest) {
-            System.out.println("You haven't signed in!");
-        } else {
-            MainMenu.currentUser = MainMenu.guest;
-            MainMenu.init();
-        }
-    }
+//    public static void logoutWrapper() {
+//        if (MainMenu.currentUser == MainMenu.guest) {
+//            System.out.println("You haven't signed in!");
+//        } else {
+//            MainMenu.currentUser = MainMenu.guest;
+//            MainMenu.init();
+//        }
+//    }
 
     //    public static void loginWrapper() {
 //        if (MainMenu.currentUser == MainMenu.guest) {

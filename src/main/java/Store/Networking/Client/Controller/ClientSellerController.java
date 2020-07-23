@@ -1,11 +1,8 @@
 package Store.Networking.Client.Controller;
 
 import Store.InputManager;
-import Store.Model.Manager;
 import Store.Networking.Client.ClientHandler;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableValue;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -180,6 +177,7 @@ public class ClientSellerController {
         hashMap.put("message", "getOffersOfThisSeller");
         return (List<Map<String, Object>>) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
     }
+
 
     public static void addAuction(Map<String, Object> product, LocalDateTime dateTime) throws Exception {
         HashMap<String, Object> hashMap = new HashMap<>();
