@@ -19,7 +19,7 @@ import java.util.regex.Matcher;
 
 public class SellerMenu {
 
-    private static final String EDIT_PERSONAL_INFO_REGEX = "^edit (.+)$";
+    /*private static final String EDIT_PERSONAL_INFO_REGEX = "^edit (.+)$";
     private static final String VIEW_PRODUCT_REGEX = "^view (\\d+)$";
     private static final String VIEW_PRODUCT_BUYERS_INFO_REGEX = "^view buyers (\\d+)$";
     private static final String EDIT_PRODUCT_REGEX = "^edit (\\d+)$";
@@ -551,5 +551,5 @@ public class SellerMenu {
         System.out.println("logout");
         System.out.println("back");
         System.out.println("*******");
-    }
+    }*/
 }

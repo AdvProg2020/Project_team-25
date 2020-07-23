@@ -41,6 +41,12 @@
                </padding>
             </HBox>
             <Separator orientation="VERTICAL" prefHeight="7.0" prefWidth="4.0" visible="false" />
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <RadioButton fx:id="byBank" mnemonicParsing="false" text="Bank" textFill="#f2ecec" />
+                  <RadioButton fx:id="byWallet" mnemonicParsing="false" selected="true" text="Wallet" textFill="#f2ecec" />
+               </children>
+            </HBox>
             <VBox alignment="TOP_CENTER" prefHeight="66.0" prefWidth="407.0" spacing="5.0">
                <children>
                   <Button id="signUpButton" mnemonicParsing="false" onAction="#finalBuyButton" prefHeight="16.0" prefWidth="90.0" stylesheets="@../CSS/signup_stylesheet.css" text="Buy" />

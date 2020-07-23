@@ -27,7 +27,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="mainNode" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" stylesheets="@../CSS/products_stylesheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Store.View.ProductsMenuUI">
+<HBox fx:id="mainNode" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" stylesheets="@../CSS/products_stylesheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Store.View.AuctionsMenuUI">
     <children>
         <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="250.0" style="-fx-background-color: #3F2563; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" styleClass="quickAccess" stylesheets="@../CSS/general_stylesheet.css">
             <children>
@@ -50,7 +50,7 @@
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button id="productsButton" fx:id="productsButton" disable="true" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Products">
+                <Button id="productsButton" fx:id="productsButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Products">
                     <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                             <image>
@@ -86,7 +86,7 @@
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button fx:id="auctionPageButton" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Auctions">
+                <Button fx:id="auctionPageButton" disable="true" graphicTextGap="6.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="234.0" styleClass="quickAccessMenuButton" stylesheets="@../CSS/general_stylesheet.css" text="Auctions">
                     <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                             <image>
@@ -136,7 +136,7 @@
         </VBox>
         <TabPane prefHeight="200.0" prefWidth="950.0" tabClosingPolicy="UNAVAILABLE">
             <tabs>
-                <Tab text="Products">
+                <Tab text="Auctions">
                     <content>
                         <VBox prefHeight="200.0" prefWidth="100.0">
                             <children>
@@ -151,7 +151,9 @@
                                                 </ImageView>
                                             </graphic>
                                         </Button>
-                                        <Region prefHeight="200.0" prefWidth="500.0" />
+                                        <Region prefHeight="60.0" prefWidth="184.0" />
+                                        <Label fx:id="errorText" prefHeight="19.0" prefWidth="129.0" />
+                                        <Region prefHeight="60.0" prefWidth="204.0" />
                                         <Button id="searchButton" fx:id="searchButton" disable="true" mnemonicParsing="false" prefHeight="51.0" prefWidth="49.0">
                                             <graphic>
                                                 <ImageView fitHeight="33.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
@@ -161,7 +163,7 @@
                                                 </ImageView>
                                             </graphic>
                                         </Button>
-                                        <TextField fx:id="searchString" prefHeight="50.0" prefWidth="240.0" />
+                                        <TextField fx:id="searchString" prefHeight="50.0" prefWidth="251.0" />
                                     </children>
                                 </HBox>
                                 <HBox prefHeight="50.0" prefWidth="200.0">
@@ -212,32 +214,6 @@
                                 <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="475.0">
                                     <children>
                                         <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" text="Static Filters" textAlignment="CENTER" />
-                                        <HBox prefHeight="149.0" prefWidth="467.0">
-                                            <children>
-                                                <VBox alignment="TOP_CENTER" prefHeight="98.0" prefWidth="328.0">
-                                                    <children>
-                                                        <Label text="Price Low" />
-                                                        <Slider fx:id="priceLowSlider" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
-                                                        <Label text="Price High" />
-                                                        <Slider fx:id="priceHighSlider" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
-                                                    </children>
-                                                </VBox>
-                                                <VBox prefHeight="147.0" prefWidth="138.0">
-                                                    <children>
-                                                        <Label fx:id="priceLowLabel" prefHeight="63.0" prefWidth="136.0" textAlignment="CENTER">
-                                                            <font>
-                                                                <Font size="18.0" />
-                                                            </font>
-                                                        </Label>
-                                                        <Label fx:id="priceHighLabel" layoutX="50.0" layoutY="65.0" prefHeight="74.0" prefWidth="136.0" textAlignment="CENTER">
-                                                            <font>
-                                                                <Font size="18.0" />
-                                                            </font>
-                                                        </Label>
-                                                    </children>
-                                                </VBox>
-                                            </children>
-                                        </HBox>
                                         <HBox prefHeight="100.0" prefWidth="200.0">
                                             <children>
                                                 <Label alignment="CENTER_RIGHT" prefHeight="53.0" prefWidth="155.0" text="Brand Name">

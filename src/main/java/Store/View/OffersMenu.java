@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 
 public class OffersMenu {
 
-    private static ArrayList<String> filters = new ArrayList<String>();
+    /*private static ArrayList<String> filters = new ArrayList<String>();
     private static ArrayList<String> availableSorts = new ArrayList<String>(Arrays.asList("price", "rating", "lexicographical", "visit"));
     private static ArrayList<String> availableFilters = new ArrayList<String>();
     private static String currentSort = "visited";
@@ -329,5 +329,5 @@ public class OffersMenu {
         System.out.println("logout");
         System.out.println("back");
         System.out.println("*******\n");
-    }
+    }*/
 }
