@@ -5,6 +5,8 @@ import Store.Controller.MainMenuUIController;
 import Store.Controller.ManagerController;
 import Store.Main;
 import Store.Model.Manager;
+import Store.Networking.Client.Controller.ClientMainMenuController;
+import Store.Networking.Client.Controller.ClientManagerController;
 import Store.Networking.Client.Controller.ClientSignUpAndLoginController;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -145,7 +147,6 @@ public class SignUpOperatorMenuUI {
         ArrayList<String> attributes = new ArrayList<String>(Arrays.asList(username, firstName, lastName, email, phoneNumber, password));
         if (isValid) {
             ClientSignUpAndLoginController.createOperator(username, firstName, lastName, email, phoneNumber, password);
-            ManagerController.createOperatorProfile((Manager) MainMenuUIController.currentUser, username, firstName, lastName, email, phoneNumber, password);
             resetAllFields();
             System.out.println(password);
             throwError("Register Successful!");

@@ -3,6 +3,8 @@ package Store.View;
 
 import Store.Main;
 
+import Store.Model.Manager;
+import Store.Networking.Client.Controller.ClientManagerController;
 import Store.Networking.Client.Controller.ClientSignUpAndLoginController;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.regex.Pattern;
 
 public class SignUpManagerMenuUI {
 
@@ -25,6 +28,8 @@ public class SignUpManagerMenuUI {
     public TextField lastNameTextField;
     public TextField emailTextField;
     public TextField phoneNumberTextField;
+    public TextField minimumMoneyTextField;
+    public TextField karmozdTextField;
     public Button confirmButton;
     public Label errorMessage;
 
@@ -59,6 +64,10 @@ public class SignUpManagerMenuUI {
 
     public void setupBindings() {
         confirmButton.setOnAction((e) -> handleSignUpValidation());
+        if (!ClientManagerController.hasManager()){
+            karmozdTextField.setVisible(true);
+            minimumMoneyTextField.setVisible(true);
+        }
     }
 
     private boolean checkEmptyFields() {
@@ -89,6 +98,14 @@ public class SignUpManagerMenuUI {
         }
         if (phoneNumberTextField.getText().isEmpty()) {
             setError(phoneNumberTextField, true);
+            result = false;
+        }
+        if (minimumMoneyTextField.getText().isEmpty()){
+            setError(minimumMoneyTextField, true);
+            result = false;
+        }
+        if (karmozdTextField.getText().isEmpty()){
+            setError(karmozdTextField, true);
             result = false;
         }
         if (!result) {
@@ -136,10 +153,30 @@ public class SignUpManagerMenuUI {
             setError(emailTextField, true);
             isValid = false;
         }
+        if (karmozdTextField.isVisible()) {
+            if (!Pattern.matches("(\\d+)", karmozdTextField.getText())) {
+                throwError("Invalid karmozd!");
+                setError(karmozdTextField, true);
+                isValid = false;
+            }
 
+            if (!Pattern.matches("(\\d+)", minimumMoneyTextField.getText())) {
+                throwError("Invalid minimum!");
+                setError(minimumMoneyTextField, true);
+                isValid = false;
+            }
+        }
         ArrayList<String> attributes = new ArrayList<String>(Arrays.asList(username, firstName, lastName, email, phoneNumber, password));
         if (isValid) {
             ClientSignUpAndLoginController.createManager(attributes);
+            if (karmozdTextField.isVisible()) {
+                double karmozd = 0;
+                double minimum = 0;
+                karmozd = Double.parseDouble(karmozdTextField.getText());
+                minimum = Double.parseDouble(minimumMoneyTextField.getText());
+                ClientManagerController.setKarmozd(karmozd);
+                ClientManagerController.setMinimum(minimum);
+            }
             resetAllFields();
             System.out.println(password);
             throwError("Register Successful!");

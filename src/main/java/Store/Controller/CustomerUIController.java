@@ -72,19 +72,28 @@ public class CustomerUIController {
         product.rate(customer, rating);
     }
 
-    public static String purchase(Customer customer, String input) throws Exception {
+    public static String purchase(Customer customer, String input, boolean bank, String address) throws Exception {
         if (input.isEmpty()) {
-            if (customer.canBuy()) {
-                customer.buy();
-                return customer.getNewFactor();
+            try{
+                if (customer.canBuy(bank)) {
+                    customer.buy(bank, address);
+                    System.out.println(customer);
+                    return customer.getNewFactor();
+                }
+            }catch (Exception e){
+                throw e;
             }
             throw (new Exception("You don't have enough money!"));
         } else {
             OffCode offCode = Manager.getOffCodeByCode(input);
             if (offCode != null && offCode.canBeUsedInDate(new Date()) && offCode.isUserIncluded(customer)) {
-                if (customer.canBuy(offCode)) {
-                    customer.buy(offCode);
-                    return customer.getNewFactor();
+                try {
+                    if (customer.canBuy(offCode, bank)) {
+                        customer.buy(offCode, bank, address);
+                        return customer.getNewFactor();
+                    }
+                }catch (Exception e){
+                    throw e;
                 }
                 throw (new Exception("You don't have enough money!"));
             }

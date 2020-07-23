@@ -1,6 +1,8 @@
 package Store.View;
 
 
+import Store.Controller.MainMenuUIController;
+import Store.Controller.ManagerController;
 import Store.Main;
 
 import Store.Model.Enums.VerifyStatus;
@@ -11,6 +13,7 @@ import Store.Networking.Client.Controller.ClientManagerController;
 import Store.Networking.Client.Controller.ClientProductController;
 import Store.Networking.Client.Controller.ClientProductsController;
 import Store.Networking.FileTransportClient;
+import Store.Networking.HashMapGenerator;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -18,13 +21,16 @@ import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -48,11 +54,13 @@ public class ManagerMenuUI {
     public Button offersButton;
     public Button userPageButton;
     public Button supportPageButton;
+    public Button auctionPageButton;
     public Button signUpButton;
     public Button loginLogoutButton;
     public Label loggedInStatusText;
     public VBox requestsList;
     public VBox categoriesList;
+    public VBox viewBuysVBox;
     public Button addCategoryButton;
     public ComboBox sortProductsChoiceBox;
     public VBox productsList;
@@ -92,11 +100,135 @@ public class ManagerMenuUI {
         setupBindings();
         reset();
         handlePersonalInfo();
+        showLogs();
         showRequests();
         showCategories();
         showProducts();
         showUsers();
         showOffCodes();
+    }
+
+    private void showLogs() {
+        HashMap<String, ArrayList<Map<String, Object>>> buyLogs = ClientManagerController.getBuyLogs();
+        for (String username: buyLogs.keySet()){
+            showUserLog(username, buyLogs.get(username));
+        }
+    }
+
+    private void showUserLog(String username, ArrayList<Map<String, Object>> buyLogs) {
+        for (Map buyLog: buyLogs)
+            showLog(username, buyLog);
+    }
+
+    private void showLog(String username, Map buyLog) {
+        HBox hBox = new HBox();
+        hBox.setMaxHeight(100);     hBox.setMinHeight(100);
+        hBox.setSpacing(20);
+        Label dateText = new Label();
+        Label customerText = new Label();
+        TextArea addressText = new TextArea();
+        Button send = new Button("Send");
+        /*TextArea productsText = new TextArea();
+        Label incomeText = new Label();
+        Label offValueText = new Label();
+        Label sendStatusText = new Label();
+        */
+        dateText.setText(buyLog.get("date") + "");
+        addressText.setText(buyLog.get("address") + "");
+        addressText.setWrapText(true);
+        send.disableProperty().bind(ClientManagerController.isReceived(buyLog));
+        /*incomeText.setText(String.valueOf(sellLog.getIncomeValue()));
+        offValueText.setText(String.valueOf(sellLog.getOffValue()));
+        if (sellLog.isSendStatus())
+            sendStatusText.setText("Arrived");
+        else
+            sendStatusText.setText("Not Arrived");
+        */
+        customerText.setText(username);
+        /*for(Product product: sellLog.getProducts())
+            productsText.setText(productsText.getText() + "\n-" + product.getName() + "-----" + product.getBrand());
+        productsText.setEditable(false);
+        */VBox vBox1 = new VBox(), vBox2 = new VBox(), vBox3 = new VBox(), vBox4 = new VBox(), vBox5 = new VBox(), vBox6 = new VBox();
+        vBox1.getChildren().add(dateText);
+        vBox2.getChildren().add(customerText);
+        vBox4.getChildren().add(addressText);
+        vBox5.getChildren().add(send);
+        Button details = new Button("View Details");
+        send.setOnAction(e -> {
+            ClientManagerController.sendProduct(buyLog);
+        });
+        details.setOnAction(e -> {
+            showDetails(buyLog);
+        });
+        vBox3.getChildren().add(details);
+        /*vBox3.getChildren().add(incomeText);
+        vBox4.getChildren().add(offValueText);
+        vBox5.getChildren().add(sendStatusText);
+        vBox6.getChildren().add(productsText);
+        */vBox1.setPrefWidth(200);    vBox1.setAlignment(Pos.CENTER);
+        vBox2.setPrefWidth(100);    vBox2.setAlignment(Pos.CENTER);
+        vBox3.setPrefWidth(100);    vBox3.setAlignment(Pos.CENTER);
+        vBox4.setPrefWidth(267);    vBox4.setAlignment(Pos.CENTER);
+        vBox5.setPrefWidth(100);    vBox5.setAlignment(Pos.CENTER);
+        /*vBox4.setPrefWidth(100);    vBox4.setAlignment(Pos.CENTER);
+        vBox5.setPrefWidth(100);    vBox5.setAlignment(Pos.CENTER);
+        vBox6.setPrefWidth(240);    vBox6.setAlignment(Pos.CENTER);
+        productsText.setEditable(false);
+        hBox.getChildren().addAll(vBox3, vBox4, vBox2, vBox5, vBox1, vBox6);
+        */
+        hBox.getChildren().addAll(vBox1, vBox2, vBox3, vBox4, vBox5);
+        viewBuysVBox.getChildren().add(hBox);
+    }
+
+    private void showDetails(Map buyLog) {
+        VBox vBox = new VBox();
+        HBox hBox1 = new HBox();
+        HBox hBox2 = new HBox();
+        Label[] titles = new Label[6];
+        for (int i = 0; i < 6; i++)
+            titles[i] = new Label();
+        titles[0].setText("ID");
+        titles[0].setPrefWidth(43);
+        titles[1].setText("Date");
+        titles[1].setPrefWidth(121);
+        titles[2].setText("Seller");
+        titles[2].setPrefWidth(98);
+        titles[3].setText("Is Sent");
+        titles[3].setPrefWidth(81);
+        titles[4].setText("OffValue");
+        titles[4].setPrefWidth(66);
+        titles[5].setText("Products");
+        titles[5].setPrefWidth(123);
+        hBox1.getChildren().addAll(titles[0], titles[1], titles[2], titles[3], titles[4], titles[5]);
+        hBox1.setSpacing(10);
+        for (int i = 0; i < 6; i++) {
+            titles[i].setTextFill(Color.valueOf("ebe9e9"));
+        }
+        Label[] labels = new Label[6];
+        for (int i = 0; i < 6; i++)
+            labels[i] = new Label();
+        labels[0].setText(buyLog.get("id") + "");
+        labels[0].setPrefWidth(43);
+        labels[1].setText(buyLog.get("date") + "");
+        labels[1].setPrefWidth(121);
+        labels[2].setText((String) buyLog.get("sellerName"));
+        labels[2].setPrefWidth(98);
+        labels[3].setText(buyLog.get("isReceived") + "");
+        labels[3].setPrefWidth(81);
+        labels[4].setText(buyLog.get("offValue") + "");
+        labels[4].setPrefWidth(66);
+        labels[5].setText(buyLog.get("products") + "");
+        labels[5].setPrefWidth(123);
+        labels[5].setWrapText(true);
+        hBox2.getChildren().addAll(labels[0], labels[1], labels[2], labels[3], labels[4], labels[5]);
+        for (int i = 0; i < 6; i++) {
+            labels[i].setTextFill(Color.valueOf("ebe9e9"));
+        }
+        vBox.setSpacing(20);
+        vBox.getChildren().addAll(hBox1, hBox2);
+        vBox.setPrefWidth(670);
+        vBox.setPrefHeight(250);
+        Main.setupOtherStage(new Scene(vBox), "Log");
     }
 
     private void showOffCodes() {
@@ -540,6 +672,7 @@ public class ManagerMenuUI {
                 showCategories();
                 showUsers();
                 showOffCodes();
+                showLogs();
             });
             acceptButton.setId("acceptButton");
             acceptButton.setPrefSize(100, 50);
@@ -572,6 +705,7 @@ public class ManagerMenuUI {
     public void setupBindings() {
         offersButton.setOnAction((e) -> OffersMenuUI.showOffersMenu());
         supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
+        auctionPageButton.setOnAction(e -> AuctionsMenuUI.showAuctionsMenu());
         loginLogoutButton.setOnAction((e) -> {
             LoginMenuUI.handleEvent();
             try {
@@ -708,13 +842,13 @@ public class ManagerMenuUI {
                 handlePersonalInfo();
             }
         });
-
+//
         FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", ClientHandler.username + ".jpg");
         File file = new File("src/main/resources/Images/" + ClientHandler.username + ".jpg");
         imageProfile.setImage(new Image(file.toURI().toString()));
-
-        final Circle clip = new Circle(100, 100, 100);
-        imageProfile.setClip(clip);
-        clip.setStroke(Color.ORANGE);
+//
+//        final Circle clip = new Circle(100, 100, 100);
+//        imageProfile.setClip(clip);
+//        clip.setStroke(Color.ORANGE);
     }
 }

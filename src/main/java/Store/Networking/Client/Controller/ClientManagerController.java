@@ -1,8 +1,11 @@
 package Store.Networking.Client.Controller;
 
 import Store.Networking.Client.ClientHandler;
+import com.google.gson.Gson;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -162,5 +165,51 @@ public class ClientManagerController {
         hashMap.put("username", username);
         hashMap.put("status", status);
         ClientHandler.sendAndReceiveMessage(hashMap).get("content");
+    }
+
+    public static void setMinimum(double minimum) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "setMinimum");
+        hashMap.put("minimum", minimum);
+        ClientHandler.sendAndReceiveMessage(hashMap).get("content");
+    }
+
+    public static void setKarmozd(double karmozd) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "setKarmozd");
+        hashMap.put("karmozd", karmozd);
+        ClientHandler.sendAndReceiveMessage(hashMap).get("content");
+    }
+
+    public static SimpleBooleanProperty isReceived(Map buyLog) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "isReceivedLog");
+        hashMap.put("logId", buyLog.get("id"));
+        return new SimpleBooleanProperty((boolean)ClientHandler.sendAndReceiveMessage(hashMap).get("content"));
+    }
+
+    public static void sendProduct(Map buyLog) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "sendProduct");
+        hashMap.put("buyLogId", buyLog.get("id"));
+        ClientHandler.sendAndReceiveMessage(hashMap);
+    }
+
+    public static HashMap<String, ArrayList<Map<String, Object>>> getBuyLogs() {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        HashMap<String, ArrayList> hashMap2 = new HashMap<>();
+        ArrayList<Map> arrayList = new ArrayList<>();
+        hashMap.put("message", "getBuyLogs");
+        hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
+        Gson gson = new Gson();
+        hashMap = gson.fromJson(String.valueOf(hashMap.get("content")), HashMap.class);
+        return (HashMap) hashMap;
+    }
+
+
+    public static boolean hasManager() {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "hasManager?");
+        return (boolean)ClientHandler.sendAndReceiveMessage(hashMap).get("content");
     }
 }

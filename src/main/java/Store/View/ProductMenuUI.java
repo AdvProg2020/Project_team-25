@@ -9,7 +9,6 @@ import Store.Networking.Client.ClientHandler;
 import Store.Networking.Client.Controller.ClientMainMenuController;
 import Store.Networking.Client.Controller.ClientProductController;
 import Store.Networking.Client.Controller.ClientSignUpAndLoginController;
-import Store.Networking.FileTransportClient;
 import Store.Networking.P2P.P2PClient;
 import Store.View.AdditionalUtils.NodeGestures;
 import Store.View.AdditionalUtils.PannableCanvas;
@@ -67,6 +66,7 @@ public class ProductMenuUI {
     public Button offersButton;
     public Button userPageButton;
     public Button supportPageButton;
+    public Button auctionPageButton;
 
     public Label loggedInStatusText;
     public Button signUpButton;
@@ -152,11 +152,12 @@ public class ProductMenuUI {
     }
 
     private void setupOffPercentageLabel() {
-        Map<String, Object> offer = (Map<String, Object>) productToShow.get("offer");
+        Map<String, Object> offer = (Map<String, Object>)productToShow.get("offer");
         if (offer != null) {
             offPercentageLabel.setText(offer.get("offPercent") + "% OFF");
             offPercentageLabel.setVisible(true);
-        } else {
+        }
+        else {
             offPercentageLabel.setText("No Offer");
             offPercentageLabel.setVisible(false);
         }
@@ -172,25 +173,19 @@ public class ProductMenuUI {
 //                path = productToShow.getImagePath();
 //            }
 //
-        FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", ClientHandler.username + ".jpg");
-        File file = new File("src/main/resources/Images/" + ClientHandler.username + ".jpg");
-        productImageView.setImage(new Image(file.toURI().toString()));
-
-//            productImageView.setImage(new Image(ProductMenuUI.class.getResource("/Images/" + productToShow.getImagePath()).toExternalForm()));
-
-
+//            File file = new File(path);
+//            productImageView.setImage(new Image(file.toURI().toString()));
+//
+////            productImageView.setImage(new Image(ProductMenuUI.class.getResource("/Images/" + productToShow.getImagePath()).toExternalForm()));
+//        }
         PannableCanvas canvas = new PannableCanvas();
 
         setupOffPercentageLabel();
-        imageAndVideoVBox.getChildren().
-
-                clear();
+        imageAndVideoVBox.getChildren().clear();
 
         StackPane innerGroup = new StackPane(productImageView, offPercentageLabel);
         innerGroup.setAlignment(Pos.TOP_LEFT);
-        canvas.getChildren().
-
-                add(innerGroup);
+        canvas.getChildren().add(innerGroup);
         canvas.setPrefWidth(Region.USE_COMPUTED_SIZE);
         canvas.setPrefHeight(Region.USE_COMPUTED_SIZE);
         SceneGestures sceneGestures = new SceneGestures(canvas);
@@ -200,10 +195,7 @@ public class ProductMenuUI {
 
         final Group group = new Group(canvas);
 
-        imageAndVideoVBox.getChildren().
-
-                add(new AnchorPane(group));
-
+        imageAndVideoVBox.getChildren().add(new AnchorPane(group));
         handleImageAndVideoGrayscale();
 
 //        if (!productToShow.getVideoPath().isEmpty()) {
@@ -214,20 +206,17 @@ public class ProductMenuUI {
 //            videoPlayer = new VideoPlayer(file.toURI().toString());
 //            imageAndVideoVBox.getChildren().add(videoPlayer);
 //        }
-        FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "V", productToShow.get("id") + ".mp4");
-        file = new File("src/main/resources/Videos/" + productToShow.get("id") + ".mp4");
-        videoPlayer = new VideoPlayer(file.toURI().toString());
-        imageAndVideoVBox.getChildren().add(videoPlayer);
     }
 
     private void handleImageAndVideoGrayscale() {
-        if (!(Boolean) productToShow.get("availability")) {
+        if (!(Boolean)productToShow.get("availability")) {
             ColorAdjust monochrome = new ColorAdjust();
             monochrome.setSaturation(-1);
             imageAndVideoVBox.setEffect(monochrome);
             offPercentageLabel.setText("SOLD OUT");
             offPercentageLabel.setVisible(true);
-        } else {
+        }
+        else {
             imageAndVideoVBox.setEffect(null);
         }
     }
@@ -238,8 +227,9 @@ public class ProductMenuUI {
         descriptionLabel.setText((String) productToShow.get("description"));
         priceLabel.setText("" + productToShow.get("price"));
         if (productToShow.get("category") != null) {
-            categoryLabel.setText((String) ((Map<String, Object>) productToShow.get("category")).get("fullName"));
-        } else {
+            categoryLabel.setText((String) ((Map<String, Object>)productToShow.get("category")).get("fullName"));
+        }
+        else {
             categoryLabel.setText("None");
         }
 
@@ -247,7 +237,8 @@ public class ProductMenuUI {
 
         if (productToShow.get("startingDate") != null) {
             dateOfOfferLabel.setText(productToShow.get("startingDate").toString());
-        } else {
+        }
+        else {
             dateOfOfferLabel.setText("None");
         }
 
@@ -262,14 +253,15 @@ public class ProductMenuUI {
     }
 
     private void handleAvailabilityLabel() {
-        if (!(Boolean) productToShow.get("availability")) {
+        if (!(Boolean)productToShow.get("availability")) {
             productStatusLabel.setText("Available");
             ObservableList<String> styleClass = productStatusLabel.getStyleClass();
             if (styleClass.contains("unavailable")) {
                 styleClass.remove("unavailable");
             }
             styleClass.add("available");
-        } else {
+        }
+        else {
             productStatusLabel.setText("Unavailable");
             ObservableList<String> styleClass = productStatusLabel.getStyleClass();
             if (styleClass.contains("available")) {
@@ -298,7 +290,7 @@ public class ProductMenuUI {
     }
 
     private void changeProductSeller(String username) {
-        Map<String, Object> newProduct = ClientProductController.getProductWithDifferentSeller((String) productToShow.get("id"), username);
+        Map<String, Object> newProduct = ClientProductController.getProductWithDifferentSeller((String)productToShow.get("id"), username);
         for (Button button : sellerButtons) {
             button.setDisable(false);
             if (button.getText().equalsIgnoreCase((String) (newProduct.get("sellerName")))) {
@@ -309,10 +301,11 @@ public class ProductMenuUI {
         setupImageAndVideo();
         handleAvailabilityLabel();
         setupCommentsSection();
-        addToCartButton.setDisable(!(Boolean) productToShow.get("availability"));
+        addToCartButton.setDisable(!(Boolean)productToShow.get("availability"));
     }
 
     public void setupBindings() {
+        auctionPageButton.setOnAction(e -> AuctionsMenuUI.showAuctionsMenu());
         mainMenuButton.setOnAction((e) -> {
             try {
                 Main.setPrimaryStageScene(new Scene(MainMenuUI.getContent()));
@@ -329,7 +322,7 @@ public class ProductMenuUI {
         userPageButton.setOnAction(e -> UserPageHandlerUI.handleEvent());
         supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
 
-        Button[] starButtons = new Button[]{ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5};
+        Button[] starButtons = new Button[] {ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5};
         for (int buttonIndex = 0; buttonIndex < 5; buttonIndex++) {
             int finalButtonIndex = buttonIndex + 1;
             starButtons[buttonIndex].setOnAction((e) -> handleRatingChange(finalButtonIndex));
@@ -343,7 +336,7 @@ public class ProductMenuUI {
 
     private void setRatingDisable(boolean disable) {
         resetStars();
-        Button[] starButtons = new Button[]{ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5};
+        Button[] starButtons = new Button[] {ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5};
         for (int buttonIndex = 0; buttonIndex < 5; buttonIndex++) {
             starButtons[buttonIndex].setDisable(disable);
         }
@@ -354,19 +347,24 @@ public class ProductMenuUI {
         Map<String, Object> customer = ClientSignUpAndLoginController.getUserInfo(ClientHandler.username);
         if (!ClientHandler.hasLoggedIn) {
             setRatingDisable(true);
-        } else if (!(customer.get("type").equals("Customer"))) {
+        }
+        else if (!(customer.get("type").equals("Customer"))) {
             setRatingDisable(true);
-        } else if (ClientProductController.hasBeenRated((String) productToShow.get("id"), ClientHandler.username)) {
+        }
+
+        else if (ClientProductController.hasBeenRated((String) productToShow.get("id"), ClientHandler.username)) {
             setRatingDisable(true);
-        } else if (!ClientProductController.hasBoughtProduct((String) productToShow.get("id"), ClientHandler.username)) {
+        }
+        else if (!ClientProductController.hasBoughtProduct((String) productToShow.get("id"), ClientHandler.username)) {
             setRatingDisable(true);
-        } else {
+        }
+        else {
             setRatingDisable(false);
         }
     }
 
     private void resetStars() {
-        ImageView[] starImages = new ImageView[]{activeStar, activeStar1, activeStar2, activeStar3, activeStar4};
+        ImageView[] starImages = new ImageView[] {activeStar, activeStar1, activeStar2, activeStar3, activeStar4};
         for (ImageView imageView : starImages) {
             imageView.setVisible(false);
         }
@@ -374,7 +372,7 @@ public class ProductMenuUI {
 
     private void handleRatingChange(int index) {
         currentRating = index;
-        ImageView[] starImages = new ImageView[]{activeStar, activeStar1, activeStar2, activeStar3, activeStar4};
+        ImageView[] starImages = new ImageView[] {activeStar, activeStar1, activeStar2, activeStar3, activeStar4};
 
         resetStars();
         for (int buttonIndex = 0; buttonIndex < index; buttonIndex++) {
@@ -437,7 +435,8 @@ public class ProductMenuUI {
             if (!styleClass.contains("error")) {
                 styleClass.add("error");
             }
-        } else {
+        }
+        else {
             styleClass.removeAll(Collections.singleton("error"));
         }
     }
@@ -445,15 +444,16 @@ public class ProductMenuUI {
     private void addToCart(Map<String, Object> product) {
         Map<String, Object> customer = ClientSignUpAndLoginController.getUserInfo(ClientHandler.username);
         if (customer.get("type").equals("Customer")) {
-            ClientProductController.addToCart(ClientHandler.username, (String) product.get("id"));
-        } else {
+            ClientProductController.addToCart(ClientHandler.username, (String)product.get("id"));
+        }
+        else {
             throwError("Only customer type accounts can\nadd products to their cart");
         }
     }
 
     private void setupCommentsSection() {
         commentSectionVBox.getChildren().clear();
-        for (Map<String, Object> comment : (ArrayList<Map<String, Object>>) productToShow.get("comments")) {
+        for (Map<String, Object> comment : (ArrayList<Map<String, Object>>)productToShow.get("comments")) {
             commentSectionVBox.getChildren().add(createCommentBox(comment));
         }
     }
@@ -472,12 +472,13 @@ public class ProductMenuUI {
                 "-fx-font-size: 16;");
 
         Label buyStatus = new Label();
-        if ((Boolean) comment.get("hasBought")) {
+        if ((Boolean)comment.get("hasBought")) {
             buyStatus.setText("--Has bought this product");
             buyStatus.setStyle("-fx-text-fill: green;" +
                     "-fx-font-size: 16;" +
                     "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0.0, 0.0);");
-        } else {
+        }
+        else {
             buyStatus.setText("--Has not bought this product");
             buyStatus.setStyle("-fx-text-fill: red;" +
                     "-fx-font-size: 16;" +
@@ -538,7 +539,8 @@ public class ProductMenuUI {
                     try {
                         P2PClient.receiveFile(ClientHandler.username, ClientHandler.token,
                                 (String) productToShow.get("sellerName"), fileName);
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e) {
                         errorFound = true;
                     }
                     boolean finalErrorFound = errorFound;
@@ -550,7 +552,8 @@ public class ProductMenuUI {
                             alert.setContentText("It seems the sellers aren't running the server\non their end");
 
                             alert.show();
-                        } else {
+                        }
+                        else {
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
                             alert.setTitle("Download Complete");
                             alert.setHeaderText("File of " + productToShow.get("name") + " Downloaded");

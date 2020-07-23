@@ -24,8 +24,8 @@ public class SellLogItem extends LogItem {
         return sendStatus;
     }
 
-    public SellLogItem(int id, Date date, ArrayList<Product> products, double incomeValue, double offValue, String customerName, boolean sendStatus) {
-        super(id, date, products);
+    public SellLogItem(Date date, ArrayList<Product> products, double incomeValue, double offValue, String customerName, boolean sendStatus) {
+        super(date, products);
         this.incomeValue = incomeValue;
         this.offValue = offValue;
         this.customerName = customerName;
@@ -40,15 +40,13 @@ public class SellLogItem extends LogItem {
         return customerName;
     }
 
-
-
     @Override
     public String toString() {
         return "SellLogItem{" +
                 "incomeValue=" + incomeValue +
                 ", offValue=" + offValue +
                 ", customerName='" + customerName + '\'' +
-                ", sendStatus=" + sendStatus +
+                ", sent=" + sendStatus +
                 ", id=" + id +
                 ", date=" + date +
                 ", productList=" + productList +

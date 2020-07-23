@@ -61,20 +61,60 @@ public class ClientCustomerController {
         ClientProductController.rateProduct((String) customer.get("username"), product, rating);
     }
 
-    public static String purchase(Map<String, Object> customer, String input) throws Exception {
+    public static String purchase(Map<String, Object> customer, String input, boolean by, String address) throws Exception {
         if (input.isEmpty()) {
-            if (canBuy()) {
-                return buy();
-            }
-            throw (new Exception("You don't have enough money!"));
+            return buy((String)customer.get("username"), by, address);
         } else {
-            if (canBuy(input)) {
-                return buy(input);
-            }
-            throw (new Exception("You don't have enough money! Or Your offcode is invalid"));
+            return buy((String)customer.get("username"), input, by, address);
         }
     }
 
+    public static boolean canBuy(boolean by) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "canBuyWithoutOffCode");
+        if (by)
+            hashMap.put("by", "bank");
+        else
+            hashMap.put("by", "wallet");
+        return (Boolean) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
+    }
+
+    public static Boolean canBuy(String code, boolean by) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "canBuyWithOffCode");
+        hashMap.put("code", code);
+        if (by)
+            hashMap.put("by", "bank");
+        else
+            hashMap.put("by", "wallet");
+        return (Boolean) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
+    }
+
+    public static String buy(String username, boolean by, String address) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "buy");
+        hashMap.put("username", username);
+        hashMap.put("code", "");
+        hashMap.put("address", address);
+        if (by)
+            hashMap.put("by", "bank");
+        else
+            hashMap.put("by", "wallet");
+        return (String) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
+    }
+
+    public static String buy(String username, String code, boolean by, String address) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "buy");
+        hashMap.put("username", username);
+        hashMap.put("code", code);
+        hashMap.put("address", address);
+        if (by)
+            hashMap.put("by", "bank");
+        else
+            hashMap.put("by", "wallet");
+        return (String) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
+    }
 
     public static boolean validatePassword(String password) {
         HashMap<String, Object> hashMap = new HashMap<>();

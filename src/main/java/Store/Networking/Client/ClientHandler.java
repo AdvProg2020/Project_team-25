@@ -14,6 +14,7 @@ import java.util.HashMap;
 public class ClientHandler {
     private static int port;
     private static Socket socket;
+    private static Socket chatAuctionSocket;
     public static String token = "";
     public static boolean hasLoggedIn = false;
     public static String username = "";
@@ -48,6 +49,22 @@ public class ClientHandler {
                 ClientMainMenuController.setCurrentUser("");
                 forceLogout();
             }
+        } catch (Exception exception) {
+            hashMap = new HashMap<>();
+        } finally {
+            return hashMap;
+        }
+    }
+
+    public static HashMap sendAndReceiveMessage(HashMap<String, Object> hashMap, int port) {
+        try {
+            chatAuctionSocket = new Socket("192.168.1.4", port);
+            DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(chatAuctionSocket.getOutputStream()));
+            Gson gson = new Gson();
+            dataOutputStream.writeUTF(gson.toJson(hashMap));
+            dataOutputStream.flush();
+            DataInputStream dataInputStream = new DataInputStream(new BufferedInputStream(chatAuctionSocket.getInputStream()));
+            hashMap = gson.fromJson(dataInputStream.readUTF(), HashMap.class);
         } catch (Exception exception) {
             hashMap = new HashMap<>();
         } finally {

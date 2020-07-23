@@ -2,7 +2,9 @@ package Store.Networking.Client.Controller;
 
 import Store.InputManager;
 import Store.Networking.Client.ClientHandler;
+import javafx.beans.property.SimpleBooleanProperty;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -174,5 +176,27 @@ public class ClientSellerController {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("message", "getOffersOfThisSeller");
         return (List<Map<String, Object>>) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
+    }
+
+
+    public static void addAuction(Map<String, Object> product, LocalDateTime dateTime) throws Exception {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "addAuction");
+        hashMap.put("product", product);
+        hashMap.put("date", dateTime);
+        hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
+        if (((String)hashMap.get("content")).equalsIgnoreCase("error"))
+            throw new Exception((String)hashMap.get("type"));
+    }
+
+    public static SimpleBooleanProperty getIsInAuction(Map<String, Object> product) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "isInAuction");
+        hashMap.put("product", product);
+        String string = (String)ClientHandler.sendAndReceiveMessage(hashMap).get("content");
+        if (string.equalsIgnoreCase("false"))
+            return new SimpleBooleanProperty(false);
+        else
+            return new SimpleBooleanProperty(true);
     }
 }

@@ -12,7 +12,7 @@ import java.util.Random;
 public class MainMenuUIController {
     public static User currentUser;
     public static Customer guest = new Customer("guest", "guest", "guest",
-            "guest@approject.com", "00000000000", "guest", 0.0);
+            "guest@approject.com", "00000000000", "guest");
     public static SimpleStringProperty currentUserUsername = new SimpleStringProperty("Not Logged In");
     public static SimpleBooleanProperty isLoggedIn = new SimpleBooleanProperty(false);
     public static SimpleStringProperty loginLogoutButtonText = new SimpleStringProperty("Login");

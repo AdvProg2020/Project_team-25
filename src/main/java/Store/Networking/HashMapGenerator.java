@@ -101,6 +101,20 @@ public class HashMapGenerator {
         return arrayList;
     }
 
+    //changegggegeggege
+    public static HashMap<String, Object> getAuctionHashMap(Auction auction) {
+        if (auction == null)
+            return null;
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("auctionId", auction.getAuctionID());
+        hashMap.put("seller", getUserHashMap(auction.getSeller()));
+        hashMap.put("product", getProductHashMap(auction.getProduct()));
+        hashMap.put("currentBuyer", getUserHashMap(auction.getCurrentBuyer()));
+        hashMap.put("highestPrice", auction.getHighestPrice());
+        hashMap.put("endingTime", auction.getEndingTime());
+        return hashMap;
+    }
+
     public static HashMap<String, Object> getOfferHashMap(Offer offer) {
         if (offer == null) {
             return null;

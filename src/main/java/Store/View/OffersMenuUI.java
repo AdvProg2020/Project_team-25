@@ -71,6 +71,7 @@ public class OffersMenuUI {
     public Button offersButton;
     public Button userPageButton;
     public Button supportPageButton;
+    public Button auctionPageButton;
     public Button signUpButton;
     public Button loginLogoutButton;
     public Label loggedInStatusText;
@@ -135,6 +136,7 @@ public class OffersMenuUI {
         supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
 
         userPageButton.setOnAction(e -> UserPageHandlerUI.handleEvent());
+        auctionPageButton.setOnAction(e -> AuctionsMenuUI.showAuctionsMenu());
 
         mainMenuButton.setOnAction((e) -> {
             try {
@@ -527,4 +529,3 @@ public class OffersMenuUI {
 //        showProducts();
 //    }
 }
-

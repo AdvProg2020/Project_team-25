@@ -45,24 +45,24 @@ public class CustomerController {
         return "Rating submitted.";
     }
 
-    public static String purchase(Customer customer, String input) {
-        if (input.equalsIgnoreCase("null")) {
-            if (customer.canBuy()) {
-                customer.buy();
-                return "Bought successfully. \n" + customer.getNewFactor();
-            }
-            return "You don't have enough money!";
-        } else {
-            OffCode offCode = Manager.getOffCodeByCode(input);
-            if (offCode != null && offCode.canBeUsedInDate(new Date()) && offCode.isUserIncluded(customer)) {
-                if (customer.canBuy(offCode)) {
-                    customer.buy(offCode);
-                    return "Bought successfully. \n" + customer.getNewFactor();
-                }
-                return "You don't have enough money!";
-            }
-            return "The offCode is invalid!";
-        }
-    }
+//    public static String purchase(Customer customer, String input) {
+//        if (input.equalsIgnoreCase("null")) {
+//            if (customer.canBuy()) {
+//                customer.buy();
+//                return "Bought successfully. \n" + customer.getNewFactor();
+//            }
+//            return "You don't have enough money!";
+//        } else {
+//            OffCode offCode = Manager.getOffCodeByCode(input);
+//            if (offCode != null && offCode.canBeUsedInDate(new Date()) && offCode.isUserIncluded(customer)) {
+//                if (customer.canBuy(offCode)) {
+//                    customer.buy(offCode);
+//                    return "Bought successfully. \n" + customer.getNewFactor();
+//                }
+//                return "You don't have enough money!";
+//            }
+//            return "The offCode is invalid!";
+//        }
+//    }
 
 }

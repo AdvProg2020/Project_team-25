@@ -11,12 +11,14 @@ public class BuyLogItem extends LogItem {
     private String sellerName;
     private boolean received;
     private boolean showed;
+    private String address;
 
-    public BuyLogItem(int id, Date date, ArrayList<Product> products, double offValue, String sellerName, boolean received) {
-        super(id, date, products);
+    public BuyLogItem(Date date, ArrayList<Product> products, double offValue, String sellerName, boolean received, String address) {
+        super(date, products);
         this.offValue = offValue;
         this.sellerName = sellerName;
         this.received = received;
+        this.address = address;
     }
 
     public boolean isShowed()
@@ -25,6 +27,14 @@ public class BuyLogItem extends LogItem {
     }
     public void setReceived(boolean received) {
         this.received = received;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public double getOffValue() {
@@ -45,7 +55,7 @@ public class BuyLogItem extends LogItem {
         return "BuyLogItem{" +
                 "offValue=" + offValue +
                 ", sellerName=" + sellerName +
-                ", received=" + received +
+                ", sent=" + received +
                 ", id=" + id +
                 ", date=" + date +
                 ", productList=" + productList +

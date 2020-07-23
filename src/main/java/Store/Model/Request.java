@@ -3,8 +3,11 @@ package Store.Model;
 import Store.Model.Enums.RequestType;
 import Store.Model.Enums.VerifyStatus;
 
+import java.io.DataOutputStream;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Request implements Serializable {
     private static ArrayList<Request> allRequests = new ArrayList<Request>();
@@ -14,6 +17,7 @@ public class Request implements Serializable {
     private Seller seller;
     private Offer offer;
     private Object newObject;
+    private LocalDateTime date;
     private boolean change;
     private static int adCounter;
 
@@ -35,6 +39,13 @@ public class Request implements Serializable {
         }
         this.status = VerifyStatus.WAITING;
         allRequests.add(this);
+    }
+
+    public Request(Product product, LocalDateTime endingDate){
+        this.seller = product.getSeller();
+        this.product = product;
+        this.date = endingDate;
+        this.requestType = RequestType.ADD_NEW_AUCTION;
     }
 
     public Request(Seller seller, Offer offer, boolean change, Object newObject) {
@@ -79,6 +90,10 @@ public class Request implements Serializable {
 
     public Offer getOffer() {
         return offer;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
     }
 
     public Offer getNewOffer() {

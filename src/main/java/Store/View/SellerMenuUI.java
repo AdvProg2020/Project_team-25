@@ -1,18 +1,23 @@
 package Store.View;
 
 import Store.Controller.SellerController;
+import Store.Controller.SellerUIController;
 import Store.Main;
 import Store.Model.Enums.CheckingStatus;
+import Store.Model.Log.BuyLogItem;
+import Store.Model.Log.SellLogItem;
+import Store.Networking.BankAPI;
+import Store.Networking.Client.ClientHandler;
+import Store.Networking.Client.Controller.ClientSellerController;
 
 import Store.Model.Seller;
 import Store.Networking.Client.ClientHandler;
 import Store.Networking.Client.Controller.*;
-import Store.Networking.FileTransportClient;
+import Store.View.DateTimePicker.DateTimePicker;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -35,13 +40,12 @@ import org.codehaus.plexus.util.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -65,6 +69,7 @@ public class SellerMenuUI implements Initializable {
     public Button offersButton;
     public Button productsButton;
     public Button mainMenuButton;
+    public Button auctionPageButton;
     public Button logoutButton;
     public Label loggedInStatusText;
     public ComboBox myOffersSortBy;
@@ -73,6 +78,8 @@ public class SellerMenuUI implements Initializable {
     public ImageView profile;
     public Button submitEditButton;
     public Button changePassButton;
+    public Button chargeWalletButton;
+    public Button dechargeWalletButton;
     public TextField usernameTextField;
     public PasswordField passwordField;
     public TextField firstNameTextField;
@@ -82,6 +89,9 @@ public class SellerMenuUI implements Initializable {
     public TextField companyNameTextField;
     public TextArea companyInformationTextField;
     public Label errorText;
+
+    public TextField moneyBank;
+    public TextField bankPass;
 
     static String phoneNumber, firstName, lastName, email, companyName, companyInformation;
     ArrayList<String> filters = new ArrayList<>();
@@ -94,6 +104,8 @@ public class SellerMenuUI implements Initializable {
     public TextField oldPass;
     public PasswordField newPass;
     public PasswordField confirmationNewPass;
+
+    public DateTimePicker endDateAuction;
 
     public DatePicker startDateOffer;
     public DatePicker endDateOffer;
@@ -118,6 +130,8 @@ public class SellerMenuUI implements Initializable {
     String availablityString;
     String categoryString;
 
+    public HBox auctionDateHBox;
+
     public TextField requestedProductId;
 
     public Button supportPageButton;
@@ -133,11 +147,22 @@ public class SellerMenuUI implements Initializable {
         if (menuState.equalsIgnoreCase("changePass")) {
 
         } else if (menuState.equalsIgnoreCase("sellLog")) {
+        }
+        else if (menuState.equalsIgnoreCase("chargeWallet")) {
+        }
+        else if (menuState.equalsIgnoreCase("dechargeWallet")){
+        }
+        else if (menuState.equalsIgnoreCase("sellLog")) {
             showSellLog();
             menuState = "SellerMenu";
         } else if (menuState.equalsIgnoreCase("imagePath")) {
 
         } else if (menuState.equalsIgnoreCase("adsRequest")) {
+        }
+        else if (menuState.equalsIgnoreCase("endDate")){
+            auctionDateHBox.getChildren().add(endDateAuction);
+        }
+        else if (menuState.equalsIgnoreCase("adsRequest")){
 
         } else if (menuState.equalsIgnoreCase("addProduct")) {
             setupInitialAddProduct();
@@ -346,6 +371,9 @@ public class SellerMenuUI implements Initializable {
 
     @FXML
     private void setupInitialAddProduct() {
+//        if (ClientSellerController.isProductInCategory((String) selectedProduct.get("id")))
+//            categoryString = (String) ((Map<String, Object>) selectedProduct.get("category")).get("name");
+//        else
         categoryString = "";
         ArrayList<String> categories = new ArrayList<>();
         selectedProduct.put("filters", new ArrayList<>());
@@ -402,11 +430,20 @@ public class SellerMenuUI implements Initializable {
 
     public void doneAddProduct() {
         try {
-
             ClientSellerController.addProductFromSeller(createProduct());
             ((Stage) filterTextField.getScene().getWindow()).close();
             menuState = "product";
             showSellerMenu();
+        } catch (Exception exception) {
+            throwError(exception.getMessage());
+        }
+    }
+
+    public void enterDate(){
+        LocalDateTime localDateTime = endDateAuction.dateTimeProperty().getValue();
+        try {
+            ClientSellerController.addAuction(selectedProduct, localDateTime);
+            ((Stage)(endDateAuction.getScene().getWindow())).close();
         } catch (Exception exception) {
             throwError(exception.getMessage());
         }
@@ -510,6 +547,7 @@ public class SellerMenuUI implements Initializable {
 
     @FXML
     private void setupInitial() {
+        auctionPageButton.setOnAction(e -> AuctionsMenuUI.showAuctionsMenu());
         supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
         product.setOnSelectionChanged(e -> setupInitialPersonalMenu());
         offer.setOnSelectionChanged(e -> setupInitialPersonalMenu());
@@ -552,15 +590,15 @@ public class SellerMenuUI implements Initializable {
 
     @FXML
     private void setupInitialPersonalMenu() {
-//        String path = "src/main/resources/Icons/unknown.png";
-////        if (seller.getProfilePicturePath().isEmpty()) {
-////            path = "src/main/resources/Icons/unknown.png";
-////        }
-////        else {
-////            path = seller.getProfilePicturePath();
-////        }
-        FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", ClientHandler.username + ".jpg");
-        File file = new File("src/main/resources/Images/" + ClientHandler.username + ".jpg");
+        String path = "src/main/resources/Icons/unknown.png";
+//        if (seller.getProfilePicturePath().isEmpty()) {
+//            path = "src/main/resources/Icons/unknown.png";
+//        }
+//        else {
+//            path = seller.getProfilePicturePath();
+//        }
+
+        File file = new File(path);
         profile.setImage(new Image(file.toURI().toString()));
 
         emailTextField.setText((String) seller.get("email"));
@@ -571,6 +609,20 @@ public class SellerMenuUI implements Initializable {
         usernameTextField.setEditable(false);
         companyNameTextField.setText((String) seller.get("companyName"));
         companyInformationTextField.setText((String) seller.get("companyDescription"));
+        chargeWalletButton.setOnAction(e -> {
+            try {
+                openStage("chargeWallet");
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+        dechargeWalletButton.setOnAction(e -> {
+            try {
+                openStage("dechargeWallet");
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
     }
 
     @FXML
@@ -656,6 +708,7 @@ public class SellerMenuUI implements Initializable {
         });*/
         Button edit = new Button("Edit");
         Button remove = new Button("Remove");
+        Button auction = new Button("Auction");
         edit.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             try {
                 selectedProduct = product;
@@ -668,6 +721,15 @@ public class SellerMenuUI implements Initializable {
             ClientSellerController.removeProduct((String) product.get("id"));
             menuState = "product";
             showSellerMenu();
+        });
+        auction.disableProperty().bind(ClientSellerController.getIsInAuction(product));
+        auction.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->{
+            try {
+                selectedProduct = product;
+                openStage("endDate");
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
         });
         /*productView.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             try {
@@ -714,7 +776,7 @@ public class SellerMenuUI implements Initializable {
         vBoxes.get(7).getChildren().add(discription);
         vBoxes.get(8).getChildren().add(productStatus);
         vBoxes.get(9).getChildren().add(filters);
-        vBoxes.get(10).getChildren().addAll(edit, remove);
+        vBoxes.get(10).getChildren().addAll(edit, remove, auction);
         vBoxes.get(10).setPrefWidth(95);
         filters.setMaxWidth(99);
         discription.setMaxWidth(99);
@@ -803,15 +865,13 @@ public class SellerMenuUI implements Initializable {
         username.setText((String) customer1.get("username"));
         email.setText((String) customer1.get("email"));
         phoneNumber.setText((String) customer1.get("phoneNumber"));
-//        File file = null;
+        File file = null;
 //        if (customer1.getProfilePicturePath().equals("")) {
 //            file = new File("src/main/resources/Icons/unknown.png");
 //        } else {
 //            file = new File(customer1.getProfilePicturePath());
 //        }
-//        file = new File("src/main/resources/Icons/unknown.png");
-        FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", customer1.get("username") + ".jpg");
-        File file = new File("src/main/resources/Images/" + customer1.get("username") + ".jpg");
+        file = new File("src/main/resources/Icons/unknown.png");
         imageView.setImage(new Image(file.toURI().toString()));
         HBox.setMargin(username, new Insets(0, 0, 0, 10));
         hBox1.getChildren().addAll(username, email, phoneNumber, imageView);
@@ -825,15 +885,12 @@ public class SellerMenuUI implements Initializable {
             username.setText((String) customer2.get("username"));
             email.setText((String) customer2.get("email"));
             phoneNumber.setText((String) customer2.get("phoneNumber"));
-//            File file = null;
-////        if (customer1.getProfilePicturePath().equals("")) {
-////            file = new File("src/main/resources/Icons/unknown.png");
-////        } else {
-////            file = new File(customer1.getProfilePicturePath());
-////        }
-////        file = new File("src/main/resources/Icons/unknown.png");
-            FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", customer2.get("username") + ".jpg");
-            file = new File("src/main/resources/Images/" + customer2.get("username") + ".jpg");
+//            if (customer2.getProfilePicturePath().equals("")) {
+//                file = new File("src/main/resources/Icons/unknown.png");
+//            } else {
+//                file = new File(customer2.getProfilePicturePath());
+//            }
+            file = new File("src/main/resources/Icons/unknown.png");
             imageView.setImage(new Image(file.toURI().toString()));
             hBox2.getChildren().addAll(username, email, phoneNumber, imageView);
         }
@@ -878,11 +935,7 @@ public class SellerMenuUI implements Initializable {
     public void changePic() throws IOException {
         FileChooser fileChooser = new FileChooser();
         try {
-            String path = fileChooser.showOpenDialog(new Stage()).getPath();
-            File file = new File(path);
-            File copyFile = new File("src/main/resources/Images/" + ClientHandler.username + ".jpg");
-            Files.copy(file.toPath(), copyFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            FileTransportClient.sendFile(ClientHandler.username, ClientHandler.token, "I", ClientHandler.username + ".jpg");
+//            seller.setProfilePicturePath(fileChooser.showOpenDialog(new Stage()).getPath());
         } catch (Exception exception) {
             // do nothing
         }
@@ -903,24 +956,56 @@ public class SellerMenuUI implements Initializable {
     public void imagePathClicked() {
         FileChooser fileChooser = new FileChooser();
         try {
-            String path = fileChooser.showOpenDialog(new Stage()).getPath();
-            File file = new File(path);
-            File copyFile = new File("src/main/resources/Images/" + selectedProduct.get("id") + ".jpg");
-            Files.copy(file.toPath(), copyFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            FileTransportClient.sendFile(ClientHandler.username, ClientHandler.token, "I", selectedProduct.get("id") + ".jpg");
+//            selectedProduct.setImagePath(fileChooser.showOpenDialog(new Stage()).getPath());
         } catch (Exception exception) {
             // do nothing
         }
     }
+    public void chargeWallet()
+    {
+        if (!Pattern.matches("(\\d+)(\\.(\\d+))?", moneyBank.getText()))
+            throwError("Money filed should be filled correctly!");
+        else{
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("message", "chargeWallet");
+            hashMap.put("money", Double.parseDouble(moneyBank.getText()));
+            hashMap.put("username", (String)seller.get("username"));
+            hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
+            if (hashMap.get("content").equals("error")){
+                throwError((String)hashMap.get("type"));
+            }
+            else{
+                menuState = "personal";
+                ((Stage)moneyBank.getScene().getWindow()).close();
+                showSellerMenu();
+            }
+        }
+    }
 
+    public void dechargeWallet()
+    {
+        if (!Pattern.matches("(\\d+)(\\.(\\d+))?", moneyBank.getText()))
+            throwError("Money filed should be filled correctly!");
+        else{
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("message", "dechargeWallet");
+            hashMap.put("money", Double.parseDouble(moneyBank.getText()));
+            hashMap.put("username", (String)seller.get("username"));
+            hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
+            if (hashMap.get("content").equals("error")){
+                throwError((String)hashMap.get("type"));
+            }
+            else{
+                menuState = "personal";
+                ((Stage)moneyBank.getScene().getWindow()).close();
+                showSellerMenu();
+            }
+        }
+    }
     public void videoPathClicked() {
         FileChooser fileChooser = new FileChooser();
         try {
-            String path = fileChooser.showOpenDialog(new Stage()).getPath();
-            File file = new File(path);
-            File copyFile = new File("src/main/resources/Videos/" + selectedProduct.get("id") + ".mp4");
-            Files.copy(file.toPath(), copyFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            FileTransportClient.sendFile(ClientHandler.username, ClientHandler.token, "V", selectedProduct.get("id") + ".mp4");
+//            selectedProduct.setVideoPath(fileChooser.showOpenDialog(new Stage()).getPath());
         } catch (Exception exception) {
             // do nothing
         }
@@ -1003,6 +1088,15 @@ public class SellerMenuUI implements Initializable {
         } else if (lock.equalsIgnoreCase("sellLog")) {
             Parent root = FXMLLoader.load(SignUpAndLoginMenu.class.getClassLoader().getResource("FXML/SellLog.fxml"));
             Main.setupOtherStage(new Scene(root), "Sell Log");
+        } else if (lock.equalsIgnoreCase("endDate")) {
+            Parent root = FXMLLoader.load(SignUpAndLoginMenu.class.getClassLoader().getResource("FXML/EndDate.fxml"));
+            Main.setupOtherStage(new Scene(root), "Enter Ending Time Of Auction");
+        } else if (lock.equalsIgnoreCase("chargeWallet")) {
+            Parent root = FXMLLoader.load(SignUpAndLoginMenu.class.getClassLoader().getResource("FXML/ChargeWalletSeller.fxml"));
+            Main.setupOtherStage(new Scene(root), "Charge Wallet");
+        } else if (lock.equalsIgnoreCase("dechargeWallet")) {
+            Parent root = FXMLLoader.load(SignUpAndLoginMenu.class.getClassLoader().getResource("FXML/DechargeWalletSeller.fxml"));
+            Main.setupOtherStage(new Scene(root), "Decharge Wallet");
         }
     }
 
@@ -1037,4 +1131,6 @@ public class SellerMenuUI implements Initializable {
             // do nothing
         }
     }
+
 }
+

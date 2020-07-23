@@ -3,34 +3,37 @@ package Store.Model;
 import Store.Controller.MainMenuUIController;
 import Store.Model.Enums.RequestType;
 import Store.Model.Log.SellLogItem;
+import Store.Networking.BankAPI;
+import Store.Networking.MainServer;
 import Store.View.MainMenuUI;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 public class Seller extends User {
 
-    private double money;
+    private double money = Manager.getMinimumRemaining();
     private String companyName;
     private String companyDescription;
     private ArrayList<SellLogItem> sellLog = new ArrayList<SellLogItem>();
     private ArrayList<Product> products = new ArrayList<Product>();
     private ArrayList<Offer> offers = new ArrayList<Offer>();
+    private int bankAccount;
 
-    public Seller(String username, String name, String familyName, String email, String phoneNumber, String password, double money, String companyName, String companyDescription) {
+    public Seller(String username, String name, String familyName, String email, String phoneNumber, String password, String companyName, String companyDescription) {
         super(username, name, familyName, email, phoneNumber, password);
         this.companyName = companyName;
         this.companyDescription = companyDescription;
-        this.money = money;
         this.type = "Seller";
     }
 
-    public Seller(User user, String password, double money, String companyName, String companyDescription)
+    public Seller(User user, String password, String companyName, String companyDescription)
     {
         super(user.getUsername(), user.getName(), user.getFamilyName(), user.getEmail(), user.getPhoneNumber(), password);
         this.companyName = companyName;
         this.companyDescription = companyDescription;
-        this.money = money;
         this.type = "Seller";
     }
 
@@ -38,9 +41,22 @@ public class Seller extends User {
     {
         offers.add(offer);
     }
-    public static void addSeller(Seller seller)
-    {
+    public static void addSeller(Seller seller) {
         allUsers.add(seller);
+    }
+
+    public int getBankAccount() {
+        return bankAccount;
+    }
+
+    public void setBankAccount(int bankAccount) {
+        this.bankAccount = bankAccount;
+        try {
+            MainServer.sendAndReceiveToBankAPIMove(money, bankAccount, Manager.getBankAccount(), "");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void addProduct(Product product)
@@ -64,12 +80,12 @@ public class Seller extends User {
     {
         ArrayList<String> buyers = new ArrayList<>();
         for(SellLogItem sellLogItem: sellLog)
-             buyers.add(sellLogItem.getCustomerName());
+            buyers.add(sellLogItem.getCustomerName());
         return buyers;
     }
 
     public void handleLogs(double offValue, ArrayList<Product> sellProducts, Date date, Customer customer, double income) {
-        sellLog.add(new SellLogItem(sellLog.size() + 1, date, sellProducts, income, offValue, customer.getUsername(), false));
+        sellLog.add(new SellLogItem(date, sellProducts, income, offValue, customer.getUsername(), false));
     }
 
     public void removeProduct(Product productToRemove)
@@ -123,6 +139,8 @@ public class Seller extends User {
 //                MainMenuUIController.setStaticAdUpper(request.getProduct());
 //            else
 //                MainMenuUIController.setStaticAdLower(request.getProduct());
+        } else if (request.getRequestType() == RequestType.ADD_NEW_AUCTION){
+            new Auction(request.getSeller(), request.getProduct(), request.getDate());
         }
     }
 

@@ -29,6 +29,7 @@ public class MainMenuUI {
     public Button supportPageButton;
     public Button signUpButton;
     public Button loginLogoutButton;
+    public Button auctionPageButton;
     public Label loggedInStatusText;
 
     public ImageView upperStaticAd;
@@ -124,6 +125,7 @@ public class MainMenuUI {
         offersButton.setOnAction((e) -> OffersMenuUI.showOffersMenu());
         userPageButton.setOnAction(e -> UserPageHandlerUI.handleEvent());
         supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
+        auctionPageButton.setOnAction(e -> AuctionsMenuUI.showAuctionsMenu());
     }
 
 }
