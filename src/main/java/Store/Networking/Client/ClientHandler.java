@@ -56,6 +56,8 @@ public class ClientHandler {
         }
     }
 
+
+
     public static HashMap sendAndReceiveMessage(HashMap<String, Object> hashMap, int port) {
         try {
             chatAuctionSocket = new Socket("192.168.1.4", port);

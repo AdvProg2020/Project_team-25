@@ -64,7 +64,7 @@ public class SignUpManagerMenuUI {
 
     public void setupBindings() {
         confirmButton.setOnAction((e) -> handleSignUpValidation());
-        if (!Manager.hasManager){
+        if (!ClientManagerController.hasManager()){
             karmozdTextField.setVisible(true);
             minimumMoneyTextField.setVisible(true);
         }
@@ -153,28 +153,30 @@ public class SignUpManagerMenuUI {
             setError(emailTextField, true);
             isValid = false;
         }
+        if (karmozdTextField.isVisible()) {
+            if (!Pattern.matches("(\\d+)", karmozdTextField.getText())) {
+                throwError("Invalid karmozd!");
+                setError(karmozdTextField, true);
+                isValid = false;
+            }
 
-        if (!Pattern.matches("(\\d+)", karmozdTextField.getText())){
-            throwError("Invalid karmozd!");
-            setError(karmozdTextField, true);
-            isValid = false;
+            if (!Pattern.matches("(\\d+)", minimumMoneyTextField.getText())) {
+                throwError("Invalid minimum!");
+                setError(minimumMoneyTextField, true);
+                isValid = false;
+            }
         }
-
-        if (!Pattern.matches("(\\d+)", minimumMoneyTextField.getText())){
-            throwError("Invalid minimum!");
-            setError(minimumMoneyTextField, true);
-            isValid = false;
-        }
-
         ArrayList<String> attributes = new ArrayList<String>(Arrays.asList(username, firstName, lastName, email, phoneNumber, password));
         if (isValid) {
             ClientSignUpAndLoginController.createManager(attributes);
-            double karmozd = 0;
-            double minimum = 0;
-            karmozd = Double.parseDouble(karmozdTextField.getText());
-            minimum = Double.parseDouble(minimumMoneyTextField.getText());
-            ClientManagerController.setKarmozd(karmozd);
-            ClientManagerController.setMinimum(minimum);
+            if (karmozdTextField.isVisible()) {
+                double karmozd = 0;
+                double minimum = 0;
+                karmozd = Double.parseDouble(karmozdTextField.getText());
+                minimum = Double.parseDouble(minimumMoneyTextField.getText());
+                ClientManagerController.setKarmozd(karmozd);
+                ClientManagerController.setMinimum(minimum);
+            }
             resetAllFields();
             System.out.println(password);
             throwError("Register Successful!");

@@ -24,14 +24,14 @@ public class SignUpAndLoginController {
                 e.printStackTrace();
             }
             if (Pattern.matches("\\d+", input))
-                {
-                    bankAccount = Integer.parseInt(input);
-                    Manager.setBankAccount(bankAccount);
-                }
-                else{
-                    throw new Exception(input);
-                }
+            {
+                bankAccount = Integer.parseInt(input);
+                Manager.setBankAccount(bankAccount);
             }
+            else{
+                throw new Exception(input);
+            }
+        }
     }
 
     public static void createSeller(ArrayList<String> attributes, String companyName, String companyDescription) {

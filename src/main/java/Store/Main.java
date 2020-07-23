@@ -85,9 +85,9 @@ public class Main extends Application {
         primaryStage.setTitle("Shop");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
-        primaryStage.setOnCloseRequest(e -> {
+        /*primaryStage.setOnCloseRequest(e -> {
             ResourceHandler.writeAll();
-        });
+        });*/
 //        setupBGM();
     }
 
@@ -109,23 +109,23 @@ public class Main extends Application {
 //        thread.setDaemon(true);
 //        thread.start();
         //        setTest();
-        Scanner scanner = new Scanner(System.in);
+        /*Scanner scanner = new Scanner(System.in);
         if (scanner.nextLine().equals("S")) {
             handleServer();
-        } else {
+        } else {*/
             MainMenuUIController.currentUser = MainMenuUIController.guest;
 //        Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
 //        setTest();
 //        setOffers();
             try {
 //            MainServer server = new MainServer();
-                ClientHandler.setPort(Integer.parseInt(scanner.nextLine()));
+                ClientHandler.setPort(/*Integer.parseInt(scanner.nextLine())*/12000);
                 ClientHandler.setSocket(new Socket("localhost", ClientHandler.getPort()));
             } catch (IOException exception) {
                 exception.printStackTrace();
             }
             launch(args);
-        }
+       // }
     }
 
 
@@ -332,7 +332,7 @@ public class Main extends Application {
         );
 
 
-//        applicationStage.setScene(new Scene(new Group(imageView)));
+   //     applicationStage.setScene(new Scene(new Group(imageView)));
         popup.getContent().add(new Group(imageView));
 
         animation.setCycleCount(Animation.INDEFINITE);
@@ -342,17 +342,17 @@ public class Main extends Application {
     }
 
     public static void handleServer() {
-        Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
-        /*Main.setTest();
-        Main.setOffers();
-        */try {
+        /*Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
+        //Main.setTest();
+        //Main.setOffers();
+        try {
             MainServer server = new MainServer();
             ChatServer chatServer = new ChatServer();
             P2PManager p2PManager = new P2PManager();
             System.out.println(server.getPort());
         } catch (IOException exception) {
             exception.printStackTrace();
-        }
+        }*/
     }
 
     public static Stage getApplicationStage() {

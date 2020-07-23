@@ -61,9 +61,9 @@ public class ClientCustomerController {
 
     public static String purchase(Map<String, Object> customer, String input, boolean by, String address) throws Exception {
         if (input.isEmpty()) {
-            return buy(by, address);
+            return buy((String)customer.get("username"), by, address);
         } else {
-            return buy(input, by, address);
+            return buy((String)customer.get("username"), input, by, address);
         }
     }
 
@@ -112,9 +112,10 @@ public class ClientCustomerController {
         return (Boolean) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
     }
 
-    public static String buy(boolean by, String address) {
+    public static String buy(String username, boolean by, String address) {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("message", "buy");
+        hashMap.put("username", username);
         hashMap.put("code", "");
         hashMap.put("address", address);
         if (by)
@@ -124,9 +125,10 @@ public class ClientCustomerController {
         return (String) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
     }
 
-    public static String buy(String code, boolean by, String address) {
+    public static String buy(String username, String code, boolean by, String address) {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("message", "buy");
+        hashMap.put("username", username);
         hashMap.put("code", code);
         hashMap.put("address", address);
         if (by)

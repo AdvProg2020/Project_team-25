@@ -2,6 +2,11 @@ package Store.Networking.Client.Controller;
 
 import Store.Networking.Client.ClientHandler;
 import Store.Networking.HashMapGenerator;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 
@@ -198,7 +203,32 @@ public class ClientManagerController {
 
     public static HashMap<String, ArrayList<Map<String, Object>>> getBuyLogs() {
         HashMap<String, Object> hashMap = new HashMap<>();
+        HashMap<String, ArrayList> hashMap2 = new HashMap<>();
+        ArrayList<Map> arrayList = new ArrayList<>();
         hashMap.put("message", "getBuyLogs");
-        return (HashMap)ClientHandler.sendAndReceiveMessage(hashMap).get("content");
+        hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
+        Gson gson = new Gson();
+        hashMap = gson.fromJson(String.valueOf(hashMap.get("content")), HashMap.class);
+        return (HashMap)hashMap;
+    }
+
+
+    public static boolean hasManager() {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "hasManager?");
+        return (boolean)ClientHandler.sendAndReceiveMessage(hashMap).get("content");
+    }
+
+    public static void createOperatorProfile(String value, String username, String firstName, String lastName, String email, String phoneNumber, String password) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("message", "createOperator");
+        hashMap.put("creator", value);
+        hashMap.put("username", username);
+        hashMap.put("firstName", firstName);
+        hashMap.put("lastName", lastName);
+        hashMap.put("email", email);
+        hashMap.put("phoneNumber", phoneNumber);
+        hashMap.put("password", password);
+        ClientHandler.sendAndReceiveMessage(hashMap).get("content");
     }
 }

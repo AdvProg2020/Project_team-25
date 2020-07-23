@@ -189,8 +189,7 @@
                            </font>
                         </Label>
                         <Button layoutX="801.0" layoutY="269.0" mnemonicParsing="false" onAction="#changePic" prefHeight="25.0" prefWidth="77.0" styleClass="sellerButton" stylesheets="@../CSS/product_menu_stylesheet.css" text="Change" />
-                        <Button layoutX="689.0" layoutY="77.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" styleClass="sellerButton" stylesheets="@../CSS/product_menu_stylesheet.css" text="Charge" />
-                        <Button layoutX="434.0" layoutY="65.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="136.0" styleClass="sellerButton" stylesheets="@../CSS/product_menu_stylesheet.css" text="Create Bank Account" />
+                        <Button fx:id="chargeWalletButton" layoutX="689.0" layoutY="77.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" styleClass="sellerButton" stylesheets="@../CSS/product_menu_stylesheet.css" text="Charge" />
                      </children>
                   </AnchorPane>
             </content>

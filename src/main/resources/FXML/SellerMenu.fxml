@@ -98,9 +98,8 @@
                            </font>
                         </Label>
                         <Button layoutX="793.0" layoutY="270.0" mnemonicParsing="false" onAction="#changePic" prefHeight="25.0" prefWidth="84.0" styleClass="sellerButton" stylesheets="@../CSS/product_menu_stylesheet.css" text="Change" />
-                        <Button layoutX="794.0" layoutY="75.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="84.0" styleClass="sellerButton" stylesheets="@../CSS/product_menu_stylesheet.css" text="Decharge" />
-                        <Button layoutX="696.0" layoutY="75.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="84.0" styleClass="sellerButton" stylesheets="@../CSS/product_menu_stylesheet.css" text="Charge" />
-                        <Button layoutX="424.0" layoutY="55.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="136.0" styleClass="sellerButton" stylesheets="@../CSS/product_menu_stylesheet.css" text="Create Bank Account" />
+                        <Button fx:id="dechargeWalletButton" layoutX="794.0" layoutY="75.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="84.0" styleClass="sellerButton" stylesheets="@../CSS/product_menu_stylesheet.css" text="Decharge" />
+                        <Button fx:id="chargeWalletButton" layoutX="696.0" layoutY="75.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="84.0" styleClass="sellerButton" stylesheets="@../CSS/product_menu_stylesheet.css" text="Charge" />
                      </children>
                   </AnchorPane>
             </content>
@@ -348,11 +347,6 @@
                            </font>
                         </Label>
                      </children></AnchorPane>
-               </content>
-            </Tab>
-            <Tab fx:id="bank" text="Bank">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                </content>
             </Tab>
         </tabs>
