@@ -36,6 +36,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -1017,15 +1019,22 @@ public class SellerMenuUI implements Initializable {
         }
     }
 
-    public void filePathClicked() {
+    public void filePathClicked()
+    {
         FileChooser fileChooser = new FileChooser();
-//        try {
-//            String path = fileChooser.showOpenDialog(new Stage()).getPath();
-//            File file = new File(path);
-//            File copyFile = new File("src/main/resources/Files/" + selectedProduct.get("id"));
-//            Files.copy(file.toPath(), copyFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-//        } catch (Exception exception) {
-//            // do nothing
-//        }
+        try {
+            Path path = Paths.get(fileChooser.showOpenDialog(new Stage()).getPath());
+            System.out.println("############ " + path.getFileName().toString());
+
+            if (selectedProduct.containsKey("filePath")) {
+                selectedProduct.replace("filePath", path.getFileName().toString());
+            }
+            else {
+                selectedProduct.put("filePath", path.getFileName().toString());
+            }
+        }
+        catch (Exception exception) {
+            // do nothing
+        }
     }
 }
