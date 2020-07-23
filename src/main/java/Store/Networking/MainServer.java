@@ -316,6 +316,7 @@ public class MainServer {
         private void editProductServer(HashMap input) {
             Map<String, Object> productHashMap = (Map<String, Object>) input.get("product");
             Product product = new Product(CheckingStatus.CREATION, Manager.categoryByName((String) productHashMap.get("category")), (String) productHashMap.get("name"), (Seller) user, (String) productHashMap.get("brand"), (Double) productHashMap.get("price"), (Boolean) productHashMap.get("availability"), (String) productHashMap.get("description"));
+            product.setFilePath((String) productHashMap.get("filePath"));
             for (String filterToAdd : (List<String>) productHashMap.get("filters")) {
                 product.addFilter(filterToAdd);
             }
