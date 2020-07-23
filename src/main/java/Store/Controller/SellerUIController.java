@@ -85,7 +85,7 @@ public class SellerUIController {
             if (!offer1.equals(offer) && offer1.equals(newOffer))
                 throw new Exception("Your new offer has at least one product which is in off!");
         Manager.addRequest(new Request(seller, offer, true, newOffer));
-       // return "Request has been sent.";
+        // return "Request has been sent.";
     }
 
     public static void addOff(Seller seller, Offer offer) {
@@ -131,7 +131,7 @@ public class SellerUIController {
             throw new Exception("This product already has this filter!");
         }
         product.addFilter(filter);
-       // return "Filter added.";
+        // return "Filter added.";
     }
 
     public static void removeFilterFromProduct(Seller seller, String idString, String filter) throws Exception {

@@ -44,6 +44,7 @@ public class Customer extends User {
     public static void addCustomer(Customer customer, int bankAccount) {
         customer.setBankAccount(bankAccount);
         allUsers.add(customer);
+        System.out.println("added");
     }
 
     public double getMoney() {
@@ -191,7 +192,7 @@ public class Customer extends User {
             offerOff = calOfferOff(productsOfOneSeller);
             buyLog.add(new BuyLogItem(date, productsOfOneSeller, priceOfList(productsOfOneSeller) - (priceOfList(productsOfOneSeller) - offerOff) * (1.0 - (discount / totalPrice)), seller.getUsername(), false, address));
             seller.handleLogs(offerOff, productsOfOneSeller, date, this, (priceOfList(productsOfOneSeller) - offerOff) * (100.0 - Manager.getKarmozd()) / 100.0);
-           // seller.removeProducts(productsOfOneSeller);
+            // seller.removeProducts(productsOfOneSeller);
             seller.setMoney(seller.getMoney() + (priceOfList(productsOfOneSeller) - offerOff) * (100.0 - Manager.getKarmozd()) / 100.0);
         }
     }

@@ -19,7 +19,7 @@ public class SignUpAndLoginController {
             int bankAccount = 0;
             String input = "";
             try {
-                input = (String) MainServer.sendAndReceiveToBankAPICreateAccount();
+                input = String.valueOf(MainServer.sendAndReceiveToBankAPICreateAccount());
             }catch (Exception e) {
                 e.printStackTrace();
             }
@@ -42,10 +42,11 @@ public class SignUpAndLoginController {
 
     public static void createCustomer(ArrayList<String> attributes) throws Exception {
         Customer customer = new Customer(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5));
+        System.out.println(attributes);
         int bankAccount = 0;
         String input = "";
         try {
-            input = (String) MainServer.sendAndReceiveToBankAPICreateAccount();
+            input = String.valueOf(MainServer.sendAndReceiveToBankAPICreateAccount());
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -59,7 +60,7 @@ public class SignUpAndLoginController {
         }
     }
 
-    public static String handleLogin(String username, String password) {
+    /*public static String handleLogin(String username, String password) {
         User user = User.getUserByUsername(username);
 
         if (user.validatePassword(password)) {
@@ -68,7 +69,7 @@ public class SignUpAndLoginController {
         } else {
             return "Invalid password!";
         }
-    }
+    }*/
 
     /*public static String handleCreateAccount(String type, String username) {
         if (User.getUserByUsername(username) != null) {

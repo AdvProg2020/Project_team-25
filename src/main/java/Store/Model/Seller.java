@@ -50,12 +50,13 @@ public class Seller extends User {
     }
 
     public void setBankAccount(int bankAccount) {
+        this.bankAccount = bankAccount;
         try {
             MainServer.sendAndReceiveToBankAPIMove(money, bankAccount, Manager.getBankAccount(), "");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.bankAccount = bankAccount;
+
     }
 
     public void addProduct(Product product)
@@ -79,7 +80,7 @@ public class Seller extends User {
     {
         ArrayList<String> buyers = new ArrayList<>();
         for(SellLogItem sellLogItem: sellLog)
-             buyers.add(sellLogItem.getCustomerName());
+            buyers.add(sellLogItem.getCustomerName());
         return buyers;
     }
 

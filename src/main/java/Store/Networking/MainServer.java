@@ -26,13 +26,33 @@ public class MainServer {
     private ServerSocket serverSocket;
     private int port;
     private static Socket bankAPISocket;
-    private HashMap<Auction, Integer> chatAuctionPorts;
-    private HashMap<Auction, Integer> chatWriteAuctionPort;
-    private HashMap<Auction, ArrayList<Socket>> connectedSockets;
+    private static HashMap<Auction, Integer> chatAuctionPorts;
+    private static HashMap<Auction, Integer> chatWriteAuctionPort;
+    private static HashMap<Socket, ArrayList<Auction>> socketAuctionsAvailable;
+    private static HashMap<Auction, ArrayList<ChatAuctionClientThread>> chatAuctionArray;
 
     static {
         try {
-            bankAPISocket = new Socket("192.168.1.4", 15000);
+            bankAPISocket = new Socket("127.0.0.1", 15000);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private static DataOutputStream dataOutputStream1;
+
+    static {
+        try {
+            dataOutputStream1 = new DataOutputStream(new BufferedOutputStream(bankAPISocket.getOutputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static DataInputStream dataInputStream1;
+
+    static {
+        try {
+            dataInputStream1 = new DataInputStream(new BufferedInputStream(bankAPISocket.getInputStream()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -40,7 +60,7 @@ public class MainServer {
 
 
     public MainServer() throws IOException {
-        this.port = nextFreePort(9000, 20000);
+        this.port = 12000;//nextFreePort(9000, 20000);
         serverSocket = new ServerSocket(port);
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -59,6 +79,7 @@ public class MainServer {
         for (Auction auction: Auction.getAllAuctions()) {
             chatAuctionPorts.put(auction, nextFreePort(9000, 20000));
             chatWriteAuctionPort.put(auction, nextFreePort(9000, 20000));
+            chatAuctionArray.put(auction, new ArrayList<>());
         }
         for (Auction auction: Auction.getAllAuctions()){
             new Thread(new Runnable() {
@@ -69,7 +90,9 @@ public class MainServer {
                         Socket socket;
                         while (true) {
                             socket = serverSocket.accept();
-                            new ChatAuctionClientThread(socket, auction).start();
+                            socketAuctionsAvailable.put(socket, new ArrayList<>());
+                            chatAuctionArray.get(auction).add(new ChatAuctionClientThread(socket, auction));
+                            chatAuctionArray.get(auction).get(chatAuctionArray.get(auction).size() - 1).start();
                         }
                     }catch (Exception e){
 
@@ -111,20 +134,17 @@ public class MainServer {
 
     public static Object sendAndReceiveToBankAPICreateAccount() throws IOException {
         String output = "createAccount";
-        DataOutputStream dataOutputStream1 = new DataOutputStream(new BufferedOutputStream(bankAPISocket.getOutputStream()));
-        DataInputStream dataInputStream1 = new DataInputStream(new BufferedInputStream(bankAPISocket.getInputStream()));
         dataOutputStream1.writeUTF(output);
         dataOutputStream1.flush();
         String input = dataInputStream1.readUTF();
+        System.out.println(input);
         if (Pattern.matches("\\d+", input))
-            return input;
+            return Integer.parseInt(input);
         else
             return null;
     }
     public static Object sendAndReceiveToBankAPIBalance() throws IOException {
         String output = "balance";
-        DataOutputStream dataOutputStream1 = new DataOutputStream(new BufferedOutputStream(bankAPISocket.getOutputStream()));
-        DataInputStream dataInputStream1 = new DataInputStream(new BufferedInputStream(bankAPISocket.getInputStream()));
         dataOutputStream1.writeUTF(output);
         dataOutputStream1.flush();
         String input = dataInputStream1.readUTF();
@@ -135,26 +155,59 @@ public class MainServer {
     }
     public static Object sendAndReceiveToBankAPIMove(double money, int source, int dest, String description) throws IOException {
         String output = "move" + " " + money + " " + source + " " + dest + " " + description;
-        DataOutputStream dataOutputStream1 = new DataOutputStream(new BufferedOutputStream(bankAPISocket.getOutputStream()));
-        DataInputStream dataInputStream1 = new DataInputStream(new BufferedInputStream(bankAPISocket.getInputStream()));
         dataOutputStream1.writeUTF(output);
         dataOutputStream1.flush();
         return dataInputStream1.readUTF();
     }
     public static Object sendAndReceiveToBankAPIDeposit(double money, int source, String description) throws IOException {
         String output = "deposit" + " " + money + " " + source + " " + description;
-        DataOutputStream dataOutputStream1 = new DataOutputStream(new BufferedOutputStream(bankAPISocket.getOutputStream()));
-        DataInputStream dataInputStream1 = new DataInputStream(new BufferedInputStream(bankAPISocket.getInputStream()));
         dataOutputStream1.writeUTF(output);
         dataOutputStream1.flush();
         return dataInputStream1.readUTF();
+    }
+
+    public static void portAuction(Auction auction) {
+        chatAuctionPorts.put(auction, nextFreePort(9000, 20000));
+        chatWriteAuctionPort.put(auction, nextFreePort(9000, 20000));
+        chatAuctionArray.put(auction, new ArrayList<>());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ServerSocket serverSocket = new ServerSocket(chatAuctionPorts.get(auction));
+                    Socket socket;
+                    while (true) {
+                        socket = serverSocket.accept();
+                        chatAuctionArray.get(auction).add(new ChatAuctionClientThread(socket, auction));
+                        chatAuctionArray.get(auction).get(chatAuctionArray.get(auction).size() - 1).start();
+                    }
+                }catch (Exception e){
+
+                }
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ServerSocket serverSocket = new ServerSocket(chatWriteAuctionPort.get(auction));
+                    Socket socket;
+                    while (true) {
+                        socket = serverSocket.accept();
+                        new ChatAuctionWriteClientThread(socket, auction).start();
+                    }
+                } catch (Exception e) {
+                }
+            }
+        }).start();
     }
 
     public int getPort() {
         return port;
     }
 
-    private int nextFreePort(int from, int to) {
+    private static int nextFreePort(int from, int to) {
         int port = ThreadLocalRandom.current().nextInt(from, to);
         while (true) {
             if (isLocalPortFree(port)) {
@@ -165,7 +218,7 @@ public class MainServer {
         }
     }
 
-    private boolean isLocalPortFree(int port) {
+    private static boolean isLocalPortFree(int port) {
         try {
             new ServerSocket(port).close();
             return true;
@@ -174,18 +227,29 @@ public class MainServer {
         }
     }
 
-    private class ChatAuctionClientThread extends Thread{
+    private static class ChatAuctionClientThread extends Thread{
         private Socket clientSocket;
         private DataOutputStream dataOutputStream;
         private DataInputStream dataInputStream;
         private Auction auction;
-        private User user;
 
         public ChatAuctionClientThread(Socket socket, Auction auction) throws IOException{
             this.clientSocket = socket;
             dataInputStream = new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()));
             dataOutputStream = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
             this.auction = auction;
+        }
+
+        public DataOutputStream getDataOutputStream() {
+            return dataOutputStream;
+        }
+
+        public DataInputStream getDataInputStream() {
+            return dataInputStream;
+        }
+
+        public Socket getClientSocket() {
+            return clientSocket;
         }
 
         @Override
@@ -197,17 +261,14 @@ public class MainServer {
                     Gson gson = new Gson();
                     HashMap input = gson.fromJson(string, HashMap.class);
                     if (input.get("message").equals("connect")) {
-                        if (!connectedSockets.get(auction).contains(clientSocket))
-                            connectedSockets.get(auction).add(clientSocket);
+                        if (!socketAuctionsAvailable.get(clientSocket).contains(auction))
+                            socketAuctionsAvailable.get(clientSocket).add(auction);
                     }
                     if (input.get("message").equals("disconnect")) {
+                        if (socketAuctionsAvailable.get(clientSocket).contains(auction))
+                            socketAuctionsAvailable.get(clientSocket).remove(auction);
                         HashMap<String, Object> hashMap = new HashMap<>();
-                        if (connectedSockets.get(auction).contains(clientSocket)) {
-                            connectedSockets.get(auction).remove(clientSocket);
-                            hashMap.put("content", "disconnected");
-                        } else {
-                            hashMap.put("content", "already disconnected");
-                        }
+                        hashMap.put("content", "disconnected");
                         try {
                             DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
                             dataOutputStream.writeUTF(gson.toJson(hashMap));
@@ -222,12 +283,11 @@ public class MainServer {
         }
 
     }
-    private class ChatAuctionWriteClientThread extends Thread{
+    private static class ChatAuctionWriteClientThread extends Thread{
         private Socket clientSocket;
         private DataOutputStream dataOutputStream;
         private DataInputStream dataInputStream;
         private Auction auction;
-        private User user;
 
         public ChatAuctionWriteClientThread(Socket socket, Auction auction) throws IOException{
             this.clientSocket = socket;
@@ -239,7 +299,7 @@ public class MainServer {
         @Override
         public void run() {
             while (true){
-                String string = null;
+                String string = "";
                 try {
                     string = dataInputStream.readUTF();
                     Gson gson = new Gson();
@@ -263,7 +323,6 @@ public class MainServer {
                 hashMap.put("content", "done");
                 try {
                     Gson gson = new Gson();
-                    DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
                     dataOutputStream.writeUTF(gson.toJson(hashMap));
                     dataOutputStream.flush();
                 } catch(Exception exception){
@@ -275,7 +334,6 @@ public class MainServer {
                 hashMap.put("type", "You Are Not Allowed To Chat!");
                 try {
                     Gson gson = new Gson();
-                    DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
                     dataOutputStream.writeUTF(gson.toJson(hashMap));
                     dataOutputStream.flush();
                 } catch(Exception exception){
@@ -286,14 +344,15 @@ public class MainServer {
         private void sendToAllConnectedSockets() {
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", auction.getMessages());
-            for (Socket socket: connectedSockets.get(auction)){
-                try {
-                    DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-                    Gson gson = new Gson();
-                    dataOutputStream.writeUTF(gson.toJson(hashMap));
-                    dataOutputStream.flush();
-                } catch (Exception exception) {
+            for (ChatAuctionClientThread chatAuctionClientThread: chatAuctionArray.get(auction)){
+                if (socketAuctionsAvailable.get(chatAuctionClientThread.getClientSocket()).contains(auction)) {
+                    try {
+                        Gson gson = new Gson();
+                        chatAuctionClientThread.getDataOutputStream().writeUTF(gson.toJson(hashMap));
+                        chatAuctionClientThread.getDataOutputStream().flush();
+                    } catch (Exception exception) {
 //
+                    }
                 }
             }
         }
@@ -330,6 +389,7 @@ public class MainServer {
                         user = User.getUserByUsername(TokenHandler.getUsernameOfToken(token));
                     }
 //                    System.out.println("Token: " + token + "Command: " + input.get("message"));
+                    System.out.println(input.get("message"));
                     if (input.get("message").equals("login")) {
                         moveShoppingCartAndLoginServer((String) input.get("username"));
                     }
@@ -354,7 +414,7 @@ public class MainServer {
                     if (input.get("message").equals("getProducts")) {
                         getProductsServer(input);
                     }
-                    if (input.get("messege").equals("getAuctionsProducts")){
+                    if (input.get("message").equals("getAuctionsProducts")){
                         getAuctionsServer(input);
                     }
                     if (input.get("message").equals("getOfferedProducts")) {
@@ -419,6 +479,9 @@ public class MainServer {
                     }
                     if (input.get("message").equals("createOffCode")) {
                         createOffCodeServer(input);
+                    }
+                    if (input.get("message").equals("createOperator")){
+                        createOperator(input);
                     }
                     if (input.get("message").equals("getAllUsers")) {
                         getAllUsersServer(input);
@@ -497,10 +560,10 @@ public class MainServer {
                         increaseAuctionPrice(input);
                     }
                     if (input.get("message").equals("setMinimum")){
-                        Manager.setMinimumRemaining((Double)input.get("minimum"));
+                        setMinimum(input);
                     }
                     if (input.get("message").equals("setKarmozd")){
-                        Manager.setKarmozd((Double)input.get("karmozd"));
+                        setKarmozd(input);
                     }
                     if (input.get("message").equals("editSellerPersonalInfo")) {
                         editSellerPersonalInfoServer(input);
@@ -590,6 +653,34 @@ public class MainServer {
                     //exception.printStackTrace();
                 }
             }
+        }
+
+        private void setMinimum(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            Manager.setMinimumRemaining((Double)input.get("minimum"));
+            hashMap.put("content", "done");
+            sendMessage(hashMap);
+        }
+
+        private void setKarmozd(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            Manager.setKarmozd((Double)input.get("karmozd"));
+            hashMap.put("content", "done");
+            sendMessage(hashMap);
+        }
+
+        private void createOperator(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            String creator = (String)input.get("creator");
+            String username = (String)input.get("username");
+            String firstName = (String)input.get("firstName");
+            String lastName = (String)input.get("lastName");
+            String email = (String)input.get("email");
+            String phoneNumber = (String)input.get("phoneNumber");
+            String password = (String)input.get("password");
+            ManagerController.createOperatorProfile((Manager)User.getUserByUsername(creator), username, firstName, lastName, email, phoneNumber, password);
+            hashMap.put("content", "done");
+            sendMessage(hashMap);
         }
 
         private void portAuctionChatWrite(HashMap input) {
@@ -757,11 +848,13 @@ public class MainServer {
         synchronized private void purchaseByWallet(HashMap input) {
             HashMap<String, Object> hashMap = new HashMap<>();
             Customer customer = (Customer)User.getUserByUsername((String) input.get("username"));
+            System.out.println(customer);
             String offCode = (String)input.get("offCode");
             String address = (String)input.get("address");
             try {
                 hashMap.put("content", CustomerUIController.purchase(customer, offCode, false, address));
             } catch (Exception e) {
+                System.out.println(customer);
                 hashMap.put("content", "error");
                 hashMap.put("type", e.getMessage());
             }
@@ -777,7 +870,7 @@ public class MainServer {
                 result = sendAndReceiveToBankAPI("move", money, ((Seller)user).getBankAccount(), Manager.getBankAccount(), "");
             else
                 result = sendAndReceiveToBankAPI("move", money, ((Customer)user).getBankAccount(), Manager.getBankAccount(), "");
-            if (!result.equalsIgnoreCase("done")) {
+            if (!result.equalsIgnoreCase("done successfully")) {
                 hashMap.put("content", "error");
                 hashMap.put("type", result);
             }
@@ -1210,6 +1303,13 @@ public class MainServer {
                     ((Customer) user).addToCart(product);
                 }
                 guest.getCart().clear();
+                if (((Customer)user).getBankAccount() == 0) {
+                    try {
+                        ((Customer)user).setBankAccount((Integer)sendAndReceiveToBankAPICreateAccount());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
             if (user instanceof Seller){
                 if (((Seller)user).getBankAccount() == 0) {
@@ -1333,6 +1433,7 @@ public class MainServer {
                 hashMap.put("tokenStatus", "ok");
             }
             try {
+                System.out.println(hashMap.get("content"));
                 DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
                 Gson gson = new Gson();
 

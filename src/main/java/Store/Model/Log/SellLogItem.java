@@ -40,8 +40,6 @@ public class SellLogItem extends LogItem {
         return customerName;
     }
 
-
-
     @Override
     public String toString() {
         return "SellLogItem{" +

@@ -146,7 +146,7 @@ public class Manager extends User {
                 for (int i = 0; i < 3; i++)
                     assignOffCodeToUser(OffCode.randomOffCode(10), User.findIndexOfNthCustomer(helpRand.get(i) + 1));
             }
-            setPeriodOffCodeDate(new Date(new Date().getTime() + 1 * 60 *1000));
+            setPeriodOffCodeDate(new Date(new Date().getTime() + 5 * 60 *1000));
         }
     }
 

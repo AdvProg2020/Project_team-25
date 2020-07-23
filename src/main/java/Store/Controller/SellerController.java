@@ -35,7 +35,7 @@ public class SellerController {
             seller.setPhoneNumber(value);
         }
         else if (field.equalsIgnoreCase("password")) {
-                seller.setPassword(value);
+            seller.setPassword(value);
         }
         else if (field.equalsIgnoreCase("company name")) {
             seller.setCompanyName(value);
@@ -198,3 +198,4 @@ public class SellerController {
         }
     }
 }
+

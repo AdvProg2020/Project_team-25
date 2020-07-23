@@ -35,6 +35,7 @@ public class Auction implements Serializable {
         this.basePrice = product.getPrice();
         allAuctions.add(this);
         allAuctionsProducts.add(product);
+        MainServer.portAuction(this);
     }
 
     public static double getMoneyInAuctions(Customer customer) {
@@ -44,6 +45,18 @@ public class Auction implements Serializable {
                 sum += auction.getHighestPrice();
         }
         return sum;
+    }
+
+    public static void setIdCounter(int id) {
+        idCounter = id;
+    }
+
+    public static void setAllAuctions(ArrayList<Auction> allAuctions) {
+        Auction.allAuctions = allAuctions;
+    }
+
+    public static void setAllAuctionsProducts(ArrayList<Product> allAuctionsProducts) {
+        Auction.allAuctionsProducts = allAuctionsProducts;
     }
 
     public double getBasePrice() {

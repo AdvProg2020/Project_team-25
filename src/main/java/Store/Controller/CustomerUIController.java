@@ -77,6 +77,7 @@ public class CustomerUIController {
             try{
                 if (customer.canBuy(bank)) {
                     customer.buy(bank, address);
+                    System.out.println(customer);
                     return customer.getNewFactor();
                 }
             }catch (Exception e){
