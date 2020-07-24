@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class FileTransportServer {
 
-    private static final int FILE_SERVER_PORT = 9890;
+    private static final int FILE_SERVER_PORT = 19890;
     private static final String UPLOAD_REGEX = "^UPLOAD (\\S+) (\\S{50}) ([IVF]) (\\S+) (\\d+)$";
     private static final String DOWNLOAD_REGEX = "^DOWNLOAD (\\S+) (\\S{50}) ([IVF]) (\\S+)$";
     private static final String RESOURCE_PATH = "src/main/resources/";

@@ -1075,10 +1075,7 @@ public class MainServer {
         }
 
         private void addCategoryServer(HashMap input) {
-            Category category = Manager.categoryByName((String) input.get("name"));
-            synchronized (category) {
-                ManagerController.editCategory((Manager) user, category, (String) input.get("field"), (String) input.get("newValue"));
-            }
+            ManagerController.addCategory((Manager) user, (String) input.get("name"), (String) input.get("parentName"));
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", "Ok");
             sendMessage(hashMap);
@@ -1091,7 +1088,10 @@ public class MainServer {
         }
 
         private void editCategoryServer(HashMap input) {
-            ManagerController.editCategory((Manager) user, Manager.categoryByName((String) input.get("name")), (String) input.get("field"), (String) input.get("newValue"));
+            Category category = Manager.categoryByName((String) input.get("name"));
+            synchronized (category) {
+                ManagerController.editCategory((Manager) user, category, (String) input.get("field"), (String) input.get("newValue"));
+            }
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", "Ok");
             sendMessage(hashMap);
@@ -1282,8 +1282,23 @@ public class MainServer {
                     ((Customer) user).addToCart(product);
                 }
                 guest.getCart().clear();
+                if (((Customer)user).getBankAccount() == 0) {
+                    try {
+                        ((Customer)user).setBankAccount((Integer)sendAndReceiveToBankAPICreateAccount());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-
+            if (user instanceof Seller){
+                if (((Seller)user).getBankAccount() == 0) {
+                    try {
+                        ((Seller)user).setBankAccount((Integer)sendAndReceiveToBankAPICreateAccount());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
             HashMap<String, Object> hashMap = new HashMap<>();
             TokenHandler.createToken(username);
             hashMap.put("content", TokenHandler.getTokenOfUsername(username));
@@ -1342,7 +1357,13 @@ public class MainServer {
             if (Manager.hasManager) {
                 ((Manager) user).addNewManager(new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5)));
             } else {
-                new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5));
+                try {
+                    SignUpAndLoginController.handleCreateAccount("manager", attributes);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+//                new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5));
             }
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", "Ok");

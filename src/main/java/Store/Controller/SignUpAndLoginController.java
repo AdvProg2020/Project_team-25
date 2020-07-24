@@ -15,6 +15,7 @@ public class SignUpAndLoginController {
         if (Manager.hasManager)
             ((Manager)MainMenuUIController.currentUser).addNewManager(new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5)));
         else{
+            System.err.println("HERE");
             new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5));
             int bankAccount = 0;
             String input = "";
@@ -102,6 +103,7 @@ public class SignUpAndLoginController {
             SignUpAndLoginController.createCustomer(new ArrayList<>(attributes.subList(0, 6)));
         }
         else {
+            System.err.println("STATE: " + Manager.hasManager);
             SignUpAndLoginController.createManager(attributes);
         }
     }

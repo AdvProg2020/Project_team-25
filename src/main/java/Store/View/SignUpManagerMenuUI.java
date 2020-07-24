@@ -100,14 +100,18 @@ public class SignUpManagerMenuUI {
             setError(phoneNumberTextField, true);
             result = false;
         }
-        if (minimumMoneyTextField.getText().isEmpty()){
-            setError(minimumMoneyTextField, true);
-            result = false;
+
+        if (karmozdTextField.isVisible()) {
+            if (minimumMoneyTextField.getText().isEmpty()) {
+                setError(minimumMoneyTextField, true);
+                result = false;
+            }
+            if (karmozdTextField.getText().isEmpty()) {
+                setError(karmozdTextField, true);
+                result = false;
+            }
         }
-        if (karmozdTextField.getText().isEmpty()){
-            setError(karmozdTextField, true);
-            result = false;
-        }
+
         if (!result) {
             throwError("Please fill out all the needed fields!");
         }
@@ -192,6 +196,8 @@ public class SignUpManagerMenuUI {
         lastNameTextField.setText("");
         emailTextField.setText("");
         phoneNumberTextField.setText("");
+        karmozdTextField.setText("");
+        minimumMoneyTextField.setText("");
     }
 
     private void resetAllErrors() {
@@ -203,6 +209,8 @@ public class SignUpManagerMenuUI {
         setError(lastNameTextField, false);
         setError(emailTextField, false);
         setError(phoneNumberTextField, false);
+        setError(karmozdTextField, false);
+        setError(minimumMoneyTextField, false);
     }
 
     private void throwError(String message) {

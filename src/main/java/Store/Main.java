@@ -3,6 +3,7 @@ package Store;
 import Store.Controller.MainMenuUIController;
 import Store.Model.*;
 import Store.Model.Enums.CheckingStatus;
+import Store.Networking.BankAPI;
 import Store.Networking.Chat.ChatServer;
 import Store.Networking.Client.ClientHandler;
 import Store.Networking.MainServer;
@@ -110,9 +111,10 @@ public class Main extends Application {
 //        thread.start();
         //        setTest();
         Scanner scanner = new Scanner(System.in);
-        if (scanner.nextLine().equals("S")) {
+        String input = scanner.nextLine();
+        if (input.equals("S")) {
             handleServer();
-        } else {
+        } else if (input.equals("C")) {
             MainMenuUIController.currentUser = MainMenuUIController.guest;
 //        Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
 //        setTest();
@@ -125,6 +127,10 @@ public class Main extends Application {
                 exception.printStackTrace();
             }
             launch(args);
+        }
+        else {
+            BankAPI bankAPI = new BankAPI();
+            BankAPI.handleCommandAPI();
         }
     }
 
@@ -342,9 +348,10 @@ public class Main extends Application {
     }
 
     public static void handleServer() {
-        Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
+//        Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
 //        Main.setTest();
 //        Main.setOffers();
+        BankAPI bankAPI = new BankAPI();
         try {
             MainServer server = new MainServer();
             ChatServer chatServer = new ChatServer();
