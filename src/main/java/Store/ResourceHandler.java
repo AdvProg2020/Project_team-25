@@ -2,6 +2,7 @@ package Store;
 
 import Store.Controller.MainMenuUIController;
 import Store.Model.*;
+import Store.Model.Log.LogItem;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -20,6 +21,9 @@ public class ResourceHandler {
             Category.setIdCounter((int) objectInputStream.readObject());
             Manager.hasManager = (boolean) objectInputStream.readObject();
             Manager.setPeriodOffCodeDate((Date) objectInputStream.readObject());
+            Manager.setBankAccount((int) objectInputStream.readObject());
+            Auction.setIdCounter((int) objectInputStream.readObject());
+            LogItem.setIdCounter((int) objectInputStream.readObject());
 
             User.setAllUsers((ArrayList<User>) objectInputStream.readObject());
             Request.setAllRequests((ArrayList<Request>) objectInputStream.readObject());
@@ -29,6 +33,9 @@ public class ResourceHandler {
             Manager.setAllCategories((ArrayList<Category>) objectInputStream.readObject());
             Manager.setOffCodes((ArrayList<OffCode>) objectInputStream.readObject());
             Manager.setPendingRequests((ArrayList<Request>) objectInputStream.readObject());
+            Auction.setAllAuctions((ArrayList<Auction>) objectInputStream.readObject());
+            Auction.setAllAuctionsProducts((ArrayList<Product>) objectInputStream.readObject());
+            LogItem.setAllLogItems((ArrayList<LogItem>) objectInputStream.readObject());
 
             MainMenuUIController.staticAdUpper = (Product) objectInputStream.readObject();
             MainMenuUIController.staticAdLower = (Product) objectInputStream.readObject();
@@ -63,6 +70,9 @@ public class ResourceHandler {
             objectOutputStream.writeObject(Category.getIdCounter());
             objectOutputStream.writeObject(Manager.hasManager);
             objectOutputStream.writeObject(Manager.getPeriodOffCodeDate());
+            objectOutputStream.writeObject(Manager.getBankAccount());
+            objectOutputStream.writeObject(Auction.getIdCounter());
+            objectOutputStream.writeObject(LogItem.getIdCounter());
 
             objectOutputStream.writeObject(User.getAllUsers());
             objectOutputStream.writeObject(Request.getAllRequests());
@@ -72,6 +82,9 @@ public class ResourceHandler {
             objectOutputStream.writeObject(Manager.getAllCategories());
             objectOutputStream.writeObject(Manager.getOffCodes());
             objectOutputStream.writeObject(Manager.getPendingRequests());
+            objectOutputStream.writeObject(Auction.getAllAuctions());
+            objectOutputStream.writeObject(Auction.getAllAuctionsProducts());
+            objectOutputStream.writeObject(LogItem.getAllLogItems());
 
             objectOutputStream.writeObject(MainMenuUIController.staticAdUpper);
             objectOutputStream.writeObject(MainMenuUIController.staticAdLower);

@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 public class ChatClient {
 
     private static final String CHAT_SERVER_IP_ADDRESS = "127.0.0.1";
-    private static final int CHAT_SERVER_PORT = 9880;
+    private static final int CHAT_SERVER_PORT = 10010;
 
     private static final String MESSAGE_REGEX = "^MESSAGE (\\S+)-(.+)$";
     private static final String GET_OPERATORS_REGEX = "^OPERATORS (.+)$";

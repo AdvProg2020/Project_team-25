@@ -109,23 +109,17 @@ public class ManagerMenuUI {
     }
 
     private void showLogs() {
-        HashMap<String, ArrayList<Map<String, Object>>> buyLogs = ClientManagerController.getBuyLogs();
-        for (String username: buyLogs.keySet()){
-            showUserLog(username, buyLogs.get(username));
+        List<Map<String, Object>> buyLogs = ClientManagerController.getBuyLogs();
+        for (Map buyLog: buyLogs){
+            showLog(buyLog);
         }
     }
 
-    private void showUserLog(String username, ArrayList<Map<String, Object>> buyLogs) {
-        for (Map buyLog: buyLogs)
-            showLog(username, buyLog);
-    }
-
-    private void showLog(String username, Map buyLog) {
+    private void showLog(Map buyLog) {
         HBox hBox = new HBox();
         hBox.setMaxHeight(100);     hBox.setMinHeight(100);
         hBox.setSpacing(20);
         Label dateText = new Label();
-        Label customerText = new Label();
         TextArea addressText = new TextArea();
         Button send = new Button("Send");
         /*TextArea productsText = new TextArea();
@@ -136,7 +130,7 @@ public class ManagerMenuUI {
         dateText.setText(buyLog.get("date") + "");
         addressText.setText(buyLog.get("address") + "");
         addressText.setWrapText(true);
-        send.disableProperty().bind(ClientManagerController.isReceived(buyLog));
+        //send.disableProperty().bind(ClientManagerController.isReceived(buyLog));
         /*incomeText.setText(String.valueOf(sellLog.getIncomeValue()));
         offValueText.setText(String.valueOf(sellLog.getOffValue()));
         if (sellLog.isSendStatus())
@@ -144,13 +138,11 @@ public class ManagerMenuUI {
         else
             sendStatusText.setText("Not Arrived");
         */
-        customerText.setText(username);
         /*for(Product product: sellLog.getProducts())
             productsText.setText(productsText.getText() + "\n-" + product.getName() + "-----" + product.getBrand());
         productsText.setEditable(false);
         */VBox vBox1 = new VBox(), vBox2 = new VBox(), vBox3 = new VBox(), vBox4 = new VBox(), vBox5 = new VBox(), vBox6 = new VBox();
         vBox1.getChildren().add(dateText);
-        vBox2.getChildren().add(customerText);
         vBox4.getChildren().add(addressText);
         vBox5.getChildren().add(send);
         Button details = new Button("View Details");
@@ -166,7 +158,6 @@ public class ManagerMenuUI {
         vBox5.getChildren().add(sendStatusText);
         vBox6.getChildren().add(productsText);
         */vBox1.setPrefWidth(200);    vBox1.setAlignment(Pos.CENTER);
-        vBox2.setPrefWidth(100);    vBox2.setAlignment(Pos.CENTER);
         vBox3.setPrefWidth(100);    vBox3.setAlignment(Pos.CENTER);
         vBox4.setPrefWidth(267);    vBox4.setAlignment(Pos.CENTER);
         vBox5.setPrefWidth(100);    vBox5.setAlignment(Pos.CENTER);
@@ -176,7 +167,7 @@ public class ManagerMenuUI {
         productsText.setEditable(false);
         hBox.getChildren().addAll(vBox3, vBox4, vBox2, vBox5, vBox1, vBox6);
         */
-        hBox.getChildren().addAll(vBox1, vBox2, vBox3, vBox4, vBox5);
+        hBox.getChildren().addAll(vBox1, vBox3, vBox4, vBox5);
         viewBuysVBox.getChildren().add(hBox);
     }
 

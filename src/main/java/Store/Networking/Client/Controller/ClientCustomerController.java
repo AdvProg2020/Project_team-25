@@ -137,53 +137,6 @@ public class ClientCustomerController {
         return (String) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
     }
 
-    public static boolean canBuy(boolean by) {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("message", "canBuyWithoutOffCode");
-        if (by)
-            hashMap.put("by", "bank");
-        else
-            hashMap.put("by", "wallet");
-        return (Boolean) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
-    }
-
-    public static Boolean canBuy(String code, boolean by) {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("message", "canBuyWithOffCode");
-        hashMap.put("code", code);
-        if (by)
-            hashMap.put("by", "bank");
-        else
-            hashMap.put("by", "wallet");
-        return (Boolean) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
-    }
-
-    public static String buy(String username, boolean by, String address) {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("message", "buy");
-        hashMap.put("username", username);
-        hashMap.put("code", "");
-        hashMap.put("address", address);
-        if (by)
-            hashMap.put("by", "bank");
-        else
-            hashMap.put("by", "wallet");
-        return (String) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
-    }
-
-    public static String buy(String username, String code, boolean by, String address) {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("message", "buy");
-        hashMap.put("username", username);
-        hashMap.put("code", code);
-        hashMap.put("address", address);
-        if (by)
-            hashMap.put("by", "bank");
-        else
-            hashMap.put("by", "wallet");
-        return (String) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
-    }
-
     public static Boolean removeProduct(String id) {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("message", "removeProductFromCart");

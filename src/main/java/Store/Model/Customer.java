@@ -91,6 +91,7 @@ public class Customer extends User {
         {
             try {
                 Object input = MainServer.sendAndReceiveToBankAPIBalance();
+                System.out.println(input);
                 if (input != null)
                     money = Double.parseDouble((String)input);
                 else
@@ -134,12 +135,14 @@ public class Customer extends User {
         offCodeAfterBuy();
         if (bank){
             String result = "";
-            result = (String)MainServer.sendAndReceiveToBankAPIMove(getTotalCartPrice(), bankAccount, Manager.getBankAccount(), "");
+            result = (String)MainServer.sendAndReceiveToBankAPIMove(getTotalCartPrice(), bankAccount, Manager.getBankAccount(), "BUY");
             if (!result.equalsIgnoreCase("done"))
                 throw new Exception("some problem happens");
         }
-        else
+        else {
+            System.out.println("money changes");
             money -= getTotalCartPrice();
+        }
         handleLogs(0, address);
         cart.clear();
     }

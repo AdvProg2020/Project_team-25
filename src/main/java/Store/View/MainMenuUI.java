@@ -30,7 +30,6 @@ public class MainMenuUI {
     public Button auctionPageButton;
     public Button signUpButton;
     public Button loginLogoutButton;
-    public Button auctionPageButton;
     public Label loggedInStatusText;
 
     public ImageView upperStaticAd;

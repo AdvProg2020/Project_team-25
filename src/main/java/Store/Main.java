@@ -3,6 +3,7 @@ package Store;
 import Store.Controller.MainMenuUIController;
 import Store.Model.*;
 import Store.Model.Enums.CheckingStatus;
+import Store.Networking.BankAPI;
 import Store.Networking.Chat.ChatServer;
 import Store.Networking.Client.ClientHandler;
 import Store.Networking.MainServer;
@@ -45,6 +46,7 @@ public class Main extends Application {
     private static Media backgroundMusic;
     private static MediaPlayer backgroundPlayer;
 
+    private static Scanner scanner = new Scanner(System.in);
     @Override
     public void start(Stage primaryStage) throws Exception {
         otherStage.initModality(Modality.APPLICATION_MODAL);
@@ -85,9 +87,9 @@ public class Main extends Application {
         primaryStage.setTitle("Shop");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
-        primaryStage.setOnCloseRequest(e -> {
+        /*primaryStage.setOnCloseRequest(e -> {
             ResourceHandler.writeAll();
-        });
+        });*/
 //        setupBGM();
     }
 
@@ -96,7 +98,7 @@ public class Main extends Application {
 //        ResourceHandler.resetFile();
 //        ResourceHandler.writeAll();
 
-//        ResourceHandler.readAll();
+        ResourceHandler.readAll();
 //        Thread thread = new Thread (new Runnable(){
 //            @Override
 //            public void run() {
@@ -109,10 +111,14 @@ public class Main extends Application {
 //        thread.setDaemon(true);
 //        thread.start();
         //        setTest();
-        Scanner scanner = new Scanner(System.in);
-        if (scanner.nextLine().equals("S")) {
+        String input = scanner.nextLine();
+        if (input.equals("S")) {
             handleServer();
-        } else {
+        } else if(input.equals("C")) {
+            new BankAPI();
+            BankAPI.handleCommandAPI();
+        }
+        else {
             MainMenuUIController.currentUser = MainMenuUIController.guest;
 //        Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
 //        setTest();
@@ -342,14 +348,19 @@ public class Main extends Application {
     }
 
     public static void handleServer() {
-        Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
+//        Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
 //        Main.setTest();
 //        Main.setOffers();
         try {
+            BankAPI bankAPI = new BankAPI();
             MainServer server = new MainServer();
             ChatServer chatServer = new ChatServer();
             P2PManager p2PManager = new P2PManager();
             System.out.println(server.getPort());
+            while (true) {
+                if (scanner.nextLine().equalsIgnoreCase("save"))
+                    ResourceHandler.writeAll();
+            }
         } catch (IOException exception) {
             exception.printStackTrace();
         }

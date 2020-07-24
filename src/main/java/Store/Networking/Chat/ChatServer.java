@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 public class ChatServer {
 
-    private static final int CHAT_SERVER_PORT = 9880;
+    private static final int CHAT_SERVER_PORT = 10010;
     private static final String SEND_MESSAGE_REGEX = "^MESSAGE (\\S+) (\\S{50}) (\\S+)-(.+)$";
     private static final String GET_OPERATORS_REGEX = "^GET_OPERATORS (\\S+) (\\S{50})$";
 

@@ -1,5 +1,13 @@
 package Store.Networking;
+/*
+22347
 
+@echo off
+set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_202jdk-14
+set JAVA_HOME=C:\Program Files\Java\jdk-14
+set Path=%JAVA_HOME%\bin;%Path%
+@echo on
+ */
 import Store.Controller.*;
 import Store.Model.*;
 import Store.Model.Enums.CheckingStatus;
@@ -102,7 +110,7 @@ public class MainServer {
         }
     }
 
-    public static Object sendAndReceiveToBankAPICreateAccount() throws IOException {
+    public static Object sendAndReceiveToBankAPICreateAccount() throws Exception {
         String output = "createAccount";
         dataOutputStream1.writeUTF(output);
         dataOutputStream1.flush();
@@ -111,14 +119,14 @@ public class MainServer {
         if (Pattern.matches("\\d+", input))
             return Integer.parseInt(input);
         else
-            return null;
+            throw new Exception(input);
     }
     public static Object sendAndReceiveToBankAPIBalance() throws IOException {
         String output = "balance";
         dataOutputStream1.writeUTF(output);
         dataOutputStream1.flush();
         String input = dataInputStream1.readUTF();
-        if (Pattern.matches("\\d+(\\.(\\d+))?", input))
+        if (Pattern.matches("\\d+(\\.\\d+)?", input))
             return input;
         else
             return null;
@@ -565,31 +573,41 @@ public class MainServer {
             }
         }
 
-        synchronized private void purchaseByBank(HashMap input) {
+        private void purchaseByBank(HashMap input) {
             HashMap<String, Object> hashMap = new HashMap<>();
             Customer customer = (Customer)User.getUserByUsername((String) input.get("username"));
             String offCode = (String)input.get("offCode");
             String address = (String)input.get("address");
+            if (offCode == null)
+                offCode = "";
+            if (address == null)
+                address = "";
             try {
                 hashMap.put("content", CustomerUIController.purchase(customer, offCode, true, address));
             } catch (Exception e) {
+                System.out.println(e);
                 hashMap.put("content", "error");
                 hashMap.put("type", e.getMessage());
             }
             sendMessage(hashMap);
         }
 
-        //karmozd va hesabe forooshgah?????
-        synchronized private void purchaseByWallet(HashMap input) {
+        //karmozd?
+        private void purchaseByWallet(HashMap input) {
             HashMap<String, Object> hashMap = new HashMap<>();
-            Customer customer = (Customer)User.getUserByUsername((String) input.get("username"));
-            System.out.println(customer);
+            Customer customer = (Customer) user;
+            System.out.println("Step 1");
             String offCode = (String)input.get("offCode");
             String address = (String)input.get("address");
+            if (offCode == null)
+                offCode = "";
+            if (address == null)
+                address = "";
             try {
                 hashMap.put("content", CustomerUIController.purchase(customer, offCode, false, address));
+                System.out.println("Step 2-1");
             } catch (Exception e) {
-                System.out.println(customer);
+                System.out.println("Step 2-2");
                 hashMap.put("content", "error");
                 hashMap.put("type", e.getMessage());
             }
@@ -605,7 +623,7 @@ public class MainServer {
                 result = sendAndReceiveToBankAPI("move", money, ((Seller)user).getBankAccount(), Manager.getBankAccount(), "");
             else
                 result = sendAndReceiveToBankAPI("move", money, ((Customer)user).getBankAccount(), Manager.getBankAccount(), "");
-            if (!result.equalsIgnoreCase("done successfully")) {
+            if (!result.equalsIgnoreCase("done")) {
                 hashMap.put("content", "error");
                 hashMap.put("type", result);
             }
@@ -700,7 +718,7 @@ public class MainServer {
 
         private void getAuctionOfProduct(HashMap input) {
             HashMap<String, Object> hashMap = new HashMap<>();
-            Product product = Product.getProductByID((Integer)input.get("productId"));
+            Product product = Product.getProductByID(Integer.parseInt((String)input.get("productId")));
             Auction auction = Auction.getAuctionOfProduct(product);
             if (auction != null)
                 hashMap.put("content", HashMapGenerator.getAuctionHashMap(auction));
@@ -734,7 +752,7 @@ public class MainServer {
 
         private void isInAuction(HashMap input) {
             HashMap<String, Object> hashMap = new HashMap<>();
-            Product product = Product.getProductByID((Integer)((Map)input.get("product")).get("id"));
+            Product product = Product.getProductByID(Integer.parseInt((String)((Map)input.get("product")).get("id")));
             if (Auction.getAuctionOfProduct(product) == null)
                 hashMap.put("content", "false");
             else
@@ -787,7 +805,7 @@ public class MainServer {
 
         synchronized private void sendProduct(HashMap input) {
             HashMap<String, Object> hashMap = new HashMap<>();
-            BuyLogItem buyLogItem = (BuyLogItem)input.get("buyLogId");
+            BuyLogItem buyLogItem = (BuyLogItem)LogItem.getLogById(Integer.parseInt((String)input.get("buyLogId")));
             buyLogItem.setReceived(true);
             hashMap.put("content", "done");
             sendMessage(hashMap);
@@ -795,19 +813,19 @@ public class MainServer {
 
         private void getBuyLogs() {
             HashMap<String, Object> hashMap = new HashMap<>();
-            HashMap<String, ArrayList> content = new HashMap<>();
-            for (User user: User.getAllUsers()){
-                if (user instanceof Customer){
-                    content.put(user.getUsername(), HashMapGenerator.getListOfBuyLogItems(((Customer)user).getBuyLog()));
+            ArrayList<BuyLogItem> arrayList = new ArrayList<>();
+            for (LogItem logItem: LogItem.getAllLogItems()){
+                if (logItem instanceof BuyLogItem){
+                    arrayList.add((BuyLogItem) logItem);
                 }
             }
-            hashMap.put("content", content);
+            hashMap.put("content", HashMapGenerator.getListOfBuyLogItems(arrayList));
             sendMessage(hashMap);
         }
 
         private void isReceivedLog(HashMap input) {
             HashMap<String, Object> hashMap = new HashMap<>();
-            int id = (Integer)input.get("id");
+            int id = Integer.parseInt((String)input.get("logId"));
             if (LogItem.getLogById(id) != null)
                 hashMap.put("content", ((BuyLogItem) LogItem.getLogById(id)).isReceived());
             else
@@ -1075,10 +1093,7 @@ public class MainServer {
         }
 
         private void addCategoryServer(HashMap input) {
-            Category category = Manager.categoryByName((String) input.get("name"));
-            synchronized (category) {
-                ManagerController.editCategory((Manager) user, category, (String) input.get("field"), (String) input.get("newValue"));
-            }
+            ManagerController.addCategory((Manager) user, (String)input.get("name"), (String) input.get("parentName"));
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", "Ok");
             sendMessage(hashMap);
@@ -1282,8 +1297,27 @@ public class MainServer {
                     ((Customer) user).addToCart(product);
                 }
                 guest.getCart().clear();
+                if (((Customer)user).getBankAccount() == 0) {
+                    try {
+                        ((Customer)user).setBankAccount((Integer)sendAndReceiveToBankAPICreateAccount());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (Exception exception) {
+                        System.out.println("errorERROR");
+                    }
+                }
             }
-
+            if (user instanceof Seller){
+                if (((Seller)user).getBankAccount() == 0) {
+                    try {
+                        ((Seller)user).setBankAccount((Integer)sendAndReceiveToBankAPICreateAccount());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (Exception exception) {
+                        System.out.println("errorERROR");
+                    }
+                }
+            }
             HashMap<String, Object> hashMap = new HashMap<>();
             TokenHandler.createToken(username);
             hashMap.put("content", TokenHandler.getTokenOfUsername(username));
@@ -1339,13 +1373,21 @@ public class MainServer {
         }
 
         private void handleCreateManagerAccountServer(ArrayList<String> attributes) {
-            if (Manager.hasManager) {
-                ((Manager) user).addNewManager(new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5)));
-            } else {
-                new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5));
-            }
             HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("content", "Ok");
+            if (Manager.hasManager)
+            {
+                ((Manager)user).addNewManager(new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5)));
+                hashMap.put("content", "Ok");
+            }
+            else {
+                try {
+                    SignUpAndLoginController.handleCreateAccount("manager", attributes);
+                    hashMap.put("content", "Ok");
+                } catch (Exception exception) {
+                    hashMap.put("content", "error");
+                    hashMap.put("type", exception.getMessage());
+                }
+            }
             sendMessage(hashMap);
         }
 
