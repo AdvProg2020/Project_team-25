@@ -4,6 +4,7 @@ import Store.Networking.Client.ClientHandler;
 import com.google.gson.Gson;
 import javafx.beans.property.SimpleBooleanProperty;
 
+import java.lang.reflect.Type;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -195,15 +196,10 @@ public class ClientManagerController {
         ClientHandler.sendAndReceiveMessage(hashMap);
     }
 
-    public static HashMap<String, ArrayList<Map<String, Object>>> getBuyLogs() {
+    public static List<Map<String, Object>> getBuyLogs() {
         HashMap<String, Object> hashMap = new HashMap<>();
-        HashMap<String, ArrayList> hashMap2 = new HashMap<>();
-        ArrayList<Map> arrayList = new ArrayList<>();
         hashMap.put("message", "getBuyLogs");
-        hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
-        Gson gson = new Gson();
-        hashMap = gson.fromJson(String.valueOf(hashMap.get("content")), HashMap.class);
-        return (HashMap) hashMap;
+        return (List<Map<String, Object>>) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
     }
 
 

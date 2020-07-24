@@ -14,6 +14,22 @@ public abstract class LogItem implements Serializable {
     private static int idCounter = 1;
     private static ArrayList<LogItem> allLogItems = new ArrayList<>();
 
+    public static ArrayList<LogItem> getAllLogItems() {
+        return allLogItems;
+    }
+
+    public static int getIdCounter() {
+        return idCounter;
+    }
+
+    public static void setIdCounter(int idCounter) {
+        LogItem.idCounter = idCounter;
+    }
+
+    public static void setAllLogItems(ArrayList<LogItem> allLogItems) {
+        LogItem.allLogItems = allLogItems;
+    }
+
     LogItem(Date date, ArrayList<Product> products) {
         this.date = date;
         id = idCounter++;

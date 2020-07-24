@@ -98,11 +98,12 @@ public class BankAPI {
                     if (input.startsWith("move")) {
                         Matcher matcher = InputManager.getMatcher(input, "move ((\\d+)\\.(\\d+)) (\\d+) (\\d+) (.*)");
                         matcher.find();
-                        System.out.println("Username: ");
-                        username = InputManager.getNextLine();
-                        System.out.println("Password: ");
-                        password = InputManager.getNextLine();
-                        move(getToken(username, password), Double.parseDouble(matcher.group(1)), Integer.parseInt(matcher.group(4)), Integer.parseInt(matcher.group(5)), matcher.group(6));
+                        do {
+                            System.out.println("Username: ");
+                            username = InputManager.getNextLine();
+                            System.out.println("Password: ");
+                            password = InputManager.getNextLine();
+                        }while (!move(getToken(username, password), Double.parseDouble(matcher.group(1)), Integer.parseInt(matcher.group(4)), Integer.parseInt(matcher.group(5)), matcher.group(6)));
                     } else if (input.startsWith("deposit")) {
                         Matcher matcher = InputManager.getMatcher(input, "deposit ((\\d+)\\.(\\d+)) (\\d+) (.*)");
                         matcher.find();
@@ -174,12 +175,13 @@ public class BankAPI {
             }
         }
 
-        public void move(String token, double money, int source, int dest, String s) {
+        public boolean move(String token, double money, int source, int dest, String s) {
             try {
                 createReceipt(token, "move", money, source, dest, s);
                 sendMessageToServer("done");
+                return true;
             } catch (Exception e) {
-                sendMessageToServer(e.getMessage());
+                return false;
             }
         }
 
@@ -197,7 +199,7 @@ public class BankAPI {
         private void pay(int id) throws Exception {
             String output = "pay " + id;
             String input = (String)sendMessageAndReceive(output);
-            if (!input.equalsIgnoreCase("done"))
+            if (!input.equalsIgnoreCase("done successfully"))
                 throw new Exception(input);
         }
 
@@ -216,15 +218,18 @@ public class BankAPI {
         public boolean createAccount(String firstName, String lastName, String username, String pass, String repPass) throws Exception {
             String output = "create_account " + firstName + " " + lastName + " " + username + " " + pass + " " + repPass;
             String input = (String) sendMessageAndReceive(output);
-            sendMessageToServer(input);
             if (Pattern.matches("\\d+", input))
+            {
+                sendMessageToServer(input);
                 return true;
+            }
             return false;
         }
     }
 
     public static Object sendMessageAndReceive(Object msg) throws Exception {
         try {
+            System.out.println(msg);
             outputStream.writeUTF((String)msg);
             outputStream.flush();
             input = inputStream.readUTF();
@@ -245,11 +250,12 @@ public class BankAPI {
                 if (input.startsWith("move")) {
                     Matcher matcher = InputManager.getMatcher(input, "move ((\\d+)\\.(\\d+)) (\\d+) (\\d+) (.*)");
                     matcher.find();
-                    System.out.println("Username: ");
-                    username = InputManager.getNextLine();
-                    System.out.println("Password: ");
-                    password = InputManager.getNextLine();
-                    move(getToken(username, password), Double.parseDouble(matcher.group(1)), Integer.parseInt(matcher.group(4)), Integer.parseInt(matcher.group(5)), matcher.group(6));
+                    do {
+                        System.out.println("Username: ");
+                        username = InputManager.getNextLine();
+                        System.out.println("Password: ");
+                        password = InputManager.getNextLine();
+                    }while (!move(getToken(username, password), Double.parseDouble(matcher.group(1)), Integer.parseInt(matcher.group(4)), Integer.parseInt(matcher.group(5)), matcher.group(6)));
                 } else if (input.startsWith("deposit")) {
                     Matcher matcher = InputManager.getMatcher(input, "deposit ((\\d+)\\.(\\d+)) (\\d+) (.*)");
                     matcher.find();
@@ -311,11 +317,13 @@ public class BankAPI {
         }
     }
 
-    public static void move(String token, double money, int source, int dest, String s) {
+    public static boolean move(String token, double money, int source, int dest, String s) {
         try {
             createReceipt(token, "move", money, source, dest, s);
+            return true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            return false;
         }
     }
 

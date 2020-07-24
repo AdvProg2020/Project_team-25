@@ -37,6 +37,18 @@ public class Auction implements Serializable {
         allAuctionsProducts.add(product);
     }
 
+    public static void setAllAuctions(ArrayList<Auction> allAuctions) {
+        Auction.allAuctions = allAuctions;
+    }
+
+    public static void setAllAuctionsProducts(ArrayList<Product> allAuctionsProducts) {
+        Auction.allAuctionsProducts = allAuctionsProducts;
+    }
+
+    public static void setIdCounter(int idCounter) {
+        Auction.idCounter = idCounter;
+    }
+
     public static double getMoneyInAuctions(Customer customer) {
         double sum = 0;
         for (Auction auction: allAuctions){

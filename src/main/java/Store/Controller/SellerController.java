@@ -35,7 +35,7 @@ public class SellerController {
             seller.setPhoneNumber(value);
         }
         else if (field.equalsIgnoreCase("password")) {
-                seller.setPassword(value);
+            seller.setPassword(value);
         }
         else if (field.equalsIgnoreCase("company name")) {
             seller.setCompanyName(value);
@@ -55,7 +55,6 @@ public class SellerController {
             if (!product1.equals(product) && product1.equals(newProduct))
                 return "Your new product is in current seller's products!";
         Manager.addRequest(new Request(product, true, newProduct));
-        newProduct.setProductID(product.getProductID());
         return "Ok";
     }
 
@@ -72,7 +71,6 @@ public class SellerController {
             if (!offer1.equals(offer) && offer1.equals(newOffer))
                 return "Your new offer has at least one product which is in off!";
         Manager.addRequest(new Request(seller, offer, true, newOffer));
-        newOffer.setOffID(offer.getOffID());
         return "Ok";
     }
 
@@ -200,3 +198,4 @@ public class SellerController {
         }
     }
 }
+

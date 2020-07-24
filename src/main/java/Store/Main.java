@@ -46,6 +46,7 @@ public class Main extends Application {
     private static Media backgroundMusic;
     private static MediaPlayer backgroundPlayer;
 
+    private static Scanner scanner = new Scanner(System.in);
     @Override
     public void start(Stage primaryStage) throws Exception {
         otherStage.initModality(Modality.APPLICATION_MODAL);
@@ -86,9 +87,9 @@ public class Main extends Application {
         primaryStage.setTitle("Shop");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
-        primaryStage.setOnCloseRequest(e -> {
+        /*primaryStage.setOnCloseRequest(e -> {
             ResourceHandler.writeAll();
-        });
+        });*/
 //        setupBGM();
     }
 
@@ -357,6 +358,10 @@ public class Main extends Application {
             ChatServer chatServer = new ChatServer();
             P2PManager p2PManager = new P2PManager();
             System.out.println(server.getPort());
+            while (true) {
+                if (scanner.nextLine().equalsIgnoreCase("save"))
+                    ResourceHandler.writeAll();
+            }
         } catch (IOException exception) {
             exception.printStackTrace();
         }

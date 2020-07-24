@@ -101,12 +101,12 @@ public class SignUpManagerMenuUI {
             result = false;
         }
 
-        if (karmozdTextField.isVisible()) {
-            if (minimumMoneyTextField.getText().isEmpty()) {
+        if (karmozdTextField.isVisible()){
+            if (minimumMoneyTextField.getText().isEmpty()){
                 setError(minimumMoneyTextField, true);
                 result = false;
             }
-            if (karmozdTextField.getText().isEmpty()) {
+            if (karmozdTextField.getText().isEmpty()){
                 setError(karmozdTextField, true);
                 result = false;
             }

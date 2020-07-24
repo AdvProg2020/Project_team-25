@@ -1,9 +1,7 @@
 package Store.Networking.Client.Controller;
 
 import Store.InputManager;
-import Store.Model.*;
 import Store.Networking.Client.ClientHandler;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -136,32 +134,6 @@ public class ClientCustomerController {
         hashMap.put("message", "editCustomerPersonalInfo");
         hashMap.put("field", field);
         hashMap.put("newValue", newValue);
-        return (String) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
-    }
-
-    public static boolean canBuy() {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("message", "canBuyWithoutOffCode");
-        return (Boolean) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
-    }
-
-    public static Boolean canBuy(String code) {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("message", "canBuyWithOffCode");
-        hashMap.put("code", code);
-        return (Boolean) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
-    }
-
-    public static String buy() {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("message", "buyWithoutOffCode");
-        return (String) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
-    }
-
-    public static String buy(String code) {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("message", "buyWithOffCode");
-        hashMap.put("code", code);
         return (String) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
     }
 

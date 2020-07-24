@@ -8,7 +8,6 @@ import Store.Model.*;
 import Store.Model.Enums.VerifyStatus;
 import Store.Networking.Client.ClientHandler;
 import Store.Networking.Client.Controller.ClientManagerController;
-import Store.Networking.FileTransportClient;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -30,8 +29,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,8 +40,8 @@ public class OperatorMenuUI {
     public Button offersButton;
     public Button userPageButton;
     public Button supportPageButton;
-    public Button signUpButton;
     public Button auctionPageButton;
+    public Button signUpButton;
     public Button loginLogoutButton;
     public Label loggedInStatusText;
     public ImageView imageProfile;
@@ -168,30 +165,33 @@ public class OperatorMenuUI {
         });
 
 
-        changeImageButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                FileChooser fileChooser = new FileChooser();
-                try {
-                    String path = fileChooser.showOpenDialog(new Stage()).getPath();
-                    File file = new File(path);
-                    File copyFile = new File("src/main/resources/Images/" + ClientHandler.username + ".jpg");
-                    Files.copy(file.toPath(), copyFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                    FileTransportClient.sendFile(ClientHandler.username, ClientHandler.token, "I", ClientHandler.username + ".jpg");
-                }
-                catch (Exception exception) {
-                    // do nothing
-                }
-                handlePersonalInfo();
-            }
-        });
-
-        FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", ClientHandler.username + ".jpg");
-        File file = new File("src/main/resources/Images/" + ClientHandler.username + ".jpg");
-        imageProfile.setImage(new Image(file.toURI().toString()));
-
-        final Circle clip = new Circle(100, 100, 100);
-        imageProfile.setClip(clip);
-        clip.setStroke(Color.ORANGE);
+//        changeImageButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent event) {
+//                FileChooser fileChooser = new FileChooser();
+//                try {
+//                    operator.setProfilePicturePath(fileChooser.showOpenDialog(new Stage()).getPath());
+//                }
+//                catch (Exception exception) {
+//                    // do nothing
+//                }
+//                handlePersonalInfo();
+//            }
+//        });
+//
+//        String path;
+//        if (operator.getProfilePicturePath().isEmpty()) {
+//            path = "src/main/resources/Images/images.jpg";
+//        }
+//        else {
+//            path = operator.getProfilePicturePath();
+//        }
+//
+//        File file = new File(path);
+//        imageProfile.setImage(new Image(file.toURI().toString()));
+//
+//        final Circle clip = new Circle(100, 100, 100);
+//        imageProfile.setClip(clip);
+//        clip.setStroke(Color.ORANGE);
     }
 }

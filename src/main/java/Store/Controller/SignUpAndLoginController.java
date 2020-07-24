@@ -12,10 +12,9 @@ import java.util.regex.Pattern;
 public class SignUpAndLoginController {
 
     public static void createManager(ArrayList<String> attributes) throws Exception {
-        if (Manager.hasManager)
-            ((Manager)MainMenuUIController.currentUser).addNewManager(new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5)));
-        else{
-            System.err.println("HERE");
+        if (Manager.hasManager) {
+            ((Manager) User.getUserByUsername(MainMenuUIController.currentUserUsername.getValue())).addNewManager(new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5)));
+        }else{
             new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5));
             int bankAccount = 0;
             String input = "";

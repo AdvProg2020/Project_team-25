@@ -73,11 +73,16 @@ public class CustomerUIController {
     }
 
     public static String purchase(Customer customer, String input, boolean bank, String address) throws Exception {
+        System.out.println("infinity");
+        System.out.println(input);
         if (input.isEmpty()) {
             try{
+                System.out.println("Step 3");
                 if (customer.canBuy(bank)) {
+                    System.out.println("Step 4");
                     customer.buy(bank, address);
                     System.out.println(customer);
+                    System.out.println("Step 5");
                     return customer.getNewFactor();
                 }
             }catch (Exception e){
