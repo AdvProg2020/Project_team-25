@@ -20,14 +20,14 @@
 		<graphic>
 			<ImageView>
 				<image>
-					<Image url="@icons/calendar.png"/>
+					<Image url="@../../java/Store/View/DateTimePicker/icons/calendar.png"/>
 				</image>
 			</ImageView>
 		</graphic>
 	</Button>
 
 	<stylesheets>
-		<URL value="@DateTimePicker.css"/>
+		<URL value="@../../java/Store/View/DateTimePicker/DateTimePicker.css"/>
 	</stylesheets>
 
 </fx:root>

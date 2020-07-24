@@ -46,6 +46,8 @@ public class Request implements Serializable {
         this.product = product;
         this.date = endingDate;
         this.requestType = RequestType.ADD_NEW_AUCTION;
+        this.status = VerifyStatus.WAITING;
+        allRequests.add(this);
     }
 
     public Request(Seller seller, Offer offer, boolean change, Object newObject) {

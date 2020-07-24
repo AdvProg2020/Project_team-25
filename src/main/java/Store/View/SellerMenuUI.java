@@ -109,7 +109,7 @@ public class SellerMenuUI implements Initializable {
     public PasswordField newPass;
     public PasswordField confirmationNewPass;
 
-    public DateTimePicker endDateAuction;
+    public DateTimePicker endDateAuction = new DateTimePicker();
 
     public DatePicker startDateOffer;
     public DatePicker endDateOffer;
@@ -164,6 +164,7 @@ public class SellerMenuUI implements Initializable {
         } else if (menuState.equalsIgnoreCase("adsRequest")) {
         }
         else if (menuState.equalsIgnoreCase("endDate")){
+            endDateAuction = new DateTimePicker();
             auctionDateHBox.getChildren().add(endDateAuction);
         }
         else if (menuState.equalsIgnoreCase("adsRequest")){

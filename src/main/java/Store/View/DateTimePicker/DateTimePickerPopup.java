@@ -1,5 +1,6 @@
 package Store.View.DateTimePicker;
 
+import Store.View.SignUpAndLoginMenu;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -58,9 +59,7 @@ class DateTimePickerPopup extends VBox implements Initializable {
         this.minutesPicker = new MinuteSecondPicker(this);
         this.secondsPicker = new MinuteSecondPicker(this);
 
-        final FXMLLoader fxmlLoader = new FXMLLoader(
-                getClass().getResource(
-                        "DateTimePickerPopup.fxml"));
+        final FXMLLoader fxmlLoader = new FXMLLoader(SignUpAndLoginMenu.class.getClassLoader().getResource("FXML/DateTimePickerPopup.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 

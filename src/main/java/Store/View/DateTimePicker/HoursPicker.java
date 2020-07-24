@@ -1,5 +1,6 @@
 package Store.View.DateTimePicker;
 
+import Store.View.SignUpAndLoginMenu;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -71,8 +72,8 @@ public class HoursPicker extends GridPane implements Initializable {
         this.parentContainer = parentContainer;
 
         final FXMLLoader fxmlLoader = new FXMLLoader(
-                getClass().getResource(
-                        "HoursPicker.fxml"));
+                SignUpAndLoginMenu.class.getClassLoader().getResource(
+                        "FXML/HoursPicker.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
