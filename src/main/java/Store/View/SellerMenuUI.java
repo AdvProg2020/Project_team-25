@@ -976,9 +976,17 @@ public class SellerMenuUI implements Initializable {
 //            selectedProduct.setImagePath(fileChooser.showOpenDialog(new Stage()).getPath());
             String path = fileChooser.showOpenDialog(new Stage()).getPath();
             File file = new File(path);
-            File copyFile = new File("src/main/resources/Images/" + selectedProduct.get("id") + ".jpg");
+            File copyFile = new File("src/main/resources/Images/" + selectedProduct.get("id") + ".png");
             Files.copy(file.toPath(), copyFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            FileTransportClient.sendFile(ClientHandler.username, ClientHandler.token, "I", selectedProduct.get("id") + ".jpg");
+
+            try {
+                Thread.sleep(1000);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            FileTransportClient.sendFile(ClientHandler.username, ClientHandler.token, "I", selectedProduct.get("id") + ".png");
         } catch (Exception exception) {
             // do nothing
         }

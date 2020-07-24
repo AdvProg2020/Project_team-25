@@ -6,6 +6,8 @@ import Store.Model.Enums.CheckingStatus;
 import Store.Networking.BankAPI;
 import Store.Networking.Chat.ChatServer;
 import Store.Networking.Client.ClientHandler;
+import Store.Networking.FileTransportClient;
+import Store.Networking.FileTransportServer;
 import Store.Networking.MainServer;
 import Store.Networking.P2P.P2PManager;
 import Store.View.*;
@@ -99,7 +101,7 @@ public class Main extends Application {
 //        ResourceHandler.resetFile();
 //        ResourceHandler.writeAll();
 
-//        ResourceHandler.readAll();
+        ResourceHandler.readAll();
 //        Auction.setAllAuctions(new ArrayList<Auction>());
         //        Thread thread = new Thread (new Runnable(){
 //            @Override
@@ -358,6 +360,7 @@ public class Main extends Application {
             MainServer server = new MainServer();
             ChatServer chatServer = new ChatServer();
             P2PManager p2PManager = new P2PManager();
+            FileTransportServer fileTransportServer = new FileTransportServer();
             System.out.println(server.getPort());
             while (true) {
                 if (scanner.nextLine().equalsIgnoreCase("save"))

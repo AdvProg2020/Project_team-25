@@ -5,7 +5,7 @@ import java.net.Socket;
 
 public class FileTransportClient {
     private static final String FILE_SERVER_IP_ADDRESS = "127.0.0.1";
-    private static final int FILE_SERVER_PORT = 19890;
+    private static final int FILE_SERVER_PORT = 44444;
     private static final String RESOURCE_PATH = "src/main/resources/";
 
     private static Socket fileClientSocket;
@@ -28,12 +28,18 @@ public class FileTransportClient {
                     + type + " " + fileName + " " + length);
             fileDataOutputStream.flush();
 
+            String input = fileDataInputStream.readUTF();
+            if (input.equals("REJ")) {
+                return;
+            }
+
             FileInputStream fileInputStream = new FileInputStream(file);
             int count;
             byte[] buffer = new byte[8192];
             while ((count = fileInputStream.read(buffer)) > 0) {
                 fileDataOutputStream.write(buffer, 0, count);
             }
+            fileDataOutputStream.flush();
             fileInputStream.close();
 
             fileClientSocket.close();
@@ -45,8 +51,10 @@ public class FileTransportClient {
 
     public static void receiveFile(String username, String token, String type, String fileName) {
         try {
+            System.out.println("RECEIVING: ______________________ " + fileName);
             File file = new File(RESOURCE_PATH + convertTypeToFolderName(type) + "/" + fileName);
             if (file.exists()) {
+                System.out.println("BOOGADABA " + file.length());
                 return;
             }
             file.createNewFile();
@@ -64,9 +72,9 @@ public class FileTransportClient {
             long count = fileDataInputStream.readLong();
             byte[] buffer = new byte[8192];
             while (count > 0) {
-                fileDataInputStream.read(buffer);
-                fileOutputStream.write(buffer, 0, (int) Math.min(count, buffer.length));
-                count -= Math.min(count, buffer.length);
+                int read = fileDataInputStream.read(buffer);
+                fileOutputStream.write(buffer, 0, read);
+                count -= read;
             }
 
             fileOutputStream.close();

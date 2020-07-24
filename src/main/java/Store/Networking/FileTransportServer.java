@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class FileTransportServer {
 
-    private static final int FILE_SERVER_PORT = 19890;
+    private static final int FILE_SERVER_PORT = 44444;
     private static final String UPLOAD_REGEX = "^UPLOAD (\\S+) (\\S{50}) ([IVF]) (\\S+) (\\d+)$";
     private static final String DOWNLOAD_REGEX = "^DOWNLOAD (\\S+) (\\S{50}) ([IVF]) (\\S+)$";
     private static final String RESOURCE_PATH = "src/main/resources/";
@@ -37,6 +37,7 @@ public class FileTransportServer {
             Socket clientSocket;
             try {
                 clientSocket = serverSocket.accept();
+                System.out.println("CLIENT ACCEPTED");
                 DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
                 DataInputStream dataInputStream = new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()));
                 new FileTransportServer.ClientHandler(clientSocket, dataOutputStream, dataInputStream).start();
@@ -73,9 +74,11 @@ public class FileTransportServer {
                     sendFile(matcher.group(3), matcher.group(4));
                 }
                 else if ((matcher = getMatcher(metaData, UPLOAD_REGEX)).find()) {
+                    System.out.println("SHOULD GET");
                     if (!TokenHandler.checkUsernameAndToken(matcher.group(1), matcher.group(2))) {
                         return;
                     }
+                    System.out.println("HERE " + matcher.group(3) + " " + matcher.group(4) + " " + Long.parseLong(matcher.group(5)));
                     receiveFile(matcher.group(3), matcher.group(4), Long.parseLong(matcher.group(5)));
                 }
             }
@@ -121,18 +124,24 @@ public class FileTransportServer {
             String middleFolderName = convertTypeToFolderName(type);
             File newFile = new File(RESOURCE_PATH + middleFolderName + "/" + fileName);
             if (newFile.exists()) {
+                dataOutputStream.writeUTF("REJ");
+                dataOutputStream.flush();
                 return;
             }
             newFile.createNewFile();
             FileOutputStream fileOutputStream = new FileOutputStream(newFile);
 
+            dataOutputStream.writeUTF("ACK");
+            dataOutputStream.flush();
+
             long count = fileLength;
-            byte[] buffer = new byte[8192];
+            byte[] buffer = new byte[18192];
             while (count > 0) {
-                dataInputStream.read(buffer);
-                fileOutputStream.write(buffer, 0, (int) Math.min(count, buffer.length));
-                count -= Math.min(count, buffer.length);
+                int read = dataInputStream.read(buffer);
+                fileOutputStream.write(buffer, 0, read);
+                count -= read;
             }
+            System.out.println("DONE");
 
             fileOutputStream.close();
         }

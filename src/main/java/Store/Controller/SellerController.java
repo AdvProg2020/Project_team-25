@@ -55,6 +55,7 @@ public class SellerController {
             if (!product1.equals(product) && product1.equals(newProduct))
                 return "Your new product is in current seller's products!";
         Manager.addRequest(new Request(product, true, newProduct));
+        newProduct.setProductID(product.getProductID());
         return "Ok";
     }
 

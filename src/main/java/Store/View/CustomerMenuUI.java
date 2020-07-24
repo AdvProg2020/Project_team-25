@@ -210,9 +210,9 @@ public class CustomerMenuUI implements Initializable {
         personal.setOnSelectionChanged(e -> setupInitialPersonalMenu());
         discount.setOnSelectionChanged(e -> setupInitialPersonalMenu());
         buyHistory.setOnSelectionChanged(e -> setupInitialPersonalMenu());
-        loggedInStatusText.textProperty().bind(MainMenuUIController.currentUserUsername);
-        logoutButton.textProperty().bind(MainMenuUIController.loginLogoutButtonText);
-        signUpButton.disableProperty().bind(MainMenuUIController.isLoggedIn);
+        loggedInStatusText.textProperty().bind(ClientMainMenuController.currentUserUsername);
+        logoutButton.textProperty().bind(ClientMainMenuController.loginLogoutButtonText);
+        signUpButton.disableProperty().bind(ClientMainMenuController.isLoggedIn);
         supportPageButton.setOnAction((e) -> SupportPageUI.showSupportPage());
         auctionPageButton.setOnAction(e -> AuctionsMenuUI.showAuctionsMenu());
         logoutButton.setOnAction((e) -> {

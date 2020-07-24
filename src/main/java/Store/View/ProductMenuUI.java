@@ -181,8 +181,9 @@ public class ProductMenuUI {
 //
 ////            productImageView.setImage(new Image(ProductMenuUI.class.getResource("/Images/" + productToShow.getImagePath()).toExternalForm()));
 //        }
-        FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", productToShow.get("id") + ".jpg");
-        File file = new File("src/main/resources/Images/" + productToShow.get("id") + ".jpg");
+        FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", productToShow.get("id") + ".png");
+        File file = new File("src/main/resources/Images/" + productToShow.get("id") + ".png");
+        System.out.println("TRYING: " + file.toURI().toString());
         productImageView.setImage(new Image(file.toURI().toString()));
         PannableCanvas canvas = new PannableCanvas();
 

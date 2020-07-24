@@ -357,8 +357,22 @@ public class ProductsMenuUI {
 //        } else {
 //            file = new File(product.getImagePath());
 //        }
-        FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", product.get("id") + ".jpg");
-        File file = new File("src/main/resources/Images/" + product.get("id") + ".jpg");
+
+
+
+        System.out.println("SHOULD RECEIVE");
+        FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", product.get("id") + ".png");
+
+        try {
+            Thread.sleep(1000);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        File file = new File("src/main/resources/Images/" + product.get("id") + ".png");
+        System.out.println(file.length());
+        System.out.println("RECEIVED " + "src/main/resources/Images/" + product.get("id") + ".png" + " " + file.getTotalSpace());
         ImageView imageView = new ImageView(new Image(file.toURI().toString()));
         imageView.setFitWidth(225);
         imageView.setFitHeight(225);
