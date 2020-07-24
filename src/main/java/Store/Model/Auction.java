@@ -74,7 +74,7 @@ public class Auction implements Serializable {
         return messagePort;
     }
 
-    public static ArrayList<Product> getAllAuctionsProducts() {
+    synchronized public static ArrayList<Product> getAllAuctionsProducts() {
         return allAuctionsProducts;
     }
 
@@ -135,19 +135,19 @@ public class Auction implements Serializable {
     public void finish(){
         if (currentBuyer != null) {
             currentBuyer.setMoney(currentBuyer.getMoney() - highestPrice);
-            seller.setMoney(seller.getMoney() + highestPrice);
+            seller.setMoney(seller.getMoney() + highestPrice - Manager.getKarmozd());
             ArrayList<Product> arrayList = new ArrayList<>();
             arrayList.add(product);
             currentBuyer.getBuyLog().add(new BuyLogItem(new Date(), arrayList, 0, seller.getUsername(), false, "Address"));
             seller.handleLogs(0, arrayList, new Date(), currentBuyer, highestPrice);
-            allAuctions.remove(this);
-            boolean flag = false;
-            for (Auction auction : allAuctions)
-                if (auction.getProduct().equals(product))
-                    flag = true;
+        }
+        allAuctions.remove(this);
+        boolean flag = false;
+        for (Auction auction : allAuctions)
+            if (auction.getProduct().equals(product))
+                flag = true;
             if (!flag)
                 allAuctionsProducts.remove(product);
-        }
     }
 
     @Override
