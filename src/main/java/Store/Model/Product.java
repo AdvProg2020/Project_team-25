@@ -105,6 +105,7 @@ public class Product implements Serializable {
         this.attributes = product.attributes;
         this.description = product.description;
         this.filters = product.filters;
+        this.filePath = product.filePath;
     }
 
     public boolean equals(Product other) {

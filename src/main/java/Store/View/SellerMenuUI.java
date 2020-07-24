@@ -141,6 +141,8 @@ public class SellerMenuUI implements Initializable {
     String currentSortOffer = new String("time of starting");
     String currentSortProduct = new String("visited");
 
+    String filePath = "";
+
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
         seller = ClientManagerController.getUserInfo(ClientHandler.username);
@@ -486,6 +488,8 @@ public class SellerMenuUI implements Initializable {
         product.put("availability", availabilityBool);
         product.put("description", descriptionString);
         product.put("filters", filters);
+        product.put("filePath", filePath);
+        System.out.println("FILE PATH! : " + filePath);
 
         return product;
     }
@@ -1120,13 +1124,7 @@ public class SellerMenuUI implements Initializable {
         try {
             Path path = Paths.get(fileChooser.showOpenDialog(new Stage()).getPath());
             System.out.println("############ " + path.getFileName().toString());
-
-            if (selectedProduct.containsKey("filePath")) {
-                selectedProduct.replace("filePath", path.getFileName().toString());
-            }
-            else {
-                selectedProduct.put("filePath", path.getFileName().toString());
-            }
+            filePath = path.getFileName().toString();
         }
         catch (Exception exception) {
             // do nothing

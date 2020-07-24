@@ -350,7 +350,7 @@ public class Main extends Application {
     }
 
     public static void handleServer() {
-        Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
+//        Manager manager1 = new Manager("cloudStrife", "cloud", "strife", "lab@lab.com", "0912", "1234");
 //        Main.setTest();
 //        Main.setOffers();
         try {

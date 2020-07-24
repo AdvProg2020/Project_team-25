@@ -73,6 +73,9 @@ public class HashMapGenerator {
         if (product == null) {
             return null;
         }
+
+        System.out.println("THIS GUY: " + product.getFilePath().toString());
+
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("name", product.getName());
         hashMap.put("price", product.getPrice() + "");
@@ -89,7 +92,7 @@ public class HashMapGenerator {
         hashMap.put("comments", getListOfComments(product.getComments()));
         hashMap.put("offer", getOfferHashMap(Offer.getOfferOfProduct(product)));
         hashMap.put("status", product.getProductStatus());
-        hashMap.put("filePath", product.getFilePath());
+        hashMap.put("filePath", product.getFilePath() + "");
         return hashMap;
     }
 

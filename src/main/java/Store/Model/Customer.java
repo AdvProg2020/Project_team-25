@@ -33,12 +33,12 @@ public class Customer extends User {
     }
 
     public void setBankAccount(int bankAccount) {
-//        try {
-//            MainServer.sendAndReceiveToBankAPIMove(money, bankAccount, Manager.getBankAccount(), "");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        this.bankAccount = bankAccount;
+        try {
+            MainServer.sendAndReceiveToBankAPIMove(money, bankAccount, Manager.getBankAccount(), "");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.bankAccount = bankAccount;
     }
 
     public static void addCustomer(Customer customer, int bankAccount) {

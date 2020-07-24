@@ -134,6 +134,8 @@ public class ProductMenuUI {
 
 
     private void initialSetup() {
+        System.out.println("FILE PATH: " + productToShow.get("filePath"));
+
         loggedInStatusText.textProperty().bind(ClientMainMenuController.currentUserUsername);
         signUpButton.disableProperty().bind(ClientMainMenuController.isLoggedIn);
         loginLogoutButton.textProperty().bind(ClientMainMenuController.loginLogoutButtonText);
