@@ -99,7 +99,7 @@ public class Main extends Application {
 //        ResourceHandler.resetFile();
 //        ResourceHandler.writeAll();
 
-        ResourceHandler.readAll();
+//        ResourceHandler.readAll();
 //        Auction.setAllAuctions(new ArrayList<Auction>());
         //        Thread thread = new Thread (new Runnable(){
 //            @Override
@@ -112,7 +112,7 @@ public class Main extends Application {
 //        });
 //        thread.setDaemon(true);
 //        thread.start();
-    //    setTest();
+  //      setTest();
         String input = scanner.nextLine();
         if (input.equals("S")) {
             handleServer();

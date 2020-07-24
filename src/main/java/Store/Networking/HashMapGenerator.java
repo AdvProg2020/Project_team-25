@@ -229,6 +229,7 @@ public class HashMapGenerator {
         hashMap.put("products", getListOfProducts(buyLogItem.getProducts()));
         hashMap.put("isReceived", buyLogItem.isReceived());
         hashMap.put("isShowed", buyLogItem.isShowed());
+        hashMap.put("address", buyLogItem.getAddress());
         return hashMap;
     }
 

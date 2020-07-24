@@ -26,6 +26,8 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
 
+import static java.lang.Thread.sleep;
+
 public class MainServer {
     private final HashMap<Integer, Integer> accounts = new HashMap<>();
     private ServerSocket serverSocket;
@@ -82,13 +84,24 @@ public class MainServer {
         Thread checkAuctionThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                try {
+                    sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 while (true){
-                    for (Auction auction: Auction.getAllAuctions())
-                        if ((LocalDateTime.now()).isAfter(auction.getEndingTime()))
-                            auction.finish();
+                    System.out.println(Auction.getAllAuctions());
+                    for (int i = 0; i < Auction.getAllAuctions().size(); i++)
+                    {
+                        if ((LocalDateTime.now()).isAfter(Auction.getAllAuctions().get(i).getEndingTime()))
+                        {
+                            Auction.getAllAuctions().get(i).finish();
+                        }
+                    }
                 }
             }
         });
+        checkAuctionThread.setPriority(1);
         checkAuctionThread.start();
     }
 
@@ -668,10 +681,7 @@ public class MainServer {
         }
 
         private void getAuctionsServer(HashMap input) {
-            ArrayList<Product> productsToBeShown = AuctionsController.getFilteredList((ArrayList<String>) input.get("filters"));
-            productsToBeShown = AuctionsController.handleStaticFiltering(productsToBeShown, (String) input.get("categoryFilter"), (String) input.get("brandFilter"), (String) input.get("nameFilter"), (String) input.get("sellerUsernameFilter"), (String) input.get("availabilityFilter"));
-            productsToBeShown = ProductsController.filterProductsWithSearchQuery(productsToBeShown, (String) input.get("searchQuery"));
-            productsToBeShown = ProductsController.sort((String) input.get("currentSort"), productsToBeShown);
+            ArrayList<Product> productsToBeShown = Auction.getAllAuctionsProducts();
 
             HashMap<String, Object> hashMap = new HashMap<>();
 
