@@ -65,7 +65,8 @@ public class MainServer {
 
 
     public MainServer() throws IOException {
-        this.port = nextFreePort(9000, 20000);
+//        this.port = nextFreePort(9000, 20000);
+        this.port = 15050;
 
         serverSocket = new ServerSocket(port);
         Thread thread = new Thread(new Runnable() {
@@ -305,7 +306,7 @@ public class MainServer {
                     } else {
                         user = User.getUserByUsername(TokenHandler.getUsernameOfToken(token));
                     }
-//                    System.out.println("Token: " + token + "Command: " + input.get("message"));
+                    System.out.println("Token: " + token + "Command: " + input.get("message"));
                     synchronized (user) {
                         if (input.get("message").equals("login")) {
                             moveShoppingCartAndLoginServer((String) input.get("username"));
