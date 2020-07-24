@@ -148,6 +148,7 @@ public class ManagerMenuUI {
         Button details = new Button("View Details");
         send.setOnAction(e -> {
             ClientManagerController.sendProduct(buyLog);
+            showLogs();
         });
         details.setOnAction(e -> {
             showDetails(buyLog);

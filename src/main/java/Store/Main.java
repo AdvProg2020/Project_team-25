@@ -112,7 +112,7 @@ public class Main extends Application {
 //        });
 //        thread.setDaemon(true);
 //        thread.start();
-        setTest();
+  //      setTest();
         String input = scanner.nextLine();
         if (input.equals("S")) {
             handleServer();
