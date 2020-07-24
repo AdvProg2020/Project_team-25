@@ -1,5 +1,6 @@
 package Store.View.DateTimePicker;
 
+import Store.View.SignUpAndLoginMenu;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
@@ -51,8 +52,7 @@ public class DateTimePicker extends HBox implements Initializable {
         this.popupContainer = new Popup();
         this.popup = new DateTimePickerPopup(this);
 
-        final FXMLLoader fxmlLoader = new FXMLLoader(
-                getClass().getResource("DateTimePicker.fxml"));
+        final FXMLLoader fxmlLoader = new FXMLLoader(SignUpAndLoginMenu.class.getClassLoader().getResource("FXML/DateTimePicker.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 

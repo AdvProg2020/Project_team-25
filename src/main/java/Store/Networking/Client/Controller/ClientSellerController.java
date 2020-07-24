@@ -183,7 +183,12 @@ public class ClientSellerController {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("message", "addAuction");
         hashMap.put("product", product);
-        hashMap.put("date", dateTime);
+        hashMap.put("year", dateTime.getYear());
+        hashMap.put("month", dateTime.getMonthValue());
+        hashMap.put("day", dateTime.getDayOfMonth());
+        hashMap.put("hour", dateTime.getHour());
+        hashMap.put("minute", dateTime.getMinute());
+        hashMap.put("second", dateTime.getSecond());
         hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
         if (((String)hashMap.get("content")).equalsIgnoreCase("error"))
             throw new Exception((String)hashMap.get("type"));

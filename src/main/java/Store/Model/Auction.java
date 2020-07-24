@@ -5,10 +5,7 @@ import Store.Model.Log.BuyLogItem;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 public class Auction implements Serializable {
     int auctionId;
@@ -18,7 +15,7 @@ public class Auction implements Serializable {
     private double basePrice;
     private double highestPrice = 0.0;
     private LocalDateTime endingTime;
-    private Queue<String> messages;
+    private Queue<String> messages = new LinkedList<>();
     private int messagePort;
 
     private static ArrayList<Auction> allAuctions = new ArrayList<>();
@@ -33,6 +30,8 @@ public class Auction implements Serializable {
         this.product = product;
         this.endingTime = endingTime;
         this.basePrice = product.getPrice();
+        this.highestPrice = basePrice;
+        messages.add("Start");
         allAuctions.add(this);
         allAuctionsProducts.add(product);
     }
@@ -66,7 +65,8 @@ public class Auction implements Serializable {
         this.messagePort = messagePort;
     }
 
-    public Queue<String> getMessages() {
+    public Queue<String> getMessages()
+    {
         return messages;
     }
 
@@ -170,4 +170,8 @@ public class Auction implements Serializable {
         this.currentBuyer = customer;
         this.highestPrice = newPrice;
     }
+//
+//    public void add(String message) {
+//        messages.add(message);
+//    }
 }

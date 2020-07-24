@@ -65,6 +65,8 @@ public class AuctionMenuUI {
     public TextArea message;
     public VBox messagesVBox;
 
+    public Button refreshButton;
+
     public Button ratingStar1;
     public ImageView activeStar;
     public Button ratingStar2;
@@ -76,7 +78,6 @@ public class AuctionMenuUI {
     public Button ratingStar5;
     public ImageView activeStar4;
     int currentRating = 0;
-    public Button rateProductButton;
 
     public Label errorMessageLabel;
 
@@ -86,7 +87,7 @@ public class AuctionMenuUI {
     public ImageView productImageView;
 
     static boolean isInAuction;
-    static Queue<String> messages;
+    static ArrayList<String> messages = new ArrayList<>();
 
     public AuctionMenuUI() {
 
@@ -119,7 +120,6 @@ public class AuctionMenuUI {
         setupImageAndVideo();
         setupLabels();
         setupSellerOptions();
-        handleCanRate();
     }
 
     private void setupImageAndVideo() {
@@ -230,21 +230,15 @@ public class AuctionMenuUI {
         highestPrice.textProperty().bind(ClientAuctionController.getHighestPrice(auctionToShow));
         currentBuyer.textProperty().bind(ClientAuctionController.getCurrentBuyer(auctionToShow));
         conditionLabel.textProperty().bind(ClientAuctionController.getCondition(auctionToShow));
-
-        Thread chatThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (isInAuction && conditionLabel.getText().equalsIgnoreCase("in progress")){
-                    try {
-                        messages = ClientAuctionController.getMessages(auctionToShow);
-                    } catch (IOException e) {
-                        throwError(e.getMessage());
-                    }
-                    showMessages();
-                }
-                ClientAuctionController.disconnect(auctionToShow);
+        refreshButton.setOnAction(e -> {
+            try {
+                messages = ClientAuctionController.getMessages(auctionToShow);
+            } catch (IOException ioException) {
+                System.out.println("3");
+                throwError(ioException.getMessage());
             }
-        });chatThread.start();
+            showMessages();
+        });
         mainMenuButton.setOnAction((e) -> {
             try {
                 isInAuction = false;
@@ -283,11 +277,10 @@ public class AuctionMenuUI {
             int finalButtonIndex = buttonIndex + 1;
             starButtons[buttonIndex].setOnAction((e) -> handleRatingChange(finalButtonIndex));
         }
-        rateProductButton.setOnAction((e) -> handleRating());
-
     }
 
     private void showMessages() {
+        messagesVBox.getChildren().clear();
         for (String message: messages)
             showMessage(message);
     }
@@ -298,35 +291,6 @@ public class AuctionMenuUI {
         label.setWrapText(true);
         hBox.getChildren().add(label);
         messagesVBox.getChildren().add(hBox);
-    }
-
-    private void setRatingDisable(boolean disable) {
-        resetStars();
-        Button[] starButtons = new Button[] {ratingStar1, ratingStar2, ratingStar3, ratingStar4, ratingStar5};
-        for (int buttonIndex = 0; buttonIndex < 5; buttonIndex++) {
-            starButtons[buttonIndex].setDisable(disable);
-        }
-        rateProductButton.setDisable(disable);
-    }
-
-    private void handleCanRate() {
-        Map<String, Object> customer = ClientSignUpAndLoginController.getUserInfo(ClientHandler.username);
-        if (!ClientHandler.hasLoggedIn) {
-            setRatingDisable(true);
-        }
-        else if (!(customer.get("type").equals("Customer"))) {
-            setRatingDisable(true);
-        }
-
-        else if (ClientProductController.hasBeenRated((String) productToShow.get("id"), ClientHandler.username)) {
-            setRatingDisable(true);
-        }
-        else if (!ClientProductController.hasBoughtProduct((String) productToShow.get("id"), ClientHandler.username)) {
-            setRatingDisable(true);
-        }
-        else {
-            setRatingDisable(false);
-        }
     }
 
     private void resetStars() {
@@ -344,13 +308,6 @@ public class AuctionMenuUI {
         for (int buttonIndex = 0; buttonIndex < index; buttonIndex++) {
             starImages[buttonIndex].setVisible(true);
         }
-    }
-
-    private void handleRating() {
-        ClientProductController.rateProduct(ClientHandler.username, productToShow, currentRating);
-        resetStars();
-        handleCanRate();
-        averageRatingLabel.setText("" + productToShow.get("averageRating"));
     }
 
     private void throwError(String message) {
@@ -431,7 +388,7 @@ public class AuctionMenuUI {
     public void sendMessage(){
         if (!message.getText().isEmpty()){
             try {
-                ClientAuctionController.sendMessage(message, auctionToShow);
+                ClientAuctionController.sendMessage(message.getText(), auctionToShow);
             } catch (Exception exception) {
                 throwError(exception.getMessage());
             }

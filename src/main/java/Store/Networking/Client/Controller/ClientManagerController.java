@@ -202,7 +202,6 @@ public class ClientManagerController {
         return (List<Map<String, Object>>) ClientHandler.sendAndReceiveMessage(hashMap).get("content");
     }
 
-
     public static boolean hasManager() {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("message", "hasManager?");

@@ -37,7 +37,7 @@
 				<graphic>
 					<ImageView>
 						<image>
-							<Image url="@icons/check.png"/>
+							<Image url="@../../java/Store/View/DateTimePicker/icons/check.png"/>
 						</image>
 					</ImageView>
 				</graphic>
