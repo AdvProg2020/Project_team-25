@@ -5,10 +5,7 @@ import Store.Model.Log.BuyLogItem;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 public class Auction implements Serializable {
     int auctionId;
@@ -18,7 +15,7 @@ public class Auction implements Serializable {
     private double basePrice;
     private double highestPrice = 0.0;
     private LocalDateTime endingTime;
-    private Queue<String> messages;
+    private Queue<String> messages = new LinkedList<>();
     private int messagePort;
 
     private static ArrayList<Auction> allAuctions = new ArrayList<>();
@@ -33,6 +30,8 @@ public class Auction implements Serializable {
         this.product = product;
         this.endingTime = endingTime;
         this.basePrice = product.getPrice();
+        this.highestPrice = basePrice;
+        messages.add("Start");
         allAuctions.add(this);
         allAuctionsProducts.add(product);
     }
@@ -52,7 +51,7 @@ public class Auction implements Serializable {
     public static double getMoneyInAuctions(Customer customer) {
         double sum = 0;
         for (Auction auction: allAuctions){
-            if (auction.getCurrentBuyer().equals(customer))
+            if (auction.getCurrentBuyer() != null && auction.getCurrentBuyer().equals(customer))
                 sum += auction.getHighestPrice();
         }
         return sum;
@@ -66,7 +65,8 @@ public class Auction implements Serializable {
         this.messagePort = messagePort;
     }
 
-    public Queue<String> getMessages() {
+    public Queue<String> getMessages()
+    {
         return messages;
     }
 
@@ -133,19 +133,21 @@ public class Auction implements Serializable {
     }
 
     public void finish(){
-        currentBuyer.setMoney(currentBuyer.getMoney() - highestPrice);
-        seller.setMoney(seller.getMoney() + highestPrice);
-        ArrayList<Product> arrayList = new ArrayList<>();
-        arrayList.add(product);
-        currentBuyer.getBuyLog().add(new BuyLogItem(new Date(), arrayList, 0, seller.getUsername(), false, "Address"));
-        seller.handleLogs(0, arrayList, new Date(), currentBuyer, highestPrice);
-        allAuctions.remove(this);
-        boolean flag = false;
-        for (Auction auction: allAuctions)
-            if (auction.getProduct().equals(product))
-                flag = true;
-        if (!flag)
-            allAuctionsProducts.remove(product);
+        if (currentBuyer != null) {
+            currentBuyer.setMoney(currentBuyer.getMoney() - highestPrice);
+            seller.setMoney(seller.getMoney() + highestPrice);
+            ArrayList<Product> arrayList = new ArrayList<>();
+            arrayList.add(product);
+            currentBuyer.getBuyLog().add(new BuyLogItem(new Date(), arrayList, 0, seller.getUsername(), false, "Address"));
+            seller.handleLogs(0, arrayList, new Date(), currentBuyer, highestPrice);
+            allAuctions.remove(this);
+            boolean flag = false;
+            for (Auction auction : allAuctions)
+                if (auction.getProduct().equals(product))
+                    flag = true;
+            if (!flag)
+                allAuctionsProducts.remove(product);
+        }
     }
 
     @Override
@@ -170,4 +172,8 @@ public class Auction implements Serializable {
         this.currentBuyer = customer;
         this.highestPrice = newPrice;
     }
+//
+//    public void add(String message) {
+//        messages.add(message);
+//    }
 }

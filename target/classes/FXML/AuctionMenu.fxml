@@ -342,6 +342,11 @@
                                                 <Insets right="10.0" top="10.0" />
                                             </HBox.margin>
                                             <children>
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                       <children>
+                                          <Button fx:id="refreshButton" mnemonicParsing="false" text="Refresh" />
+                                       </children>
+                                    </HBox>
                                                 <ScrollPane prefHeight="501.0" prefWidth="610.0">
                                                     <content>
                                                         <VBox fx:id="messagesVBox" prefHeight="471.0" prefWidth="609.0" />

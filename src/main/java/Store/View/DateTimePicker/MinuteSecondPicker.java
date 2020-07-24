@@ -1,5 +1,6 @@
 package Store.View.DateTimePicker;
 
+import Store.View.SignUpAndLoginMenu;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -29,9 +30,7 @@ public class MinuteSecondPicker extends VBox implements Initializable {
         this.parentContainer = parentContainer;
 
         // Load FXML
-        final FXMLLoader fxmlLoader = new FXMLLoader(
-                getClass().getResource(
-                        "MinuteSecondPicker.fxml"));
+        final FXMLLoader fxmlLoader = new FXMLLoader(SignUpAndLoginMenu.class.getClassLoader().getResource("FXML/MinuteSecondPicker.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 

@@ -31,11 +31,6 @@ public class MainServer {
     private ServerSocket serverSocket;
     private int port;
     private static Socket bankAPISocket;
-    private static HashMap<Auction, Integer> chatAuctionPorts;
-    private static HashMap<Auction, Integer> chatWriteAuctionPort;
-    private static HashMap<Socket, ArrayList<Auction>> socketAuctionsAvailable;
-    private static HashMap<Auction, ArrayList<ChatAuctionClientThread>> chatAuctionArray;
-
     static {
         try {
             bankAPISocket = new Socket("127.0.0.1", 15000);
@@ -82,9 +77,19 @@ public class MainServer {
                 }
             }
         });
-
         thread.start();
 
+        Thread checkAuctionThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true){
+                    for (Auction auction: Auction.getAllAuctions())
+                        if ((LocalDateTime.now()).isAfter(auction.getEndingTime()))
+                            auction.finish();
+                }
+            }
+        });
+        checkAuctionThread.start();
     }
 
     public int getPort() {
@@ -144,138 +149,6 @@ public class MainServer {
         dataOutputStream1.flush();
         return dataInputStream1.readUTF();
     }
-
-    private static class ChatAuctionClientThread extends Thread{
-        private Socket clientSocket;
-        private DataOutputStream dataOutputStream;
-        private DataInputStream dataInputStream;
-        private Auction auction;
-
-        public ChatAuctionClientThread(Socket socket, Auction auction) throws IOException{
-            this.clientSocket = socket;
-            dataInputStream = new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()));
-            dataOutputStream = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
-            this.auction = auction;
-        }
-
-        public DataOutputStream getDataOutputStream() {
-            return dataOutputStream;
-        }
-
-        public DataInputStream getDataInputStream() {
-            return dataInputStream;
-        }
-
-        public Socket getClientSocket() {
-            return clientSocket;
-        }
-
-        @Override
-        public void run() {
-            while (true){
-                String string = null;
-                try {
-                    string = dataInputStream.readUTF();
-                    Gson gson = new Gson();
-                    HashMap input = gson.fromJson(string, HashMap.class);
-                    if (input.get("message").equals("connect")) {
-                        if (!socketAuctionsAvailable.get(clientSocket).contains(auction))
-                            socketAuctionsAvailable.get(clientSocket).add(auction);
-                    }
-                    if (input.get("message").equals("disconnect")) {
-                        if (socketAuctionsAvailable.get(clientSocket).contains(auction))
-                            socketAuctionsAvailable.get(clientSocket).remove(auction);
-                        HashMap<String, Object> hashMap = new HashMap<>();
-                        hashMap.put("content", "disconnected");
-                        try {
-                            DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
-                            dataOutputStream.writeUTF(gson.toJson(hashMap));
-                            dataOutputStream.flush();
-                        } catch(Exception exception){
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-    }
-    private static class ChatAuctionWriteClientThread extends Thread{
-        private Socket clientSocket;
-        private DataOutputStream dataOutputStream;
-        private DataInputStream dataInputStream;
-        private Auction auction;
-
-        public ChatAuctionWriteClientThread(Socket socket, Auction auction) throws IOException{
-            this.clientSocket = socket;
-            dataInputStream = new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()));
-            dataOutputStream = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
-            this.auction = auction;
-        }
-
-        @Override
-        public void run() {
-            while (true){
-                String string = "";
-                try {
-                    string = dataInputStream.readUTF();
-                    Gson gson = new Gson();
-                    HashMap input = gson.fromJson(string, HashMap.class);
-                    if (input.get("message").equals("chatMessage")){
-                        chatMessage(input);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        private void chatMessage(HashMap input) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            User user = User.getUserByUsername((String)input.get("username"));
-            if (user instanceof Customer) {
-                String message = (String) input.get("chatMessage");
-                message = user.getUsername() + ": " + message;
-                auction.getMessages().add(message);
-                hashMap.put("content", "done");
-                try {
-                    Gson gson = new Gson();
-                    dataOutputStream.writeUTF(gson.toJson(hashMap));
-                    dataOutputStream.flush();
-                } catch(Exception exception){
-                }
-                sendToAllConnectedSockets();
-            }
-            else{
-                hashMap.put("content", "error");
-                hashMap.put("type", "You Are Not Allowed To Chat!");
-                try {
-                    Gson gson = new Gson();
-                    dataOutputStream.writeUTF(gson.toJson(hashMap));
-                    dataOutputStream.flush();
-                } catch(Exception exception){
-                }
-            }
-        }
-
-        private void sendToAllConnectedSockets() {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("content", auction.getMessages());
-            for (ChatAuctionClientThread chatAuctionClientThread: chatAuctionArray.get(auction)){
-                if (socketAuctionsAvailable.get(chatAuctionClientThread.getClientSocket()).contains(auction)) {
-                    try {
-                        Gson gson = new Gson();
-                        chatAuctionClientThread.getDataOutputStream().writeUTF(gson.toJson(hashMap));
-                        chatAuctionClientThread.getDataOutputStream().flush();
-                    } catch (Exception exception) {
-//
-                    }
-                }
-            }
-        }
-    }
-
 
     private class ClientThread extends Thread {
         private Socket clientSocket;
@@ -561,17 +434,35 @@ public class MainServer {
                         if (input.get("message").equals("sendProduct")){
                             sendProduct(input);
                         }
-                        if (input.get("message").equals("portAuctionChat")){
-                            portAuctionChat(input);
+                        if (input.get("message").equals("getAuctionMessages")){
+                            getAuctionMessages(input);
                         }
-                        if (input.get("message").equals("portAuctionChatWrite")){
-                            portAuctionChatWrite(input);
+                        if (input.get("message").equals("writeInChat")){
+                            writeInChat(input);
                         }
                     }
                 } catch (IOException exception) {
                     //exception.printStackTrace();
                 }
             }
+        }
+
+        private void writeInChat(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            double id = ((Double)input.get("auctionId"));
+            Auction auction = Auction.getAuctionByID((int) id);
+            String message = (String)input.get("username") + ": " + (String)input.get("chatMessage");
+            auction.getMessages().add(message);
+            System.out.println(auction.getMessages());
+            sendMessage(hashMap);
+        }
+
+        private void getAuctionMessages(HashMap input) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            double id = ((Double)input.get("auctionId"));
+            Auction auction = Auction.getAuctionByID((int) id);
+            hashMap.put("content", auction.getMessages());
+            sendMessage(hashMap);
         }
 
         private void purchaseByBank(HashMap input) {
@@ -638,7 +529,7 @@ public class MainServer {
             sendMessage(hashMap);
         }
 
-        synchronized private void dechargeWallet(HashMap input) throws IOException {
+        private void dechargeWallet(HashMap input) throws IOException {
             HashMap<String, Object> hashMap = new HashMap<>();
             Seller seller = (Seller)User.getUserByUsername((String) input.get("username"));
             double money = (Double) input.get("money");
@@ -661,9 +552,11 @@ public class MainServer {
             sendMessage(hashMap);
         }
 
-        synchronized private void increaseAuctionPrice(HashMap input) {
+        private void increaseAuctionPrice(HashMap input) {
             HashMap<String, Object> hashMap = new HashMap<>();
-            Auction auction = (Auction) Auction.getAuctionByID((Integer)input.get("auctionId"));
+            int id = (Integer.parseInt((String)input.get("productId")));
+            Product product = Product.getProductByID(id);
+            Auction auction = Auction.getAuctionOfProduct(product);
             double newPrice = (Double) input.get("newPrice");
             User tryer = User.getUserByUsername((String)input.get("buyer"));
             if (!(tryer instanceof Customer)) {
@@ -703,20 +596,6 @@ public class MainServer {
             sendMessage(hashMap);
         }
 
-        private void portAuctionChatWrite(HashMap input) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            Auction auction = Auction.getAuctionByID((Integer)input.get("auctionId"));
-            hashMap.put("content", chatWriteAuctionPort.get(auction));
-            sendMessage(hashMap);
-        }
-
-        private void portAuctionChat(HashMap input) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            Auction auction = Auction.getAuctionByID((Integer)input.get("auctionId"));
-            hashMap.put("content", chatAuctionPorts.get(auction));
-            sendMessage(hashMap);
-        }
-
         private void getAuctionOfProduct(HashMap input) {
             HashMap<String, Object> hashMap = new HashMap<>();
             Product product = Product.getProductByID(Integer.parseInt((String)input.get("productId")));
@@ -730,7 +609,9 @@ public class MainServer {
 
         private void getConditionAuction(HashMap input) {
             HashMap<String, Object> hashMap = new HashMap<>();
-            if (Auction.getAuctionByID((Integer)input.get("auctionId")) == null)
+            int id = (Integer.parseInt((String)input.get("productId")));
+            Product product = Product.getProductByID(id);
+            if (Auction.getAuctionOfProduct(product) == null)
                 hashMap.put("content", "Sold");
             else
                 hashMap.put("content", "In Progress");
@@ -739,14 +620,19 @@ public class MainServer {
 
         private void getCurrentBuyerAuction(HashMap input) {
             HashMap<String, Object> hashMap = new HashMap<>();
-            Auction auction = Auction.getAuctionByID((Integer)input.get("auctionId"));
-            hashMap.put("content", auction.getCurrentBuyer().getUsername());
+            double id = ((Double)input.get("auctionId"));
+            Auction auction = Auction.getAuctionByID((int) id);
+            if (auction.getCurrentBuyer() == null)
+                hashMap.put("content", "NOBODY");
+            else
+                hashMap.put("content", auction.getCurrentBuyer().getUsername());
             sendMessage(hashMap);
         }
 
         private void getHighestPriceAuction(HashMap input) {
             HashMap<String, Object> hashMap = new HashMap<>();
-            Auction auction = Auction.getAuctionByID((Integer)input.get("auctionId"));
+            double id = ((Double)input.get("auctionId"));
+            Auction auction = Auction.getAuctionByID((int) id);
             hashMap.put("content", auction.getHighestPrice());
             sendMessage(hashMap);
         }
@@ -764,7 +650,13 @@ public class MainServer {
         synchronized private void addAuction(HashMap input) {
             HashMap<String, Object> hashMap = new HashMap<>();
             Product product = Product.getProductByID(Integer.parseInt((String)(((Map)input.get("product")).get("id"))));
-            LocalDateTime dateTime = (LocalDateTime) input.get("date");
+            double year = (Double) input.get("year");
+            double month = (Double) input.get("month");
+            double day = (Double) input.get("day");
+            double hour = (Double) input.get("hour");
+            double minute = (Double) input.get("minute");
+            double second = (Double) input.get("second");
+            LocalDateTime dateTime = LocalDateTime.of((int)year, (int)month, (int)day, (int)hour, (int)minute, (int)second);
             try {
                 SellerUIController.addAuction(product, dateTime);
                 hashMap.put("content", "done");
