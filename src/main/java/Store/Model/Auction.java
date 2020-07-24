@@ -51,7 +51,7 @@ public class Auction implements Serializable {
     public static double getMoneyInAuctions(Customer customer) {
         double sum = 0;
         for (Auction auction: allAuctions){
-            if (auction.getCurrentBuyer().equals(customer))
+            if (auction.getCurrentBuyer() != null && auction.getCurrentBuyer().equals(customer))
                 sum += auction.getHighestPrice();
         }
         return sum;
@@ -133,19 +133,21 @@ public class Auction implements Serializable {
     }
 
     public void finish(){
-        currentBuyer.setMoney(currentBuyer.getMoney() - highestPrice);
-        seller.setMoney(seller.getMoney() + highestPrice);
-        ArrayList<Product> arrayList = new ArrayList<>();
-        arrayList.add(product);
-        currentBuyer.getBuyLog().add(new BuyLogItem(new Date(), arrayList, 0, seller.getUsername(), false, "Address"));
-        seller.handleLogs(0, arrayList, new Date(), currentBuyer, highestPrice);
-        allAuctions.remove(this);
-        boolean flag = false;
-        for (Auction auction: allAuctions)
-            if (auction.getProduct().equals(product))
-                flag = true;
-        if (!flag)
-            allAuctionsProducts.remove(product);
+        if (currentBuyer != null) {
+            currentBuyer.setMoney(currentBuyer.getMoney() - highestPrice);
+            seller.setMoney(seller.getMoney() + highestPrice);
+            ArrayList<Product> arrayList = new ArrayList<>();
+            arrayList.add(product);
+            currentBuyer.getBuyLog().add(new BuyLogItem(new Date(), arrayList, 0, seller.getUsername(), false, "Address"));
+            seller.handleLogs(0, arrayList, new Date(), currentBuyer, highestPrice);
+            allAuctions.remove(this);
+            boolean flag = false;
+            for (Auction auction : allAuctions)
+                if (auction.getProduct().equals(product))
+                    flag = true;
+            if (!flag)
+                allAuctionsProducts.remove(product);
+        }
     }
 
     @Override

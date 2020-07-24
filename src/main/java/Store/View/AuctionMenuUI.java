@@ -370,28 +370,38 @@ public class AuctionMenuUI {
     }
 
     public void tryHigherPrice(){
-        if (!Pattern.matches("\\d+(\\.(\\d+))?", auctionPrice.getText()))
-            throwError("Enter correct money!");
-        else{
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("message", "increaseAuctionPrice");
-            hashMap.put("auctionId", auctionToShow.get("id"));
-            hashMap.put("newPrice", Double.parseDouble(auctionPrice.getText()));
-            hashMap.put("buyer", ClientMainMenuController.currentUserUsername.getValue());
-            hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
-            if (hashMap.get("content").equals("error")){
-                throwError((String)hashMap.get("type"));
+        if (conditionLabel.getText().equalsIgnoreCase("in progress")) {
+            if (!Pattern.matches("\\d+(\\.(\\d+))?", auctionPrice.getText()))
+                throwError("Enter correct money!");
+            else {
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("message", "increaseAuctionPrice");
+                hashMap.put("productId", ((Map)auctionToShow.get("product")).get("id"));
+                hashMap.put("newPrice", Double.parseDouble(auctionPrice.getText()));
+                hashMap.put("buyer", ClientMainMenuController.currentUserUsername.getValue());
+                hashMap = ClientHandler.sendAndReceiveMessage(hashMap);
+                if (hashMap.get("content").equals("error")) {
+                    throwError((String) hashMap.get("type"));
+                }
             }
         }
+        else
+            throwError("Auction is Finished");
     }
 
     public void sendMessage(){
-        if (!message.getText().isEmpty()){
-            try {
-                ClientAuctionController.sendMessage(message.getText(), auctionToShow);
-            } catch (Exception exception) {
-                throwError(exception.getMessage());
+        if (conditionLabel.getText().equalsIgnoreCase("in progress")){
+
+            if (!message.getText().isEmpty()){
+                try {
+                    ClientAuctionController.sendMessage(message.getText(), auctionToShow);
+                } catch (Exception exception) {
+                    throwError(exception.getMessage());
+                }
             }
+        }
+        else{
+            throwError("Auction Is Finished");
         }
     }
 

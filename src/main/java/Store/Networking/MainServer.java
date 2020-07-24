@@ -553,8 +553,10 @@ public class MainServer {
 
         private void increaseAuctionPrice(HashMap input) {
             HashMap<String, Object> hashMap = new HashMap<>();
-            double id = ((Double)input.get("auctionId"));
-            Auction auction = Auction.getAuctionByID((int) id);double newPrice = (Double) input.get("newPrice");
+            int id = (Integer.parseInt((String)input.get("productId")));
+            Product product = Product.getProductByID(id);
+            Auction auction = Auction.getAuctionOfProduct(product);
+            double newPrice = (Double) input.get("newPrice");
             User tryer = User.getUserByUsername((String)input.get("buyer"));
             if (!(tryer instanceof Customer)) {
                 hashMap.put("content", "error");
