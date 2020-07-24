@@ -102,6 +102,7 @@ public class SignUpAndLoginController {
             SignUpAndLoginController.createCustomer(new ArrayList<>(attributes.subList(0, 6)));
         }
         else {
+            System.err.println("STATE: " + Manager.hasManager);
             SignUpAndLoginController.createManager(attributes);
         }
     }

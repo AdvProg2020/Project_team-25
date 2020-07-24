@@ -46,7 +46,7 @@ public class P2PServer {
                 new P2PServer.ClientHandler(clientSocket, dataOutputStream, dataInputStream).start();
             }
             catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
                 break;
             }
         }

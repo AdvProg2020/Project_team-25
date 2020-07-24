@@ -59,6 +59,7 @@ public class MainMenuUI {
         setupAds();
 
         Platform.runLater(() -> {
+            System.out.println(ClientMainMenuController.hasManager());
             while (!ClientMainMenuController.hasManager()) {
                 SignUpManagerMenuUI.showSignUpMenu();
             }

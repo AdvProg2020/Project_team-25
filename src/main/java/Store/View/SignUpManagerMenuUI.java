@@ -100,6 +100,7 @@ public class SignUpManagerMenuUI {
             setError(phoneNumberTextField, true);
             result = false;
         }
+
         if (karmozdTextField.isVisible()){
             if (minimumMoneyTextField.getText().isEmpty()){
                 setError(minimumMoneyTextField, true);
@@ -110,6 +111,7 @@ public class SignUpManagerMenuUI {
                 result = false;
             }
         }
+
         if (!result) {
             throwError("Please fill out all the needed fields!");
         }

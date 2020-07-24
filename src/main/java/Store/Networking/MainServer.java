@@ -983,7 +983,7 @@ public class MainServer {
         }
 
         private void addCategoryServer(HashMap input) {
-            ManagerController.addCategory((Manager) user, (String)input.get("name"), (String) input.get("parentName"));
+            ManagerController.addCategory((Manager) user, (String) input.get("name"), (String) input.get("parentName"));
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", "Ok");
             sendMessage(hashMap);
@@ -996,7 +996,10 @@ public class MainServer {
         }
 
         private void editCategoryServer(HashMap input) {
-            ManagerController.editCategory((Manager) user, Manager.categoryByName((String) input.get("name")), (String) input.get("field"), (String) input.get("newValue"));
+            Category category = Manager.categoryByName((String) input.get("name"));
+            synchronized (category) {
+                ManagerController.editCategory((Manager) user, category, (String) input.get("field"), (String) input.get("newValue"));
+            }
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("content", "Ok");
             sendMessage(hashMap);
@@ -1190,10 +1193,8 @@ public class MainServer {
                 if (((Customer)user).getBankAccount() == 0) {
                     try {
                         ((Customer)user).setBankAccount((Integer)sendAndReceiveToBankAPICreateAccount());
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
-                    } catch (Exception exception) {
-                        System.out.println("errorERROR");
                     }
                 }
             }
@@ -1201,10 +1202,8 @@ public class MainServer {
                 if (((Seller)user).getBankAccount() == 0) {
                     try {
                         ((Seller)user).setBankAccount((Integer)sendAndReceiveToBankAPICreateAccount());
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
-                    } catch (Exception exception) {
-                        System.out.println("errorERROR");
                     }
                 }
             }
