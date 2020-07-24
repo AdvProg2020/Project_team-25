@@ -10,6 +10,7 @@ import Store.Model.*;
 import Store.Model.Log.BuyLogItem;
 import Store.Networking.BankAPI;
 import Store.Networking.Client.ClientHandler;
+import Store.Networking.FileTransportClient;
 import Store.Networking.HashMapGenerator;
 import com.jfoenix.animation.alert.CenterTransition;
 import javafx.application.Platform;
@@ -37,6 +38,8 @@ import org.controlsfx.control.spreadsheet.Grid;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -385,16 +388,9 @@ public class CustomerMenuUI implements Initializable {
 
     @FXML
     private void setupInitialPersonalMenu() {
-//        String path;
-//        if (customer.getProfilePicturePath().isEmpty()) {
-//            path = "src/main/resources/Images/images.jpg";
-//        }
-//        else {
-//            path = customer.getProfilePicturePath();
-//        }
-
-//        File file = new File(path);
-//        profile.setImage(new Image(file.toURI().toString()));
+        FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", ClientHandler.username + ".jpg");
+        File file = new File("src/main/resources/Images/" + ClientHandler.username + ".jpg");
+        profile.setImage(new Image(file.toURI().toString()));
 
         emailTextField.setText((String) customer.get("email"));
         firstNameTextField.setText((String) customer.get("name"));
@@ -855,12 +851,16 @@ public class CustomerMenuUI implements Initializable {
 
     public void changePic() throws IOException {
         FileChooser fileChooser = new FileChooser();
-//        try {
-//            customer.setProfilePicturePath(fileChooser.showOpenDialog(new Stage()).getPath());
-//        }
-//        catch (Exception exception) {
-//            // do nothing
-//        }
+        try {
+            String path = fileChooser.showOpenDialog(new Stage()).getPath();
+            File file = new File(path);
+            File copyFile = new File("src/main/resources/Images/" + ClientHandler.username + ".jpg");
+            Files.copy(file.toPath(), copyFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            FileTransportClient.sendFile(ClientHandler.username, ClientHandler.token, "I", ClientHandler.username + ".jpg");
+        }
+        catch (Exception exception) {
+            // do nothing
+        }
         menuState = "personal";
         showCustomerMenu();
     }

@@ -9,6 +9,7 @@ import Store.Networking.Client.ClientHandler;
 import Store.Networking.Client.Controller.ClientMainMenuController;
 import Store.Networking.Client.Controller.ClientProductController;
 import Store.Networking.Client.Controller.ClientSignUpAndLoginController;
+import Store.Networking.FileTransportClient;
 import Store.Networking.P2P.P2PClient;
 import Store.View.AdditionalUtils.NodeGestures;
 import Store.View.AdditionalUtils.PannableCanvas;
@@ -178,6 +179,9 @@ public class ProductMenuUI {
 //
 ////            productImageView.setImage(new Image(ProductMenuUI.class.getResource("/Images/" + productToShow.getImagePath()).toExternalForm()));
 //        }
+        FileTransportClient.receiveFile(ClientHandler.username, ClientHandler.token, "I", productToShow.get("id") + ".jpg");
+        File file = new File("src/main/resources/Images/" + productToShow.get("id") + ".jpg");
+        productImageView.setImage(new Image(file.toURI().toString()));
         PannableCanvas canvas = new PannableCanvas();
 
         setupOffPercentageLabel();
