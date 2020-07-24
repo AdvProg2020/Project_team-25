@@ -1372,18 +1372,6 @@ public class MainServer {
         }
 
         private void handleCreateManagerAccountServer(ArrayList<String> attributes) {
-            if (Manager.hasManager) {
-                ((Manager) user).addNewManager(new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5)));
-            } else {
-                try {
-                    SignUpAndLoginController.handleCreateAccount("manager", attributes);
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-//                new Manager(attributes.get(0), attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), attributes.get(5));
-            }
-
             HashMap<String, Object> hashMap = new HashMap<>();
             if (Manager.hasManager)
             {

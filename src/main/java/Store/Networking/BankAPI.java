@@ -280,6 +280,7 @@ public class BankAPI {
                     getBalance(getToken(username, password));
                 } else if (input.startsWith("createAccount")) {
                     do {
+                        System.out.println("CREATING ACCOUNT");
                         System.out.println("First Name: ");
                         firstName = InputManager.getNextLine();
                         System.out.println("Last Name: ");
